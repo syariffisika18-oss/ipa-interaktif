@@ -627,6 +627,8 @@ function initElaborate(){
     try{localStorage.setItem(LOG_KEY,JSON.stringify(log))}catch(_){}
   };
 
+  const teacherMode=()=>document.body.dataset.learningMode==='guru';
+
   const questions=[...document.querySelectorAll('[data-elab-question]')];
 
   const shuffleChildren=(container)=>{
@@ -657,10 +659,16 @@ function initElaborate(){
     const reasonGroup=q.querySelector('[data-elab-reason-group]');
     const feedback=q.querySelector('[data-elab-feedback]');
     const retry=q.querySelector('[data-elab-retry]');
+    const reveal=document.createElement('button');
+    reveal.type='button';
+    reveal.className='elab-reveal mode-only-teacher';
+    reveal.textContent='Buka feedback';
+    reveal.hidden=true;
+    feedback.insertAdjacentElement('afterend',reveal);
 
     shuffleChildren(reasonGroup);
 
-    const runtime={attempts:0,answer:null,reason:null,finished:false};
+    const runtime={attempts:0,answer:null,reason:null,finished:false,pending:null};
 
     const chooseAnswer=(btn)=>{
       if(runtime.finished || btn.disabled) return;
@@ -674,32 +682,11 @@ function initElaborate(){
       reasonGroup.querySelector('button')?.focus({preventScroll:true});
     };
 
-    const finishAttempt=(reasonBtn)=>{
-      if(runtime.finished || !runtime.answer || reasonBtn.disabled) return;
-
-      reasonGroup.querySelectorAll('[data-elab-reason]').forEach(x=>x.classList.remove('selected'));
-      reasonBtn.classList.add('selected');
-      runtime.reason=reasonBtn;
-      setButtonsLocked(reasonGroup,true);
-      runtime.attempts+=1;
-
-      const answerCorrect=runtime.answer.dataset.correct==='true';
-      const reasonCorrect=reasonBtn.dataset.correct==='true';
-      const fullyCorrect=answerCorrect&&reasonCorrect;
-
+    const applyEvaluation=(answerCorrect,reasonCorrect,fullyCorrect)=>{
       runtime.answer.classList.add(answerCorrect?'correct':'wrong');
-      reasonBtn.classList.add(reasonCorrect?'correct':'wrong');
-
-      if(runtime.attempts===1){
-        log[key]=log[key]||{};
-        log[key].firstAnswer=runtime.answer.dataset.value||runtime.answer.textContent.trim();
-        log[key].firstReason=reasonBtn.dataset.value||reasonBtn.textContent.trim();
-        log[key].firstAnswerCorrect=answerCorrect;
-        log[key].firstReasonCorrect=reasonCorrect;
-        log[key].firstCorrect=fullyCorrect;
-        log[key].timestamp=new Date().toISOString();
-        saveLog();
-      }
+      runtime.reason.classList.add(reasonCorrect?'correct':'wrong');
+      reveal.hidden=true;
+      runtime.pending=null;
 
       if(fullyCorrect){
         feedback.className='elab-feedback correct';
@@ -712,11 +699,9 @@ function initElaborate(){
           finalAnswerCorrect:true,
           finalReasonCorrect:true,
           finalAnswer:runtime.answer.dataset.value||runtime.answer.textContent.trim(),
-          finalReason:reasonBtn.dataset.value||reasonBtn.textContent.trim()
+          finalReason:runtime.reason.dataset.value||runtime.reason.textContent.trim()
         });
         saveLog();
-        setButtonsLocked(answerGroup,true);
-        setButtonsLocked(reasonGroup,true);
         return;
       }
 
@@ -733,30 +718,73 @@ function initElaborate(){
         feedback.className='elab-feedback wrong';
         feedback.textContent=diagnosis+(q.dataset.clue||'Tinjau kembali hubungan konsepnya sebelum mencoba lagi.');
         retry.hidden=false;
-        setButtonsLocked(answerGroup,true);
-        setButtonsLocked(reasonGroup,true);
       }else{
         feedback.className='elab-feedback wrong';
         feedback.textContent=diagnosis+(q.dataset.final||'Pelajari kembali penjelasan konsepnya.');
         retry.hidden=true;
         runtime.finished=true;
-
         q.querySelectorAll('[data-elab-answer][data-correct="true"],[data-elab-reason][data-correct="true"]')
           .forEach(x=>x.classList.add('revealed-correct'));
-
         log[key]=Object.assign(log[key]||{},{
           attempts:runtime.attempts,
           finalCorrect:false,
           finalAnswerCorrect:answerCorrect,
           finalReasonCorrect:reasonCorrect,
           finalAnswer:runtime.answer.dataset.value||runtime.answer.textContent.trim(),
-          finalReason:reasonBtn.dataset.value||reasonBtn.textContent.trim()
+          finalReason:runtime.reason.dataset.value||runtime.reason.textContent.trim()
         });
         saveLog();
-        setButtonsLocked(answerGroup,true);
-        setButtonsLocked(reasonGroup,true);
       }
     };
+
+    const finishAttempt=(reasonBtn)=>{
+      if(runtime.finished || !runtime.answer || reasonBtn.disabled) return;
+
+      reasonGroup.querySelectorAll('[data-elab-reason]').forEach(x=>x.classList.remove('selected'));
+      reasonBtn.classList.add('selected');
+      runtime.reason=reasonBtn;
+      setButtonsLocked(reasonGroup,true);
+      runtime.attempts+=1;
+
+      const answerCorrect=runtime.answer.dataset.correct==='true';
+      const reasonCorrect=reasonBtn.dataset.correct==='true';
+      const fullyCorrect=answerCorrect&&reasonCorrect;
+
+      if(runtime.attempts===1){
+        log[key]=log[key]||{};
+        log[key].firstAnswer=runtime.answer.dataset.value||runtime.answer.textContent.trim();
+        log[key].firstReason=reasonBtn.dataset.value||reasonBtn.textContent.trim();
+        log[key].firstAnswerCorrect=answerCorrect;
+        log[key].firstReasonCorrect=reasonCorrect;
+        log[key].firstCorrect=fullyCorrect;
+        log[key].timestamp=new Date().toISOString();
+        saveLog();
+      }
+
+      if(teacherMode()){
+        runtime.pending={answerCorrect,reasonCorrect,fullyCorrect};
+        feedback.className='elab-feedback';
+        feedback.textContent='Jawaban dan alasan tersimpan. Minta siswa menjelaskan pilihannya, lalu buka feedback.';
+        reveal.hidden=false;
+        retry.hidden=true;
+        return;
+      }
+
+      applyEvaluation(answerCorrect,reasonCorrect,fullyCorrect);
+    };
+
+    reveal.addEventListener('click',()=>{
+      if(!runtime.pending || runtime.finished) return;
+      const p=runtime.pending;
+      applyEvaluation(p.answerCorrect,p.reasonCorrect,p.fullyCorrect);
+    });
+
+    window.addEventListener('learningmodechange',e=>{
+      if(e.detail?.mode==='mandiri' && runtime.pending && !runtime.finished){
+        const p=runtime.pending;
+        applyEvaluation(p.answerCorrect,p.reasonCorrect,p.fullyCorrect);
+      }
+    });
 
     answerGroup?.querySelectorAll('[data-elab-answer]').forEach(btn=>{
       btn.addEventListener('click',()=>chooseAnswer(btn));
@@ -773,6 +801,8 @@ function initElaborate(){
       clearVisual(q);
       reasonPanel.hidden=true;
       retry.hidden=true;
+      reveal.hidden=true;
+      runtime.pending=null;
       feedback.className='elab-feedback';
       feedback.textContent='Coba lagi: tentukan jawaban, lalu pilih alasan yang mendukung.';
       answerGroup.querySelector('button')?.focus({preventScroll:true});
