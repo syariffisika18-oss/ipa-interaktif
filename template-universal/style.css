@@ -50,3 +50,19 @@
   .send-feedback-card{align-items:stretch;flex-direction:column}.send-feedback-button{width:100%}
 }
 @media(max-width:480px){.identity-grid{grid-template-columns:1fr}.difficulty-grid{display:grid;grid-template-columns:1fr 1fr}.difficulty-option{justify-content:flex-start}}
+
+.send-status{
+  margin-top:8px!important;
+  display:inline-flex;
+  align-items:center;
+  min-height:28px;
+  padding:5px 9px;
+  border-radius:999px;
+  background:#eef5f3;
+  color:#4d6c66!important;
+  font-size:.78rem!important;
+  font-weight:750
+}
+.send-status.is-confirmed{background:#dff5ea;color:#17633f!important}
+.send-status.is-pending{background:#fff4d6;color:#825600!important}
+.send-status.is-error{background:#fde8e8;color:#8a2929!important}
