@@ -504,6 +504,7 @@ function refreshAll(){
 
   updateConcrete();
   renderAbstractComparison();
+  window.updatePredictionCheck?.();
 }
 
 const stageIndex={concrete:0,explain:0,elaborate:0};
@@ -572,6 +573,186 @@ $$('.stage-nav').forEach(nav=>{
     }
   });
 });
+
+function initPredictionCheck(){
+  const card=document.getElementById('predictionCheckCard');
+  if(!card) return;
+
+  const recall=document.getElementById('predictionRecall');
+  const instruction=document.getElementById('predictionInstruction');
+  const start=document.getElementById('startPredictionTest');
+  const steps=document.getElementById('predictionTestSteps');
+  const compareBox=document.getElementById('predictionCompare');
+  const status=document.getElementById('predictionStatus');
+  const feedback=document.getElementById('predictionFeedback');
+  const check=document.getElementById('checkPredictionResult');
+  const retry=document.getElementById('retryPredictionCheck');
+  const compareGroup=card.querySelector('[data-prediction-compare-group]');
+  const evidenceGroup=card.querySelector('[data-prediction-evidence-group]');
+
+  const labels={
+    'semua-padam':'Semua lampu ikut padam',
+    'lain-tetap':'Lampu lain tetap dapat menyala',
+    'lebih-redup':'Lampu lain menjadi lebih redup'
+  };
+
+  let testActive=false;
+  let observed=false;
+  let selectedCompare='';
+  let selectedEvidence='';
+  let attempts=0;
+
+  const prediction=()=>window.getEngagePrediction?.()||'';
+  const expectedCompare=()=>prediction()==='lain-tetap'?'sesuai':'tidak-sesuai';
+
+  const updateCheckButton=()=>{
+    check.disabled=!(selectedCompare&&selectedEvidence);
+  };
+
+  const clearChoices=()=>{
+    selectedCompare='';
+    selectedEvidence='';
+    compareGroup.querySelectorAll('button').forEach(b=>b.classList.remove('selected','correct','wrong'));
+    evidenceGroup.querySelectorAll('button').forEach(b=>b.classList.remove('selected','correct','wrong'));
+    updateCheckButton();
+  };
+
+  const syncPrediction=()=>{
+    const p=prediction();
+    recall.textContent=labels[p]||'Belum ada prediksi.';
+    start.disabled=!p;
+    if(!p){
+      instruction.textContent='Pilih prediksi pada Engage terlebih dahulu, lalu kembali ke Explore.';
+      status.textContent='Belum ada prediksi';
+    }else if(!testActive){
+      instruction.textContent='Uji prediksi itu dengan kondisi yang sama seperti fenomena Engage.';
+      status.textContent='Belum diuji';
+    }
+  };
+
+  const prepareTest=()=>{
+    if(!prediction()) return;
+    state.type='parallel';
+    state.bulbs=3;
+    state.V=6;
+    state.R=10;
+    state.on=true;
+    state.removed=false;
+    document.getElementById('bulbs').value=3;
+    document.getElementById('voltage').value=6;
+    document.getElementById('resistance').value=10;
+    testActive=true;
+    observed=false;
+    attempts=0;
+    steps.hidden=false;
+    compareBox.hidden=true;
+    retry.hidden=true;
+    clearChoices();
+    status.textContent='Sedang diuji';
+    instruction.textContent='Kondisi uji sudah siap. Lepaskan Lampu 1 lalu amati Lampu 2 dan Lampu 3.';
+    refreshAll();
+    document.getElementById('removeBtn')?.focus({preventScroll:true});
+  };
+
+  const observeIfReady=()=>{
+    if(!testActive) return;
+    const ready=state.type==='parallel'&&state.bulbs===3&&state.on&&state.removed;
+    if(!ready) return;
+    observed=true;
+    compareBox.hidden=false;
+    status.textContent='Sudah diamati';
+    instruction.textContent='Sekarang bandingkan hasil pengamatan dengan prediksi awalmu dan pilih bukti yang kamu lihat.';
+    compareBox.scrollIntoView({behavior:'smooth',block:'nearest'});
+  };
+
+  compareGroup.querySelectorAll('[data-prediction-compare]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(!observed) return;
+      compareGroup.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedCompare=btn.dataset.predictionCompare;
+      updateCheckButton();
+    });
+  });
+
+  evidenceGroup.querySelectorAll('[data-prediction-evidence]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      if(!observed) return;
+      evidenceGroup.querySelectorAll('button').forEach(x=>x.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedEvidence=btn.dataset.predictionEvidence;
+      updateCheckButton();
+    });
+  });
+
+  check.addEventListener('click',()=>{
+    if(!selectedCompare||!selectedEvidence) return;
+    attempts+=1;
+    const compareCorrect=selectedCompare===expectedCompare();
+    const evidenceCorrect=selectedEvidence==='lain-tetap';
+
+    compareGroup.querySelectorAll('button').forEach(b=>{
+      if(b.dataset.predictionCompare===selectedCompare)b.classList.add(compareCorrect?'correct':'wrong');
+      b.disabled=true;
+    });
+    evidenceGroup.querySelectorAll('button').forEach(b=>{
+      if(b.dataset.predictionEvidence===selectedEvidence)b.classList.add(evidenceCorrect?'correct':'wrong');
+      b.disabled=true;
+    });
+    check.disabled=true;
+
+    if(compareCorrect&&evidenceCorrect){
+      status.textContent='Prediksi diperiksa';
+      feedback.className='prediction-feedback correct';
+      feedback.textContent=prediction()==='lain-tetap'
+        ?'Prediksimu sesuai dengan hasil simulasi. Bukti utamanya: Lampu 2 dan 3 tetap menyala setelah Lampu 1 dilepas.'
+        :'Prediksimu tidak sesuai dengan hasil simulasi. Bukti utamanya: Lampu 2 dan 3 tetap menyala setelah Lampu 1 dilepas.';
+      retry.hidden=true;
+      testActive=false;
+      return;
+    }
+
+    if(attempts<2){
+      feedback.className='prediction-feedback wrong';
+      feedback.textContent='Belum tepat. Fokus pada apa yang benar-benar terjadi pada Lampu 2 dan Lampu 3 setelah Lampu 1 dilepas.';
+      retry.hidden=false;
+    }else{
+      status.textContent='Prediksi diperiksa';
+      feedback.className='prediction-feedback wrong';
+      feedback.textContent=(prediction()==='lain-tetap'
+        ?'Hasil simulasi sebenarnya mendukung prediksi awalmu. '
+        :'Hasil simulasi tidak mendukung prediksi awalmu. ')
+        +'Lampu 2 dan 3 tetap menyala karena cabangnya tetap memiliki lintasan tertutup.';
+      compareGroup.querySelector('[data-prediction-compare="'+expectedCompare()+'"]')?.classList.add('revealed-correct');
+      evidenceGroup.querySelector('[data-prediction-evidence="lain-tetap"]')?.classList.add('revealed-correct');
+      retry.hidden=true;
+      testActive=false;
+    }
+  });
+
+  retry.addEventListener('click',()=>{
+    clearChoices();
+    compareGroup.querySelectorAll('button').forEach(b=>b.disabled=false);
+    evidenceGroup.querySelectorAll('button').forEach(b=>b.disabled=false);
+    feedback.className='prediction-feedback';
+    feedback.textContent='Periksa kembali hasil simulasi, lalu pilih perbandingan dan bukti.';
+    retry.hidden=true;
+  });
+
+  start.addEventListener('click',prepareTest);
+  window.addEventListener('engagepredictionchange',()=>{
+    testActive=false;
+    observed=false;
+    steps.hidden=true;
+    compareBox.hidden=true;
+    clearChoices();
+    syncPrediction();
+  });
+  window.addEventListener('learningmodechange',syncPrediction);
+
+  window.updatePredictionCheck=observeIfReady;
+  syncPrediction();
+}
 
 $('#seriesBtn').onclick=()=>{state.type='series';state.removed=false;refreshAll()};
 $('#parallelBtn').onclick=()=>{state.type='parallel';state.removed=false;refreshAll()};
@@ -842,6 +1023,7 @@ function initElaborate(){
   }
 }
 
+initPredictionCheck();
 initElaborate();
 renderQuiz();
 refreshAll();
