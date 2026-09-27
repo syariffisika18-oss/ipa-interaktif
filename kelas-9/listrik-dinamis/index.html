@@ -11,11 +11,11 @@
 <article class="u-card"><h3>🎯 Tujuan pembelajaran</h3><ul class="objectives"><li>Menjelaskan perbedaan jalur arus pada rangkaian seri dan paralel.</li><li>Menghubungkan susunan rangkaian dengan arus, tegangan, terang lampu, dan kondisi ketika lampu dilepas.</li><li>Menentukan hambatan ekuivalen sederhana dan menggunakan hubungan <b>V = IR</b>.</li><li>Menerapkan konsep pada situasi baru dan menjelaskan alasan jawaban.</li></ul></article>
 <article class="u-card"><h3>👤 Identitas sesi</h3><p>Diisi agar refleksi akhir dapat diterima guru.</p><div class="identity-grid"><label><span>Nama / nomor absen</span><input id="studentName" maxlength="80" placeholder="Contoh: Andi / 12"></label><label><span>Kelas</span><input id="studentClass" maxlength="30" placeholder="Contoh: IX A"></label></div></article></div>
 <article class="u-card" style="margin-top:14px"><h3>🧩 Cek prasyarat singkat</h3><div class="diagnostic-list">
-<div class="diagnostic-item"><b>1. Arus dapat mengalir jika lintasan listrik...</b><div class="diagnostic-options" data-diagnostic="closed"><button type="button" data-value="tertutup" data-correct="true" data-feedback="Ya. Arus memerlukan lintasan tertutup.">tertutup</button><button type="button" data-value="terbuka" data-correct="false" data-feedback="Coba ingat fungsi sakelar: saat rangkaian terbuka, arus berhenti.">terbuka</button></div><div class="diagnostic-feedback"></div></div>
+<div class="diagnostic-item"><b>1. Pada rangkaian yang memiliki sumber tegangan, arus dapat mengalir jika lintasannya...</b><div class="diagnostic-options" data-diagnostic="closed"><button type="button" data-value="tertutup" data-correct="true" data-feedback="Ya. Dengan adanya sumber tegangan, lintasan tertutup memungkinkan arus mengalir.">tertutup</button><button type="button" data-value="terbuka" data-correct="false" data-feedback="Coba ingat fungsi sakelar: saat rangkaian terbuka, arus berhenti.">terbuka</button></div><div class="diagnostic-feedback"></div></div>
 <div class="diagnostic-item"><b>2. Jika hambatan diperbesar pada tegangan tetap, arus cenderung...</b><div class="diagnostic-options" data-diagnostic="resistance"><button type="button" data-value="naik" data-correct="false" data-feedback="Belum. Perhatikan kembali I = V/R.">naik</button><button type="button" data-value="turun" data-correct="true" data-feedback="Benar. Pada V tetap, R lebih besar membuat I lebih kecil.">turun</button></div><div class="diagnostic-feedback"></div></div>
 </div></article></div></section>
 
-<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 2</p><h2>Engage</h2></div><span class="u-principle">Fenomena • Prediksi • POE</span></div><div class="engage-scene"><div class="house-lamps"><div class="lamp-row"><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div></div></div><div><h3>Tiga lampu rumah menyala. Satu lampu rusak.</h3><p>Menurutmu, apa yang terjadi pada dua lampu lainnya jika instalasinya dirancang seperti rangkaian rumah?</p><div class="engage-options"><button class="engage-option" data-prediction="semua-padam" type="button">Semua lampu ikut padam</button><button class="engage-option" data-prediction="lain-tetap" type="button">Lampu lain tetap dapat menyala</button><button class="engage-option" data-prediction="lebih-redup" type="button">Lampu lain menjadi lebih redup</button></div><div id="engageFeedback" class="note">Pilih prediksi terlebih dahulu. Jawabannya akan diuji pada tahap Explore.</div><p class="mode-only-teacher small"><b>Guru:</b> minta 2–3 siswa menyampaikan alasan sebelum membuka simulasi.</p></div></div></div></section>
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 2</p><h2>Engage</h2></div><span class="u-principle">Fenomena • Prediksi • POE</span></div><div class="engage-scene"><div class="house-lamps"><div class="lamp-row"><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div></div></div><div><h3>Tiga lampu rumah menyala. Satu lampu dilepas dari fittingnya.</h3><p>Menurutmu, apa yang terjadi pada dua lampu lainnya jika instalasinya dirancang seperti rangkaian rumah?</p><div class="engage-options"><button class="engage-option" data-prediction="semua-padam" type="button">Semua lampu ikut padam</button><button class="engage-option" data-prediction="lain-tetap" type="button">Lampu lain tetap dapat menyala</button><button class="engage-option" data-prediction="lebih-redup" type="button">Lampu lain menjadi lebih redup</button></div><div id="engageFeedback" class="note">Pilih prediksi terlebih dahulu. Jawabannya akan diuji pada tahap Explore.</div><p class="mode-only-teacher small"><b>Guru:</b> minta 2–3 siswa menyampaikan alasan sebelum membuka simulasi.</p></div></div></div></section>
 
 <section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 3</p><h2>Explore</h2></div><span class="u-principle">Concrete • Manipulasi • Pengamatan</span></div><div class="cpa-banner"><b>C — Concrete:</b> ubah susunan, jumlah lampu, tegangan, hambatan, sakelar, dan kondisi lampu. Gunakan hasilnya untuk menguji prediksi.</div><section id="concrete" class="cpa-section">
       <div class="card stage-card">
@@ -55,7 +55,7 @@
               </div>
 
               <div class="sliderline">
-                <label for="resistance">R lampu</label>
+                <label for="resistance">R tiap lampu (identik)</label>
                 <input id="resistance" type="range" min="4" max="20" step="1" value="10">
                 <b><span id="resistanceVal">10</span> Ω</b>
               </div>
@@ -91,18 +91,18 @@
               <div class="stat"><span class="small">R ekuivalen</span><b id="rt">—</b></div>
               <div class="stat"><span class="small">Arus total</span><b id="it">—</b></div>
               <div class="stat"><span class="small">Tegangan/lampu</span><b id="vb">—</b></div>
-              <div class="stat"><span class="small">Daya/lampu</span><b id="pb">—</b></div>
+              <div class="stat"><span class="small">Arus tiap lampu</span><b id="ib">—</b></div>
             </div>
 
             <div class="compact-question">
               <b>Hubungkan hasil pengamatan dengan konsep:</b>
               <div>① Ada berapa jalur yang dapat dilewati arus?</div>
               <div>② Apa yang terjadi ketika satu lampu dilepas?</div>
-              <div>③ Mengapa terang lampu berubah?</div>
+              <div>③ Bandingkan arus total, arus tiap lampu, dan tegangan tiap lampu ketika susunan atau jumlah lampu diubah.</div>
             </div>
 
             <div class="note warning stage-note">
-              <b>Model ideal:</b> lampu dianggap memiliki hambatan tetap dan sumber tegangan ideal.
+              <b>Model ideal:</b> semua lampu dianggap identik dengan hambatan tetap dan sumber tegangan ideal. Indikator terang hanya bersifat kualitatif, bukan ukuran persen kecerahan fisik.
             </div>
 
             <button id="compareBtn" class="btn full">Lanjut ke Explain →</button>
@@ -361,21 +361,21 @@
             <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
 
-          <div class="elab-mini-question" data-elab-question="series-bright"
-               data-clue="Gunakan model lampu dengan hambatan tetap. Terang lampu dikaitkan dengan daya: P = I²R. Jika arus turun, bagaimana daya tiap lampu berubah?"
-               data-final="Lampu menjadi lebih redup. Dalam model lampu dengan R tetap, penambahan lampu seri membuat arus berkurang. Karena P = I²R, daya tiap lampu ikut berkurang.">
-            <b>Terang setiap lampu cenderung...</b>
+          <div class="elab-mini-question" data-elab-question="series-voltage"
+               data-clue="Bedakan tegangan sumber dengan tegangan pada tiap lampu. Pada seri berlaku V = V₁ + V₂ + ... ."
+               data-final="Tegangan pada tiap lampu berkurang. Untuk lampu identik pada sumber tetap, dua lampu memperoleh sekitar V/2 per lampu, sedangkan tiga lampu memperoleh sekitar V/3 per lampu.">
+            <b>Tegangan pada setiap lampu cenderung...</b>
             <div class="elab-options" data-elab-answer-group>
-              <button type="button" data-elab-answer data-value="lebih-terang" data-correct="false">lebih terang</button>
-              <button type="button" data-elab-answer data-value="lebih-redup" data-correct="true">lebih redup</button>
-              <button type="button" data-elab-answer data-value="sama" data-correct="false">sama</button>
+              <button type="button" data-elab-answer data-value="bertambah" data-correct="false">bertambah</button>
+              <button type="button" data-elab-answer data-value="berkurang" data-correct="true">berkurang</button>
+              <button type="button" data-elab-answer data-value="tetap" data-correct="false">tetap</button>
             </div>
             <div class="elab-reason-panel" data-elab-reason-panel hidden>
               <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
               <div class="elab-reasons" data-elab-reason-group>
-                <button type="button" data-elab-reason data-value="daya-turun" data-correct="true">Arus mengecil sehingga daya tiap lampu P = I²R ikut mengecil.</button>
-                <button type="button" data-elab-reason data-value="v-sumber-sama" data-correct="false">Karena tegangan sumber tetap, tegangan pada setiap lampu juga tetap sehingga terangnya tidak berubah.</button>
-                <button type="button" data-elab-reason data-value="lampu-banyak-daya" data-correct="false">Semakin banyak lampu, tiap lampu menerima daya lebih besar.</button>
+                <button type="button" data-elab-reason data-value="v-terbagi" data-correct="true">Pada seri, jumlah tegangan tiap lampu sama dengan tegangan sumber; untuk lampu identik, menambah lampu membuat bagian tegangan per lampu lebih kecil.</button>
+                <button type="button" data-elab-reason data-value="v-sumber-tetap" data-correct="false">Karena tegangan sumber tetap, tegangan pada setiap lampu juga selalu tetap.</button>
+                <button type="button" data-elab-reason data-value="i-sama-v-sumber" data-correct="false">Karena arus seri sama pada semua lampu, setiap lampu selalu mendapat tegangan sebesar tegangan sumber.</button>
               </div>
             </div>
             <div class="elab-feedback" data-elab-feedback>Jawab, lalu pilih alasannya.</div>
@@ -490,4 +490,4 @@ function normalizePictorialTypo(){
   });
 }
 document.addEventListener("DOMContentLoaded",normalizePictorialTypo);
-</script><script src="config.js?v=20260927-2000"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2125"></script></body></html>
+</script><script src="config.js?v=20260927-2200"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2200"></script></body></html>
