@@ -1,7 +1,7 @@
 window.IPA_MODULE_CONFIG = {
   appTitle: "IPA Interaktif",
   templateVersion: "0.4",
-  moduleVersion: "1.0",
+  moduleVersion: "1.1",
   materialId: "kelas-9-listrik-dinamis-seri-paralel",
   materialTitle: "Listrik Dinamis: Rangkaian Seri & Paralel",
   materialMeta: "Kelas IX • CPA + POE + Worked Example • 7 tahap",
