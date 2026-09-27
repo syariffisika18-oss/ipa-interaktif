@@ -13,7 +13,7 @@
     <div class="shell header-row">
       <a class="back-link" href="../">← Portal IPA</a>
       <div class="header-title">
-        <span class="version">Template Universal v0.2</span>
+        <span class="version">Template Universal v0.3</span>
         <strong id="appTitle">IPA Interaktif</strong>
       </div>
       <button class="ghost-button" id="resetProgress" type="button">Reset progres</button>
@@ -79,6 +79,24 @@
           <div class="feedback-box" hidden>Contoh komponen diagnostik. Pada modul nyata, isi diganti sesuai materi.</div>
         </article>
       </div>
+
+      <section class="identity-card" aria-labelledby="identityTitle">
+        <div>
+          <p class="stage-kicker">Identitas sesi</p>
+          <h3 id="identityTitle">Agar refleksi dapat dibaca guru</h3>
+          <p>Isi seperlunya. Data ini tersimpan di perangkat dan digunakan saat siswa mengirim refleksi.</p>
+        </div>
+        <div class="identity-grid">
+          <label>
+            <span>Nama / nomor absen</span>
+            <input id="studentName" type="text" maxlength="80" autocomplete="name" placeholder="Contoh: Andi / 12">
+          </label>
+          <label>
+            <span>Kelas</span>
+            <input id="studentClass" type="text" maxlength="30" placeholder="Contoh: IX A">
+          </label>
+        </div>
+      </section>
       <aside class="teacher-cue">
         <strong>Untuk pendidik</strong>
         <p>Gunakan respons diagnostik untuk menentukan seberapa banyak scaffolding yang diperlukan.</p>
@@ -188,6 +206,11 @@
         <label><span>Apa yang sudah saya pahami?</span><textarea rows="4" data-reflection="understood"></textarea></label>
         <label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused"></textarea></label>
       </div>
+      <div class="difficulty-card">
+        <p class="field-title">Pada bagian mana kamu masih mengalami kesulitan?</p>
+        <div class="difficulty-grid" id="difficultyGrid"></div>
+      </div>
+
       <div class="confidence-box">
         <p>Seberapa yakin kamu memahami materi?</p>
         <div class="confidence-row">
@@ -195,6 +218,14 @@
           <button type="button" data-confidence="2">Cukup paham</button>
           <button type="button" data-confidence="3">Sudah yakin</button>
         </div>
+      </div>
+
+      <div class="send-feedback-card">
+        <div>
+          <strong>Kirim refleksi ke guru</strong>
+          <p id="feedbackConnectionNote">Refleksi masih tersimpan lokal sampai koneksi Google Sheets diaktifkan.</p>
+        </div>
+        <button id="sendFeedback" class="send-feedback-button" type="button">Kirim Refleksi</button>
       </div>
     </section>
 
