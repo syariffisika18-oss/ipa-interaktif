@@ -292,7 +292,7 @@
 
           <div class="elab-mini-question" data-elab-question="home"
                data-clue="Ingat: apakah melepas satu lampu memutus jalur lampu yang lain?"
-               data-final="Instalasi rumah menggunakan paralel karena setiap lampu berada pada cabang sendiri yang menghubungkan dua node sumber yang sama.">
+               data-final="Susunan paralel paling sesuai. Setiap lampu berada pada cabang sendiri yang terhubung ke dua titik sumber yang sama. Dengan sakelar pada tiap cabang, satu lampu dapat dimatikan atau dilepas tanpa memutus cabang lain, dan tiap lampu memperoleh tegangan sumber.">
             <b>Susunan yang paling sesuai adalah...</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="seri" data-correct="false">Seri</button>
@@ -302,9 +302,9 @@
             <div class="elab-reason-panel" data-elab-reason-panel hidden>
               <span class="elab-reason-title">Mengapa?</span>
               <div class="elab-reasons" data-elab-reason-group>
-                <button type="button" data-elab-reason data-value="node-sama" data-correct="true">Setiap lampu punya cabang sendiri pada dua node sumber yang sama.</button>
-                <button type="button" data-elab-reason data-value="arus-kecil" data-correct="false">Karena rangkaian paralel selalu memiliki arus yang lebih kecil.</button>
-                <button type="button" data-elab-reason data-value="jalur-pendek" data-correct="false">Karena arus hanya memilih jalur yang paling pendek.</button>
+                <button type="button" data-elab-reason data-value="node-sama" data-correct="true">Setiap lampu berada pada cabang sendiri yang terhubung ke dua titik sumber yang sama, sehingga satu cabang dapat diputus tanpa memutus cabang lain.</button>
+                <button type="button" data-elab-reason data-value="arus-kecil" data-correct="false">Karena pada rangkaian paralel arus pada setiap cabang selalu lebih kecil daripada arus pada rangkaian seri.</button>
+                <button type="button" data-elab-reason data-value="jalur-pendek" data-correct="false">Karena arus hanya mengalir melalui cabang yang paling pendek.</button>
               </div>
             </div>
 
@@ -320,8 +320,8 @@
           </div>
 
           <div class="elab-mini-question" data-elab-question="series-r"
-               data-clue="Gunakan hubungan hambatan seri: setiap hambatan berada pada satu jalur yang sama."
-               data-final="Pada seri, Rₜ = R₁ + R₂ + ... sehingga menambah satu lampu menambah hambatan total.">
+               data-clue="Gunakan model ideal lampu dengan hambatan tetap. Pada susunan seri, hambatan ekuivalen merupakan jumlah hambatan tiap lampu."
+               data-final="Dalam model lampu berhambatan tetap, pada seri berlaku Rₜ = R₁ + R₂ + ... . Menambah satu lampu berarti menambah satu hambatan ke jumlah tersebut, sehingga Rₜ bertambah.">
             <b>Hambatan total akan...</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="bertambah" data-correct="true">bertambah</button>
@@ -331,7 +331,7 @@
             <div class="elab-reason-panel" data-elab-reason-panel hidden>
               <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
               <div class="elab-reasons" data-elab-reason-group>
-                <button type="button" data-elab-reason data-value="jumlah-r" data-correct="true">Hambatan seri dijumlahkan: Rₜ = R₁ + R₂ + R₃.</button>
+                <button type="button" data-elab-reason data-value="jumlah-r" data-correct="true">Pada seri, hambatan ekuivalen adalah jumlah hambatan tiap lampu: Rₜ = R₁ + R₂ + R₃.</button>
                 <button type="button" data-elab-reason data-value="v-tetap-r-tetap" data-correct="false">Karena tegangan sumber tetap, hambatan total juga tetap.</button>
                 <button type="button" data-elab-reason data-value="lampu-bagi-r" data-correct="false">Semakin banyak lampu, hambatan total terbagi menjadi lebih kecil.</button>
               </div>
@@ -342,7 +342,7 @@
 
           <div class="elab-mini-question" data-elab-question="series-i"
                data-clue="Tegangan sumber tetap. Hubungkan perubahan R total dengan I = V/R."
-               data-final="Ketika V tetap dan R total bertambah, I = V/R membuat arus total berkurang.">
+               data-final="Tegangan sumber tetap, sedangkan Rₜ bertambah. Karena I = V/Rₜ, arus rangkaian berkurang. Ingat: arus seri sama besar di semua komponen, tetapi nilainya dapat berubah ketika hambatan total rangkaian diubah.">
             <b>Arus total akan...</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="bertambah" data-correct="false">bertambah</button>
@@ -353,7 +353,7 @@
               <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
               <div class="elab-reasons" data-elab-reason-group>
                 <button type="button" data-elab-reason data-value="ohm" data-correct="true">V tetap, Rₜ bertambah, maka I = V/Rₜ mengecil.</button>
-                <button type="button" data-elab-reason data-value="seri-i-selalu" data-correct="false">Arus seri selalu bernilai tetap walaupun hambatan total berubah.</button>
+                <button type="button" data-elab-reason data-value="seri-i-selalu" data-correct="false">Karena arus pada rangkaian seri sama di setiap komponen, nilainya tidak berubah ketika hambatan total rangkaian berubah.</button>
                 <button type="button" data-elab-reason data-value="lampu-tambah-i" data-correct="false">Menambah lampu berarti menambah jumlah arus yang mengalir.</button>
               </div>
             </div>
@@ -362,8 +362,8 @@
           </div>
 
           <div class="elab-mini-question" data-elab-question="series-bright"
-               data-clue="Terang lampu berkaitan dengan daya. Jika arus pada lampu turun, bagaimana P = I²R berubah?"
-               data-final="Lampu menjadi lebih redup karena arus seri berkurang. Untuk R lampu tetap, P = I²R juga berkurang.">
+               data-clue="Gunakan model lampu dengan hambatan tetap. Terang lampu dikaitkan dengan daya: P = I²R. Jika arus turun, bagaimana daya tiap lampu berubah?"
+               data-final="Lampu menjadi lebih redup. Dalam model lampu dengan R tetap, penambahan lampu seri membuat arus berkurang. Karena P = I²R, daya tiap lampu ikut berkurang.">
             <b>Terang setiap lampu cenderung...</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="lebih-terang" data-correct="false">lebih terang</button>
@@ -374,7 +374,7 @@
               <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
               <div class="elab-reasons" data-elab-reason-group>
                 <button type="button" data-elab-reason data-value="daya-turun" data-correct="true">Arus mengecil sehingga daya tiap lampu P = I²R ikut mengecil.</button>
-                <button type="button" data-elab-reason data-value="v-sumber-sama" data-correct="false">Tegangan sumber tetap, jadi terang setiap lampu pasti tetap.</button>
+                <button type="button" data-elab-reason data-value="v-sumber-sama" data-correct="false">Karena tegangan sumber tetap, tegangan pada setiap lampu juga tetap sehingga terangnya tidak berubah.</button>
                 <button type="button" data-elab-reason data-value="lampu-banyak-daya" data-correct="false">Semakin banyak lampu, tiap lampu menerima daya lebih besar.</button>
               </div>
             </div>
@@ -396,7 +396,7 @@
 
           <div class="elab-mini-question" data-elab-question="branch-current"
                data-clue="Pada paralel, V kedua cabang sama. Bandingkan I = V/R untuk R = 6 Ω dan 12 Ω."
-               data-final="Cabang 1 memiliki arus lebih besar: I₁ = 12/6 = 2 A, sedangkan I₂ = 12/12 = 1 A.">
+               data-final="Cabang 1 memiliki arus lebih besar. Pada paralel kedua cabang mendapat tegangan 12 V yang sama, sehingga I₁ = 12/6 = 2 A dan I₂ = 12/12 = 1 A. Arus cabang hanya sama jika hambatan cabangnya sama.">
             <b>Cabang mana yang memiliki arus lebih besar?</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="cabang-1" data-correct="true">Cabang 1 (6 Ω)</button>
@@ -408,7 +408,7 @@
               <div class="elab-reasons" data-elab-reason-group>
                 <button type="button" data-elab-reason data-value="r-kecil-i-besar" data-correct="true">Pada V sama, hambatan lebih kecil menghasilkan arus lebih besar: I = V/R.</button>
                 <button type="button" data-elab-reason data-value="r-besar-i-besar" data-correct="false">Hambatan yang lebih besar menarik arus yang lebih besar.</button>
-                <button type="button" data-elab-reason data-value="paralel-i-sama" data-correct="false">Semua cabang paralel selalu memiliki arus yang sama.</button>
+                <button type="button" data-elab-reason data-value="paralel-i-sama" data-correct="false">Karena cabang paralel memiliki tegangan yang sama, arus pada semua cabang juga selalu sama.</button>
               </div>
             </div>
             <div class="elab-feedback" data-elab-feedback>Jawab, lalu jelaskan alasannya.</div>
@@ -490,4 +490,4 @@ function normalizePictorialTypo(){
   });
 }
 document.addEventListener("DOMContentLoaded",normalizePictorialTypo);
-</script><script src="config.js?v=20260927-2000"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2108"></script></body></html>
+</script><script src="config.js?v=20260927-2000"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2125"></script></body></html>
