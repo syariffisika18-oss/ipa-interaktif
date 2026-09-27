@@ -596,3 +596,20 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
   .elab-options button{width:100%}
   .elab-mini-question{padding:9px}
 }
+
+.compare-line.compare-head{
+  background:linear-gradient(90deg,#eef3ff,#f6f0ff);
+  border-color:#cfd8f4;
+  font-weight:900
+}
+.compare-line.compare-head b{color:#45516b}
+.compare-line.compare-head span:nth-child(2){
+  color:#3559e0;
+  font-weight:900;
+  text-align:center
+}
+.compare-line.compare-head span:nth-child(3){
+  color:#7b4ce2;
+  font-weight:900;
+  text-align:center
+}
