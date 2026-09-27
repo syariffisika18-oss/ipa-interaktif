@@ -759,3 +759,99 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
 #abstractComparison .compare-line.compare-head > span:nth-child(3){
   text-align:center;
 }
+
+
+/* Explain — gabungkan derivasi seri & paralel dalam satu slide */
+.derivation-compare{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:4px 0 8px
+}
+.derivation-mini{
+  min-width:0;
+  border:2px solid var(--line);
+  border-radius:14px;
+  padding:11px;
+  text-align:center;
+  background:#fff
+}
+.derivation-mini.series{
+  border-color:#9db0ff;
+  background:#f6f8ff
+}
+.derivation-mini.parallel{
+  border-color:#cbb7ff;
+  background:#faf7ff
+}
+.derivation-mini-title{
+  font-weight:950;
+  letter-spacing:.05em;
+  font-size:.83rem;
+  margin-bottom:6px
+}
+.derivation-mini-basis,
+.derivation-mini-step,
+.derivation-mini-result{
+  font-family:"Cambria Math","Times New Roman",serif;
+  border-radius:9px;
+  padding:7px 6px;
+  line-height:1.3
+}
+.derivation-mini-basis{
+  background:rgba(255,255,255,.78);
+  font-size:.86rem
+}
+.derivation-mini-step{
+  margin-top:6px;
+  background:#fff;
+  font-size:.92rem
+}
+.derivation-mini-arrow{
+  font-weight:900;
+  color:var(--muted);
+  line-height:1;
+  padding:3px
+}
+.derivation-mini-result{
+  background:#eef4ff;
+  font-weight:900;
+  font-size:1rem
+}
+.derivation-mini.parallel .derivation-mini-result{
+  background:#f2edff
+}
+.derivation-mini-note{
+  margin-top:6px;
+  font-size:.75rem;
+  color:var(--muted)
+}
+
+@media(max-width:640px){
+  .derivation-compare{
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:2px
+  }
+  .derivation-mini{
+    padding:6px 5px;
+    border-radius:10px
+  }
+  .derivation-mini-title{
+    font-size:.68rem;
+    margin-bottom:3px
+  }
+  .derivation-mini-basis,
+  .derivation-mini-step,
+  .derivation-mini-result{
+    padding:4px 3px;
+    font-size:.64rem;
+    line-height:1.2
+  }
+  .derivation-mini-step{margin-top:3px}
+  .derivation-mini-arrow{padding:1px;font-size:.72rem}
+  .derivation-mini-note{
+    margin-top:3px;
+    font-size:.59rem
+  }
+}
