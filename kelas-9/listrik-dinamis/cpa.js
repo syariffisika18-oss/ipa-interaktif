@@ -280,120 +280,140 @@ function showConceptStage(){ /* V8 menggunakan slide, bukan penumpukan tahap. */
 
 const quizData = [
   {
+    level:'easy',
     q:'Pada rangkaian seri, mengapa arus pada setiap lampu sama?',
     a:['Karena tegangannya selalu sama','Karena hanya ada satu jalur arus','Karena semua lampu pasti identik','Karena hambatan total nol'],
     c:1,
     f:'Pada rangkaian seri tidak ada percabangan, sehingga arus yang sama melewati setiap komponen.'
   },
   {
+    level:'easy',
     q:'Dua lampu identik dipasang paralel. Bagaimana tegangan pada masing-masing lampu?',
     a:['Setengah tegangan sumber','Sama dengan tegangan sumber','Dua kali tegangan sumber','Selalu nol'],
     c:1,
     f:'Setiap cabang paralel terhubung pada dua node yang sama, sehingga beda potensial tiap cabang sama dengan sumber.'
   },
   {
+    level:'easy',
     q:'Jika satu lampu pada rangkaian seri dilepas, apa yang terjadi?',
     a:['Lampu lain makin terang','Lampu lain tetap menyala','Semua lampu padam','Arus total bertambah'],
     c:2,
     f:'Melepas satu lampu memutus satu-satunya jalur arus pada rangkaian seri.'
   },
   {
+    level:'easy',
     q:'Jika satu lampu pada rangkaian paralel dilepas, apa yang terjadi pada lampu di cabang lain?',
     a:['Tetap dapat menyala','Semua ikut padam','Tegangan sumber menjadi nol','Semua menjadi seri'],
     c:0,
     f:'Cabang lain masih mempunyai lintasan tertutup sendiri menuju sumber.'
   },
   {
+    level:'hard',
     q:'Tiga lampu identik dipasang seri. Dibanding satu lampu pada sumber yang sama, setiap lampu cenderung...',
     a:['Lebih terang','Lebih redup','Sama terang','Tidak dapat diprediksi'],
     c:1,
     f:'Untuk lampu identik pada sumber yang sama, penambahan lampu seri memperbesar hambatan total dan memperkecil arus. Tegangan sumber juga terbagi pada lebih banyak lampu, sehingga indikator terang tiap lampu menurun.'
   },
   {
+    level:'easy',
     q:'Tiga lampu identik dipasang paralel pada sumber ideal. Tegangan pada tiap lampu adalah...',
     a:['V/3','3V','V','0'],
     c:2,
     f:'Semua cabang paralel berada pada dua node yang sama, sehingga tiap lampu memperoleh tegangan sumber V.'
   },
   {
+    level:'medium',
     q:'Pada titik percabangan rangkaian paralel berlaku hubungan...',
     a:['I = I₁ = I₂','I = I₁ + I₂','V = V₁ + V₂','R = R₁ + R₂'],
     c:1,
     f:'Arus total terbagi ke cabang-cabang, sehingga jumlah arus cabang sama dengan arus total.'
   },
   {
+    level:'medium',
     q:'Pada rangkaian seri berlaku hubungan tegangan...',
     a:['V = V₁ = V₂','V = V₁ + V₂','V = 0','V = I₁ + I₂'],
     c:1,
     f:'Jumlah beda potensial pada komponen seri sama dengan beda potensial sumber.'
   },
   {
+    level:'medium',
     q:'Dua hambatan 4 Ω dan 6 Ω disusun seri. Hambatan ekuivalennya adalah...',
     a:['2 Ω','5 Ω','10 Ω','24 Ω'],
     c:2,
     f:'Untuk seri, hambatan dijumlahkan: Rₜ = 4 + 6 = 10 Ω.'
   },
   {
+    level:'medium',
     q:'Dua hambatan identik 8 Ω disusun paralel. Hambatan ekuivalennya adalah...',
     a:['16 Ω','8 Ω','4 Ω','2 Ω'],
     c:2,
     f:'Dua hambatan identik R yang paralel menghasilkan Rₜ = R/2 = 4 Ω.'
   },
   {
+    level:'medium',
     q:'Sumber 12 V dihubungkan dengan hambatan total 6 Ω. Berapa arus totalnya?',
     a:['0,5 A','2 A','6 A','72 A'],
     c:1,
     f:'Gunakan I = V/R = 12/6 = 2 A.'
   },
   {
+    level:'hard',
     q:'Dua lampu identik masing-masing 6 Ω disusun seri pada sumber 12 V. Berapa arus rangkaian?',
     a:['1 A','2 A','6 A','12 A'],
     c:0,
     f:'Rₜ = 6 + 6 = 12 Ω, sehingga I = 12/12 = 1 A.'
   },
   {
+    level:'hard',
     q:'Dua hambatan 6 Ω disusun paralel pada sumber 12 V. Berapa arus pada setiap cabang?',
     a:['1 A','2 A','4 A','6 A'],
     c:1,
     f:'Tiap cabang mendapat 12 V. Maka I cabang = 12/6 = 2 A.'
   },
   {
+    level:'hard',
     q:'Pada soal sebelumnya, dua hambatan 6 Ω paralel pada 12 V. Berapa arus totalnya?',
     a:['1 A','2 A','4 A','12 A'],
     c:2,
     f:'Masing-masing cabang 2 A, sehingga arus total = 2 + 2 = 4 A.'
   },
   {
+    level:'easy',
     q:'Manakah ciri yang paling tepat untuk mengenali rangkaian paralel dari gambar?',
     a:['Komponen selalu berdekatan','Ada beberapa jalur yang menghubungkan dua node yang sama','Semua lampu harus sama','Tidak menggunakan sakelar'],
     c:1,
     f:'Ciri struktural paralel adalah adanya beberapa cabang yang menghubungkan pasangan node yang sama.'
   },
   {
+    level:'medium',
     q:'Jika jumlah lampu identik dalam rangkaian seri ditambah, hambatan total akan...',
     a:['Berkurang','Tetap','Bertambah','Menjadi nol'],
     c:2,
     f:'Pada seri, Rₜ = R₁ + R₂ + ..., sehingga penambahan hambatan menambah hambatan total.'
   },
   {
+    level:'medium',
     q:'Jika jumlah lampu identik dalam rangkaian paralel ditambah, hambatan ekuivalen akan...',
     a:['Bertambah','Berkurang','Tetap','Selalu nol'],
     c:1,
     f:'Menambah cabang paralel menyediakan lebih banyak jalur arus sehingga hambatan ekuivalen mengecil.'
   },
   {
+    level:'hard',
     q:'Pada sumber tegangan ideal, menambah cabang paralel menyebabkan arus total sumber...',
     a:['Berkurang','Tetap selalu sama','Bertambah','Menjadi nol'],
     c:2,
     f:'Hambatan ekuivalen turun. Dengan V tetap, I = V/Rₜ sehingga arus total meningkat.'
   },
   {
+    level:'hard',
     q:'Dua lampu identik dihubungkan ke sumber tegangan ideal yang sama. Susunan mana yang memiliki arus total sumber lebih besar?',
     a:['Seri','Paralel','Keduanya selalu sama','Tidak dapat dibandingkan'],
     c:1,
     f:'Untuk lampu identik, hambatan ekuivalen paralel lebih kecil daripada seri. Pada tegangan sumber yang sama, I = V/Rₜ membuat arus total rangkaian paralel lebih besar.'
   },
   {
+    level:'easy',
     q:'Pernyataan yang paling tepat merangkum perbedaan seri dan paralel adalah...',
     a:['Seri: V sama; paralel: I sama','Seri: satu jalur; paralel: beberapa cabang','Seri selalu lebih terang; paralel selalu redup','Keduanya memiliki hambatan total yang sama'],
     c:1,
@@ -401,17 +421,35 @@ const quizData = [
   }
 ];
 
-let answered = Array(quizData.length).fill(false);
+function shuffleArray(arr){
+  const out=[...arr];
+  for(let i=out.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [out[i],out[j]]=[out[j],out[i]];
+  }
+  return out;
+}
+
+function buildQuizOrder(){
+  const easy=shuffleArray(quizData.filter(q=>q.level==='easy')).slice(0,6);
+  const medium=shuffleArray(quizData.filter(q=>q.level==='medium')).slice(0,8);
+  const hard=shuffleArray(quizData.filter(q=>q.level==='hard')).slice(0,6);
+  return [...easy,...medium,...hard];
+}
+
+let quizOrder=buildQuizOrder();
+
+let answered = Array(quizOrder.length).fill(false);
 let score=0;
 
 let quizSlide=0;
 
 function renderQuiz(){
-  const q=quizData[quizSlide];
+  const q=quizOrder[quizSlide];
   const box=$('#quizBox');
   box.innerHTML=`
     <div class="quiz-single">
-      <div class="quiz-index">Soal ${quizSlide+1} dari ${quizData.length}</div>
+      <div class="quiz-index">Soal ${quizSlide+1} dari ${quizOrder.length}</div>
       <div class="question" data-q="${quizSlide}">
         <b>${q.q}</b>
         ${q.a.map((a,j)=>`<button class="option" data-i="${quizSlide}" data-j="${j}">${a}</button>`).join('')}
@@ -419,20 +457,20 @@ function renderQuiz(){
       </div>
     </div>`;
   $('#score').textContent=score;
-  $('#quizCount').textContent=`${quizSlide+1}/${quizData.length}`;
+  $('#quizCount').textContent=`${quizSlide+1}/${quizOrder.length}`;
 
   const nav=document.querySelector('[data-nav-for="quiz"]');
   if(nav){
     nav.querySelector('.stage-prev').disabled=quizSlide===0;
-    nav.querySelector('.stage-next').disabled=quizSlide===quizData.length-1;
-    renderDots(nav,quizData.length,quizSlide);
+    nav.querySelector('.stage-next').disabled=quizSlide===quizOrder.length-1;
+    renderDots(nav,quizOrder.length,quizSlide);
   }
 
   $$('.option').forEach(btn=>btn.addEventListener('click',()=>{
     const i=+btn.dataset.i, j=+btn.dataset.j;
     if(answered[i]) return;
     answered[i]=true;
-    const qq=quizData[i];
+    const qq=quizOrder[i];
     const parent=btn.closest('.question');
     parent.querySelectorAll('.option').forEach((b,k)=>{
       if(k===qq.c) b.classList.add('correct');
@@ -446,7 +484,7 @@ function renderQuiz(){
 
   if(answered[quizSlide]){
     const parent=box.querySelector('.question');
-    const qq=quizData[quizSlide];
+    const qq=quizOrder[quizSlide];
     parent.querySelectorAll('.option').forEach((b,k)=>{
       if(k===qq.c) b.classList.add('correct');
       b.disabled=true;
@@ -528,7 +566,7 @@ $$('.stage-nav').forEach(nav=>{
   });
   nav.querySelector('.stage-next').addEventListener('click',()=>{
     if(group==='quiz'){
-      quizSlide=Math.min(quizData.length-1,quizSlide+1); renderQuiz(); window.scrollTo({top:0,behavior:'smooth'});
+      quizSlide=Math.min(quizOrder.length-1,quizSlide+1); renderQuiz(); window.scrollTo({top:0,behavior:'smooth'});
     }else{
       showStage(group,(stageIndex[group]||0)+1);
     }
@@ -550,8 +588,8 @@ $('#resetBtn').onclick=()=>{
 
 $('#compareBtn').onclick=()=>{stageIndex.explain=0;window.setLearningStage?.(3);setTimeout(()=>showStage('explain',0),0)};
 $('#goElaborateBtn').onclick=()=>{stageIndex.elaborate=0;window.setLearningStage?.(4);setTimeout(()=>showStage('elaborate',0),0)};
-$('#goEvaluateBtn').onclick=()=>{quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
-$('#resetQuiz').onclick=()=>{answered=Array(quizData.length).fill(false);score=0;quizSlide=0;renderQuiz()};
+$('#goEvaluateBtn').onclick=()=>{quizOrder=buildQuizOrder();answered=Array(quizOrder.length).fill(false);score=0;quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
+$('#resetQuiz').onclick=()=>{quizOrder=buildQuizOrder();answered=Array(quizOrder.length).fill(false);score=0;quizSlide=0;renderQuiz()};
 
 
 function openZoom(targetId,title){
