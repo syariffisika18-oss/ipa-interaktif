@@ -1,21 +1,49 @@
 # IPA Interaktif
 
-Portal media pembelajaran IPA interaktif SMP.
+Portal media pembelajaran IPA interaktif SMP kelas VII, VIII, dan IX.
 
 ## Status
 
-Versi awal **0.1** sedang dikembangkan.
+Fondasi **Template Universal v0.2** sudah diterapkan.
 
-## Struktur awal
+## Kerangka universal
+
+1. Orientasi
+2. Engage
+3. Explore
+4. Explain
+5. Elaborate
+6. Evaluate
+7. Reflect
+
+Template menyediakan dua mode:
+
+- **Belajar Mandiri**
+- **Bersama Guru**
+
+Strategi tambahan tetap fleksibel dan dipilih sesuai karakter materi, misalnya POE, CPA, Worked Example, Guided Inquiry, PBL, Model-Based Learning, Concept Mapping, dan Data Investigation.
+
+## Struktur repository
 
 - `index.html` — beranda portal
-- `assets/css/style.css` — tampilan utama
-- `assets/js/app.js` — interaksi dasar
-- `kelas-9/listrik-dinamis/` — modul pilot
+- `assets/` — aset portal
+- `template-universal/` — template dasar semua modul
+- `kelas-9/listrik-dinamis/` — modul pilot yang akan diadaptasi dari template universal
 
-## Rencana pengembangan
+## Fondasi pedagogis
 
-1. Aktifkan GitHub Pages.
-2. Uji beranda pada HP dan desktop.
-3. Masukkan modul interaktif Listrik Dinamis.
-4. Tambahkan materi kelas VII, VIII, dan IX secara bertahap.
+- 5E + Orientasi dan Refleksi
+- Cognitive Theory of Multimedia Learning
+- Cognitive Load Theory
+- Universal Design for Learning
+- Self-Regulated Learning
+- ICAP
+- Retrieval practice dan feedback formatif
+
+## Aturan pengembangan modul
+
+1. Mulai dari `template-universal/`.
+2. Pertahankan alur universal, tetapi sesuaikan aktivitas dengan tujuan pembelajaran.
+3. Jangan memaksakan satu pendekatan tambahan pada semua materi.
+4. Utamakan tampilan ringkas, responsif, dan tidak bergantung pada scroll panjang.
+5. Uji setiap modul pada HP dan desktop.
