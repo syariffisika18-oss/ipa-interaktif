@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2020"></head>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2048"></head>
 <body data-learning-mode="mandiri">
 <header class="module-topbar"><div class="module-shell module-topbar-row"><a class="portal-link" href="../../">← Portal IPA</a><div class="module-title-mini"><span>IPA Interaktif • Kelas IX</span><strong>Listrik Dinamis</strong></div><button id="resetLearning" class="reset-learning" type="button">Reset progres</button></div></header>
 <main class="module-shell module-main">
@@ -119,9 +119,9 @@
 <section class="u-stage-panel"><div class="u-panel-card">
   <div class="u-stage-head">
     <div><p class="u-stage-kicker">Tahap 4</p><h2>Explain</h2></div>
-    <span class="u-principle">Pictorial → Abstract • Konsep & Persamaan</span>
+    <span class="u-principle">Bandingkan • Turunkan • Terapkan</span>
   </div>
-  <div class="cpa-banner"><b>Explain:</b> mulai dari struktur jalur yang terlihat, lalu formalkan pola tersebut menjadi hubungan arus, tegangan, dan hambatan ekuivalen.</div>
+  <div class="cpa-banner"><b>Explain:</b> bandingkan struktur seri dan paralel secara langsung, lalu turunkan hubungan matematisnya.</div>
   <section id="explainFlow" class="cpa-section">
     <div class="card stage-card">
       <div class="stage-topline">
@@ -129,147 +129,98 @@
           <div class="stage-kicker">PICTORIAL → ABSTRACT</div>
           <h2>Dari jalur ke persamaan</h2>
         </div>
-        <span class="stage-count" id="explainCount">1/7</span>
+        <span class="stage-count" id="explainCount">1/4</span>
       </div>
 
-      <div class="stage-slides" data-stage-group="explain">
-
-          <!-- P1 SERI -->
+      
+        <div class="stage-slides" data-stage-group="explain">
+          <!-- E1: PERBANDINGAN VISUAL -->
           <div class="stage-slide active" data-slide="0">
-            <div class="slide-title">1. Seri: hanya satu jalur</div>
-            <div class="mini-circuit stage-mini">
-              <svg id="picSeries" viewBox="0 0 520 250" role="img" aria-label="Rangkaian seri tiga lampu">
-                <path d="M65 70 H455 V205 H65" fill="none" stroke="#333a4d" stroke-width="5"/>
-                <line x1="65" y1="70" x2="65" y2="128" stroke="#333a4d" stroke-width="5"/>
-                <line x1="65" y1="142" x2="65" y2="205" stroke="#333a4d" stroke-width="5"/>
-                <line x1="43" y1="132" x2="87" y2="132" stroke="#333a4d" stroke-width="5"/>
-                <line x1="51" y1="143" x2="79" y2="143" stroke="#333a4d" stroke-width="5"/>
-                <g font-size="16" text-anchor="middle">
-                  <rect x="120" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="156" y="76">L1</text>
-                  <rect x="225" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="261" y="76">L2</text>
-                  <rect x="330" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="366" y="76">L3</text>
-                </g>
-                <path d="M92 70 H430" stroke="#3559e0" stroke-width="4" stroke-dasharray="10 10"><animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/></path>
-                <text x="260" y="35" text-anchor="middle" fill="#3559e0" font-weight="800">I → satu jalur</text>
-              </svg>
+            <div class="slide-title">1. Bandingkan struktur seri dan paralel</div>
+
+            <div class="explain-compare-visuals">
+              <article class="explain-mini-card series-card">
+                <div class="explain-mini-title">SERI</div>
+                <svg class="explain-mini-svg" viewBox="0 0 320 150" role="img" aria-label="Rangkaian seri dua lampu">
+                  <path d="M34 34 H286 V116 H34" fill="none" stroke="#333a4d" stroke-width="5"/>
+                  <line x1="34" y1="34" x2="34" y2="67" stroke="#333a4d" stroke-width="5"/>
+                  <line x1="34" y1="83" x2="34" y2="116" stroke="#333a4d" stroke-width="5"/>
+                  <line x1="17" y1="71" x2="51" y2="71" stroke="#333a4d" stroke-width="5"/>
+                  <line x1="23" y1="80" x2="45" y2="80" stroke="#333a4d" stroke-width="5"/>
+
+                  <rect x="84" y="18" width="62" height="32" rx="7" fill="#fff" stroke="#333a4d" stroke-width="3"/>
+                  <rect x="188" y="18" width="62" height="32" rx="7" fill="#fff" stroke="#333a4d" stroke-width="3"/>
+                  <text x="115" y="40" text-anchor="middle" font-size="15">L1</text>
+                  <text x="219" y="40" text-anchor="middle" font-size="15">L2</text>
+
+                  <path d="M58 34 H268" fill="none" stroke="#3559e0" stroke-width="3.5" stroke-dasharray="9 10">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-38" dur="1.2s" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+                <div class="explain-mini-summary">
+                  <b>1 jalur</b><span>I sama</span><span>V terbagi</span>
+                </div>
+              </article>
+
+              <article class="explain-mini-card parallel-card">
+                <div class="explain-mini-title">PARALEL</div>
+                <svg class="explain-mini-svg" viewBox="0 0 320 150" role="img" aria-label="Rangkaian paralel dua lampu">
+                  <line x1="55" y1="25" x2="55" y2="118" stroke="#333a4d" stroke-width="5"/>
+                  <line x1="265" y1="25" x2="265" y2="118" stroke="#333a4d" stroke-width="5"/>
+
+                  <line x1="55" y1="45" x2="115" y2="45" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="205" y1="45" x2="265" y2="45" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="55" y1="83" x2="115" y2="83" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="205" y1="83" x2="265" y2="83" stroke="#333a4d" stroke-width="4"/>
+
+                  <rect x="115" y="29" width="90" height="32" rx="7" fill="#fff" stroke="#333a4d" stroke-width="3"/>
+                  <rect x="115" y="67" width="90" height="32" rx="7" fill="#fff" stroke="#333a4d" stroke-width="3"/>
+                  <text x="160" y="51" text-anchor="middle" font-size="15">L1</text>
+                  <text x="160" y="89" text-anchor="middle" font-size="15">L2</text>
+
+                  <line x1="55" y1="118" x2="153" y2="118" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="167" y1="118" x2="265" y2="118" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="153" y1="99" x2="153" y2="137" stroke="#333a4d" stroke-width="4"/>
+                  <line x1="167" y1="106" x2="167" y2="130" stroke="#333a4d" stroke-width="4"/>
+
+                  <path d="M55 45 H265" fill="none" stroke="#7b4ce2" stroke-width="3" stroke-dasharray="8 10">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="1.2s" repeatCount="indefinite"/>
+                  </path>
+                  <path d="M55 83 H265" fill="none" stroke="#7b4ce2" stroke-width="3" stroke-dasharray="8 10">
+                    <animate attributeName="stroke-dashoffset" from="0" to="-36" dur="1.2s" repeatCount="indefinite"/>
+                  </path>
+                </svg>
+                <div class="explain-mini-summary">
+                  <b>Beberapa jalur</b><span>I terbagi</span><span>V sama</span>
+                </div>
+              </article>
             </div>
-            <button class="zoom-btn compact-zoom" type="button" data-zoom-target="picSeries" data-zoom-title="Pictorial — Seri">⛶ Perbesar gambar</button>
-            <div class="concept-strip">
-              <span>Tanpa percabangan</span>
-              <b>→</b>
-              <span>I sama</span>
-              <b>→</b>
-              <span>V terbagi</span>
+
+            <div class="compare-compact">
+              <div class="compare-compact-row head">
+                <b>Besaran</b><span>SERI</span><span>PARALEL</span>
+              </div>
+              <div class="compare-compact-row">
+                <b>Jalur arus</b><span>1 jalur</span><span>beberapa jalur</span>
+              </div>
+              <div class="compare-compact-row">
+                <b>Arus</b><span>I = I₁ = I₂</span><span>I = I₁ + I₂</span>
+              </div>
+              <div class="compare-compact-row">
+                <b>Tegangan</b><span>V = V₁ + V₂</span><span>V = V₁ = V₂</span>
+              </div>
+              <div class="compare-compact-row">
+                <b>1 lampu dilepas</b><span>semua padam</span><span>cabang lain hidup</span>
+              </div>
             </div>
-            <div class="note stage-note">Jika satu lampu dilepas, <b>satu-satunya jalur terputus</b> sehingga seluruh rangkaian padam.</div>
+
+            <div class="note stage-note compact-explain-note">
+              Struktur jalur inilah yang menjadi dasar hubungan matematis seri dan paralel.
+            </div>
           </div>
 
-          <!-- P2 PARALEL -->
+          <!-- E2: TURUNAN SERI -->
           <div class="stage-slide" data-slide="1">
-            <div class="slide-title">2. Paralel: beberapa cabang</div>
-            <div class="mini-circuit stage-mini">
-              <svg id="picParallel" viewBox="0 0 520 300" role="img" aria-label="Rangkaian paralel tiga lampu">
-                <line x1="105" y1="45" x2="105" y2="245" stroke="#333a4d" stroke-width="6"/>
-                <line x1="415" y1="45" x2="415" y2="245" stroke="#333a4d" stroke-width="6"/>
-                <g stroke="#333a4d" stroke-width="4" fill="none">
-                  <line x1="105" y1="65" x2="205" y2="65"/><line x1="315" y1="65" x2="415" y2="65"/>
-                  <line x1="105" y1="125" x2="205" y2="125"/><line x1="315" y1="125" x2="415" y2="125"/>
-                  <line x1="105" y1="185" x2="205" y2="185"/><line x1="315" y1="185" x2="415" y2="185"/>
-                </g>
-                <g font-size="16" text-anchor="middle">
-                  <rect x="205" y="45" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="71">L1</text>
-                  <rect x="205" y="105" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="131">L2</text>
-                  <rect x="205" y="165" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="191">L3</text>
-                </g>
-                <text x="105" y="28" text-anchor="middle" fill="#667085" font-weight="800">Node A</text>
-                <text x="415" y="28" text-anchor="middle" fill="#667085" font-weight="800">Node B</text>
-                <text x="150" y="57" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₁ →</text>
-                <text x="150" y="117" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₂ →</text>
-                <text x="150" y="177" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₃ →</text>
-
-                <!-- sumber pada cabang bawah -->
-                <line x1="105" y1="245" x2="253" y2="245" stroke="#333a4d" stroke-width="4"/>
-                <line x1="267" y1="245" x2="415" y2="245" stroke="#333a4d" stroke-width="4"/>
-                <line x1="253" y1="220" x2="253" y2="270" stroke="#333a4d" stroke-width="4"/>
-                <line x1="267" y1="232" x2="267" y2="258" stroke="#333a4d" stroke-width="4"/>
-
-                <!-- animasi arus total: keluar dari pelat positif menuju Node A -->
-                <path d="M253 245 H105 V45" fill="none" stroke="#3559e0" stroke-width="3.5"
-                      stroke-dasharray="9 11" opacity=".82">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
-                </path>
-
-                <!-- animasi arus cabang: I total terbagi menjadi I1, I2, I3 -->
-                <path d="M105 65 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
-                      stroke-dasharray="9 11" opacity=".85">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
-                </path>
-                <path d="M105 125 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
-                      stroke-dasharray="9 11" opacity=".85">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
-                </path>
-                <path d="M105 185 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
-                      stroke-dasharray="9 11" opacity=".85">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
-                </path>
-
-                <!-- arus cabang bergabung kembali di Node B lalu kembali ke sumber -->
-                <path d="M415 45 V245 H267" fill="none" stroke="#3559e0" stroke-width="3.5"
-                      stroke-dasharray="9 11" opacity=".82">
-                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
-                </path>
-
-                <text x="165" y="238" text-anchor="middle" fill="#3559e0" font-size="13" font-weight="800">I total</text>
-                <text x="355" y="238" text-anchor="middle" fill="#3559e0" font-size="13" font-weight="800">I total</text>
-              </svg>
-            </div>
-            <button class="zoom-btn compact-zoom" type="button" data-zoom-target="picParallel" data-zoom-title="Pictorial — Paralel">⛶ Perbesar gambar</button>
-            <div class="concept-strip">
-              <span>Ada cabang</span>
-              <b>→</b>
-              <span>I terbagi</span>
-              <b>→</b>
-              <span>V sama</span>
-            </div>
-            <div class="note stage-note">Setiap cabang menghubungkan <b>Node A dan Node B yang sama</b>. Memutus satu cabang tidak memutus cabang lain.</div>
-          </div>
-
-          <!-- P3 BANDINGKAN -->
-          <div class="stage-slide" data-slide="2">
-            <div class="slide-title">3. Bandingkan keduanya</div>
-            <div class="compare-cards">
-              <div class="compare-line"><b>Jalur arus</b><span>1 jalur</span><span>beberapa jalur</span></div>
-              <div class="compare-line"><b>Arus</b><span>I = I₁ = I₂</span><span>I = I₁ + I₂</span></div>
-              <div class="compare-line"><b>Tegangan</b><span>V = V₁ + V₂</span><span>V = V₁ = V₂</span></div>
-              <div class="compare-line"><b>Lampu dilepas</b><span>semua padam</span><span>cabang lain hidup</span></div>
-            </div>
-            <div class="note stage-note">
-              Pola jalur di atas akan dinyatakan sebagai <b>hubungan matematis</b> pada langkah berikutnya.
-            </div>
-          </div>
-
-          <!-- A1 IDE -->
-          <div class="stage-slide" data-slide="3">
-            <div class="slide-title">1. Ide inti</div>
-            <div class="abstract-pair">
-              <div class="abstract-card series">
-                <b>SERI</b>
-                <div>Satu jalur</div>
-                <div class="formula-big">I = I₁ = I₂ = …</div>
-                <div class="formula-big">V = V₁ + V₂ + …</div>
-              </div>
-              <div class="abstract-card parallel">
-                <b>PARALEL</b>
-                <div>Beberapa cabang</div>
-                <div class="formula-big">I = I₁ + I₂ + …</div>
-                <div class="formula-big">V = V₁ = V₂ = …</div>
-              </div>
-            </div>
-            <div class="note stage-note">Perbedaan rumus berasal dari <b>struktur jalurnya</b>, bukan untuk dihafalkan sebagai aturan terpisah.</div>
-          </div>
-
-          <!-- A2 SERI -->
-          <div class="stage-slide" data-slide="4">
             <div class="slide-title">2. Turunkan hambatan seri</div>
             <div class="derivation-card series">
               <div class="formula-big">V = V₁ + V₂ + V₃</div>
@@ -280,11 +231,11 @@
               <div class="down-arrow">↓</div>
               <div class="result-formula">Rₜ = R₁ + R₂ + R₃</div>
             </div>
-            <div class="micro-note">Dasar yang dipakai hanya <b>V = IR</b> dan fakta bahwa arus seri sama.</div>
+            <div class="micro-note">Dasar: <b>V = IR</b> dan arus pada rangkaian seri sama.</div>
           </div>
 
-          <!-- A3 PARALEL -->
-          <div class="stage-slide" data-slide="5">
+          <!-- E3: TURUNAN PARALEL -->
+          <div class="stage-slide" data-slide="2">
             <div class="slide-title">3. Turunkan hambatan paralel</div>
             <div class="derivation-card parallel">
               <div class="formula-big">I = I₁ + I₂ + I₃</div>
@@ -295,16 +246,16 @@
               <div class="down-arrow">↓</div>
               <div class="result-formula">1/Rₜ = 1/R₁ + 1/R₂ + 1/R₃</div>
             </div>
-            <div class="micro-note">Dasar yang dipakai hanya <b>I = V/R</b> dan fakta bahwa tegangan setiap cabang sama.</div>
+            <div class="micro-note">Dasar: <b>I = V/R</b> dan tegangan pada setiap cabang paralel sama.</div>
           </div>
 
-          <!-- A4 ANGKA -->
-          <div class="stage-slide" data-slide="6">
+          <!-- E4: PERBANDINGAN ANGKA -->
+          <div class="stage-slide" data-slide="3">
             <div class="slide-title">4. Bandingkan dengan angka yang sama</div>
             <div id="abstractComparison"></div>
             <button id="goElaborateBtn" class="btn full">Lanjut ke Elaborate →</button>
           </div>
-      </div>
+        </div>
 
       <div class="stage-nav" data-nav-for="explain">
         <button class="stage-prev" type="button">← Sebelumnya</button>
