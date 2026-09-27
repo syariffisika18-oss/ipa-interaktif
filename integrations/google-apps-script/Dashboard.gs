@@ -1,5 +1,6 @@
 const DASHBOARD_SHEET_NAME = "DASHBOARD";
 const LATEST_SHEET_NAME = "RESPON_TERBARU";
+const DASHBOARD_DATA_SHEET_NAME = "_DASHBOARD_DATA";
 
 const DASHBOARD_DIFFICULTY_ORDER = [
   "Konsep",
@@ -79,6 +80,7 @@ function refreshDashboard() {
   );
 
   writeDashboardSummary_(dashboard, filtered, headerMap);
+  writeDashboardCharts_(ss, dashboard, filtered, headerMap);
   dashboard.getRange("G2").setValue(
     "Diperbarui: " +
     Utilities.formatDate(
@@ -193,6 +195,7 @@ function writeEmptyDashboard_(sheet) {
   setDropdown_(sheet.getRange("H3"), ["Semua"], "Semua");
   setDropdown_(sheet.getRange("B4"), ["Semua"], "Semua");
 
+  clearDashboardCharts_(sheet);
   sheet.getRange("G2").setValue("Belum ada respons.");
 }
 
@@ -430,6 +433,116 @@ function writeDashboardSummary_(dashboard, rows, map) {
       "Tidak ada respons yang memerlukan perhatian pada filter ini."
     );
   }
+}
+
+function writeDashboardCharts_(ss, dashboard, rows, map) {
+  const confidenceCounts = {
+    "Perlu bantuan": 0,
+    "Cukup paham": 0,
+    "Sudah yakin": 0
+  };
+
+  const difficultyCounts = new Map();
+
+  rows.forEach(row => {
+    const confidence = value_(row, map, "Keyakinan");
+    if (Object.prototype.hasOwnProperty.call(confidenceCounts, confidence)) {
+      confidenceCounts[confidence] += 1;
+    }
+
+    splitDifficulties_(
+      value_(row, map, "Kategori Kesulitan")
+    ).forEach(category => {
+      difficultyCounts.set(
+        category,
+        (difficultyCounts.get(category) || 0) + 1
+      );
+    });
+  });
+
+  let dataSheet = ss.getSheetByName(DASHBOARD_DATA_SHEET_NAME);
+  if (!dataSheet) dataSheet = ss.insertSheet(DASHBOARD_DATA_SHEET_NAME);
+
+  dataSheet.clearContents();
+
+  const confidenceData = [
+    ["Keyakinan", "Jumlah"],
+    ["Perlu bantuan", confidenceCounts["Perlu bantuan"]],
+    ["Cukup paham", confidenceCounts["Cukup paham"]],
+    ["Sudah yakin", confidenceCounts["Sudah yakin"]]
+  ];
+
+  dataSheet
+    .getRange(1, 1, confidenceData.length, 2)
+    .setValues(confidenceData);
+
+  let difficultyData = Array.from(difficultyCounts.entries())
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "id"));
+
+  if (!difficultyData.length) {
+    difficultyData = [["Belum ada data", 0]];
+  }
+
+  const difficultyTable = [["Kategori Kesulitan", "Jumlah"]]
+    .concat(difficultyData);
+
+  dataSheet
+    .getRange(1, 4, difficultyTable.length, 2)
+    .setValues(difficultyTable);
+
+  clearDashboardCharts_(dashboard);
+
+  const confidenceChart = dashboard.newChart()
+    .setChartType(Charts.ChartType.COLUMN)
+    .addRange(dataSheet.getRange(1, 1, confidenceData.length, 2))
+    .setPosition(2, 10, 0, 0)
+    .setOption("title", "Distribusi Keyakinan")
+    .setOption("legend", { position: "none" })
+    .setOption("width", 480)
+    .setOption("height", 250)
+    .setOption("hAxis", { title: "" })
+    .setOption("vAxis", {
+      title: "Jumlah siswa",
+      minValue: 0,
+      format: "0"
+    })
+    .setOption("backgroundColor", "transparent")
+    .build();
+
+  dashboard.insertChart(confidenceChart);
+
+  const difficultyChart = dashboard.newChart()
+    .setChartType(Charts.ChartType.BAR)
+    .addRange(dataSheet.getRange(1, 4, difficultyTable.length, 2))
+    .setPosition(17, 10, 0, 0)
+    .setOption("title", "Kategori Kesulitan")
+    .setOption("legend", { position: "none" })
+    .setOption("width", 480)
+    .setOption("height", 320)
+    .setOption("hAxis", {
+      title: "Jumlah siswa",
+      minValue: 0,
+      format: "0"
+    })
+    .setOption("vAxis", { title: "" })
+    .setOption("backgroundColor", "transparent")
+    .build();
+
+  dashboard.insertChart(difficultyChart);
+
+  try {
+    if (!dataSheet.isSheetHidden()) {
+      dataSheet.hideSheet();
+    }
+  } catch (error) {
+    console.error("Tidak dapat menyembunyikan helper sheet:", error);
+  }
+}
+
+function clearDashboardCharts_(dashboard) {
+  dashboard.getCharts().forEach(chart => {
+    dashboard.removeChart(chart);
+  });
 }
 
 function value_(row, map, header) {
