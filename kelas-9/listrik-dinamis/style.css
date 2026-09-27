@@ -489,3 +489,110 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
 .diagnostic-feedback.correct{
   color:var(--u-dark)
 }
+
+
+/* =========================
+   ELABORATE — TRANSFER & CHALLENGE
+   ========================= */
+.elab-scenario{
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:13px;
+  background:linear-gradient(135deg,#f8fbff,#f7f4ff);
+  line-height:1.55;
+  margin-bottom:12px
+}
+.elab-scenario p{margin:7px 0 0;color:var(--muted)}
+.elab-question{font-weight:900;margin:10px 0 8px}
+.elab-options{display:flex;flex-wrap:wrap;gap:8px}
+.elab-options button{
+  border:1px solid var(--line);
+  background:#fff;
+  border-radius:11px;
+  padding:9px 12px;
+  min-height:42px;
+  font-weight:800;
+  cursor:pointer
+}
+.elab-options button.correct{
+  background:#e4f5ef;
+  border-color:#2d8b78;
+  color:#176353
+}
+.elab-options button.wrong{
+  background:#fff3c4;
+  border-color:#d6a400;
+  color:#624a00
+}
+.elab-feedback{
+  margin-top:8px;
+  padding:9px 11px;
+  border-radius:10px;
+  background:#f4f6f9;
+  color:var(--muted);
+  font-size:.88rem;
+  line-height:1.45
+}
+.elab-feedback.correct{background:#e8f6f1;color:#176353}
+.elab-feedback.wrong{background:#fff6d8;color:#745600}
+.elab-mini-question{
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:10px 12px;
+  margin:8px 0;
+  background:#fff
+}
+.elab-mini-question>b{display:block;margin-bottom:8px}
+.worked-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px
+}
+.worked-example,.fade-task{
+  border:2px solid var(--line);
+  border-radius:15px;
+  padding:14px;
+  background:#fff
+}
+.worked-example{border-color:#9db0ff;background:#f5f7ff}
+.fade-task{border-color:#cbb7ff;background:#faf7ff}
+.fade-task.correct{border-color:#2d8b78;background:#f0faf6}
+.fade-task.wrong{border-color:#d6a400;background:#fffaf0}
+.worked-label{
+  display:block;
+  font-size:.75rem;
+  font-weight:900;
+  letter-spacing:.07em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:7px
+}
+.worked-step{
+  margin-top:9px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#fff;
+  font-family:"Cambria Math","Times New Roman",serif
+}
+.fade-task label{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin:10px 0;
+  font-weight:800
+}
+.fade-task input{
+  width:100%;
+  min-width:0;
+  min-height:40px;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff
+}
+@media(max-width:640px){
+  .worked-grid{grid-template-columns:1fr}
+  .elab-options{display:grid;grid-template-columns:1fr}
+  .elab-options button{width:100%}
+  .elab-mini-question{padding:9px}
+}
