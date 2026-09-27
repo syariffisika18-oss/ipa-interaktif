@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2235"></head>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2255"></head>
 <body data-learning-mode="mandiri">
 <header class="module-topbar"><div class="module-shell module-topbar-row"><a class="portal-link" href="../../">← Portal IPA</a><div class="module-title-mini"><span>IPA Interaktif • Kelas IX</span><strong>Listrik Dinamis</strong></div><button id="resetLearning" class="reset-learning" type="button">Reset progres</button></div></header>
 <main class="module-shell module-main">
@@ -19,6 +19,45 @@
 
 <section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 3</p><h2>Explore</h2></div><span class="u-principle">Concrete • Manipulasi • Pengamatan</span></div><div class="cpa-banner"><b>C — Concrete:</b> ubah susunan, jumlah lampu, tegangan, hambatan, sakelar, dan kondisi lampu. Gunakan hasilnya untuk menguji prediksi.</div>
 <div class="mode-only-teacher teacher-guide"><b>Untuk guru:</b> minta siswa memprediksi akibat perubahan sebelum menggeser kontrol. Tahan ringkasan observasi sampai beberapa siswa menjelaskan hasil pengamatannya. <button type="button" class="teacher-reveal-btn" data-reveal-target="observation">Buka ringkasan observasi</button></div>
+
+<div id="predictionCheckCard" class="mode-only-self prediction-check-card">
+  <div class="prediction-check-head">
+    <div><span class="prediction-check-kicker">PREDICT → OBSERVE</span><b>Periksa prediksimu dari Engage</b></div>
+    <span class="prediction-status" id="predictionStatus">Belum diuji</span>
+  </div>
+  <div class="prediction-recall"><span>Prediksi saya:</span><strong id="predictionRecall">Belum ada prediksi.</strong></div>
+  <p id="predictionInstruction">Pilih prediksi pada Engage terlebih dahulu, lalu kembali ke Explore.</p>
+  <button id="startPredictionTest" type="button" class="btn full" disabled>Uji prediksi saya</button>
+
+  <div id="predictionTestSteps" class="prediction-test-steps" hidden>
+    <div><b>1.</b> Simulator sudah disiapkan sebagai <b>paralel, 3 lampu, sakelar ON</b>.</div>
+    <div><b>2.</b> Tekan <b>Lepaskan Lampu 1</b> pada simulator.</div>
+    <div><b>3.</b> Amati apa yang terjadi pada Lampu 2 dan Lampu 3.</div>
+  </div>
+
+  <div id="predictionCompare" class="prediction-compare" hidden>
+    <div class="prediction-question"><b>Hasil pengamatan dibanding prediksi awalmu...</b>
+      <div class="prediction-choice-row" data-prediction-compare-group>
+        <button type="button" data-prediction-compare="sesuai">Sesuai</button>
+        <button type="button" data-prediction-compare="sebagian">Sebagian sesuai</button>
+        <button type="button" data-prediction-compare="tidak-sesuai">Tidak sesuai</button>
+      </div>
+    </div>
+
+    <div class="prediction-question"><b>Bukti yang paling kuat dari simulasi adalah...</b>
+      <div class="prediction-evidence" data-prediction-evidence-group>
+        <button type="button" data-prediction-evidence="lain-tetap" data-correct="true">Lampu 2 dan 3 tetap menyala.</button>
+        <button type="button" data-prediction-evidence="semua-padam" data-correct="false">Semua lampu ikut padam.</button>
+        <button type="button" data-prediction-evidence="lebih-redup" data-correct="false">Lampu 2 dan 3 menjadi lebih redup.</button>
+      </div>
+    </div>
+
+    <button id="checkPredictionResult" type="button" class="btn full" disabled>Periksa hasil pengamatan</button>
+    <div id="predictionFeedback" class="prediction-feedback">Pilih perbandingan dan bukti sebelum memeriksa.</div>
+    <button id="retryPredictionCheck" type="button" class="prediction-retry" hidden>Coba periksa sekali lagi</button>
+  </div>
+</div>
+
 <section id="concrete" class="cpa-section">
       <div class="card stage-card">
         <div class="stage-topline">
@@ -494,4 +533,4 @@ function normalizePictorialTypo(){
   });
 }
 document.addEventListener("DOMContentLoaded",normalizePictorialTypo);
-</script><script src="config.js?v=20260927-2200"></script><script src="module.js?v=20260927-2235"></script><script src="cpa.js?v=20260927-2235"></script></body></html>
+</script><script src="config.js?v=20260927-2200"></script><script src="module.js?v=20260927-2255"></script><script src="cpa.js?v=20260927-2255"></script></body></html>
