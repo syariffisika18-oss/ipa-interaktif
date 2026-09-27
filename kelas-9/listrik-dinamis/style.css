@@ -613,3 +613,132 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
   font-weight:900;
   text-align:center
 }
+
+
+/* =========================
+   EXPLAIN — COMPACT DIRECT COMPARISON
+   ========================= */
+.explain-compare-visuals{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin:4px 0 8px
+}
+.explain-mini-card{
+  min-width:0;
+  border:1px solid var(--line);
+  border-radius:13px;
+  padding:7px 8px 8px;
+  background:#fff
+}
+.explain-mini-card.series-card{border-color:#aab8f7;background:#f7f9ff}
+.explain-mini-card.parallel-card{border-color:#d0bdf8;background:#fbf8ff}
+.explain-mini-title{
+  text-align:center;
+  font-weight:950;
+  font-size:.82rem;
+  letter-spacing:.06em;
+  margin-bottom:2px
+}
+.explain-mini-svg{
+  display:block;
+  width:100%;
+  height:auto;
+  max-height:122px;
+  margin:0 auto
+}
+.explain-mini-summary{
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr;
+  gap:3px;
+  align-items:center;
+  text-align:center;
+  font-size:.72rem
+}
+.explain-mini-summary>*{
+  padding:4px 3px;
+  border-radius:7px;
+  background:rgba(255,255,255,.78)
+}
+.compare-compact{
+  display:grid;
+  gap:4px;
+  margin-top:5px
+}
+.compare-compact-row{
+  display:grid;
+  grid-template-columns:1.05fr 1fr 1fr;
+  gap:5px;
+  align-items:center;
+  border:1px solid var(--line);
+  border-radius:9px;
+  padding:5px 8px;
+  background:#fff;
+  font-size:.76rem;
+  line-height:1.25
+}
+.compare-compact-row.head{
+  background:linear-gradient(90deg,#eef3ff,#f7f1ff);
+  font-weight:900
+}
+.compare-compact-row span:nth-child(2){
+  color:#3559e0;
+  font-weight:800;
+  text-align:center
+}
+.compare-compact-row span:nth-child(3){
+  color:#7b4ce2;
+  font-weight:800;
+  text-align:center
+}
+.compact-explain-note{
+  padding:7px 9px!important;
+  font-size:.78rem!important;
+  margin-top:6px!important
+}
+
+@media(max-width:640px){
+  .explain-compare-visuals{
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+    margin-top:1px
+  }
+  .explain-mini-card{
+    padding:5px 4px 6px;
+    border-radius:10px
+  }
+  .explain-mini-title{
+    font-size:.7rem;
+    margin:0
+  }
+  .explain-mini-svg{
+    max-height:82px
+  }
+  .explain-mini-summary{
+    grid-template-columns:1fr;
+    gap:2px;
+    font-size:.61rem
+  }
+  .explain-mini-summary>*{
+    padding:2px 2px
+  }
+  .compare-compact{
+    gap:3px;
+    margin-top:4px
+  }
+  .compare-compact-row{
+    grid-template-columns:.9fr 1fr 1fr;
+    gap:3px;
+    padding:4px 5px;
+    font-size:.64rem;
+    border-radius:7px
+  }
+  .compact-explain-note{
+    font-size:.68rem!important;
+    padding:5px 7px!important;
+    margin-top:4px!important
+  }
+  [data-stage-group="explain"] .slide-title{
+    margin-bottom:5px
+  }
+}
