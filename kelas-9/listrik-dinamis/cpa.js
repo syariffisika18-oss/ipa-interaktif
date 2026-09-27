@@ -624,18 +624,21 @@ function initElaborate(){
       const reasonCorrect=reasonBtn.dataset.correct==='true';
       const fullyCorrect=answerCorrect&&reasonCorrect;
 
+      runtime.answer.classList.add(answerCorrect?'correct':'wrong');
+      reasonBtn.classList.add(reasonCorrect?'correct':'wrong');
+
       if(runtime.attempts===1){
         log[key]=log[key]||{};
         log[key].firstAnswer=runtime.answer.dataset.value||runtime.answer.textContent.trim();
         log[key].firstReason=reasonBtn.dataset.value||reasonBtn.textContent.trim();
+        log[key].firstAnswerCorrect=answerCorrect;
+        log[key].firstReasonCorrect=reasonCorrect;
         log[key].firstCorrect=fullyCorrect;
         log[key].timestamp=new Date().toISOString();
         saveLog();
       }
 
       if(fullyCorrect){
-        runtime.answer.classList.add('correct');
-        reasonBtn.classList.add('correct');
         feedback.className='elab-feedback correct';
         feedback.textContent=q.dataset.final||'Jawaban dan alasanmu sudah konsisten.';
         retry.hidden=true;
@@ -643,6 +646,8 @@ function initElaborate(){
         log[key]=Object.assign(log[key]||{},{
           attempts:runtime.attempts,
           finalCorrect:true,
+          finalAnswerCorrect:true,
+          finalReasonCorrect:true,
           finalAnswer:runtime.answer.dataset.value||runtime.answer.textContent.trim(),
           finalReason:reasonBtn.dataset.value||reasonBtn.textContent.trim()
         });
@@ -652,18 +657,24 @@ function initElaborate(){
         return;
       }
 
-      runtime.answer.classList.add('wrong');
-      reasonBtn.classList.add('wrong');
+      let diagnosis='';
+      if(answerCorrect && !reasonCorrect){
+        diagnosis='Jawabanmu benar, tetapi alasannya belum tepat. ';
+      }else if(!answerCorrect && reasonCorrect){
+        diagnosis='Alasanmu mengarah ke konsep yang benar, tetapi belum konsisten dengan jawaban yang dipilih. ';
+      }else{
+        diagnosis='Jawaban dan alasanmu belum tepat. ';
+      }
 
       if(runtime.attempts<2){
         feedback.className='elab-feedback wrong';
-        feedback.textContent='Belum tepat. '+(q.dataset.clue||'Tinjau kembali hubungan konsepnya sebelum mencoba lagi.');
+        feedback.textContent=diagnosis+(q.dataset.clue||'Tinjau kembali hubungan konsepnya sebelum mencoba lagi.');
         retry.hidden=false;
         setButtonsLocked(answerGroup,true);
         setButtonsLocked(reasonGroup,true);
       }else{
         feedback.className='elab-feedback wrong';
-        feedback.textContent='Percobaan kedua belum tepat. '+(q.dataset.final||'Pelajari kembali penjelasan konsepnya.');
+        feedback.textContent=diagnosis+(q.dataset.final||'Pelajari kembali penjelasan konsepnya.');
         retry.hidden=true;
         runtime.finished=true;
 
@@ -673,6 +684,8 @@ function initElaborate(){
         log[key]=Object.assign(log[key]||{},{
           attempts:runtime.attempts,
           finalCorrect:false,
+          finalAnswerCorrect:answerCorrect,
+          finalReasonCorrect:reasonCorrect,
           finalAnswer:runtime.answer.dataset.value||runtime.answer.textContent.trim(),
           finalReason:reasonBtn.dataset.value||reasonBtn.textContent.trim()
         });
