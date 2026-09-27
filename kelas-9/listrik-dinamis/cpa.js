@@ -110,12 +110,23 @@ function drawBulb(x,y,r,brightness,label,off=false){
     </g>`;
 }
 
-function battery(x,y){
+function batteryOnVerticalWire(x,y){
+  // Dipakai pada jalur vertikal: pelat baterai harus horizontal.
   return `
-  <g>
-    <line x1="${x}" y1="${y-32}" x2="${x}" y2="${y+32}" stroke="#333a4d" stroke-width="5"/>
-    <line x1="${x+18}" y1="${y-20}" x2="${x+18}" y2="${y+20}" stroke="#333a4d" stroke-width="5"/>
-    <text x="${x+9}" y="${y+58}" text-anchor="middle" font-size="16" fill="#172033">${state.V} V</text>
+  <g aria-label="baterai">
+    <line x1="${x-25}" y1="${y-7}" x2="${x+25}" y2="${y-7}" stroke="#333a4d" stroke-width="5"/>
+    <line x1="${x-16}" y1="${y+7}" x2="${x+16}" y2="${y+7}" stroke="#333a4d" stroke-width="5"/>
+    <text x="${x+42}" y="${y+6}" text-anchor="start" font-size="16" fill="#172033">${state.V} V</text>
+  </g>`;
+}
+
+function batteryOnHorizontalWire(x,y){
+  // Dipakai pada jalur horizontal: pelat baterai harus vertikal dan rapat.
+  return `
+  <g aria-label="baterai">
+    <line x1="${x-7}" y1="${y-31}" x2="${x-7}" y2="${y+31}" stroke="#333a4d" stroke-width="5"/>
+    <line x1="${x+7}" y1="${y-19}" x2="${x+7}" y2="${y+19}" stroke="#333a4d" stroke-width="5"/>
+    <text x="${x}" y="${y+55}" text-anchor="middle" font-size="16" fill="#172033">${state.V} V</text>
   </g>`;
 }
 
@@ -127,8 +138,10 @@ function drawCircuit(){
   let s='';
 
   if(state.type==='series'){
-    s += `<path d="M120 80 H650 V280 H120 Z" fill="none" stroke="#333a4d" stroke-width="5"/>`;
-    s += battery(102,180);
+    s += `<path d="M120 80 H650 V280 H120" fill="none" stroke="#333a4d" stroke-width="5"/>
+          <line x1="120" y1="80" x2="120" y2="173" stroke="#333a4d" stroke-width="5"/>
+          <line x1="120" y1="187" x2="120" y2="280" stroke="#333a4d" stroke-width="5"/>`;
+    s += batteryOnVerticalWire(120,180);
     const xs = n===1?[380]:n===2?[300,500]:[240,380,520];
     xs.forEach((x,i)=>{
       const removed = open && i===0;
@@ -176,17 +189,16 @@ function drawCircuit(){
     });
 
     // Source branch: the battery and switch are connected across the same two nodes.
+    const batteryX=285;
     s += `<circle cx="${leftRail}" cy="${sourceY}" r="5.5" fill="#333a4d"/>
           <circle cx="${rightRail}" cy="${sourceY}" r="5.5" fill="#333a4d"/>
-          <line x1="${leftRail}" y1="${sourceY}" x2="255" y2="${sourceY}" stroke="#333a4d" stroke-width="5"/>
-          <line x1="275" y1="${sourceY-30}" x2="275" y2="${sourceY+30}" stroke="#333a4d" stroke-width="5"/>
-          <line x1="295" y1="${sourceY-18}" x2="295" y2="${sourceY+18}" stroke="#333a4d" stroke-width="5"/>
-          <line x1="295" y1="${sourceY}" x2="350" y2="${sourceY}" stroke="#333a4d" stroke-width="5"/>
+          <line x1="${leftRail}" y1="${sourceY}" x2="${batteryX-7}" y2="${sourceY}" stroke="#333a4d" stroke-width="5"/>
+          ${batteryOnHorizontalWire(batteryX,sourceY)}
+          <line x1="${batteryX+7}" y1="${sourceY}" x2="350" y2="${sourceY}" stroke="#333a4d" stroke-width="5"/>
           <circle cx="350" cy="${sourceY}" r="6" fill="#333a4d"/>
           <circle cx="425" cy="${sourceY}" r="6" fill="#333a4d"/>
           <line x1="350" y1="${sourceY}" x2="${state.on?425:408}" y2="${state.on?sourceY:sourceY-34}" stroke="${state.on?'#1f9d68':'#cf3f4f'}" stroke-width="6" stroke-linecap="round"/>
           <line x1="425" y1="${sourceY}" x2="${rightRail}" y2="${sourceY}" stroke="#333a4d" stroke-width="5"/>
-          <text x="285" y="${sourceY+50}" text-anchor="middle" font-size="16" fill="#172033">${state.V} V</text>
           <text x="388" y="${sourceY+50}" text-anchor="middle" font-size="15" fill="#667085">sumber & sakelar</text>`;
 
     if(state.on && metrics().active>0){
