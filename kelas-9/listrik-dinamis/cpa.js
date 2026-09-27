@@ -252,6 +252,7 @@ function renderAbstractComparison(){
   $('#abstractComparison').innerHTML=`
     <div class="small" style="margin-bottom:6px">${n} lampu identik • ${V} V • ${R} Ω/lampu</div>
     <div class="compare-cards">
+      <div class="compare-line compare-head"><b>Besaran</b><span>SERI</span><span>PARALEL</span></div>
       <div class="compare-line"><b>R ekuivalen</b><span>${fmt(Rs,'Ω')}</span><span>${fmt(Rp,'Ω')}</span></div>
       <div class="compare-line"><b>Arus total</b><span>${fmt(Is,'A')}</span><span>${fmt(Ip,'A')}</span></div>
       <div class="compare-line"><b>V tiap lampu</b><span>${fmt(Vs,'V')}</span><span>${fmt(Vp,'V')}</span></div>
