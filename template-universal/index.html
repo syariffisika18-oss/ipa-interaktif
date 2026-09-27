@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Template universal IPA Interaktif SMP">
+  <title>Template Universal — IPA Interaktif</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="shell header-row">
+      <a class="back-link" href="../">← Portal IPA</a>
+      <div class="header-title">
+        <span class="version">Template Universal v0.2</span>
+        <strong id="appTitle">IPA Interaktif</strong>
+      </div>
+      <button class="ghost-button" id="resetProgress" type="button">Reset progres</button>
+    </div>
+  </header>
+
+  <main class="shell app-shell">
+    <section class="intro-card">
+      <div class="intro-copy">
+        <p class="eyebrow">Kerangka universal kelas VII–IX</p>
+        <h1 id="materialTitle">Judul Materi</h1>
+        <p id="materialMeta" class="material-meta">Kelas • Alokasi waktu • Topik</p>
+        <p class="intro-text">
+          Alur utama tetap konsisten, sedangkan pendekatan tambahan dapat dipilih
+          sesuai karakter materi, tujuan pembelajaran, dan konteks kelas.
+        </p>
+      </div>
+
+      <div class="mode-card" aria-labelledby="modeLabel">
+        <p id="modeLabel" class="mode-label">Mode penggunaan</p>
+        <div class="segmented" role="group" aria-label="Pilih mode penggunaan">
+          <button class="mode-button is-active" type="button" data-mode="mandiri">👤 Mandiri</button>
+          <button class="mode-button" type="button" data-mode="guru">👨‍🏫 Bersama Guru</button>
+        </div>
+        <p class="mode-note" id="modeNote"></p>
+      </div>
+    </section>
+
+    <section class="progress-card" aria-label="Progres pembelajaran">
+      <div class="progress-copy">
+        <strong>Progres</strong>
+        <span id="progressText">0 dari 7 tahap</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </section>
+
+    <nav class="stage-nav" aria-label="Tahapan pembelajaran">
+      <button class="stage-tab is-active" data-stage="0"><span>1</span>Orientasi</button>
+      <button class="stage-tab" data-stage="1"><span>2</span>Engage</button>
+      <button class="stage-tab" data-stage="2"><span>3</span>Explore</button>
+      <button class="stage-tab" data-stage="3"><span>4</span>Explain</button>
+      <button class="stage-tab" data-stage="4"><span>5</span>Elaborate</button>
+      <button class="stage-tab" data-stage="5"><span>6</span>Evaluate</button>
+      <button class="stage-tab" data-stage="6"><span>7</span>Reflect</button>
+    </nav>
+
+    <section class="stage-panel is-active" data-panel="0">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 1</p><h2>Orientasi</h2></div>
+        <span class="principle">Tujuan • Prasyarat • Diagnostik</span>
+      </div>
+      <div class="content-grid">
+        <article class="learning-card">
+          <h3>🎯 Tujuan Pembelajaran</h3>
+          <p data-slot="objective">Tuliskan tujuan pembelajaran yang dapat diamati dan diukur.</p>
+        </article>
+        <article class="learning-card">
+          <h3>🧩 Cek Prasyarat</h3>
+          <p>Gunakan 1–3 pertanyaan singkat untuk mengetahui konsep awal yang dibutuhkan.</p>
+          <button class="mini-action" type="button" data-demo-feedback>Coba diagnostik</button>
+          <div class="feedback-box" hidden>Contoh komponen diagnostik. Pada modul nyata, isi diganti sesuai materi.</div>
+        </article>
+      </div>
+      <aside class="teacher-cue">
+        <strong>Untuk pendidik</strong>
+        <p>Gunakan respons diagnostik untuk menentukan seberapa banyak scaffolding yang diperlukan.</p>
+      </aside>
+    </section>
+
+    <section class="stage-panel" data-panel="1">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 2</p><h2>Engage</h2></div>
+        <span class="principle">Fenomena • Apersepsi • Prediksi</span>
+      </div>
+      <div class="feature-box">
+        <span class="feature-icon">❓</span>
+        <div>
+          <h3>Mulai dari fenomena, bukan definisi</h3>
+          <p>Tampilkan masalah, gambar, animasi, demonstrasi singkat, atau situasi sehari-hari yang memancing prediksi.</p>
+        </div>
+      </div>
+      <div class="interaction-demo">
+        <p class="prompt">Contoh: “Menurutmu, apa yang akan terjadi?”</p>
+        <div class="choice-row">
+          <button type="button" class="choice">Prediksi A</button>
+          <button type="button" class="choice">Prediksi B</button>
+          <button type="button" class="choice">Prediksi C</button>
+        </div>
+        <p class="self-note">Mode mandiri: siswa mendapat respons awal tanpa langsung diberi konsep final.</p>
+        <p class="teacher-note">Mode bersama guru: tahan jawaban final, minta siswa menjelaskan alasannya terlebih dahulu.</p>
+      </div>
+    </section>
+
+    <section class="stage-panel" data-panel="2">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 3</p><h2>Explore</h2></div>
+        <span class="principle">Manipulasi • Pengamatan • Data</span>
+      </div>
+      <div class="content-grid">
+        <article class="learning-card emphasis">
+          <h3>🧪 Area eksplorasi</h3>
+          <p>Tempatkan simulasi, virtual experiment, hotspot, sorting, drag-and-drop, pengamatan gambar, atau analisis data di sini.</p>
+          <label class="slider-demo">
+            Contoh variabel
+            <input id="demoSlider" type="range" min="0" max="100" value="40">
+            <output id="demoOutput">40</output>
+          </label>
+        </article>
+        <article class="learning-card">
+          <h3>📝 Catatan Pengamatan</h3>
+          <textarea rows="5" placeholder="Apa pola yang kamu amati?"></textarea>
+          <p class="self-note helper">Mode mandiri: berikan petunjuk bertahap jika siswa buntu.</p>
+          <p class="teacher-note helper">Mode guru: gunakan hasil eksplorasi sebagai bahan diskusi kelas.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="stage-panel" data-panel="3">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 4</p><h2>Explain</h2></div>
+        <span class="principle">Representasi • Konsep • Self-explanation</span>
+      </div>
+      <div class="explain-layout">
+        <div class="visual-placeholder" aria-label="Area visual konsep"><span>Visual / diagram / animasi</span></div>
+        <article>
+          <h3>Bangun penjelasan dari hasil eksplorasi</h3>
+          <p>Sajikan teks singkat dekat dengan visual yang relevan. Pecah konsep kompleks menjadi bagian kecil.</p>
+          <div class="why-box"><strong>Mengapa?</strong><p>Minta siswa menjelaskan hubungan sebab-akibat dengan bahasanya sendiri.</p></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="stage-panel" data-panel="4">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 5</p><h2>Elaborate</h2></div>
+        <span class="principle">Transfer • Aplikasi • Scaffolding</span>
+      </div>
+      <p class="lead">Pada tahap ini, template boleh memakai jalur tambahan yang berbeda sesuai karakter materi.</p>
+      <div class="strategy-grid" id="strategyGrid"></div>
+      <div class="adapt-box">
+        <strong>Aturan fleksibilitas</strong>
+        <p>Pilih hanya strategi yang benar-benar membantu tujuan belajar. Tidak semua modul perlu CPA, POE, PBL, atau permainan.</p>
+      </div>
+    </section>
+
+    <section class="stage-panel" data-panel="5">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 6</p><h2>Evaluate</h2></div>
+        <span class="principle">Retrieval • Feedback • Diagnostik</span>
+      </div>
+      <article class="question-card">
+        <span class="question-number">Contoh cek konsep</span>
+        <h3>Pilih jawaban, lalu lihat bagaimana feedback bekerja.</h3>
+        <div class="answer-list">
+          <button type="button" data-answer="0">Pilihan A</button>
+          <button type="button" data-answer="1">Pilihan B</button>
+          <button type="button" data-answer="2">Pilihan C</button>
+        </div>
+        <div id="answerFeedback" class="answer-feedback" hidden></div>
+      </article>
+      <p class="evaluation-note">Evaluasi akhir dapat berisi 10–20 soal, tetapi cek konsep singkat juga ditempatkan di sepanjang proses belajar.</p>
+    </section>
+
+    <section class="stage-panel" data-panel="6">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 7</p><h2>Reflect</h2></div>
+        <span class="principle">Monitoring • Refleksi • Tindak lanjut</span>
+      </div>
+      <div class="reflection-grid">
+        <label><span>Apa yang sudah saya pahami?</span><textarea rows="4" data-reflection="understood"></textarea></label>
+        <label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused"></textarea></label>
+      </div>
+      <div class="confidence-box">
+        <p>Seberapa yakin kamu memahami materi?</p>
+        <div class="confidence-row">
+          <button type="button" data-confidence="1">Perlu bantuan</button>
+          <button type="button" data-confidence="2">Cukup paham</button>
+          <button type="button" data-confidence="3">Sudah yakin</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="bottom-nav">
+      <button id="prevStage" type="button">← Sebelumnya</button>
+      <button id="completeStage" class="complete-button" type="button">Tandai selesai</button>
+      <button id="nextStage" class="primary-button" type="button">Berikutnya →</button>
+    </div>
+
+    <section class="design-note">
+      <p class="eyebrow">Fondasi desain</p>
+      <div class="design-grid">
+        <div><strong>5E + Orientasi & Refleksi</strong><span>alur universal</span></div>
+        <div><strong>Mayer + Cognitive Load</strong><span>aturan multimedia</span></div>
+        <div><strong>UDL</strong><span>akses & representasi</span></div>
+        <div><strong>SRL</strong><span>belajar mandiri</span></div>
+        <div><strong>ICAP</strong><span>kualitas interaksi</span></div>
+        <div><strong>Retrieval + Feedback</strong><span>evaluasi formatif</span></div>
+      </div>
+    </section>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="template.js"></script>
+</body>
+</html>
