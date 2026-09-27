@@ -68,3 +68,37 @@ Web App ini memang dapat diakses siswa tanpa login agar dapat digunakan dari Git
 - jangan mengumpulkan data kesehatan, alamat, nomor telepon, atau data sensitif;
 - batasi akses Google Sheet hanya untuk guru/pengelola;
 - untuk skala lebih besar atau data sensitif, gunakan backend dengan autentikasi dan kontrol akses.
+
+## Dashboard Guru
+
+Tambahkan file `Dashboard.gs` ke project Apps Script yang sama.
+
+Dashboard dibuat **di dalam Google Sheet**, bukan di GitHub Pages. Ini disengaja agar nama siswa dan teks refleksi tidak dipublikasikan melalui website publik.
+
+Setelah file ditambahkan dan disimpan:
+
+1. Reload Google Sheet.
+2. Menu baru **IPA Interaktif** akan muncul.
+3. Pilih **IPA Interaktif → Perbarui Dashboard**.
+4. Sheet **DASHBOARD** dan **RESPON_TERBARU** akan dibuat otomatis.
+
+Dashboard memakai **respons terbaru per siswa + kelas + materi**, sehingga jika seorang siswa mengirim refleksi revisi, dashboard tidak menghitungnya sebagai siswa tambahan.
+
+Filter yang tersedia:
+
+- Kelas
+- Materi
+- Mode
+- Keyakinan
+- Kategori kesulitan
+
+Ringkasan utama:
+
+- jumlah respons siswa unik
+- jumlah **Perlu bantuan**
+- jumlah **Cukup paham**
+- jumlah **Sudah yakin**
+- kategori kesulitan terbanyak
+- daftar siswa/respons yang perlu perhatian
+
+Saat guru membuka spreadsheet, dashboard mencoba diperbarui otomatis. Guru juga dapat memperbarui manual dari menu **IPA Interaktif**.
