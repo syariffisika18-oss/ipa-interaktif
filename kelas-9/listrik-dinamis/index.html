@@ -1,30 +1,332 @@
 <!doctype html>
-<html lang="id">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Listrik Dinamis — IPA Interaktif</title>
-  <style>
-    *{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;background:#f5f8f7;color:#15332f}
-    main{width:min(760px,calc(100% - 28px));margin:0 auto;padding:48px 0}
-    a{color:#0f766e;font-weight:800;text-decoration:none}
-    .card{margin-top:24px;background:#fff;border:1px solid #d8e5e2;border-radius:24px;padding:28px;box-shadow:0 12px 32px rgba(15,118,110,.08)}
-    .tag{display:inline-flex;padding:6px 10px;border-radius:999px;background:#d7f5ee;color:#0b5f59;font-size:.75rem;font-weight:800}
-    h1{font-size:clamp(2rem,5vw,3.2rem);line-height:1.04;margin:14px 0}
-    p{color:#5f7672;line-height:1.7}
-  </style>
-</head>
-<body>
-  <main>
-    <a href="../../">← Kembali ke beranda</a>
-    <section class="card">
-      <span class="tag">MODUL PILOT</span>
-      <h1>Listrik Dinamis</h1>
-      <p>
-        Struktur modul sudah disiapkan. Pada langkah berikutnya, HTML interaktif
-        Listrik Dinamis akan ditempatkan di halaman ini tanpa mengubah alamat modul.
-      </p>
-    </section>
-  </main>
-</body>
-</html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css"></head>
+<body data-learning-mode="mandiri">
+<header class="module-topbar"><div class="module-shell module-topbar-row"><a class="portal-link" href="../../">← Portal IPA</a><div class="module-title-mini"><span>IPA Interaktif • Kelas IX</span><strong>Listrik Dinamis</strong></div><button id="resetLearning" class="reset-learning" type="button">Reset progres</button></div></header>
+<main class="module-shell module-main">
+<section class="module-hero"><div><p class="u-eyebrow">Modul nyata pertama • Template Universal v0.4</p><h1>Listrik Dinamis: Seri & Paralel</h1><p>Mulai dari fenomena → uji pada rangkaian → lihat jalur arus → turunkan hubungan matematis → latihan → refleksi.</p></div><div class="module-mode"><strong>Mode penggunaan</strong><div class="mode-switch"><button type="button" data-learning-mode="mandiri">👤 Mandiri</button><button type="button" data-learning-mode="guru">👨‍🏫 Bersama Guru</button></div><p id="modeHelp" class="mode-help"></p></div></section>
+<section class="progress-wrap"><div class="progress-line"><strong>Progres modul</strong><span id="learningProgressText">0 dari 7 tahap</span></div><div class="progress-track"><div id="learningProgressFill" class="progress-fill"></div></div></section>
+<nav class="u-stage-nav" aria-label="Tahapan pembelajaran"><button class="u-stage-tab active" data-u-stage="0"><b>1</b>Orientasi</button><button class="u-stage-tab" data-u-stage="1"><b>2</b>Engage</button><button class="u-stage-tab" data-u-stage="2"><b>3</b>Explore</button><button class="u-stage-tab" data-u-stage="3"><b>4</b>Explain</button><button class="u-stage-tab" data-u-stage="4"><b>5</b>Elaborate</button><button class="u-stage-tab" data-u-stage="5"><b>6</b>Evaluate</button><button class="u-stage-tab" data-u-stage="6"><b>7</b>Reflect</button></nav>
+
+<section class="u-stage-panel active"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 1</p><h2>Orientasi</h2></div><span class="u-principle">Tujuan • Prasyarat • Identitas</span></div><div class="u-grid-2">
+<article class="u-card"><h3>🎯 Tujuan pembelajaran</h3><ul class="objectives"><li>Menjelaskan perbedaan jalur arus pada rangkaian seri dan paralel.</li><li>Menghubungkan susunan rangkaian dengan arus, tegangan, terang lampu, dan kondisi ketika lampu dilepas.</li><li>Menentukan hambatan ekuivalen sederhana dan menggunakan hubungan <b>V = IR</b>.</li><li>Menerapkan konsep pada situasi baru dan menjelaskan alasan jawaban.</li></ul></article>
+<article class="u-card"><h3>👤 Identitas sesi</h3><p>Diisi agar refleksi akhir dapat diterima guru.</p><div class="identity-grid"><label><span>Nama / nomor absen</span><input id="studentName" maxlength="80" placeholder="Contoh: Andi / 12"></label><label><span>Kelas</span><input id="studentClass" maxlength="30" placeholder="Contoh: IX A"></label></div></article></div>
+<article class="u-card" style="margin-top:14px"><h3>🧩 Cek prasyarat singkat</h3><div class="diagnostic-list">
+<div class="diagnostic-item"><b>1. Arus dapat mengalir jika lintasan listrik...</b><div class="diagnostic-options" data-diagnostic="closed"><button type="button" data-value="tertutup" data-feedback="Ya. Arus memerlukan lintasan tertutup.">tertutup</button><button type="button" data-value="terbuka" data-feedback="Coba ingat fungsi sakelar: saat rangkaian terbuka, arus berhenti.">terbuka</button></div><div class="diagnostic-feedback"></div></div>
+<div class="diagnostic-item"><b>2. Jika hambatan diperbesar pada tegangan tetap, arus cenderung...</b><div class="diagnostic-options" data-diagnostic="resistance"><button type="button" data-value="naik" data-feedback="Belum. Perhatikan kembali I = V/R.">naik</button><button type="button" data-value="turun" data-feedback="Benar. Pada V tetap, R lebih besar membuat I lebih kecil.">turun</button></div><div class="diagnostic-feedback"></div></div>
+</div></article></div></section>
+
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 2</p><h2>Engage</h2></div><span class="u-principle">Fenomena • Prediksi • POE</span></div><div class="engage-scene"><div class="house-lamps"><div class="lamp-row"><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div></div></div><div><h3>Tiga lampu rumah menyala. Satu lampu rusak.</h3><p>Menurutmu, apa yang terjadi pada dua lampu lainnya jika instalasinya dirancang seperti rangkaian rumah?</p><div class="engage-options"><button class="engage-option" data-prediction="semua-padam" type="button">Semua lampu ikut padam</button><button class="engage-option" data-prediction="lain-tetap" type="button">Lampu lain tetap dapat menyala</button><button class="engage-option" data-prediction="lebih-redup" type="button">Lampu lain menjadi lebih redup</button></div><div id="engageFeedback" class="note">Pilih prediksi terlebih dahulu. Jawabannya akan diuji pada tahap Explore.</div><p class="mode-only-teacher small"><b>Guru:</b> minta 2–3 siswa menyampaikan alasan sebelum membuka simulasi.</p></div></div></div></section>
+
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 3</p><h2>Explore</h2></div><span class="u-principle">Concrete • Manipulasi • Pengamatan</span></div><div class="cpa-banner"><b>C — Concrete:</b> ubah susunan, jumlah lampu, tegangan, hambatan, sakelar, dan kondisi lampu. Gunakan hasilnya untuk menguji prediksi.</div><section id="concrete" class="cpa-section">
+      <div class="card stage-card">
+        <div class="stage-topline">
+          <div>
+            <div class="stage-kicker">C — CONCRETE</div>
+            <h2>Rangkai dan amati</h2>
+          </div>
+          <span class="stage-count" id="concreteCount">1/3</span>
+        </div>
+
+        
+        <div class="stage-slides" data-stage-group="concrete">
+          <!-- C1: ATUR + AMATI -->
+          <div class="stage-slide active" data-slide="0">
+            <div class="slide-title">1. Atur & amati rangkaian</div>
+
+            <div class="controls compact-controls">
+              <div>
+                <div class="small">Jenis rangkaian</div>
+                <div class="segment">
+                  <button id="seriesBtn" class="active">Seri</button>
+                  <button id="parallelBtn">Paralel</button>
+                </div>
+              </div>
+
+              <div class="sliderline">
+                <label for="bulbs">Jumlah lampu</label>
+                <input id="bulbs" type="range" min="1" max="3" step="1" value="2">
+                <b><span id="bulbCount">2</span></b>
+              </div>
+
+              <div class="sliderline">
+                <label for="voltage">Tegangan</label>
+                <input id="voltage" type="range" min="3" max="12" step="1" value="6">
+                <b><span id="voltageVal">6</span> V</b>
+              </div>
+
+              <div class="sliderline">
+                <label for="resistance">R lampu</label>
+                <input id="resistance" type="range" min="4" max="20" step="1" value="10">
+                <b><span id="resistanceVal">10</span> Ω</b>
+              </div>
+
+              <div class="control-grid">
+                <button id="switchBtn" class="btn">Sakelar: ON</button>
+                <button id="removeBtn" class="btn danger">Lepaskan Lampu 1</button>
+                <button id="resetBtn" class="btn secondary full">Reset</button>
+              </div>
+            </div>
+
+            <div class="circuitBox stage-circuit combined-circuit">
+              <svg id="circuit" viewBox="0 0 760 420" role="img" aria-label="Simulasi rangkaian listrik"></svg>
+            </div>
+
+            <button class="zoom-btn compact-zoom" type="button"
+              data-zoom-target="circuit"
+              data-zoom-title="Rangkaian Concrete">⛶ Perbesar gambar</button>
+
+            <div id="observation" class="note stage-note"></div>
+
+            <div class="micro-note">
+              Ubah <b>jumlah lampu, tegangan, hambatan</b>, atau lepaskan salah satu lampu.
+              Amati langsung perubahan rangkaian dan terang lampunya.
+            </div>
+          </div>
+
+          <!-- C2: MAKNA -->
+          <div class="stage-slide" data-slide="1">
+            <div class="slide-title">2. Maknai hasilnya</div>
+
+            <div class="statgrid">
+              <div class="stat"><span class="small">R ekuivalen</span><b id="rt">—</b></div>
+              <div class="stat"><span class="small">Arus total</span><b id="it">—</b></div>
+              <div class="stat"><span class="small">Tegangan/lampu</span><b id="vb">—</b></div>
+              <div class="stat"><span class="small">Daya/lampu</span><b id="pb">—</b></div>
+            </div>
+
+            <div class="compact-question">
+              <b>Hubungkan hasil pengamatan dengan konsep:</b>
+              <div>① Ada berapa jalur yang dapat dilewati arus?</div>
+              <div>② Apa yang terjadi ketika satu lampu dilepas?</div>
+              <div>③ Mengapa terang lampu berubah?</div>
+            </div>
+
+            <div class="note warning stage-note">
+              <b>Model ideal:</b> lampu dianggap memiliki hambatan tetap dan sumber tegangan ideal.
+            </div>
+
+            <button id="compareBtn" class="btn full">Lanjut ke Pictorial →</button>
+          </div>
+        </div>
+
+        <div class="stage-nav" data-nav-for="concrete">
+          <button class="stage-prev" type="button">← Sebelumnya</button>
+          <div class="stage-dots" aria-hidden="true"></div>
+          <button class="stage-next" type="button">Berikutnya →</button>
+        </div>
+      </div>
+    </section></div></section>
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 4</p><h2>Explain</h2></div><span class="u-principle">Pictorial • Jalur • Node</span></div><div class="cpa-banner"><b>P — Pictorial:</b> jelaskan <i>mengapa</i> hasil seri dan paralel berbeda melalui jalur dan titik percabangan.</div><section id="pictorial" class="cpa-section">
+      <div class="card stage-card">
+        <div class="stage-topline">
+          <div>
+            <div class="stage-kicker">P — PICTORIAL</div>
+            <h2>Lihat struktur jalurnya</h2>
+          </div>
+          <span class="stage-count" id="pictorialCount">1/3</span>
+        </div>
+
+        <div class="stage-slides" data-stage-group="pictorial">
+          <!-- P1 SERI -->
+          <div class="stage-slide active" data-slide="0">
+            <div class="slide-title">1. Seri: hanya satu jalur</div>
+            <div class="mini-circuit stage-mini">
+              <svg id="picSeries" viewBox="0 0 520 250" role="img" aria-label="Rangkaian seri tiga lampu">
+                <path d="M65 70 H455 V205 H65 Z" fill="none" stroke="#333a4d" stroke-width="5"/>
+                <line x1="50" y1="120" x2="50" y2="165" stroke="#333a4d" stroke-width="5"/>
+                <line x1="66" y1="129" x2="66" y2="156" stroke="#333a4d" stroke-width="5"/>
+                <g font-size="16" text-anchor="middle">
+                  <rect x="120" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="156" y="76">L1</text>
+                  <rect x="225" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="261" y="76">L2</text>
+                  <rect x="330" y="50" width="72" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="366" y="76">L3</text>
+                </g>
+                <path d="M92 70 H430" stroke="#3559e0" stroke-width="4" stroke-dasharray="10 10"><animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/></path>
+                <text x="260" y="35" text-anchor="middle" fill="#3559e0" font-weight="800">I → satu jalur</text>
+              </svg>
+            </div>
+            <button class="zoom-btn compact-zoom" type="button" data-zoom-target="picSeries" data-zoom-title="Pictorial — Seri">⛶ Perbesar gambar</button>
+            <div class="concept-strip">
+              <span>Tanpa percabangan</span>
+              <b>→</b>
+              <span>I sama</span>
+              <b>→</b>
+              <span>V terbagi</span>
+            </div>
+            <div class="note stage-note">Jika satu lampu dilepas, <b>satu-satunya jalur terputus</b> sehingga seluruh rangkaian padam.</div>
+          </div>
+
+          <!-- P2 PARALEL -->
+          <div class="stage-slide" data-slide="1">
+            <div class="slide-title">2. Paralel: beberapa cabang</div>
+            <div class="mini-circuit stage-mini">
+              <svg id="picParallel" viewBox="0 0 520 300" role="img" aria-label="Rangkaian paralel tiga lampu">
+                <line x1="105" y1="45" x2="105" y2="245" stroke="#333a4d" stroke-width="6"/>
+                <line x1="415" y1="45" x2="415" y2="245" stroke="#333a4d" stroke-width="6"/>
+                <g stroke="#333a4d" stroke-width="4" fill="none">
+                  <line x1="105" y1="65" x2="205" y2="65"/><line x1="315" y1="65" x2="415" y2="65"/>
+                  <line x1="105" y1="125" x2="205" y2="125"/><line x1="315" y1="125" x2="415" y2="125"/>
+                  <line x1="105" y1="185" x2="205" y2="185"/><line x1="315" y1="185" x2="415" y2="185"/>
+                </g>
+                <g font-size="16" text-anchor="middle">
+                  <rect x="205" y="45" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="71">L1</text>
+                  <rect x="205" y="105" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="131">L2</text>
+                  <rect x="205" y="165" width="110" height="40" rx="8" fill="#fff" stroke="#333a4d" stroke-width="3"/><text x="260" y="191">L3</text>
+                </g>
+                <text x="105" y="28" text-anchor="middle" fill="#667085" font-weight="800">Node A</text>
+                <text x="415" y="28" text-anchor="middle" fill="#667085" font-weight="800">Node B</text>
+                <text x="150" y="57" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₁ →</text>
+                <text x="150" y="117" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₂ →</text>
+                <text x="150" y="177" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₃ →</text>
+                <line x1="105" y1="245" x2="225" y2="245" stroke="#333a4d" stroke-width="4"/>
+                <line x1="295" y1="245" x2="415" y2="245" stroke="#333a4d" stroke-width="4"/>
+                <line x1="245" y1="220" x2="245" y2="270" stroke="#333a4d" stroke-width="4"/>
+                <line x1="275" y1="230" x2="275" y2="260" stroke="#333a4d" stroke-width="4"/>
+                <line x1="225" y1="245" x2="245" y2="245" stroke="#333a4d" stroke-width="4"/>
+                <line x1="275" y1="245" x2="295" y2="245" stroke="#333a4d" stroke-width="4"/>
+              </svg>
+            </div>
+            <button class="zoom-btn compact-zoom" type="button" data-zoom-target="picParallel" data-zoom-title="Pictorial — Paralel">⛶ Perbesar gambar</button>
+            <div class="concept-strip">
+              <span>Ada cabang</span>
+              <b>→</b>
+              <span>I terbagi</span>
+              <b>→</b>
+              <span>V sama</span>
+            </div>
+            <div class="note stage-note">Setiap cabang menghubungkan <b>Node A dan Node B yang sama</b>. Memutus satu cabang tidak memutus cabang lain.</div>
+          </div>
+
+          <!-- P3 BANDINGKAN -->
+          <div class="stage-slide" data-slide="2">
+            <div class="slide-title">3. Bandingkan keduanya</div>
+            <div class="compare-cards">
+              <div class="compare-line"><b>Jalur arus</b><span>1 jalur</span><span>beberapa jalur</span></div>
+              <div class="compare-line"><b>Arus</b><span>I = I₁ = I₂</span><span>I = I₁ + I₂</span></div>
+              <div class="compare-line"><b>Tegangan</b><span>V = V₁ + V₂</span><span>V = V₁ = V₂</span></div>
+              <div class="compare-line"><b>Lampu dilepas</b><span>semua padam</span><span>cabang lain hidup</span></div>
+            </div>
+            <div class="bridge compact-bridge">
+              <div class="bridge-title">Jembatan CPA</div>
+              <div class="concept-strip">
+                <span>Kejadian nyata</span><b>→</b><span>jalur</span><b>→</b><span>I & V</span>
+              </div>
+            </div>
+            <button id="toAbstractBtn" class="btn full">Lanjut ke Abstract →</button>
+          </div>
+        </div>
+
+        <div class="stage-nav" data-nav-for="pictorial">
+          <button class="stage-prev" type="button">← Sebelumnya</button>
+          <div class="stage-dots" aria-hidden="true"></div>
+          <button class="stage-next" type="button">Berikutnya →</button>
+        </div>
+      </div>
+    </section></div></section>
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 5</p><h2>Elaborate</h2></div><span class="u-principle">Abstract • Transfer • Worked Example</span></div><div class="cpa-banner"><b>A — Abstract:</b> hubungkan struktur jalur dengan persamaan. Rumus muncul setelah pola fisiknya dipahami.</div><section id="abstract" class="cpa-section">
+      <div class="card stage-card">
+        <div class="stage-topline">
+          <div>
+            <div class="stage-kicker">A — ABSTRACT</div>
+            <h2>Dari jalur ke persamaan</h2>
+          </div>
+          <span class="stage-count" id="abstractCount">1/4</span>
+        </div>
+
+        <div class="stage-slides" data-stage-group="abstract">
+          <!-- A1 IDE -->
+          <div class="stage-slide active" data-slide="0">
+            <div class="slide-title">1. Ide inti</div>
+            <div class="abstract-pair">
+              <div class="abstract-card series">
+                <b>SERI</b>
+                <div>Satu jalur</div>
+                <div class="formula-big">I = I₁ = I₂ = …</div>
+                <div class="formula-big">V = V₁ + V₂ + …</div>
+              </div>
+              <div class="abstract-card parallel">
+                <b>PARALEL</b>
+                <div>Beberapa cabang</div>
+                <div class="formula-big">I = I₁ + I₂ + …</div>
+                <div class="formula-big">V = V₁ = V₂ = …</div>
+              </div>
+            </div>
+            <div class="note stage-note">Perbedaan rumus berasal dari <b>struktur jalurnya</b>, bukan untuk dihafalkan sebagai aturan terpisah.</div>
+          </div>
+
+          <!-- A2 SERI -->
+          <div class="stage-slide" data-slide="1">
+            <div class="slide-title">2. Turunkan hambatan seri</div>
+            <div class="derivation-card series">
+              <div class="formula-big">V = V₁ + V₂ + V₃</div>
+              <div class="down-arrow">↓</div>
+              <div class="formula-big">V = IR₁ + IR₂ + IR₃</div>
+              <div class="down-arrow">↓</div>
+              <div class="formula-big">V = I(R₁ + R₂ + R₃)</div>
+              <div class="down-arrow">↓</div>
+              <div class="result-formula">Rₜ = R₁ + R₂ + R₃</div>
+            </div>
+            <div class="micro-note">Dasar yang dipakai hanya <b>V = IR</b> dan fakta bahwa arus seri sama.</div>
+          </div>
+
+          <!-- A3 PARALEL -->
+          <div class="stage-slide" data-slide="2">
+            <div class="slide-title">3. Turunkan hambatan paralel</div>
+            <div class="derivation-card parallel">
+              <div class="formula-big">I = I₁ + I₂ + I₃</div>
+              <div class="down-arrow">↓</div>
+              <div class="formula-big">V/Rₜ = V/R₁ + V/R₂ + V/R₃</div>
+              <div class="down-arrow">↓</div>
+              <div class="formula-big">bagi seluruh ruas dengan V</div>
+              <div class="down-arrow">↓</div>
+              <div class="result-formula">1/Rₜ = 1/R₁ + 1/R₂ + 1/R₃</div>
+            </div>
+            <div class="micro-note">Dasar yang dipakai hanya <b>I = V/R</b> dan fakta bahwa tegangan setiap cabang sama.</div>
+          </div>
+
+          <!-- A4 ANGKA -->
+          <div class="stage-slide" data-slide="3">
+            <div class="slide-title">4. Bandingkan dengan angka yang sama</div>
+            <div id="abstractComparison"></div>
+            <button id="goQuizBtn" class="btn full">Lanjut ke Latihan →</button>
+          </div>
+        </div>
+
+        <div class="stage-nav" data-nav-for="abstract">
+          <button class="stage-prev" type="button">← Sebelumnya</button>
+          <div class="stage-dots" aria-hidden="true"></div>
+          <button class="stage-next" type="button">Berikutnya →</button>
+        </div>
+      </div>
+    </section></div></section>
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 6</p><h2>Evaluate</h2></div><span class="u-principle">20 soal • Retrieval • Feedback</span></div><p class="quiz-note">Kerjakan satu soal per layar. Setelah memilih jawaban, baca alasan yang muncul sebelum melanjutkan.</p><section id="quiz" class="cpa-section">
+      <div class="card stage-card">
+        <div class="stage-topline">
+          <div>
+            <div class="stage-kicker">LATIHAN</div>
+            <h2>Satu soal per layar</h2>
+          </div>
+          <span class="stage-count" id="quizCount">1/5</span>
+        </div>
+
+        <div id="quizBox"></div>
+
+        <div class="quiz-footer">
+          <span class="chip">Skor: <span id="score">0</span>/20</span>
+          <button id="resetQuiz" class="btn secondary">Ulangi</button>
+        </div>
+
+        <div class="stage-nav" data-nav-for="quiz">
+          <button class="stage-prev" type="button">← Sebelumnya</button>
+          <div class="stage-dots" aria-hidden="true"></div>
+          <button class="stage-next" type="button">Berikutnya →</button>
+        </div>
+      </div>
+    </section></div></section>
+
+<section class="u-stage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 7</p><h2>Reflect</h2></div><span class="u-principle">Monitoring • Confidence • Feedback guru</span></div><div class="reflection-grid"><label><span>Apa yang sudah saya pahami?</span><textarea rows="4" data-reflection="understood" placeholder="Contoh: saya memahami mengapa arus seri sama..."></textarea></label><label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused" placeholder="Tuliskan bagian yang masih sulit secara spesifik."></textarea></label></div><div class="u-card" style="margin-top:14px"><b>Pada bagian mana kamu masih mengalami kesulitan?</b><div id="difficultyGrid" class="difficulty-grid"></div></div><div class="u-card" style="margin-top:14px"><b>Seberapa yakin kamu memahami materi?</b><div class="confidence-row" style="margin-top:10px"><button type="button" data-confidence="1">Perlu bantuan</button><button type="button" data-confidence="2">Cukup paham</button><button type="button" data-confidence="3">Sudah yakin</button></div></div><div class="send-card"><div><strong>Kirim refleksi ke guru</strong><p>Refleksi masuk ke Google Sheet dan Dashboard Guru.</p><p id="sendStatus" class="send-status">Belum pernah dikirim.</p></div><button id="sendFeedback" class="send-btn" type="button">Kirim Refleksi</button></div></div></section>
+
+<div class="u-bottom-nav"><button id="uPrev" class="u-prev" type="button">← Sebelumnya</button><button id="uComplete" class="u-complete" type="button">Tandai selesai</button><button id="uNext" class="u-next" type="button">Berikutnya →</button></div>
+</main>
+<div class="zoom-overlay" id="zoomOverlay" aria-hidden="true"><div class="zoom-panel"><div class="zoom-top"><b id="zoomTitle">Perbesar gambar</b><button id="zoomClose" class="zoom-close" type="button">Tutup ✕</button></div><div class="zoom-scroll" id="zoomContent"></div><div class="small">Geser ke kiri/kanan jika gambar lebih lebar dari layar.</div></div></div>
+<div id="uToast" class="toast" role="status" aria-live="polite"></div>
+<script src="config.js"></script><script src="module.js"></script><script src="cpa.js"></script></body></html>
