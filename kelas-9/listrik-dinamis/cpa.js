@@ -454,7 +454,7 @@ function refreshAll(){
   renderAbstractComparison();
 }
 
-const stageIndex={concrete:0,pictorial:0,abstract:0};
+const stageIndex={concrete:0,explain:0,elaborate:0};
 
 function renderDots(nav,total,current){
   const dots=nav.querySelector('.stage-dots');
@@ -534,9 +534,10 @@ $('#resetBtn').onclick=()=>{
   refreshAll();
 };
 
-$('#compareBtn').onclick=()=>{stageIndex.pictorial=0;window.setLearningStage?.(3)};
-$('#toAbstractBtn').onclick=()=>{stageIndex.abstract=0;window.setLearningStage?.(4)};
-$('#goQuizBtn').onclick=()=>{quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
+$('#compareBtn').onclick=()=>{stageIndex.explain=0;window.setLearningStage?.(3);setTimeout(()=>showStage('explain',0),0)};
+$('#toAbstractBtn').onclick=()=>{showStage('explain',3)};
+$('#goElaborateBtn').onclick=()=>{stageIndex.elaborate=0;window.setLearningStage?.(4);setTimeout(()=>showStage('elaborate',0),0)};
+$('#goEvaluateBtn').onclick=()=>{quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
 $('#resetQuiz').onclick=()=>{answered=Array(quizData.length).fill(false);score=0;quizSlide=0;renderQuiz()};
 
 
@@ -566,8 +567,50 @@ $('#zoomOverlay').addEventListener('click',e=>{if(e.target.id==='zoomOverlay') c
 document.addEventListener('keydown',e=>{if(e.key==='Escape') closeZoom();});
 
 
+function initElaborate(){
+  document.querySelectorAll('[data-elab-choice]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const group=btn.closest('[data-elab-group]');
+      if(!group) return;
+      group.querySelectorAll('[data-elab-choice]').forEach(x=>x.classList.remove('correct','wrong','selected'));
+      const correct=btn.dataset.correct==='true';
+      btn.classList.add('selected',correct?'correct':'wrong');
+      const key=group.dataset.elabGroup;
+      const fb=document.querySelector('[data-elab-feedback="'+key+'"]');
+      if(fb){
+        fb.textContent=btn.dataset.feedback||'';
+        fb.classList.toggle('correct',correct);
+        fb.classList.toggle('wrong',!correct);
+      }
+    });
+  });
+
+  const check=document.getElementById('checkFading');
+  if(check){
+    check.addEventListener('click',()=>{
+      const rt=parseFloat(document.getElementById('fadeRt').value);
+      const i=parseFloat(document.getElementById('fadeI').value);
+      const okRt=Math.abs(rt-18)<0.11;
+      const okI=Math.abs(i-(12/18))<0.03;
+      const fb=document.getElementById('fadeFeedback');
+      const box=document.getElementById('fadeTask');
+      box.classList.remove('correct','wrong');
+      if(okRt&&okI){
+        box.classList.add('correct');
+        fb.className='elab-feedback correct';
+        fb.textContent='Benar. Rₜ = 18 Ω dan I ≈ 0,67 A.';
+      }else{
+        box.classList.add('wrong');
+        fb.className='elab-feedback wrong';
+        fb.textContent='Belum tepat. Jumlahkan tiga hambatan seri terlebih dahulu, lalu gunakan I = V/Rₜ.';
+      }
+    });
+  }
+}
+
+initElaborate();
 renderQuiz();
 refreshAll();
 showStage('concrete',0);
-showStage('pictorial',0);
-showStage('abstract',0);
+showStage('explain',0);
+showStage('elaborate',0);
