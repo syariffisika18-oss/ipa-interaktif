@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2038"></head>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta http-equiv="Pragma" content="no-cache"><meta http-equiv="Expires" content="0"><meta name="theme-color" content="#0f766e"><meta name="description" content="Modul IPA Interaktif kelas IX: Listrik Dinamis seri dan paralel"><title>Listrik Dinamis — IPA Interaktif</title><link rel="stylesheet" href="style.css?v=20260927-2105"></head>
 <body data-learning-mode="mandiri">
 <header class="module-topbar"><div class="module-shell module-topbar-row"><a class="portal-link" href="../../">← Portal IPA</a><div class="module-title-mini"><span>IPA Interaktif • Kelas IX</span><strong>Listrik Dinamis</strong></div><button id="resetLearning" class="reset-learning" type="button">Reset progres</button></div></header>
 <main class="module-shell module-main">
@@ -281,6 +281,7 @@
         <span class="stage-count" id="elaborateCount">1/4</span>
       </div>
 
+      
       <div class="stage-slides" data-stage-group="elaborate">
         <div class="stage-slide active" data-slide="0">
           <div class="slide-title">1. Kasus instalasi rumah</div>
@@ -288,12 +289,28 @@
             <b>Tiga lampu di rumah harus dapat dinyalakan atau dimatikan secara independen.</b>
             <p>Jika satu lampu dilepas, lampu lain harus tetap menyala dan setiap lampu memperoleh tegangan sumber yang sama.</p>
           </div>
-          <div class="elab-question">Susunan yang paling sesuai adalah...</div>
-          <div class="elab-options" data-elab-group="home">
-            <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Pada seri, satu lampu dilepas akan memutus satu-satunya jalur.">Seri</button>
-            <button type="button" data-elab-choice data-correct="true" data-feedback="Benar. Paralel memberi setiap lampu cabang sendiri pada dua node sumber yang sama.">Paralel</button>
+
+          <div class="elab-mini-question" data-elab-question="home"
+               data-clue="Ingat: apakah melepas satu lampu memutus jalur lampu yang lain?"
+               data-final="Instalasi rumah menggunakan paralel karena setiap lampu berada pada cabang sendiri yang menghubungkan dua node sumber yang sama.">
+            <b>Susunan yang paling sesuai adalah...</b>
+            <div class="elab-options" data-elab-answer-group>
+              <button type="button" data-elab-answer data-value="seri" data-correct="false">Seri</button>
+              <button type="button" data-elab-answer data-value="paralel" data-correct="true">Paralel</button>
+            </div>
+
+            <div class="elab-reason-panel" data-elab-reason-panel hidden>
+              <span class="elab-reason-title">Mengapa?</span>
+              <div class="elab-reasons" data-elab-reason-group>
+                <button type="button" data-elab-reason data-value="node-sama" data-correct="true">Setiap lampu punya cabang sendiri pada dua node sumber yang sama.</button>
+                <button type="button" data-elab-reason data-value="arus-kecil" data-correct="false">Karena rangkaian paralel selalu memiliki arus yang lebih kecil.</button>
+                <button type="button" data-elab-reason data-value="jalur-pendek" data-correct="false">Karena arus hanya memilih jalur yang paling pendek.</button>
+              </div>
+            </div>
+
+            <div class="elab-feedback" data-elab-feedback>Pilih jawaban terlebih dahulu, lalu jelaskan alasannya.</div>
+            <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
-          <div class="elab-feedback" data-elab-feedback="home">Pilih berdasarkan struktur jalurnya.</div>
         </div>
 
         <div class="stage-slide" data-slide="1">
@@ -302,34 +319,67 @@
             <b>Dua lampu identik disusun seri pada tegangan tetap. Kemudian ditambahkan satu lampu identik lagi secara seri.</b>
           </div>
 
-          <div class="elab-mini-question">
+          <div class="elab-mini-question" data-elab-question="series-r"
+               data-clue="Gunakan hubungan hambatan seri: setiap hambatan berada pada satu jalur yang sama."
+               data-final="Pada seri, Rₜ = R₁ + R₂ + ... sehingga menambah satu lampu menambah hambatan total.">
             <b>Hambatan total akan...</b>
-            <div class="elab-options" data-elab-group="series-r">
-              <button type="button" data-elab-choice data-correct="true" data-feedback="Benar. Hambatan seri dijumlahkan, sehingga R total bertambah.">bertambah</button>
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Menambah hambatan seri menambah R total.">berkurang</button>
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Jumlah komponen seri memengaruhi R total.">tetap</button>
+            <div class="elab-options" data-elab-answer-group>
+              <button type="button" data-elab-answer data-value="bertambah" data-correct="true">bertambah</button>
+              <button type="button" data-elab-answer data-value="berkurang" data-correct="false">berkurang</button>
+              <button type="button" data-elab-answer data-value="tetap" data-correct="false">tetap</button>
             </div>
-            <div class="elab-feedback" data-elab-feedback="series-r"></div>
+            <div class="elab-reason-panel" data-elab-reason-panel hidden>
+              <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
+              <div class="elab-reasons" data-elab-reason-group>
+                <button type="button" data-elab-reason data-value="jumlah-r" data-correct="true">Hambatan seri dijumlahkan: Rₜ = R₁ + R₂ + R₃.</button>
+                <button type="button" data-elab-reason data-value="v-tetap-r-tetap" data-correct="false">Karena tegangan sumber tetap, hambatan total juga tetap.</button>
+                <button type="button" data-elab-reason data-value="lampu-bagi-r" data-correct="false">Semakin banyak lampu, hambatan total terbagi menjadi lebih kecil.</button>
+              </div>
+            </div>
+            <div class="elab-feedback" data-elab-feedback>Jawab, lalu pilih alasannya.</div>
+            <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
 
-          <div class="elab-mini-question">
+          <div class="elab-mini-question" data-elab-question="series-i"
+               data-clue="Tegangan sumber tetap. Hubungkan perubahan R total dengan I = V/R."
+               data-final="Ketika V tetap dan R total bertambah, I = V/R membuat arus total berkurang.">
             <b>Arus total akan...</b>
-            <div class="elab-options" data-elab-group="series-i">
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. V tetap dan R total bertambah.">bertambah</button>
-              <button type="button" data-elab-choice data-correct="true" data-feedback="Benar. Dengan V tetap, I = V/R sehingga I turun ketika R total naik.">berkurang</button>
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Perubahan R total mengubah arus.">tetap</button>
+            <div class="elab-options" data-elab-answer-group>
+              <button type="button" data-elab-answer data-value="bertambah" data-correct="false">bertambah</button>
+              <button type="button" data-elab-answer data-value="berkurang" data-correct="true">berkurang</button>
+              <button type="button" data-elab-answer data-value="tetap" data-correct="false">tetap</button>
             </div>
-            <div class="elab-feedback" data-elab-feedback="series-i"></div>
+            <div class="elab-reason-panel" data-elab-reason-panel hidden>
+              <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
+              <div class="elab-reasons" data-elab-reason-group>
+                <button type="button" data-elab-reason data-value="ohm" data-correct="true">V tetap, Rₜ bertambah, maka I = V/Rₜ mengecil.</button>
+                <button type="button" data-elab-reason data-value="seri-i-selalu" data-correct="false">Arus seri selalu bernilai tetap walaupun hambatan total berubah.</button>
+                <button type="button" data-elab-reason data-value="lampu-tambah-i" data-correct="false">Menambah lampu berarti menambah jumlah arus yang mengalir.</button>
+              </div>
+            </div>
+            <div class="elab-feedback" data-elab-feedback>Jawab, lalu pilih alasannya.</div>
+            <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
 
-          <div class="elab-mini-question">
+          <div class="elab-mini-question" data-elab-question="series-bright"
+               data-clue="Terang lampu berkaitan dengan daya. Jika arus pada lampu turun, bagaimana P = I²R berubah?"
+               data-final="Lampu menjadi lebih redup karena arus seri berkurang. Untuk R lampu tetap, P = I²R juga berkurang.">
             <b>Terang setiap lampu cenderung...</b>
-            <div class="elab-options" data-elab-group="series-bright">
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Arus seri justru berkurang.">lebih terang</button>
-              <button type="button" data-elab-choice data-correct="true" data-feedback="Benar. Arus yang lebih kecil membuat daya tiap lampu lebih kecil.">lebih redup</button>
-              <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Penambahan lampu mengubah arus pada rangkaian seri.">sama</button>
+            <div class="elab-options" data-elab-answer-group>
+              <button type="button" data-elab-answer data-value="lebih-terang" data-correct="false">lebih terang</button>
+              <button type="button" data-elab-answer data-value="lebih-redup" data-correct="true">lebih redup</button>
+              <button type="button" data-elab-answer data-value="sama" data-correct="false">sama</button>
             </div>
-            <div class="elab-feedback" data-elab-feedback="series-bright"></div>
+            <div class="elab-reason-panel" data-elab-reason-panel hidden>
+              <span class="elab-reason-title">Pilih alasan yang mendukung jawabanmu.</span>
+              <div class="elab-reasons" data-elab-reason-group>
+                <button type="button" data-elab-reason data-value="daya-turun" data-correct="true">Arus mengecil sehingga daya tiap lampu P = I²R ikut mengecil.</button>
+                <button type="button" data-elab-reason data-value="v-sumber-sama" data-correct="false">Tegangan sumber tetap, jadi terang setiap lampu pasti tetap.</button>
+                <button type="button" data-elab-reason data-value="lampu-banyak-daya" data-correct="false">Semakin banyak lampu, tiap lampu menerima daya lebih besar.</button>
+              </div>
+            </div>
+            <div class="elab-feedback" data-elab-feedback>Jawab, lalu pilih alasannya.</div>
+            <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
         </div>
 
@@ -343,13 +393,27 @@
             </div>
             <p>Keduanya mendapat tegangan yang sama. Gunakan I = V/R untuk membandingkan arus cabangnya.</p>
           </div>
-          <div class="elab-question">Cabang mana yang memiliki arus lebih besar?</div>
-          <div class="elab-options" data-elab-group="branch-current">
-            <button type="button" data-elab-choice data-correct="true" data-feedback="Benar. I₁ = 12/6 = 2 A, sedangkan I₂ = 12/12 = 1 A.">Cabang 1 (6 Ω)</button>
-            <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Pada V yang sama, hambatan lebih besar menghasilkan arus lebih kecil.">Cabang 2 (12 Ω)</button>
-            <button type="button" data-elab-choice data-correct="false" data-feedback="Belum. Tegangannya sama, tetapi hambatannya berbeda sehingga arusnya tidak sama.">Sama besar</button>
+
+          <div class="elab-mini-question" data-elab-question="branch-current"
+               data-clue="Pada paralel, V kedua cabang sama. Bandingkan I = V/R untuk R = 6 Ω dan 12 Ω."
+               data-final="Cabang 1 memiliki arus lebih besar: I₁ = 12/6 = 2 A, sedangkan I₂ = 12/12 = 1 A.">
+            <b>Cabang mana yang memiliki arus lebih besar?</b>
+            <div class="elab-options" data-elab-answer-group>
+              <button type="button" data-elab-answer data-value="cabang-1" data-correct="true">Cabang 1 (6 Ω)</button>
+              <button type="button" data-elab-answer data-value="cabang-2" data-correct="false">Cabang 2 (12 Ω)</button>
+              <button type="button" data-elab-answer data-value="sama" data-correct="false">Sama besar</button>
+            </div>
+            <div class="elab-reason-panel" data-elab-reason-panel hidden>
+              <span class="elab-reason-title">Mengapa?</span>
+              <div class="elab-reasons" data-elab-reason-group>
+                <button type="button" data-elab-reason data-value="r-kecil-i-besar" data-correct="true">Pada V sama, hambatan lebih kecil menghasilkan arus lebih besar: I = V/R.</button>
+                <button type="button" data-elab-reason data-value="r-besar-i-besar" data-correct="false">Hambatan yang lebih besar menarik arus yang lebih besar.</button>
+                <button type="button" data-elab-reason data-value="paralel-i-sama" data-correct="false">Semua cabang paralel selalu memiliki arus yang sama.</button>
+              </div>
+            </div>
+            <div class="elab-feedback" data-elab-feedback>Jawab, lalu jelaskan alasannya.</div>
+            <button type="button" class="elab-retry" data-elab-retry hidden>Coba sekali lagi</button>
           </div>
-          <div class="elab-feedback" data-elab-feedback="branch-current">Bandingkan I₁ dan I₂.</div>
         </div>
 
         <div class="stage-slide" data-slide="3">
@@ -426,4 +490,4 @@ function normalizePictorialTypo(){
   });
 }
 document.addEventListener("DOMContentLoaded",normalizePictorialTypo);
-</script><script src="config.js?v=20260927-2000"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2022"></script></body></html>
+</script><script src="config.js?v=20260927-2000"></script><script src="module.js?v=20260927-2000"></script><script src="cpa.js?v=20260927-2105"></script></body></html>
