@@ -79,7 +79,7 @@ function refreshDashboard() {
   );
 
   writeDashboardSummary_(dashboard, filtered, headerMap);
-  dashboard.getRange("H2").setValue(
+  dashboard.getRange("G2").setValue(
     "Diperbarui: " +
     Utilities.formatDate(
       new Date(),
@@ -193,7 +193,7 @@ function writeEmptyDashboard_(sheet) {
   setDropdown_(sheet.getRange("H3"), ["Semua"], "Semua");
   setDropdown_(sheet.getRange("B4"), ["Semua"], "Semua");
 
-  sheet.getRange("H2").setValue("Belum ada respons.");
+  sheet.getRange("G2").setValue("Belum ada respons.");
 }
 
 function headerMap_(headerRow) {
