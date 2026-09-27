@@ -4,15 +4,87 @@ let active=Number.isInteger(state.activeStage)?state.activeStage:0, done=new Set
 if(!state.sessionId) state.sessionId=id();
 const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.querySelectorAll(".u-stage-panel")], fill=document.getElementById("learningProgressFill"), ptxt=document.getElementById("learningProgressText"), prev=document.getElementById("uPrev"), next=document.getElementById("uNext"), complete=document.getElementById("uComplete"), toast=document.getElementById("uToast");
 window.setLearningStage=show;
-initMode();initIdentity();initDiag();initEngage();initReflect();initNav();restoreReflect();show(active);refreshSend();save();
+initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active);refreshSend();save();
 
 function initMode(){document.querySelectorAll("[data-learning-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.learningMode==="guru"?"guru":"mandiri";applyMode();changed();save()});applyMode()}
-function applyMode(){document.body.dataset.learningMode=mode;document.querySelectorAll("[data-learning-mode]").forEach(b=>b.classList.toggle("active",b.dataset.learningMode===mode));document.getElementById("modeHelp").textContent=mode==="guru"?"Pendidik mengendalikan diskusi, kapan penjelasan dibuka, dan kapan siswa berpindah tahap.":"Petunjuk, feedback, progres, dan refleksi membantu kamu belajar secara mandiri."}
+function applyMode(){
+  document.body.dataset.learningMode=mode;
+  document.querySelectorAll("[data-learning-mode]").forEach(b=>b.classList.toggle("active",b.dataset.learningMode===mode));
+  document.getElementById("modeHelp").textContent=mode==="guru"
+    ?"Sebagian feedback ditahan agar guru dapat memfasilitasi prediksi, diskusi, dan pembahasan sebelum jawaban dibuka."
+    :"Petunjuk dan feedback otomatis diberikan lebih langsung agar kamu dapat belajar tanpa menunggu bantuan guru.";
+  if(mode==="guru") document.querySelectorAll(".teacher-reveal-target").forEach(x=>x.classList.remove("teacher-revealed"));
+  window.dispatchEvent(new CustomEvent("learningmodechange",{detail:{mode}}));
+}
 function initIdentity(){const a=document.getElementById("studentName"),b=document.getElementById("studentClass");a.value=state.identity?.name||"";b.value=state.identity?.className||"";[a,b].forEach(f=>f.oninput=()=>{state.identity=state.identity||{};state.identity[f.id==="studentName"?"name":"className"]=f.value.trim();changed();save()})}
-function initDiag(){document.querySelectorAll("[data-diagnostic]").forEach(g=>{const k=g.dataset.diagnostic;const paint=b=>{g.querySelectorAll("button").forEach(x=>x.classList.remove("selected","correct","wrong"));if(!b)return;b.classList.add("selected",b.dataset.correct==="true"?"correct":"wrong");const fb=g.parentElement.querySelector(".diagnostic-feedback");if(fb){fb.textContent=b.dataset.feedback||"";fb.classList.toggle("wrong",b.dataset.correct!=="true");fb.classList.toggle("correct",b.dataset.correct==="true")}};g.querySelectorAll("button").forEach(b=>b.onclick=()=>{paint(b);state.diagnostic=state.diagnostic||{};state.diagnostic[k]=b.dataset.value;save()});const v=state.diagnostic?.[k];if(v)paint(g.querySelector('[data-value="'+v+'"]'))})}
+function initDiag(){
+  document.querySelectorAll("[data-diagnostic]").forEach(g=>{
+    const k=g.dataset.diagnostic;
+    const item=g.closest(".diagnostic-item")||g.parentElement;
+    const fb=item.querySelector(".diagnostic-feedback");
+    const reveal=document.createElement("button");
+    reveal.type="button";
+    reveal.className="diagnostic-reveal mode-only-teacher";
+    reveal.textContent="Buka pembahasan";
+    reveal.hidden=true;
+    fb.insertAdjacentElement("afterend",reveal);
+    let chosen=null, revealed=false;
+
+    const paint=(b,force=false)=>{
+      g.querySelectorAll("button").forEach(x=>x.classList.remove("selected","correct","wrong"));
+      if(!b){reveal.hidden=true;return}
+      chosen=b;
+      b.classList.add("selected");
+      const teacherHold=mode==="guru"&&!force;
+      if(teacherHold){
+        revealed=false;
+        fb.textContent="Jawaban tersimpan. Minta siswa menjelaskan alasannya sebelum membuka pembahasan.";
+        fb.classList.remove("correct","wrong");
+        reveal.hidden=false;
+        return;
+      }
+      revealed=true;
+      b.classList.add(b.dataset.correct==="true"?"correct":"wrong");
+      fb.textContent=b.dataset.feedback||"";
+      fb.classList.toggle("wrong",b.dataset.correct!=="true");
+      fb.classList.toggle("correct",b.dataset.correct==="true");
+      reveal.hidden=true;
+    };
+
+    g.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+      paint(b,false);
+      state.diagnostic=state.diagnostic||{};
+      state.diagnostic[k]=b.dataset.value;
+      save();
+    });
+
+    reveal.onclick=()=>chosen&&paint(chosen,true);
+    window.addEventListener("learningmodechange",()=>{if(chosen)paint(chosen,mode!=="guru"&&revealed)});
+
+    const v=state.diagnostic?.[k];
+    if(v)paint(g.querySelector('[data-value="'+v+'"]'),mode!=="guru");
+  });
+}
 function initEngage(){document.querySelectorAll(".engage-option").forEach(b=>b.onclick=()=>{document.querySelectorAll(".engage-option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.engagePrediction=b.dataset.prediction;document.getElementById("engageFeedback").textContent=mode==="guru"?"Prediksi tersimpan. Jelaskan alasanmu kepada kelompok/guru sebelum membuka Explore.":"Prediksi tersimpan. Jangan ubah dulu—uji melalui simulasi pada tahap Explore.";save()});if(state.engagePrediction)document.querySelector('[data-prediction="'+state.engagePrediction+'"]')?.classList.add("selected")}
 function initReflect(){document.querySelectorAll("[data-reflection]").forEach(f=>f.oninput=()=>{state.reflections=state.reflections||{};state.reflections[f.dataset.reflection]=f.value;changed();save()});const g=document.getElementById("difficultyGrid");(config.difficultyCategories||[]).forEach(c=>{const l=document.createElement("label");l.className="difficulty-option";const i=document.createElement("input");i.type="checkbox";i.dataset.difficulty=c;i.checked=(state.difficulties||[]).includes(c);const s=document.createElement("span");s.textContent=c;l.append(i,s);g.appendChild(l)});g.onchange=()=>{state.difficulties=diffs();changed();save()};document.querySelectorAll("[data-confidence]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-confidence]").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.confidence=+b.dataset.confidence;changed();save()});if(state.confidence)document.querySelector('[data-confidence="'+state.confidence+'"]')?.classList.add("selected");document.getElementById("sendFeedback").onclick=send}
 function restoreReflect(){const r=state.reflections||{};document.querySelectorAll("[data-reflection]").forEach(f=>f.value=r[f.dataset.reflection]||"")}
+function initTeacherControls(){
+  document.querySelectorAll(".teacher-reveal-btn[data-reveal-target]").forEach(btn=>{
+    const target=document.getElementById(btn.dataset.revealTarget);
+    if(!target) return;
+    const sync=()=>{
+      const open=target.classList.contains("teacher-revealed");
+      btn.textContent=open?"Sembunyikan ringkasan":"Buka ringkasan observasi";
+    };
+    btn.onclick=()=>{target.classList.toggle("teacher-revealed");sync()};
+    sync();
+  });
+  window.addEventListener("learningmodechange",()=>document.querySelectorAll(".teacher-reveal-btn[data-reveal-target]").forEach(btn=>{
+    const target=document.getElementById(btn.dataset.revealTarget);
+    if(target && mode==="guru") target.classList.remove("teacher-revealed");
+    if(target) btn.textContent="Buka ringkasan observasi";
+  }));
+}
 function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{if(confirm("Reset progres dan identitas lokal modul ini?")){localStorage.removeItem(KEY);location.reload()}}}
 function show(i){active=Math.max(0,Math.min(N-1,i));panels.forEach((p,j)=>p.classList.toggle("active",j===active));tabs.forEach((t,j)=>{t.classList.toggle("active",j===active);t.classList.toggle("complete",done.has(j))});prev.disabled=active===0;next.disabled=active===N-1;next.style.opacity=active===N-1?".45":"1";complete.classList.toggle("done",done.has(active));complete.textContent=done.has(active)?"✓ Sudah selesai":"Tandai selesai";render();save();window.scrollTo({top:0,behavior:"smooth"})}
 function render(){const c=done.size,p=Math.round(c/N*100);fill.style.width=p+"%";ptxt.textContent=c+" dari "+N+" tahap • "+p+"%";tabs.forEach((t,j)=>t.classList.toggle("complete",done.has(j)))}
