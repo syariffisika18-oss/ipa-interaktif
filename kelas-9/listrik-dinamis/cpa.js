@@ -605,7 +605,6 @@ function initElaborate(){
       btn.classList.add('selected');
       runtime.answer=btn;
       setButtonsLocked(answerGroup,true);
-      btn.disabled=false;
       reasonPanel.hidden=false;
       feedback.className='elab-feedback';
       feedback.textContent='Jawaban dikunci. Sekarang pilih alasan yang paling mendukung.';
@@ -619,7 +618,6 @@ function initElaborate(){
       reasonBtn.classList.add('selected');
       runtime.reason=reasonBtn;
       setButtonsLocked(reasonGroup,true);
-      reasonBtn.disabled=false;
       runtime.attempts+=1;
 
       const answerCorrect=runtime.answer.dataset.correct==='true';
