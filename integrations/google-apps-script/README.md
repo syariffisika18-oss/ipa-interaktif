@@ -102,3 +102,22 @@ Ringkasan utama:
 - daftar siswa/respons yang perlu perhatian
 
 Saat guru membuka spreadsheet, dashboard mencoba diperbarui otomatis. Guru juga dapat memperbarui manual dari menu **IPA Interaktif**.
+
+
+## Dashboard Guru v1.1
+
+Dashboard sekarang menambahkan dua visual ringkas:
+
+- **Distribusi Keyakinan** — grafik kolom untuk Perlu bantuan, Cukup paham, dan Sudah yakin.
+- **Kategori Kesulitan** — grafik batang horizontal berdasarkan kategori kesulitan siswa.
+
+Grafik mengikuti filter dashboard secara otomatis. Data sumber grafik ditempatkan pada sheet helper tersembunyi `_DASHBOARD_DATA`, sehingga area dashboard utama tetap bersih.
+
+Untuk memperbarui:
+
+1. Ganti isi `Dashboard.gs` di Apps Script dengan versi terbaru dari repository.
+2. Simpan.
+3. Kembali ke Google Sheet.
+4. Pilih **IPA Interaktif → Perbarui Dashboard**.
+
+Tidak perlu redeploy Web App.
