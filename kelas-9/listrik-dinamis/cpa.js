@@ -536,7 +536,6 @@ $('#resetBtn').onclick=()=>{
 };
 
 $('#compareBtn').onclick=()=>{stageIndex.explain=0;window.setLearningStage?.(3);setTimeout(()=>showStage('explain',0),0)};
-$('#toAbstractBtn').onclick=()=>{showStage('explain',3)};
 $('#goElaborateBtn').onclick=()=>{stageIndex.elaborate=0;window.setLearningStage?.(4);setTimeout(()=>showStage('elaborate',0),0)};
 $('#goEvaluateBtn').onclick=()=>{quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
 $('#resetQuiz').onclick=()=>{answered=Array(quizData.length).fill(false);score=0;quizSlide=0;renderQuiz()};
