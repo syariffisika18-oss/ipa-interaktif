@@ -431,9 +431,9 @@ function shuffleArray(arr){
 }
 
 function buildQuizOrder(){
-  const easy=shuffleArray(quizData.filter(q=>q.level==='easy')).slice(0,6);
-  const medium=shuffleArray(quizData.filter(q=>q.level==='medium')).slice(0,8);
-  const hard=shuffleArray(quizData.filter(q=>q.level==='hard')).slice(0,6);
+  const easy=shuffleArray(quizData.filter(q=>q.level==='easy'));
+  const medium=shuffleArray(quizData.filter(q=>q.level==='medium'));
+  const hard=shuffleArray(quizData.filter(q=>q.level==='hard'));
   return [...easy,...medium,...hard];
 }
 
