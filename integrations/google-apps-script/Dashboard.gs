@@ -517,12 +517,11 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
     .setOption("width", 480)
     .setOption("height", 250)
     .setOption("hAxis", { title: "" })
-    .setOption("vAxis", {
-      title: "Jumlah siswa",
-      viewWindow: { min: 0, max: confidenceAxis.max },
-      ticks: confidenceAxis.ticks,
-      format: "0"
-    })
+    .setOption("vAxis.title", "Jumlah siswa")
+    .setOption("vAxis.minValue", 0)
+    .setOption("vAxis.maxValue", confidenceAxis.max)
+    .setOption("vAxis.format", "0")
+    .setOption("vAxis.gridlines.count", Math.min(confidenceAxis.max + 1, 6))
     .setOption("backgroundColor", "transparent")
     .build();
 
@@ -537,12 +536,11 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
     .setOption("legend", { position: "none" })
     .setOption("width", 480)
     .setOption("height", 320)
-    .setOption("hAxis", {
-      title: "Jumlah siswa",
-      viewWindow: { min: 0, max: difficultyAxis.max },
-      ticks: difficultyAxis.ticks,
-      format: "0"
-    })
+    .setOption("hAxis.title", "Jumlah siswa")
+    .setOption("hAxis.minValue", 0)
+    .setOption("hAxis.maxValue", difficultyAxis.max)
+    .setOption("hAxis.format", "0")
+    .setOption("hAxis.gridlines.count", Math.min(difficultyAxis.max + 1, 6))
     .setOption("vAxis", { title: "" })
     .setOption("backgroundColor", "transparent")
     .build();
