@@ -492,9 +492,25 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
 
   clearDashboardCharts_(dashboard);
 
+  const confidenceAxis = integerAxis_(
+    Math.max(
+      confidenceCounts["Perlu bantuan"],
+      confidenceCounts["Cukup paham"],
+      confidenceCounts["Sudah yakin"]
+    )
+  );
+
+  const difficultyAxis = integerAxis_(
+    Math.max.apply(
+      null,
+      difficultyData.map(item => Number(item[1]) || 0)
+    )
+  );
+
   const confidenceChart = dashboard.newChart()
     .setChartType(Charts.ChartType.COLUMN)
     .addRange(dataSheet.getRange(1, 1, confidenceData.length, 2))
+    .setNumHeaders(1)
     .setPosition(2, 10, 0, 0)
     .setOption("title", "Distribusi Keyakinan")
     .setOption("legend", { position: "none" })
@@ -503,7 +519,8 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
     .setOption("hAxis", { title: "" })
     .setOption("vAxis", {
       title: "Jumlah siswa",
-      minValue: 0,
+      viewWindow: { min: 0, max: confidenceAxis.max },
+      ticks: confidenceAxis.ticks,
       format: "0"
     })
     .setOption("backgroundColor", "transparent")
@@ -514,6 +531,7 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
   const difficultyChart = dashboard.newChart()
     .setChartType(Charts.ChartType.BAR)
     .addRange(dataSheet.getRange(1, 4, difficultyTable.length, 2))
+    .setNumHeaders(1)
     .setPosition(17, 10, 0, 0)
     .setOption("title", "Kategori Kesulitan")
     .setOption("legend", { position: "none" })
@@ -521,7 +539,8 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
     .setOption("height", 320)
     .setOption("hAxis", {
       title: "Jumlah siswa",
-      minValue: 0,
+      viewWindow: { min: 0, max: difficultyAxis.max },
+      ticks: difficultyAxis.ticks,
       format: "0"
     })
     .setOption("vAxis", { title: "" })
@@ -537,6 +556,23 @@ function writeDashboardCharts_(ss, dashboard, rows, map) {
   } catch (error) {
     console.error("Tidak dapat menyembunyikan helper sheet:", error);
   }
+}
+
+function integerAxis_(maxValue) {
+  const max = Math.max(1, Number(maxValue) || 0);
+  const step = max <= 5 ? 1 : Math.ceil(max / 5);
+  const axisMax = Math.max(1, Math.ceil(max / step) * step);
+  const ticks = [];
+
+  for (let value = 0; value <= axisMax; value += step) {
+    ticks.push(value);
+  }
+
+  if (ticks[ticks.length - 1] !== axisMax) {
+    ticks.push(axisMax);
+  }
+
+  return { max: axisMax, ticks: ticks };
 }
 
 function clearDashboardCharts_(dashboard) {
