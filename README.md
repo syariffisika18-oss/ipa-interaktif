@@ -47,3 +47,9 @@ Strategi tambahan tetap fleksibel dan dipilih sesuai karakter materi, misalnya P
 3. Jangan memaksakan satu pendekatan tambahan pada semua materi.
 4. Utamakan tampilan ringkas, responsif, dan tidak bergantung pada scroll panjang.
 5. Uji setiap modul pada HP dan desktop.
+
+
+## Dashboard Guru
+
+Dashboard guru berada di Google Sheet privat melalui `integrations/google-apps-script/Dashboard.gs`.
+Dashboard merangkum respons terbaru, keyakinan, kategori kesulitan, dan teks yang masih membingungkan siswa tanpa mempublikasikan data siswa di GitHub Pages.
