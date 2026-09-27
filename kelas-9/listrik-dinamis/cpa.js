@@ -72,7 +72,6 @@ function drawBulb(x,y,r,brightness,label,off=false){
   const glowAlpha = off ? 0.03 : (0.10 + 0.34*brightness);
   const ringAlpha = off ? 0.02 : (0.10 + 0.28*brightness);
   const level = brightnessText(brightness);
-  const pct = Math.round(brightness*100);
   const barW = 64;
   const fillW = Math.max(0, Math.min(barW, barW*brightness));
 
@@ -106,7 +105,7 @@ function drawBulb(x,y,r,brightness,label,off=false){
       <text x="${x}" y="${y+r+51}" text-anchor="middle" font-size="14" font-weight="700" fill="#b26b00">${level}</text>
       <rect x="${x-barW/2}" y="${y+r+58}" width="${barW}" height="8" rx="5" fill="#e5e7eb" stroke="#cdd5df"/>
       <rect x="${x-barW/2}" y="${y+r+58}" width="${fillW}" height="8" rx="5" fill="${brightness>0.78 ? '#ff9800' : brightness>0.45 ? '#f4b942' : '#b8c1cc'}"/>
-      <text x="${x}" y="${y+r+81}" text-anchor="middle" font-size="12" fill="#667085">${pct}% indikator terang</text>
+      <text x="${x}" y="${y+r+81}" text-anchor="middle" font-size="12" fill="#667085">skala visual simulasi</text>
     </g>`;
 }
 
@@ -138,26 +137,40 @@ function drawCircuit(){
   let s='';
 
   if(state.type==='series'){
-    s += `<path d="M120 80 H650 V280 H120" fill="none" stroke="#333a4d" stroke-width="5"/>
-          <line x1="120" y1="80" x2="120" y2="173" stroke="#333a4d" stroke-width="5"/>
+    const xs = n===1?[380]:n===2?[300,500]:[240,380,520];
+
+    // Left side + battery: the source is physically in the only series loop.
+    s += `<line x1="120" y1="80" x2="120" y2="173" stroke="#333a4d" stroke-width="5"/>
           <line x1="120" y1="187" x2="120" y2="280" stroke="#333a4d" stroke-width="5"/>`;
     s += batteryOnVerticalWire(120,180);
-    const xs = n===1?[380]:n===2?[300,500]:[240,380,520];
+
+    // Top path is segmented around each lamp, so removing a lamp really opens the circuit.
+    let cursor=120;
     xs.forEach((x,i)=>{
-      const removed = open && i===0;
+      const left=x-52, right=x+52;
+      s += `<line x1="${cursor}" y1="80" x2="${left}" y2="80" stroke="#333a4d" stroke-width="5"/>`;
+      const removed=open && i===0;
       if(removed){
-        s += `<rect x="${x-48}" y="56" width="96" height="48" rx="10" fill="#fff0f2" stroke="#cf3f4f" stroke-width="3"/>
-              <text x="${x}" y="86" text-anchor="middle" fill="#9f2432" font-weight="700">Lampu dilepas</text>`;
-      } else {
+        s += `<rect x="${x-46}" y="57" width="92" height="46" rx="10" fill="#fff0f2" stroke="#cf3f4f" stroke-width="3"/>
+              <text x="${x}" y="76" text-anchor="middle" fill="#9f2432" font-size="13" font-weight="700">Lampu 1</text>
+              <text x="${x}" y="92" text-anchor="middle" fill="#9f2432" font-size="13" font-weight="700">dilepas</text>`;
+      }else{
         s += drawBulb(x,80,26,b,`Lampu ${i+1}`,false);
       }
+      cursor=right;
     });
-    s += `<line x1="220" y1="280" x2="280" y2="280" stroke="#333a4d" stroke-width="5"/>
-          <circle cx="280" cy="280" r="6" fill="#333a4d"/>
+    s += `<line x1="${cursor}" y1="80" x2="650" y2="80" stroke="#333a4d" stroke-width="5"/>
+          <line x1="650" y1="80" x2="650" y2="280" stroke="#333a4d" stroke-width="5"/>`;
+
+    // Bottom return path is segmented around the switch; no hidden wire bypasses it.
+    s += `<line x1="650" y1="280" x2="350" y2="280" stroke="#333a4d" stroke-width="5"/>
           <circle cx="350" cy="280" r="6" fill="#333a4d"/>
+          <circle cx="280" cy="280" r="6" fill="#333a4d"/>
+          <line x1="280" y1="280" x2="120" y2="280" stroke="#333a4d" stroke-width="5"/>
           <line x1="280" y1="280" x2="${state.on?350:335}" y2="${state.on?280:246}" stroke="${state.on?'#1f9d68':'#cf3f4f'}" stroke-width="6" stroke-linecap="round"/>`;
+
     if(state.on && !open){
-      s += `<path d="M160 80 H620" stroke="#3559e0" stroke-width="4" stroke-dasharray="10 12">
+      s += `<path d="M150 80 H620" stroke="#3559e0" stroke-width="4" stroke-dasharray="10 12" opacity=".78">
         <animate attributeName="stroke-dashoffset" from="0" to="-44" dur="1.2s" repeatCount="indefinite"/></path>`;
     }
   } else {
@@ -219,7 +232,7 @@ function updateConcrete(){
   $('#rt').textContent = m.Rt==null ? 'rangkaian terbuka' : fmt(m.Rt,'Ω');
   $('#it').textContent = fmt(m.It,'A');
   $('#vb').textContent = fmt(m.Vb,'V');
-  $('#pb').textContent = fmt(m.Pb,'W');
+  $('#ib').textContent = fmt(m.branchI,'A');
 
   let text='';
   if(!state.on){
@@ -229,9 +242,9 @@ function updateConcrete(){
     else text=`Rangkaian seri memiliki satu jalur. Arus yang sama melewati setiap lampu. Dengan ${state.bulbs} lampu identik, tegangan sumber terbagi pada lampu-lampu tersebut.`;
   } else {
     if(state.removed) text='Lampu 1 dilepas → cabang itu terbuka, tetapi cabang lain masih memiliki jalur lengkap sehingga lampu lain tetap menyala.';
-    else text=`Rangkaian paralel memiliki ${state.bulbs} cabang. Setiap lampu terhubung pada dua titik sumber yang sama, sehingga masing-masing mendapat tegangan sumber yang sama.`;
+    else text=`Rangkaian paralel memiliki ${state.bulbs} cabang lampu. Setiap lampu terhubung pada dua titik sumber yang sama, sehingga masing-masing mendapat tegangan sumber yang sama.`;
   }
-  const brightInfo = !state.on ? 'Semua lampu mati.' : `Indikator terang tiap lampu saat ini: <b>${brightnessText(brightnessRatio())}</b>.`;
+  const brightInfo = !state.on ? 'Semua lampu mati.' : `Indikator terang kualitatif tiap lampu saat ini: <b>${brightnessText(brightnessRatio())}</b>.`;
   $('#observation').innerHTML=`<b>Amati:</b> ${text}<br>${brightInfo}`;
   drawCircuit();
 }
@@ -246,8 +259,8 @@ function renderAbstractComparison(){
   const Ip=V/Rp;
   const Vs=V/n;
   const Vp=V;
-  const Ps=Is*Is*R;
-  const Pp=V*V/R;
+  const IbranchS=Is;
+  const IbranchP=V/R;
 
   $('#abstractComparison').innerHTML=`
     <div class="small" style="margin-bottom:6px">${n} lampu identik • ${V} V • ${R} Ω/lampu</div>
@@ -255,8 +268,8 @@ function renderAbstractComparison(){
       <div class="compare-line compare-head"><b>Besaran</b><span>SERI</span><span>PARALEL</span></div>
       <div class="compare-line"><b>R ekuivalen</b><span>${fmt(Rs,'Ω')}</span><span>${fmt(Rp,'Ω')}</span></div>
       <div class="compare-line"><b>Arus total</b><span>${fmt(Is,'A')}</span><span>${fmt(Ip,'A')}</span></div>
+      <div class="compare-line"><b>Arus tiap lampu</b><span>${fmt(IbranchS,'A')}</span><span>${fmt(IbranchP,'A')}</span></div>
       <div class="compare-line"><b>V tiap lampu</b><span>${fmt(Vs,'V')}</span><span>${fmt(Vp,'V')}</span></div>
-      <div class="compare-line"><b>Daya/lampu</b><span>${fmt(Ps,'W')}</span><span>${fmt(Pp,'W')}</span></div>
     </div>
     ${n===1?'<div class="note warning stage-note"><b>Catatan:</b> gunakan 2–3 lampu agar perbedaan seri dan paralel tampak.</div>':''}
   `;
@@ -294,7 +307,7 @@ const quizData = [
     q:'Tiga lampu identik dipasang seri. Dibanding satu lampu pada sumber yang sama, setiap lampu cenderung...',
     a:['Lebih terang','Lebih redup','Sama terang','Tidak dapat diprediksi'],
     c:1,
-    f:'Pada seri, tegangan sumber terbagi. Untuk lampu identik, daya tiap lampu menjadi lebih kecil sehingga lebih redup.'
+    f:'Untuk lampu identik pada sumber yang sama, penambahan lampu seri memperbesar hambatan total dan memperkecil arus. Tegangan sumber juga terbagi pada lebih banyak lampu, sehingga indikator terang tiap lampu menurun.'
   },
   {
     q:'Tiga lampu identik dipasang paralel pada sumber ideal. Tegangan pada tiap lampu adalah...',
@@ -375,10 +388,10 @@ const quizData = [
     f:'Hambatan ekuivalen turun. Dengan V tetap, I = V/Rₜ sehingga arus total meningkat.'
   },
   {
-    q:'Satu lampu 4 Ω mendapat tegangan 8 V. Daya lampu menurut model hambatan tetap adalah...',
-    a:['2 W','8 W','16 W','32 W'],
-    c:2,
-    f:'P = V²/R = 8²/4 = 64/4 = 16 W.'
+    q:'Dua lampu identik dihubungkan ke sumber tegangan ideal yang sama. Susunan mana yang memiliki arus total sumber lebih besar?',
+    a:['Seri','Paralel','Keduanya selalu sama','Tidak dapat dibandingkan'],
+    c:1,
+    f:'Untuk lampu identik, hambatan ekuivalen paralel lebih kecil daripada seri. Pada tegangan sumber yang sama, I = V/Rₜ membuat arus total rangkaian paralel lebih besar.'
   },
   {
     q:'Pernyataan yang paling tepat merangkum perbedaan seri dan paralel adalah...',
