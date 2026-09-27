@@ -935,3 +935,41 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
   .elab-reason-title{font-size:.7rem}
   .elab-retry{width:100%;padding:7px 9px}
 }
+
+
+/* Worked example — sejajarkan bentuk Rₜ = [input] Ω dan I = [input] A */
+.fade-task .equation-input{
+  display:grid;
+  grid-template-columns:46px minmax(0,1fr) 22px;
+  align-items:center;
+  gap:8px;
+  margin:10px 0;
+}
+.fade-task .equation-prefix{
+  white-space:nowrap;
+  font-family:"Cambria Math","Times New Roman",serif;
+  font-weight:900;
+  text-align:right;
+}
+.fade-task .equation-unit{
+  white-space:nowrap;
+  font-weight:900;
+  text-align:left;
+}
+.fade-task .equation-input input{
+  width:100%;
+  min-width:0;
+  margin:0;
+}
+
+@media(max-width:640px){
+  .fade-task .equation-input{
+    grid-template-columns:40px minmax(0,1fr) 18px;
+    gap:6px;
+    margin:7px 0;
+  }
+  .fade-task .equation-prefix,
+  .fade-task .equation-unit{
+    font-size:.78rem;
+  }
+}
