@@ -1,6 +1,6 @@
 (() => {
   const config = window.IPA_TEMPLATE_CONFIG || {};
-  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.2";
+  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.3";
   const stageCount = 7;
   const state = loadState();
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
@@ -20,9 +20,13 @@
   bindModeButtons();
   bindStages();
   bindDemos();
+  bindFeedbackForm();
   restoreReflections();
+  restoreIdentity();
+  restoreDifficulty();
   setMode(mode);
   showStage(activeStage);
+  updateFeedbackConnectionState();
 
   function hydrateConfig() {
     document.getElementById("appTitle").textContent = config.appTitle || "IPA Interaktif";
@@ -38,6 +42,14 @@
       button.className = "strategy-chip" + (index === 0 ? " is-selected" : "");
       button.textContent = strategy;
       grid.appendChild(button);
+    });
+
+    const difficultyGrid = document.getElementById("difficultyGrid");
+    (config.difficultyCategories || []).forEach((category, index) => {
+      const label = document.createElement("label");
+      label.className = "difficulty-option";
+      label.innerHTML = '<input type="checkbox" data-difficulty="' + escapeHtml(category) + '"><span>' + escapeHtml(category) + '</span>';
+      difficultyGrid.appendChild(label);
     });
   }
 
@@ -165,12 +177,147 @@
       completed = new Set();
       activeStage = 0;
       state.reflections = {};
+      state.identity = {};
+      state.difficulties = [];
+      state.confidence = 0;
       document.querySelectorAll("[data-reflection]").forEach(field => field.value = "");
       document.querySelectorAll("[data-confidence]").forEach(button => button.classList.remove("is-selected"));
+      document.querySelectorAll("[data-difficulty]").forEach(input => input.checked = false);
+      const nameField = document.getElementById("studentName");
+      const classField = document.getElementById("studentClass");
+      if (nameField) nameField.value = "";
+      if (classField) classField.value = "";
       setMode(config.defaultMode || "mandiri");
       showStage(0);
       showToast("Progres template direset.");
     });
+  }
+
+  function bindFeedbackForm() {
+    const nameField = document.getElementById("studentName");
+    const classField = document.getElementById("studentClass");
+    const sendButton = document.getElementById("sendFeedback");
+
+    [nameField, classField].forEach(field => {
+      field?.addEventListener("input", () => {
+        state.identity = state.identity || {};
+        state.identity[field.id === "studentName" ? "name" : "className"] = field.value.trim();
+        saveState();
+      });
+    });
+
+    document.getElementById("difficultyGrid")?.addEventListener("change", () => {
+      state.difficulties = getSelectedDifficulties();
+      saveState();
+    });
+
+    sendButton?.addEventListener("click", sendFeedback);
+  }
+
+  async function sendFeedback() {
+    const endpoint = (config.feedbackEndpoint || "").trim();
+    const name = document.getElementById("studentName")?.value.trim() || "";
+    const className = document.getElementById("studentClass")?.value.trim() || "";
+    const understood = state.reflections?.understood?.trim() || "";
+    const confused = state.reflections?.confused?.trim() || "";
+    const difficulties = getSelectedDifficulties();
+    const confidence = Number(state.confidence || 0);
+
+    if (!name || !className) {
+      showToast("Isi nama/nomor absen dan kelas terlebih dahulu.");
+      showStage(0);
+      return;
+    }
+    if (!confused && difficulties.length === 0 && !confidence) {
+      showToast("Isi minimal satu bagian refleksi sebelum mengirim.");
+      return;
+    }
+    if (!endpoint) {
+      showToast("Google Sheets belum terhubung. Refleksi tetap tersimpan di perangkat.");
+      return;
+    }
+
+    const payload = {
+      timestampClient: new Date().toISOString(),
+      studentName: name,
+      className,
+      materialId: config.materialId || "",
+      materialTitle: config.materialTitle || "",
+      mode,
+      understood,
+      confused,
+      difficulties: difficulties.join(", "),
+      confidence: confidenceLabel(confidence),
+      completedStages: String(completed.size),
+      totalStages: String(stageCount)
+    };
+
+    const button = document.getElementById("sendFeedback");
+    button.disabled = true;
+    button.classList.add("is-sending");
+    button.textContent = "Mengirim...";
+
+    try {
+      await fetch(endpoint, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams(payload)
+      });
+      state.lastFeedbackSentAt = payload.timestampClient;
+      saveState();
+      showToast("Refleksi dikirim. Guru dapat memeriksa Google Sheet.");
+    } catch (error) {
+      showToast("Pengiriman gagal. Refleksi tetap tersimpan di perangkat.");
+    } finally {
+      button.disabled = false;
+      button.classList.remove("is-sending");
+      button.textContent = "Kirim Refleksi";
+    }
+  }
+
+  function getSelectedDifficulties() {
+    return [...document.querySelectorAll("[data-difficulty]:checked")]
+      .map(input => input.dataset.difficulty);
+  }
+
+  function confidenceLabel(value) {
+    if (value === 1) return "Perlu bantuan";
+    if (value === 2) return "Cukup paham";
+    if (value === 3) return "Sudah yakin";
+    return "";
+  }
+
+  function restoreIdentity() {
+    const identity = state.identity || {};
+    const nameField = document.getElementById("studentName");
+    const classField = document.getElementById("studentClass");
+    if (nameField) nameField.value = identity.name || "";
+    if (classField) classField.value = identity.className || "";
+  }
+
+  function restoreDifficulty() {
+    const selected = new Set(state.difficulties || []);
+    document.querySelectorAll("[data-difficulty]").forEach(input => {
+      input.checked = selected.has(input.dataset.difficulty);
+    });
+  }
+
+  function updateFeedbackConnectionState() {
+    const note = document.getElementById("feedbackConnectionNote");
+    if (!note) return;
+    note.textContent = (config.feedbackEndpoint || "").trim()
+      ? "Refleksi akan dikirim ke Google Sheet guru saat tombol ditekan."
+      : "Refleksi masih tersimpan lokal sampai koneksi Google Sheets diaktifkan.";
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    })[char]);
   }
 
   function restoreReflections() {
