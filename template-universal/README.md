@@ -1,4 +1,4 @@
-# Template Universal IPA Interaktif v0.2
+# Template Universal IPA Interaktif v0.3
 
 Template ini menjadi fondasi semua modul IPA SMP kelas VII, VIII, dan IX.
 
@@ -11,6 +11,21 @@ Template ini menjadi fondasi semua modul IPA SMP kelas VII, VIII, dan IX.
 5. **Elaborate** — aplikasi baru dan strategi tambahan yang adaptif.
 6. **Evaluate** — retrieval practice, feedback, dan evaluasi.
 7. **Reflect** — refleksi, monitoring, tindak lanjut.
+
+## Feedback ke guru
+
+Tahap Reflect mendukung pengiriman ke Google Sheets melalui Google Apps Script.
+
+Data minimal yang dikirim:
+- nama/nomor absen
+- kelas
+- materi dan mode belajar
+- refleksi yang dipahami dan membingungkan
+- kategori kesulitan
+- tingkat keyakinan
+- progres
+
+Jika endpoint belum dikonfigurasi, refleksi hanya disimpan pada perangkat siswa.
 
 ## Dua mode penggunaan
 
