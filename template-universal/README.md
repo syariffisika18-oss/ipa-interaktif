@@ -1,4 +1,4 @@
-# Template Universal IPA Interaktif v0.3
+# Template Universal IPA Interaktif v0.4
 
 Template ini menjadi fondasi semua modul IPA SMP kelas VII, VIII, dan IX.
 
@@ -15,6 +15,8 @@ Template ini menjadi fondasi semua modul IPA SMP kelas VII, VIII, dan IX.
 ## Feedback ke guru
 
 Tahap Reflect mendukung pengiriman ke Google Sheets melalui Google Apps Script.
+
+Versi v0.4 menambahkan Submission ID, pencegahan duplikasi, verifikasi bahwa data benar-benar tercatat di Sheet, status waktu kirim terakhir, dan proteksi input formula.
 
 Data minimal yang dikirim:
 - nama/nomor absen
