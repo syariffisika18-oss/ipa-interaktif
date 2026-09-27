@@ -7,7 +7,7 @@ window.IPA_TEMPLATE_CONFIG = {
   defaultMode: "mandiri",
 
   // Tempel URL Web App Google Apps Script di sini setelah deployment.
-  feedbackEndpoint: "",
+  feedbackEndpoint: "https://script.google.com/macros/s/AKfycbypYONB7Q5VvX-bs0zENegZDCzmTmcAFeyzqhDBd2L1cpdI_4m6NDkQMcXDSBqJlGXi/exec",
 
   difficultyCategories: [
     "Konsep",
