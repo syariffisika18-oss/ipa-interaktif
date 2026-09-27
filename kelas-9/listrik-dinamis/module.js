@@ -4,6 +4,8 @@ let active=Number.isInteger(state.activeStage)?state.activeStage:0, done=new Set
 if(!state.sessionId) state.sessionId=id();
 const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.querySelectorAll(".u-stage-panel")], fill=document.getElementById("learningProgressFill"), ptxt=document.getElementById("learningProgressText"), prev=document.getElementById("uPrev"), next=document.getElementById("uNext"), complete=document.getElementById("uComplete"), toast=document.getElementById("uToast");
 window.setLearningStage=show;
+window.getEngagePrediction=()=>state.engagePrediction||"";
+window.getLearningMode=()=>mode;
 initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active);refreshSend();save();
 
 function initMode(){document.querySelectorAll("[data-learning-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.learningMode==="guru"?"guru":"mandiri";applyMode();changed();save()});applyMode()}
@@ -65,7 +67,19 @@ function initDiag(){
     if(v)paint(g.querySelector('[data-value="'+v+'"]'),mode!=="guru");
   });
 }
-function initEngage(){document.querySelectorAll(".engage-option").forEach(b=>b.onclick=()=>{document.querySelectorAll(".engage-option").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.engagePrediction=b.dataset.prediction;document.getElementById("engageFeedback").textContent=mode==="guru"?"Prediksi tersimpan. Jelaskan alasanmu kepada kelompok/guru sebelum membuka Explore.":"Prediksi tersimpan. Jangan ubah dulu—uji melalui simulasi pada tahap Explore.";save()});if(state.engagePrediction)document.querySelector('[data-prediction="'+state.engagePrediction+'"]')?.classList.add("selected")}
+function initEngage(){
+  document.querySelectorAll(".engage-option").forEach(b=>b.onclick=()=>{
+    document.querySelectorAll(".engage-option").forEach(x=>x.classList.remove("selected"));
+    b.classList.add("selected");
+    state.engagePrediction=b.dataset.prediction;
+    document.getElementById("engageFeedback").textContent=mode==="guru"
+      ?"Prediksi tersimpan. Jelaskan alasanmu kepada kelompok/guru sebelum membuka Explore."
+      :"Prediksi tersimpan. Jangan ubah dulu—uji melalui simulasi pada tahap Explore.";
+    save();
+    window.dispatchEvent(new CustomEvent("engagepredictionchange",{detail:{prediction:state.engagePrediction}}));
+  });
+  if(state.engagePrediction)document.querySelector('[data-prediction="'+state.engagePrediction+'"]')?.classList.add("selected");
+}
 function initReflect(){document.querySelectorAll("[data-reflection]").forEach(f=>f.oninput=()=>{state.reflections=state.reflections||{};state.reflections[f.dataset.reflection]=f.value;changed();save()});const g=document.getElementById("difficultyGrid");(config.difficultyCategories||[]).forEach(c=>{const l=document.createElement("label");l.className="difficulty-option";const i=document.createElement("input");i.type="checkbox";i.dataset.difficulty=c;i.checked=(state.difficulties||[]).includes(c);const s=document.createElement("span");s.textContent=c;l.append(i,s);g.appendChild(l)});g.onchange=()=>{state.difficulties=diffs();changed();save()};document.querySelectorAll("[data-confidence]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-confidence]").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.confidence=+b.dataset.confidence;changed();save()});if(state.confidence)document.querySelector('[data-confidence="'+state.confidence+'"]')?.classList.add("selected");document.getElementById("sendFeedback").onclick=send}
 function restoreReflect(){const r=state.reflections||{};document.querySelectorAll("[data-reflection]").forEach(f=>f.value=r[f.dataset.reflection]||"")}
 function initTeacherControls(){
