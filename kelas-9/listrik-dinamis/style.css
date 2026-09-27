@@ -742,3 +742,20 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
     margin-bottom:5px
   }
 }
+
+/* Selaraskan kolom SERI / PARALEL pada tabel perbandingan Explain */
+#abstractComparison .compare-line{
+  grid-template-columns:1.08fr 1fr 1fr;
+}
+#abstractComparison .compare-line > span:nth-child(2),
+#abstractComparison .compare-line > span:nth-child(3){
+  text-align:center;
+  justify-self:stretch;
+}
+#abstractComparison .compare-line > b:first-child{
+  text-align:left;
+}
+#abstractComparison .compare-line.compare-head > span:nth-child(2),
+#abstractComparison .compare-line.compare-head > span:nth-child(3){
+  text-align:center;
+}
