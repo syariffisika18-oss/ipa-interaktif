@@ -179,10 +179,41 @@
                 <text x="150" y="57" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₁ →</text>
                 <text x="150" y="117" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₂ →</text>
                 <text x="150" y="177" text-anchor="middle" fill="#7b4ce2" font-weight="800">I₃ →</text>
+
+                <!-- sumber pada cabang bawah -->
                 <line x1="105" y1="245" x2="253" y2="245" stroke="#333a4d" stroke-width="4"/>
                 <line x1="267" y1="245" x2="415" y2="245" stroke="#333a4d" stroke-width="4"/>
                 <line x1="253" y1="220" x2="253" y2="270" stroke="#333a4d" stroke-width="4"/>
                 <line x1="267" y1="232" x2="267" y2="258" stroke="#333a4d" stroke-width="4"/>
+
+                <!-- animasi arus total: keluar dari pelat positif menuju Node A -->
+                <path d="M253 245 H105 V45" fill="none" stroke="#3559e0" stroke-width="3.5"
+                      stroke-dasharray="9 11" opacity=".82">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
+                </path>
+
+                <!-- animasi arus cabang: I total terbagi menjadi I1, I2, I3 -->
+                <path d="M105 65 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
+                      stroke-dasharray="9 11" opacity=".85">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
+                </path>
+                <path d="M105 125 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
+                      stroke-dasharray="9 11" opacity=".85">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
+                </path>
+                <path d="M105 185 H415" fill="none" stroke="#7b4ce2" stroke-width="3.5"
+                      stroke-dasharray="9 11" opacity=".85">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
+                </path>
+
+                <!-- arus cabang bergabung kembali di Node B lalu kembali ke sumber -->
+                <path d="M415 45 V245 H267" fill="none" stroke="#3559e0" stroke-width="3.5"
+                      stroke-dasharray="9 11" opacity=".82">
+                  <animate attributeName="stroke-dashoffset" from="0" to="-40" dur="1.2s" repeatCount="indefinite"/>
+                </path>
+
+                <text x="165" y="238" text-anchor="middle" fill="#3559e0" font-size="13" font-weight="800">I total</text>
+                <text x="355" y="238" text-anchor="middle" fill="#3559e0" font-size="13" font-weight="800">I total</text>
               </svg>
             </div>
             <button class="zoom-btn compact-zoom" type="button" data-zoom-target="picParallel" data-zoom-title="Pictorial — Paralel">⛶ Perbesar gambar</button>
