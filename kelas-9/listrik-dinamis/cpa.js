@@ -591,6 +591,16 @@ function initElaborate(){
 
   const questions=[...document.querySelectorAll('[data-elab-question]')];
 
+  const shuffleChildren=(container)=>{
+    if(!container) return;
+    const items=[...container.children];
+    for(let i=items.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [items[i],items[j]]=[items[j],items[i]];
+    }
+    items.forEach(item=>container.appendChild(item));
+  };
+
   const setButtonsLocked=(container,locked)=>{
     container?.querySelectorAll('button').forEach(btn=>{btn.disabled=locked});
   };
@@ -609,6 +619,8 @@ function initElaborate(){
     const reasonGroup=q.querySelector('[data-elab-reason-group]');
     const feedback=q.querySelector('[data-elab-feedback]');
     const retry=q.querySelector('[data-elab-retry]');
+
+    shuffleChildren(reasonGroup);
 
     const runtime={attempts:0,answer:null,reason:null,finished:false};
 
