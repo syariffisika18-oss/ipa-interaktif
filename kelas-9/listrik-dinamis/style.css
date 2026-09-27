@@ -973,3 +973,46 @@ html{scroll-behavior:smooth}body{background:radial-gradient(circle at top right,
     font-size:.78rem;
   }
 }
+
+
+/* =========================
+   MODE MANDIRI vs BERSAMA GURU
+   ========================= */
+.teacher-guide{
+  margin:10px 0;
+  padding:10px 12px;
+  border:1px solid #b9d8d1;
+  border-radius:12px;
+  background:#f0faf7;
+  color:#245f56;
+  line-height:1.45;
+  font-size:.86rem
+}
+.teacher-reveal-btn,
+.diagnostic-reveal,
+.elab-reveal{
+  margin-top:8px;
+  border:1px solid #2d8b78;
+  background:#fff;
+  color:#176353;
+  border-radius:9px;
+  padding:7px 10px;
+  font-weight:900;
+  cursor:pointer
+}
+body[data-learning-mode="guru"] .teacher-reveal-target:not(.teacher-revealed){
+  display:none!important
+}
+body[data-learning-mode="mandiri"] .teacher-reveal-btn,
+body[data-learning-mode="mandiri"] .diagnostic-reveal,
+body[data-learning-mode="mandiri"] .elab-reveal{
+  display:none!important
+}
+.diagnostic-reveal[hidden],
+.elab-reveal[hidden]{
+  display:none!important
+}
+@media(max-width:640px){
+  .teacher-guide{font-size:.74rem;padding:8px 9px;margin:7px 0}
+  .teacher-reveal-btn,.diagnostic-reveal,.elab-reveal{width:100%;padding:7px 8px}
+}
