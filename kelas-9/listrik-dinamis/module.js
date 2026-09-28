@@ -45,7 +45,8 @@ function scrollToStageMenu(behavior="smooth"){
   if(!nav) return;
   requestAnimationFrame(()=>{
     const topbar=document.querySelector(".module-topbar");
-    const topbarH=topbar?topbar.getBoundingClientRect().height:0;
+    const topbarHidden=document.body.classList.contains("phone-topbar-hidden");
+    const topbarH=topbar&&!topbarHidden?topbar.getBoundingClientRect().height:0;
     const y=naturalDocumentTop(nav)-topbarH-2;
     window.scrollTo({top:Math.max(0,y),behavior});
   });
@@ -57,8 +58,10 @@ function scrollToLearningContent(target,behavior="smooth"){
   requestAnimationFrame(()=>{
     const topbar=document.querySelector(".module-topbar");
     const stageNav=document.querySelector(".u-stage-nav");
-    const topbarH=topbar?topbar.getBoundingClientRect().height:0;
-    const navH=stageNav?stageNav.getBoundingClientRect().height:0;
+    const topbarHidden=document.body.classList.contains("phone-topbar-hidden");
+    const stageNavHidden=document.body.classList.contains("phone-stage-nav-hidden");
+    const topbarH=topbar&&!topbarHidden?topbar.getBoundingClientRect().height:0;
+    const navH=stageNav&&!stageNavHidden?stageNav.getBoundingClientRect().height:0;
     const offset=topbarH+navH+10;
     const y=window.scrollY+target.getBoundingClientRect().top-offset;
     window.scrollTo({top:Math.max(0,y),behavior});
@@ -66,7 +69,7 @@ function scrollToLearningContent(target,behavior="smooth"){
 }
 window.scrollToLearningContent=scrollToLearningContent;
 
-initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active,false);
+initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();initMobileChrome();initSwipeNavigation();restoreReflect();show(active,false);
 
 if(resetRequested){
   document.querySelectorAll(".selected,.correct,.wrong,.revealed-correct,.complete,.done")
@@ -179,6 +182,143 @@ function initTeacherControls(){
     if(target) btn.textContent="Buka ringkasan observasi";
   }));
 }
+function isPhoneLayout(){
+  return window.matchMedia("(max-width:640px), (orientation: landscape) and (max-width:950px) and (max-height:500px)").matches;
+}
+
+function initMobileChrome(){
+  const body=document.body;
+  const nav=document.querySelector(".u-stage-nav");
+  const topbar=document.querySelector(".module-topbar");
+  if(!nav||!topbar) return;
+
+  let lastY=window.scrollY;
+  let hideNavTimer=0;
+
+  const clearNavTimer=()=>{
+    clearTimeout(hideNavTimer);
+    hideNavTimer=0;
+  };
+
+  const scheduleNavHide=()=>{
+    clearNavTimer();
+    if(!isPhoneLayout()) return;
+    const navTop=naturalDocumentTop(nav);
+    if(window.scrollY <= Math.max(18,navTop-4)) return;
+    hideNavTimer=setTimeout(()=>{
+      if(!isPhoneLayout()) return;
+      body.classList.add("phone-stage-nav-hidden");
+    },1800);
+  };
+
+  const revealStageNav=(hold=false)=>{
+    if(!isPhoneLayout()) return;
+    body.classList.remove("phone-stage-nav-hidden");
+    clearNavTimer();
+    if(!hold) scheduleNavHide();
+  };
+
+  const resetDesktop=()=>{
+    if(isPhoneLayout()) return;
+    clearNavTimer();
+    body.classList.remove("phone-topbar-hidden","phone-stage-nav-hidden");
+  };
+
+  const onScroll=()=>{
+    if(!isPhoneLayout()){
+      resetDesktop();
+      lastY=window.scrollY;
+      return;
+    }
+    const y=window.scrollY;
+    const dy=y-lastY;
+
+    // Stage menu appears whenever the learner moves the page.
+    if(Math.abs(dy)>1) revealStageNav();
+
+    // Topbar behaves like mobile browser chrome: visible upward, hidden downward.
+    if(y<24 || dy<-3){
+      body.classList.remove("phone-topbar-hidden");
+    }else if(dy>3 && y>64){
+      body.classList.add("phone-topbar-hidden");
+    }
+    lastY=y;
+  };
+
+  window.revealStageNav=revealStageNav;
+
+  window.addEventListener("scroll",onScroll,{passive:true});
+  window.addEventListener("resize",()=>{
+    resetDesktop();
+    if(isPhoneLayout()) revealStageNav();
+  },{passive:true});
+
+  document.addEventListener("touchstart",()=>{
+    if(isPhoneLayout()) revealStageNav();
+  },{passive:true});
+
+  document.addEventListener("click",e=>{
+    if(!isPhoneLayout()) return;
+    if(e.target.closest(".u-stage-tab,.stage-next,.stage-prev,.u-prev,.u-next,.u-complete")){
+      revealStageNav();
+    }
+  },true);
+
+  revealStageNav(true);
+}
+
+function initSwipeNavigation(){
+  const root=document.querySelector(".module-main");
+  if(!root) return;
+
+  let sx=0,sy=0,startedAt=0,blocked=false;
+
+  const ignoreTarget=target=>!!target.closest(
+    "button,input,textarea,select,a,label,[contenteditable],.u-stage-nav,.u-bottom-nav,.zoom-overlay"
+  );
+
+  root.addEventListener("touchstart",e=>{
+    if(!isPhoneLayout()||e.touches.length!==1) return;
+    blocked=ignoreTarget(e.target);
+    if(blocked) return;
+    sx=e.touches[0].clientX;
+    sy=e.touches[0].clientY;
+    startedAt=Date.now();
+  },{passive:true});
+
+  root.addEventListener("touchend",e=>{
+    if(!isPhoneLayout()||blocked||!startedAt||!e.changedTouches.length){
+      blocked=false;startedAt=0;return;
+    }
+
+    const dx=e.changedTouches[0].clientX-sx;
+    const dy=e.changedTouches[0].clientY-sy;
+    const ax=Math.abs(dx), ay=Math.abs(dy);
+    const dt=Date.now()-startedAt;
+    blocked=false;startedAt=0;
+
+    // Deliberate horizontal swipe only; ordinary vertical scroll is untouched.
+    if(dt>900 || ax<64 || ax<ay*1.35) return;
+
+    const panel=panels[active];
+    if(!panel) return;
+    const forward=dx<0;
+    const internal=panel.querySelector(forward?".stage-nav .stage-next":".stage-nav .stage-prev");
+
+    if(internal && !internal.disabled && internal.offsetParent!==null){
+      internal.click();
+      window.revealStageNav?.();
+      return;
+    }
+
+    if(forward && active<N-1){
+      show(active+1);
+    }else if(!forward && active>0){
+      show(active-1);
+    }
+  },{passive:true});
+}
+
 function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{
   if(!confirm("Reset seluruh progres, jawaban, identitas, dan refleksi modul ini?")) return;
 
@@ -216,6 +356,7 @@ function show(i,doScroll=true){
   panels.forEach((p,j)=>p.classList.toggle("active",j===active));
   tabs.forEach((t,j)=>{t.classList.toggle("active",j===active);t.classList.toggle("complete",done.has(j))});
   keepActiveStageTabVisible(active,doScroll?"smooth":"auto");
+  if(doScroll) window.revealStageNav?.();
   prev.disabled=active===0;
   next.disabled=active===N-1;
   next.style.opacity=active===N-1?".45":"1";
