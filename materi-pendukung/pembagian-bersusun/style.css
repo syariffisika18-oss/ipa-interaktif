@@ -345,3 +345,49 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
   .ld-dividend{font-size:1.42rem}
   .ld-work{min-width:78px;font-size:1.12rem}
 }
+
+
+/* =========================================================
+   FIX ALIGNMENT — angka kerja tepat di bawah bilangan dibagi
+   ========================================================= */
+.division-stack{
+  grid-template-columns:auto auto;
+}
+.ld-body{
+  min-width:0!important;
+  width:max-content!important;
+}
+.ld-dividend{
+  width:max-content!important;
+  min-width:4ch;
+  text-align:right!important;
+}
+.ld-work{
+  width:100%!important;
+  min-width:0!important;
+  margin-left:0!important;
+  text-align:right!important;
+}
+.ld-work-row{
+  width:100%!important;
+  text-align:right!important;
+}
+.ld-work-row.ld-line{
+  width:100%!important;
+  margin-left:0!important;
+}
+.ld-work-row.second,
+.ld-work-row.third{
+  margin-left:0!important;
+}
+
+@media(max-width:640px){
+  .division-stack{grid-template-columns:auto auto}
+  .ld-body{min-width:0!important;width:max-content!important}
+  .ld-dividend{min-width:4ch}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .division-stack{grid-template-columns:auto auto}
+  .ld-body{min-width:0!important;width:max-content!important}
+  .ld-dividend{min-width:4ch}
+}
