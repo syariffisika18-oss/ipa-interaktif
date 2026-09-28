@@ -1156,3 +1156,266 @@ body[data-learning-mode="mandiri"] .elab-reveal{
   .prediction-choice-row button,.prediction-evidence button{min-height:35px;padding:6px 7px;font-size:.7rem}
   .prediction-question,.prediction-feedback{font-size:.7rem}
 }
+
+
+/* =========================
+   MOBILE FOCUS SCREENS — 1 konteks = 1 viewport
+   ========================= */
+.elab-context-mini{
+  display:grid;
+  gap:2px;
+  margin:0 0 8px;
+  padding:9px 11px;
+  border:1px solid #d9e2ef;
+  border-radius:11px;
+  background:linear-gradient(135deg,#f7fbff,#f8f6ff)
+}
+.elab-context-mini span{
+  font-size:.65rem;
+  font-weight:950;
+  letter-spacing:.08em;
+  color:#5367c7
+}
+.elab-context-mini b{font-size:.88rem;line-height:1.3}
+.elab-context-mini small{color:var(--muted);font-size:.75rem;line-height:1.3}
+
+@media(max-width:640px){
+  /* General: reclaim vertical space once a stage is selected. */
+  .engage-panel>.u-panel-card,
+  .explore-panel>.u-panel-card,
+  .elaborate-panel>.u-panel-card{
+    padding:8px 10px 10px!important;
+  }
+  .engage-panel .u-stage-head,
+  .explore-panel .u-stage-head,
+  .elaborate-panel .u-stage-head{
+    display:none!important;
+  }
+  .explore-panel>.u-panel-card>.cpa-banner,
+  .elaborate-panel>.u-panel-card>.cpa-banner{
+    display:none!important;
+  }
+
+  /* ENGAGE: scene, question, choices and feedback stay together. */
+  .engage-panel .engage-scene{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:8px!important;
+  }
+  .engage-panel .house-lamps{
+    min-height:112px!important;
+    padding:8px!important;
+    border-radius:14px!important;
+  }
+  .engage-panel .lamp-row{gap:10px!important}
+  .engage-panel .lamp-icon{
+    width:48px!important;height:48px!important;
+    border-width:3px!important;font-size:20px!important
+  }
+  .engage-panel h3{
+    margin:2px 0 5px!important;
+    font-size:1rem!important;
+    line-height:1.3!important
+  }
+  .engage-panel .engage-scene p{
+    margin:3px 0 7px!important;
+    font-size:.78rem!important;
+    line-height:1.4!important
+  }
+  .engage-panel .engage-options{
+    gap:5px!important;
+    margin:6px 0!important
+  }
+  .engage-panel .engage-option{
+    min-height:38px!important;
+    padding:6px 9px!important;
+    font-size:.8rem!important
+  }
+  .engage-panel #engageFeedback{
+    margin-top:5px!important;
+    padding:7px 8px!important;
+    font-size:.73rem!important;
+    line-height:1.35!important
+  }
+
+  /* EXPLORE slide 1: controls + circuit + observation fit as a single working view. */
+  .explore-panel #concrete .stage-card{padding:8px!important}
+  .explore-panel #concrete .stage-topline{margin-bottom:3px!important}
+  .explore-panel #concrete .stage-topline h2{font-size:.98rem!important}
+  .explore-panel #concrete .slide-title{
+    font-size:.83rem!important;
+    margin-bottom:4px!important
+  }
+  .explore-panel #concrete .compact-controls{
+    gap:3px!important;
+    padding:5px!important
+  }
+  .explore-panel #concrete .compact-controls>.small,
+  .explore-panel #concrete .small{font-size:.68rem!important}
+  .explore-panel #concrete .sliderline{
+    grid-template-columns:88px minmax(0,1fr) 46px!important;
+    gap:5px!important;
+    min-height:25px!important
+  }
+  .explore-panel #concrete .sliderline label{font-size:.68rem!important}
+  .explore-panel #concrete .sliderline input[type=range]{height:20px!important}
+  .explore-panel #concrete .segment button{
+    min-height:32px!important;padding:4px 7px!important;font-size:.72rem!important
+  }
+  .explore-panel #concrete .control-grid{gap:4px!important}
+  .explore-panel #concrete .control-grid .btn{
+    min-height:32px!important;padding:5px 6px!important;font-size:.69rem!important
+  }
+  .explore-panel #concrete .combined-circuit{
+    margin-top:2px!important;
+    min-height:0!important;
+    height:154px!important;
+    padding:0!important
+  }
+  .explore-panel #concrete .combined-circuit svg{
+    max-height:154px!important;
+    height:154px!important;
+    width:100%!important
+  }
+  .explore-panel #concrete .compact-zoom{
+    min-height:31px!important;padding:4px 7px!important;
+    margin:2px 0 3px!important;font-size:.7rem!important
+  }
+  .explore-panel #concrete #observation{
+    margin-top:3px!important;
+    padding:5px 7px!important;
+    font-size:.69rem!important;
+    line-height:1.28!important
+  }
+  .explore-panel #concrete .micro-note{
+    margin-top:3px!important;
+    padding:5px 7px!important;
+    font-size:.66rem!important;
+    line-height:1.25!important
+  }
+  .explore-panel #concrete .stage-nav{
+    margin-top:4px!important;padding-top:4px!important
+  }
+
+  /* EXPLAIN numeric comparison: keep real columns; remove duplicate pseudo-labels. */
+  #abstractComparison .compare-line{
+    grid-template-columns:1.08fr .92fr .92fr!important;
+    gap:3px!important;
+    padding:6px 6px!important;
+    font-size:.69rem!important;
+    line-height:1.2!important
+  }
+  #abstractComparison .compare-line b{
+    border-bottom:0!important;
+    padding-bottom:0!important;
+    margin-bottom:0!important
+  }
+  #abstractComparison .compare-line span::before{content:none!important}
+  #abstractComparison .compare-line span{
+    white-space:nowrap!important;
+    text-align:center!important
+  }
+  #abstractComparison .compare-line.compare-head span{
+    font-size:.68rem!important
+  }
+
+  /* ELABORATE: each slide is one decision with its context repeated above it. */
+  .elaborate-panel #elaborateTransfer .stage-card{padding:8px!important}
+  .elaborate-panel #elaborateTransfer .stage-topline{
+    margin-bottom:3px!important
+  }
+  .elaborate-panel #elaborateTransfer .stage-topline h2{
+    font-size:.98rem!important
+  }
+  .elaborate-panel [data-stage-group="elaborate"] .slide-title{
+    font-size:.86rem!important;
+    margin-bottom:5px!important
+  }
+  .elaborate-panel .elab-context-mini{
+    padding:6px 8px!important;
+    margin-bottom:5px!important;
+    gap:1px!important
+  }
+  .elaborate-panel .elab-context-mini span{font-size:.56rem!important}
+  .elaborate-panel .elab-context-mini b{font-size:.76rem!important}
+  .elaborate-panel .elab-context-mini small{font-size:.65rem!important}
+  .elaborate-panel .elab-mini-question{
+    margin:4px 0!important;
+    padding:7px!important
+  }
+  .elaborate-panel .elab-mini-question>b{
+    margin-bottom:5px!important;
+    font-size:.78rem!important
+  }
+  .elaborate-panel .elab-options{
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:4px!important
+  }
+  .elaborate-panel .elab-options button{
+    min-height:34px!important;
+    padding:5px 4px!important;
+    font-size:.69rem!important
+  }
+  .elaborate-panel .elab-reason-panel{
+    padding:5px!important;
+    margin-top:5px!important
+  }
+  .elaborate-panel .elab-reason-title{
+    font-size:.65rem!important;
+    margin-bottom:3px!important
+  }
+  .elaborate-panel .elab-reasons{gap:3px!important}
+  .elaborate-panel .elab-reasons button{
+    min-height:32px!important;
+    padding:5px 6px!important;
+    font-size:.66rem!important;
+    line-height:1.2!important
+  }
+  .elaborate-panel .elab-feedback{
+    margin-top:5px!important;
+    padding:6px 7px!important;
+    font-size:.67rem!important;
+    line-height:1.25!important
+  }
+  .elaborate-panel .elab-retry,
+  .elaborate-panel .elab-reveal{
+    margin-top:4px!important;
+    padding:5px 7px!important;
+    min-height:32px!important;
+    font-size:.68rem!important
+  }
+  .elaborate-panel .stage-nav{
+    margin-top:5px!important;
+    padding-top:5px!important
+  }
+
+  /* Worked example also stays compact without losing the phenomenon. */
+  .elaborate-panel .worked-grid{
+    grid-template-columns:1fr 1fr!important;
+    gap:5px!important
+  }
+  .elaborate-panel .worked-example,
+  .elaborate-panel .fade-task{
+    padding:7px!important;
+    border-radius:10px!important;
+    font-size:.67rem!important
+  }
+  .elaborate-panel .worked-label{
+    font-size:.56rem!important;
+    margin-bottom:3px!important
+  }
+  .elaborate-panel .worked-step{
+    margin-top:4px!important;
+    padding:5px!important;
+    font-size:.68rem!important
+  }
+  .elaborate-panel .fade-task .equation-input{
+    grid-template-columns:34px minmax(0,1fr) 14px!important;
+    gap:3px!important;
+    margin:4px 0!important
+  }
+  .elaborate-panel .fade-task input{
+    min-height:32px!important;
+    padding:4px 5px!important
+  }
+}
