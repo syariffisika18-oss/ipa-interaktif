@@ -2796,3 +2796,277 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     font-size:.72rem!important;
   }
 }
+
+
+/* =========================================================
+   EXPLORE DESKTOP COMPACT — baseline 1366 × 768
+   ========================================================= */
+@media (min-width:951px){
+
+  .explore-panel>.u-panel-card{
+    padding:12px!important;
+  }
+
+  .explore-panel .u-stage-head{
+    margin-bottom:7px!important;
+  }
+
+  .explore-panel .cpa-banner{
+    margin-bottom:6px!important;
+    padding:7px 9px!important;
+    border-radius:10px!important;
+    font-size:.68rem!important;
+    line-height:1.3!important;
+  }
+
+  /* Prediction check: compact horizontal card */
+  .explore-panel .prediction-check-card{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr) auto!important;
+    column-gap:10px!important;
+    row-gap:4px!important;
+    margin:5px 0 7px!important;
+    padding:7px 9px!important;
+    border-radius:10px!important;
+  }
+
+  .explore-panel .prediction-check-head{
+    grid-column:1/-1!important;
+    align-items:center!important;
+  }
+
+  .explore-panel .prediction-check-kicker{
+    font-size:.54rem!important;
+    margin-bottom:0!important;
+  }
+
+  .explore-panel .prediction-check-head b{
+    font-size:.72rem!important;
+  }
+
+  .explore-panel .prediction-status{
+    padding:2px 6px!important;
+    font-size:.56rem!important;
+  }
+
+  .explore-panel .prediction-recall{
+    margin:0!important;
+    padding:5px 7px!important;
+    border-radius:8px!important;
+    min-height:31px!important;
+  }
+
+  .explore-panel .prediction-recall span{
+    font-size:.6rem!important;
+  }
+
+  .explore-panel .prediction-recall strong{
+    font-size:.66rem!important;
+  }
+
+  .explore-panel .prediction-check-card>p{
+    margin:0!important;
+    font-size:.6rem!important;
+    line-height:1.25!important;
+  }
+
+  .explore-panel .prediction-start-btn{
+    grid-column:2!important;
+    grid-row:2/4!important;
+    align-self:center!important;
+    min-height:31px!important;
+    margin:0!important;
+    padding:4px 10px!important;
+    font-size:.62rem!important;
+  }
+
+  .explore-panel .prediction-test-steps{
+    grid-column:1/-1!important;
+    grid-template-columns:repeat(3,1fr)!important;
+    gap:5px!important;
+    margin-top:2px!important;
+    padding:5px 7px!important;
+    font-size:.58rem!important;
+    line-height:1.2!important;
+  }
+
+  .explore-panel .prediction-compare{
+    grid-column:1/-1!important;
+    margin-top:3px!important;
+    padding-top:5px!important;
+  }
+
+  .explore-panel .prediction-question{
+    margin-bottom:5px!important;
+    font-size:.62rem!important;
+  }
+
+  .explore-panel .prediction-choice-row,
+  .explore-panel .prediction-evidence{
+    gap:4px!important;
+    margin-top:4px!important;
+  }
+
+  .explore-panel .prediction-choice-row button,
+  .explore-panel .prediction-evidence button{
+    min-height:31px!important;
+    padding:4px 6px!important;
+    font-size:.6rem!important;
+  }
+
+  .explore-panel .prediction-feedback{
+    margin-top:4px!important;
+    padding:5px 7px!important;
+    font-size:.59rem!important;
+    line-height:1.2!important;
+  }
+
+  /* Main simulator: controls left, circuit right */
+  .explore-panel #concrete .stage-card{
+    padding:8px!important;
+  }
+
+  .explore-panel #concrete .stage-topline{
+    margin-bottom:3px!important;
+  }
+
+  .explore-panel #concrete .stage-topline h2{
+    font-size:.88rem!important;
+  }
+
+  .explore-panel #concrete .stage-kicker{
+    font-size:.52rem!important;
+  }
+
+  .explore-panel #concrete .slide-title{
+    grid-column:1/-1!important;
+    margin:0 0 3px!important;
+    font-size:.68rem!important;
+  }
+
+  .explore-panel #concrete [data-slide="0"]{
+    display:grid!important;
+    grid-template-columns:minmax(270px,.72fr) minmax(0,1.28fr)!important;
+    column-gap:8px!important;
+    align-items:start!important;
+  }
+
+  .explore-panel #concrete .compact-controls{
+    gap:4px!important;
+    padding:5px!important;
+  }
+
+  .explore-panel #concrete .compact-controls>.small,
+  .explore-panel #concrete .small{
+    font-size:.6rem!important;
+  }
+
+  .explore-panel #concrete .segment button{
+    min-height:29px!important;
+    padding:3px 7px!important;
+    font-size:.62rem!important;
+  }
+
+  .explore-panel #concrete .sliderline{
+    grid-template-columns:88px minmax(0,1fr) 44px!important;
+    gap:5px!important;
+    min-height:25px!important;
+  }
+
+  .explore-panel #concrete .sliderline label{
+    font-size:.61rem!important;
+    line-height:1.15!important;
+  }
+
+  .explore-panel #concrete .sliderline b{
+    font-size:.65rem!important;
+  }
+
+  .explore-panel #concrete .sliderline input[type=range]{
+    height:22px!important;
+  }
+
+  .explore-panel #concrete .control-grid{
+    gap:4px!important;
+  }
+
+  .explore-panel #concrete .control-grid .btn{
+    min-height:29px!important;
+    padding:4px 6px!important;
+    font-size:.59rem!important;
+  }
+
+  .explore-panel #concrete .combined-circuit{
+    min-height:0!important;
+    height:220px!important;
+    margin:0!important;
+    padding:0!important;
+  }
+
+  .explore-panel #concrete .combined-circuit svg{
+    display:block!important;
+    width:100%!important;
+    height:220px!important;
+    max-height:220px!important;
+  }
+
+  .explore-panel #concrete .compact-zoom{
+    grid-column:2!important;
+    justify-self:start!important;
+    width:auto!important;
+    min-height:29px!important;
+    margin:3px 0 0!important;
+    padding:4px 8px!important;
+    font-size:.59rem!important;
+  }
+
+  /* Meaning slide uses horizontal space rather than vertical stacking */
+  .explore-panel #concrete [data-slide="1"]{
+    display:grid!important;
+    grid-template-columns:.82fr 1.18fr!important;
+    column-gap:8px!important;
+    align-items:start!important;
+  }
+
+  .explore-panel #concrete [data-slide="1"]>.slide-title{
+    grid-column:1/-1!important;
+  }
+
+  .explore-panel .statgrid{
+    grid-template-columns:1fr 1fr!important;
+    gap:5px!important;
+  }
+
+  .explore-panel .stat{
+    padding:7px!important;
+    border-radius:10px!important;
+  }
+
+  .explore-panel .stat .small{
+    font-size:.6rem!important;
+  }
+
+  .explore-panel .stat b{
+    font-size:.8rem!important;
+  }
+
+  .explore-panel .compact-question{
+    margin:0!important;
+    padding:7px!important;
+    font-size:.62rem!important;
+    line-height:1.28!important;
+  }
+
+  .explore-panel #compareBtn{
+    grid-column:1/-1!important;
+    min-height:31px!important;
+    padding:4px 8px!important;
+    font-size:.62rem!important;
+    margin-top:4px!important;
+  }
+
+  .explore-panel #concrete .stage-nav{
+    margin-top:4px!important;
+    padding-top:4px!important;
+  }
+}
