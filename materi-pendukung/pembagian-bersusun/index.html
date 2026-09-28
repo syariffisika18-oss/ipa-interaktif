@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
+  <title>Pembagian Bersusun — Materi Pendukung</title>
+  <link rel="stylesheet" href="style.css?v=20260929-1">
+</head>
+<body>
+<header class="topbar">
+  <div class="shell topbar-row">
+    <a class="back-link" href="../../">← Portal IPA</a>
+    <div class="topbar-title">
+      <span>Materi Pendukung • Numerasi</span>
+      <strong>Pembagian Bersusun</strong>
+    </div>
+    <button id="resetProgress" class="reset-btn" type="button">Reset progres</button>
+  </div>
+</header>
+
+<main class="shell app-main">
+  <section class="hero">
+    <div>
+      <span class="badge">Tidak terikat kelas</span>
+      <h1>Pembagian Bersusun</h1>
+      <p>Pelajari pembagian secara bertahap: tentukan angka awal, gunakan kelipatan, kurangkan, turunkan angka, lalu lanjutkan bila perlu ke desimal.</p>
+    </div>
+    <div class="hero-symbol" aria-hidden="true">➗</div>
+  </section>
+
+  <section class="progress-card" aria-label="Progres belajar">
+    <div><strong>Progres</strong><span id="progressText">0 dari 6 langkah</span></div>
+    <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+  </section>
+
+  <nav class="stage-nav" aria-label="Langkah pembelajaran">
+    <button class="stage-tab active" data-stage="0"><b>1</b>Cek awal</button>
+    <button class="stage-tab" data-stage="1"><b>2</b>Kenali bentuk</button>
+    <button class="stage-tab" data-stage="2"><b>3</b>Angka awal</button>
+    <button class="stage-tab" data-stage="3"><b>4</b>Ikuti proses</button>
+    <button class="stage-tab" data-stage="4"><b>5</b>Coba sendiri</button>
+    <button class="stage-tab" data-stage="5"><b>6</b>Evaluasi</button>
+  </nav>
+
+  <section class="stage-panel active" data-panel="0">
+    <div class="stage-title"><span>LANGKAH 1</span><h2>Cek kemampuan awal</h2></div>
+    <div class="two-col">
+      <article class="card">
+        <h3>Tanpa menghitung panjang</h3>
+        <p>Perhatikan <strong>240 ÷ 35</strong>. Menurutmu, angka satuan awal hasil bagi yang paling masuk akal adalah...</p>
+        <div class="choices" id="diagChoices">
+          <button data-value="5">5</button>
+          <button data-value="6">6</button>
+          <button data-value="7">7</button>
+          <button data-value="dontknow">Saya belum tahu</button>
+        </div>
+        <div id="diagFeedback" class="feedback neutral">Tidak apa-apa jika belum tahu. Modul akan menunjukkan caranya.</div>
+      </article>
+      <article class="card soft">
+        <h3>Tujuan singkat</h3>
+        <ul class="compact-list">
+          <li>Menentukan kelipatan pembagi yang tepat.</li>
+          <li>Melakukan langkah bagi → kali → kurang → turunkan.</li>
+          <li>Melanjutkan pembagian ke desimal jika masih bersisa.</li>
+        </ul>
+      </article>
+    </div>
+  </section>
+
+  <section class="stage-panel" data-panel="1">
+    <div class="stage-title"><span>LANGKAH 2</span><h2>Kenali bentuk pembagian bersusun</h2></div>
+    <div class="division-layout">
+      <div class="long-division-demo" aria-label="Bentuk pembagian 240 dibagi 35">
+        <div class="quotient">?</div>
+        <div class="divisor">35</div>
+        <div class="bracket"></div>
+        <div class="dividend">240</div>
+      </div>
+      <article class="card meaning-card">
+        <div><b>35</b><span>Pembagi</span></div>
+        <div><b>240</b><span>Bilangan yang dibagi</span></div>
+        <div><b>?</b><span>Hasil bagi yang akan kita cari</span></div>
+        <p class="mini-note">Kita tidak langsung membagi 240 dengan 35 menggunakan kalkulator. Kita mencari kelipatan 35 yang paling dekat tanpa melewati 240.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="stage-panel" data-panel="2">
+    <div class="stage-title"><span>LANGKAH 3</span><h2>Tentukan angka awal</h2></div>
+
+    <div class="focus-problem">
+      <div class="problem-main">
+        <span>Contoh</span>
+        <strong>240 ÷ 35</strong>
+        <p>Cari kelipatan 35 yang <b>paling besar tetapi tidak melebihi 240</b>.</p>
+      </div>
+      <div class="answer-start">
+        <label for="firstDigit">Angka awal hasil bagi</label>
+        <div class="answer-row">
+          <input id="firstDigit" inputmode="numeric" maxlength="2" placeholder="?">
+          <button id="checkFirstDigit" type="button">Periksa</button>
+        </div>
+        <div id="firstDigitFeedback" class="feedback neutral">Coba tentukan sendiri terlebih dahulu.</div>
+      </div>
+    </div>
+
+    <div class="helper-card">
+      <div>
+        <span class="helper-kicker">💡 Scaffolding</span>
+        <h3>Bantuan kelipatan</h3>
+        <p>Jika masih bingung, buka tabel perkalian pembagi dari ×1 sampai ×10.</p>
+      </div>
+      <button id="toggleMultiples" class="helper-btn" type="button">Tampilkan kelipatan 35</button>
+    </div>
+
+    <div id="multiplePanel" class="multiple-panel" hidden>
+      <div class="multiple-head">
+        <strong id="multipleTitle">Kelipatan 35</strong>
+        <span>Cari hasil terbesar yang ≤ 240</span>
+      </div>
+      <div id="multipleGrid" class="multiple-grid"></div>
+      <div class="multiple-legend"><span class="ok-dot"></span> masih dapat dipakai <span class="too-dot"></span> sudah melewati 240</div>
+    </div>
+  </section>
+
+  <section class="stage-panel" data-panel="3">
+    <div class="stage-title"><span>LANGKAH 4</span><h2>Ikuti prosesnya</h2></div>
+    <div class="process-grid">
+      <div class="process-visual">
+        <div class="process-number" id="processNumber">240 ÷ 35</div>
+        <div id="processEquation" class="process-equation">Mulai dari mencari kelipatan 35 yang sesuai.</div>
+      </div>
+      <div class="process-card">
+        <div class="process-count"><span id="processIndex">1</span>/6</div>
+        <h3 id="processTitle">Bagi</h3>
+        <p id="processText">35 masuk ke 240 sebanyak 6 kali karena 6 × 35 = 210 dan 7 × 35 = 245 terlalu besar.</p>
+        <button id="processNext" type="button">Langkah berikutnya →</button>
+      </div>
+    </div>
+    <div class="process-strip" id="processStrip"></div>
+  </section>
+
+  <section class="stage-panel" data-panel="4">
+    <div class="stage-title"><span>LANGKAH 5</span><h2>Coba sendiri</h2></div>
+    <div class="practice-shell">
+      <div class="practice-top">
+        <span id="practiceCount">Soal 1 dari 3</span>
+        <strong id="practiceScore">Benar 0</strong>
+      </div>
+      <div class="practice-question">
+        <span>Hitung dengan pembagian bersusun</span>
+        <h3 id="practiceProblem">156 ÷ 12</h3>
+        <label>Hasil bagi
+          <input id="practiceAnswer" inputmode="decimal" placeholder="Masukkan jawaban">
+        </label>
+        <div class="practice-actions">
+          <button id="practiceCheck" type="button">Periksa jawaban</button>
+          <button id="practiceHelper" class="secondary" type="button">Bantuan kelipatan</button>
+        </div>
+        <div id="practiceFeedback" class="feedback neutral">Kerjakan sendiri. Bantuan tersedia bila diperlukan.</div>
+      </div>
+      <div id="practiceMultiples" class="multiple-panel compact" hidden></div>
+      <button id="practiceNext" class="next-practice" type="button" hidden>Soal berikutnya →</button>
+    </div>
+  </section>
+
+  <section class="stage-panel" data-panel="5">
+    <div class="stage-title"><span>LANGKAH 6</span><h2>Evaluasi singkat</h2></div>
+    <div class="evaluation-card">
+      <div class="eval-top"><span id="evalCount">1/5</span><strong id="evalScore">Skor 0</strong></div>
+      <h3 id="evalQuestion"></h3>
+      <div id="evalChoices" class="eval-choices"></div>
+      <div id="evalFeedback" class="feedback neutral">Pilih jawaban yang paling tepat.</div>
+      <button id="evalNext" type="button" hidden>Berikutnya →</button>
+      <button id="evalReset" class="secondary" type="button">Ulangi evaluasi</button>
+    </div>
+    <div id="masteryCard" class="mastery-card" hidden>
+      <strong id="masteryTitle"></strong>
+      <p id="masteryText"></p>
+    </div>
+  </section>
+
+  <div class="bottom-nav">
+    <button id="prevStage" type="button">← Sebelumnya</button>
+    <button id="completeStage" type="button">Tandai selesai</button>
+    <button id="nextStage" class="primary" type="button">Berikutnya →</button>
+  </div>
+</main>
+
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script src="app.js?v=20260929-1"></script>
+</body>
+</html>
