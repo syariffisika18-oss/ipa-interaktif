@@ -705,3 +705,78 @@ footer {
     font-size:.6rem;
   }
 }
+
+
+/* =========================================================
+   MATERI PENDUKUNG — tidak terikat kelas
+   ========================================================= */
+.support-section{padding-top:28px}
+.support-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);
+  gap:18px;
+}
+.support-card{
+  min-height:260px;
+  padding:22px;
+  border:1px solid var(--line);
+  border-radius:var(--radius-md);
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  gap:13px;
+  box-shadow:0 7px 25px rgba(24,66,60,.05);
+}
+.support-card.is-active{
+  border-color:rgba(15,118,110,.35);
+  background:linear-gradient(180deg,#effcf8,#fff 62%);
+}
+.support-icon{
+  width:56px;
+  height:56px;
+  display:grid;
+  place-items:center;
+  border-radius:17px;
+  background:#e7f5f2;
+  font-size:1.7rem;
+}
+.support-copy h3,.support-copy p{margin:0}
+.support-copy h3{
+  margin-top:3px;
+  font-size:1.45rem;
+}
+.support-copy p:not(.material-kicker){
+  margin-top:7px;
+  color:var(--muted);
+  line-height:1.55;
+}
+.support-placeholder{
+  justify-content:center;
+  border-style:dashed;
+  background:rgba(255,255,255,.62);
+}
+@media(max-width:820px){
+  .support-grid{grid-template-columns:1fr}
+  .support-card{min-height:0}
+}
+@media(max-width:560px){
+  .support-section{padding-top:24px}
+  .support-card{
+    padding:16px;
+    border-radius:16px;
+  }
+  .support-icon{
+    width:44px;height:44px;border-radius:13px;font-size:1.3rem;
+  }
+  .support-copy h3{font-size:1.2rem}
+  .support-copy p:not(.material-kicker){font-size:.82rem}
+}
+@media (orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .support-section{padding:14px 0 10px}
+  .support-grid{grid-template-columns:1.2fr .8fr;gap:8px}
+  .support-card{min-height:0;padding:10px;gap:6px;border-radius:13px}
+  .support-icon{width:36px;height:36px;border-radius:10px;font-size:1rem}
+  .support-copy h3{font-size:1rem}
+  .support-copy p:not(.material-kicker){margin-top:3px;font-size:.63rem;line-height:1.25}
+  .support-card .card-action{min-height:32px;font-size:.66rem}
+}
