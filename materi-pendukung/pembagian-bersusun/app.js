@@ -228,7 +228,7 @@ const processSteps=[
   },
   {
     phase:"ULANGI",
-    title:"Bagi 200 dengan 35",
+    title:"",
     text:"20 menjadi 200. Pilih 5 karena 35 × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
     rule:"Ulangi bagi → kali → kurangi. Jika hasil pengurangan menjadi 0, pembagian selesai. Jika belum 0, lanjutkan lagi.",
     compare:[
@@ -307,7 +307,9 @@ function renderProcess(){
   document.getElementById("processIndex").textContent=processIndex+1;
   document.getElementById("processTotal").textContent=processSteps.length;
   document.getElementById("processPhase").textContent=s.phase;
-  document.getElementById("processTitle").textContent=s.title;
+  const processTitle=document.getElementById("processTitle");
+  processTitle.hidden=!s.title;
+  processTitle.textContent=s.title||"";
 
   const processText=document.getElementById("processText");
   if(s.text){
