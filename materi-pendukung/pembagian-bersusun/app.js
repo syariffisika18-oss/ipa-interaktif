@@ -116,70 +116,139 @@ buildMultiples(35,240,document.getElementById("multipleGrid"),{
   }
 });
 
-// Proses pembagian bersusun 240 ÷ 35, konsisten dengan tahap sebelumnya.
+// Proses pembagian bersusun 240 ÷ 35 dengan bentuk pembagian bersusun standar.
 const processSteps=[
   {
     phase:"BAGI",title:"Tentukan bagian pertama yang dibagi",
     text:"35 tidak dapat masuk ke 2 atau 24. Karena itu gunakan 240 sebagai bagian pertama yang dibagi.",
     rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
-    stack:["       ","    ______","35 ) 240"]
+    quotient:"?",dividend:"240",rows:[]
   },
   {
     phase:"BAGI",title:"Bagi 240 dengan 35",
     text:"Dari tabel kelipatan, 35 × 6 = 210 dan 35 × 7 = 245 sudah terlalu besar. Jadi pilih 6.",
     rule:"Pilih kelipatan terbesar yang tidak melebihi bilangan yang sedang dibagi.",
-    stack:["      6","    ______","35 ) 240"]
+    quotient:"6",dividend:"240",rows:[]
   },
   {
     phase:"KALI",title:"Kalikan kembali",
     text:"Kalikan 6 × 35 = 210. Tulis 210 di bawah 240.",
     rule:"Kalikan digit hasil bagi dengan pembagi.",
-    stack:["      6","    ______","35 ) 240","     210"]
+    quotient:"6",dividend:"240",
+    rows:[{text:"210",kind:"product",current:true}]
   },
   {
     phase:"KURANGI",title:"Kurangkan",
     text:"240 − 210 = 30. Jadi sisanya 30.",
     rule:"Kurangkan untuk mengetahui sisa pembagian.",
-    stack:["      6","    ______","35 ) 240","     210","     ---","      30"]
+    quotient:"6",dividend:"240",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"30",kind:"remainder",current:true}
+    ]
   },
   {
     phase:"DESIMAL",title:"Lanjutkan ke desimal",
     text:"Tidak ada digit lagi untuk diturunkan, tetapi masih ada sisa 30. Tulis koma pada hasil, lalu tambahkan 0 sehingga 30 menjadi 300.",
     rule:"Jika masih ada sisa, tambahkan koma pada hasil dan 0 pada sisa untuk melanjutkan.",
-    stack:["      6,","    ______","35 ) 240,0","     210","     ---","      300"]
+    quotient:"6,",dividend:"240,0",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"300",kind:"remainder",current:true}
+    ]
   },
   {
     phase:"BAGI",title:"Bagi 300 dengan 35",
     text:"35 × 8 = 280 dan 35 × 9 = 315 terlalu besar. Jadi digit berikutnya adalah 8.",
     rule:"Ulangi cara yang sama pada bilangan baru.",
-    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300"]
+    quotient:"6,8",dividend:"240,0",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"300",kind:"remainder"}
+    ]
   },
   {
     phase:"KALI",title:"Kalikan kembali",
     text:"8 × 35 = 280. Tulis 280 di bawah 300.",
     rule:"Kalikan digit hasil bagi yang baru dengan pembagi.",
-    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300","      280"]
+    quotient:"6,8",dividend:"240,0",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"300",kind:"remainder"},
+      {text:"280",kind:"product second",current:true}
+    ]
   },
   {
     phase:"KURANGI",title:"Kurangkan lagi",
     text:"300 − 280 = 20. Masih ada sisa 20.",
     rule:"Karena masih ada sisa, proses dapat diteruskan dengan menambahkan 0 lagi.",
-    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300","      280","      ---","       20"]
+    quotient:"6,8",dividend:"240,0",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"300",kind:"remainder"},
+      {text:"280",kind:"product second"},
+      {kind:"line second"},
+      {text:"20",kind:"remainder second",current:true}
+    ]
   },
   {
     phase:"ULANGI",title:"Teruskan pola yang sama",
     text:"20 menjadi 200. Kemudian 200 ÷ 35 memberi digit 5, lalu proses bagi → kali → kurangi diulang lagi.",
     rule:"Pola selanjutnya tetap sama sampai ketelitian desimal yang dibutuhkan tercapai.",
-    stack:["      6,85…","    ______","35 ) 240,00…","     210","     ---","      300","      280","      ---","       200","       175","       ---","        25"]
+    quotient:"6,85…",dividend:"240,00…",
+    rows:[
+      {text:"210",kind:"product"},
+      {kind:"line"},
+      {text:"300",kind:"remainder"},
+      {text:"280",kind:"product second"},
+      {kind:"line second"},
+      {text:"200",kind:"remainder second",current:true},
+      {text:"175",kind:"product third"},
+      {kind:"line third"},
+      {text:"25",kind:"remainder third"}
+    ]
   },
   {
     phase:"HASIL",title:"Hasil pembagian",
     text:"Jika diteruskan, 240 ÷ 35 = 6,857142…",
     rule:"Untuk pembagian yang tidak habis, hasil desimal dapat berlanjut atau berulang.",
-    stack:["   6,857142…","    _________","35 ) 240,000000…"]
+    quotient:"6,857142…",dividend:"240,000000…",
+    rows:[]
   }
 ];
+
 let processIndex=Math.min(state.processIndex||0,processSteps.length-1);
+
+function renderLongDivision(step){
+  const stack=document.getElementById("divisionStack");
+  const rows=step.rows.map(row=>{
+    if(row.kind==="line"){
+      return '<div class="ld-work-row ld-line'+(row.kind.includes?.("second")?" second":"")+'"></div>';
+    }
+    if(row.kind?.startsWith("line")){
+      const level=row.kind.includes("third")?" third":row.kind.includes("second")?" second":"";
+      return '<div class="ld-work-row ld-line'+level+'"></div>';
+    }
+    const classes=["ld-work-row"];
+    if(row.kind) classes.push(...row.kind.split(" "));
+    if(row.current) classes.push("current-line");
+    return '<div class="'+classes.join(" ")+'">'+row.text+'</div>';
+  }).join("");
+
+  stack.innerHTML=
+    '<div class="ld-quotient">'+step.quotient+'</div>'+
+    '<div class="ld-divisor">35</div>'+
+    '<div class="ld-body">'+
+      '<div class="ld-dividend">'+step.dividend+'</div>'+
+      '<div class="ld-work">'+rows+'</div>'+
+    '</div>';
+}
+
 function renderProcess(){
   const s=processSteps[processIndex];
   document.getElementById("processIndex").textContent=processIndex+1;
@@ -188,21 +257,22 @@ function renderProcess(){
   document.getElementById("processTitle").textContent=s.title;
   document.getElementById("processText").textContent=s.text;
   document.getElementById("processRule").textContent=s.rule;
-  document.getElementById("divisionStack").innerHTML=s.stack.map((line,i)=>{
-    const current=i===s.stack.length-1 && processIndex>0 ? " current-line" : "";
-    return '<div class="division-line'+current+'">'+line.replace(/ /g,"&nbsp;")+'</div>';
-  }).join("");
+  renderLongDivision(s);
   document.getElementById("processNext").textContent=processIndex===processSteps.length-1?"Ulangi dari awal":"Langkah berikutnya →";
-  const strip=document.getElementById("processStrip");strip.innerHTML="";
+  const strip=document.getElementById("processStrip");
+  strip.innerHTML="";
   processSteps.forEach((_,i)=>{
     const d=document.createElement("div");
     d.className="process-dot "+(i<processIndex?"done":i===processIndex?"active":"");
     strip.appendChild(d);
   });
 }
+
 document.getElementById("processNext").onclick=()=>{
   processIndex=processIndex===processSteps.length-1?0:processIndex+1;
-  state.processIndex=processIndex;save();renderProcess();
+  state.processIndex=processIndex;
+  save();
+  renderProcess();
 };
 renderProcess();
 
