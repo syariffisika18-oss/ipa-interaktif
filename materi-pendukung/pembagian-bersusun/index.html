@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
   <title>Pembagian Bersusun — Materi Pendukung</title>
-  <link rel="stylesheet" href="style.css?v=20260929-1">
+  <link rel="stylesheet" href="style.css?v=20260929-2">
 </head>
 <body>
 <header class="topbar">
@@ -82,7 +82,6 @@
         <div><b>35</b><span>Pembagi</span></div>
         <div><b>240</b><span>Bilangan yang dibagi</span></div>
         <div><b>?</b><span>Hasil bagi yang akan kita cari</span></div>
-        <p class="mini-note">Kita tidak langsung membagi 240 dengan 35 menggunakan kalkulator. Kita mencari kelipatan 35 yang paling dekat tanpa melewati 240.</p>
       </article>
     </div>
   </section>
@@ -90,52 +89,43 @@
   <section class="stage-panel" data-panel="2">
     <div class="stage-title"><span>LANGKAH 3</span><h2>Tentukan angka awal</h2></div>
 
-    <div class="focus-problem">
+    <div class="focus-problem focus-problem-simple">
       <div class="problem-main">
         <span>Contoh</span>
         <strong>240 ÷ 35</strong>
-        <p>Cari kelipatan 35 yang <b>paling besar tetapi tidak melebihi 240</b>.</p>
+        <p>Pilih kelipatan 35 yang <b>paling besar tetapi tidak melebihi 240</b>.</p>
       </div>
-      <div class="answer-start">
-        <label for="firstDigit">Angka awal hasil bagi</label>
-        <div class="answer-row">
-          <input id="firstDigit" inputmode="numeric" maxlength="2" placeholder="?">
-          <button id="checkFirstDigit" type="button">Periksa</button>
-        </div>
-        <div id="firstDigitFeedback" class="feedback neutral">Coba tentukan sendiri terlebih dahulu.</div>
-      </div>
+      <div id="multipleChoiceFeedback" class="feedback neutral">Sentuh salah satu kelipatan di bawah. Belum ada pilihan yang ditandai benar.</div>
     </div>
 
-    <div class="helper-card">
-      <div>
-        <span class="helper-kicker">💡 Scaffolding</span>
-        <h3>Bantuan kelipatan</h3>
-        <p>Jika masih bingung, buka tabel perkalian pembagi dari ×1 sampai ×10.</p>
-      </div>
-      <button id="toggleMultiples" class="helper-btn" type="button">Tampilkan kelipatan 35</button>
-    </div>
-
-    <div id="multiplePanel" class="multiple-panel" hidden>
+    <div id="multiplePanel" class="multiple-panel always-visible">
       <div class="multiple-head">
-        <strong id="multipleTitle">Kelipatan 35</strong>
-        <span>Cari hasil terbesar yang ≤ 240</span>
+        <strong>Kelipatan 35</strong>
+        <span>Pilih satu hasil yang paling tepat</span>
       </div>
-      <div id="multipleGrid" class="multiple-grid"></div>
-      <div class="multiple-legend"><span class="ok-dot"></span> masih dapat dipakai <span class="too-dot"></span> sudah melewati 240</div>
+      <div id="multipleGrid" class="multiple-grid interactive-multiples"></div>
+      <div class="multiple-legend">Hijau = tepat • Kuning = belum tepat. Coba bandingkan hasilnya dengan 240.</div>
     </div>
   </section>
 
   <section class="stage-panel" data-panel="3">
     <div class="stage-title"><span>LANGKAH 4</span><h2>Ikuti prosesnya</h2></div>
-    <div class="process-grid">
-      <div class="process-visual">
-        <div class="process-number" id="processNumber">240 ÷ 35</div>
-        <div id="processEquation" class="process-equation">Mulai dari mencari kelipatan 35 yang sesuai.</div>
+
+    <div class="process-example-head">
+      <div><span>CONTOH PROSES</span><strong>156 ÷ 3</strong></div>
+      <p>Perhatikan bagaimana bentuk pembagian bersusun bertambah sedikit demi sedikit.</p>
+    </div>
+
+    <div class="process-grid division-process-grid">
+      <div class="process-visual long-process-visual">
+        <div id="divisionStack" class="division-stack" aria-live="polite"></div>
       </div>
       <div class="process-card">
-        <div class="process-count"><span id="processIndex">1</span>/6</div>
-        <h3 id="processTitle">Bagi</h3>
-        <p id="processText">35 masuk ke 240 sebanyak 6 kali karena 6 × 35 = 210 dan 7 × 35 = 245 terlalu besar.</p>
+        <div class="process-count"><span id="processIndex">1</span>/<span id="processTotal">9</span></div>
+        <div id="processPhase" class="process-phase">BAGI</div>
+        <h3 id="processTitle">Tentukan bagian pertama yang dibagi</h3>
+        <p id="processText">Karena 1 lebih kecil daripada 3, gunakan dua angka pertama: 15.</p>
+        <div id="processRule" class="process-rule">Jika angka pertama lebih kecil daripada pembagi, ambil digit berikutnya.</div>
         <button id="processNext" type="button">Langkah berikutnya →</button>
       </div>
     </div>
@@ -190,6 +180,6 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="app.js?v=20260929-1"></script>
+<script src="app.js?v=20260929-2"></script>
 </body>
 </html>
