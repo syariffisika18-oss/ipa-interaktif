@@ -2582,3 +2582,217 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     height:5px!important;
   }
 }
+
+
+/* =========================================================
+   DESKTOP / LAPTOP BASELINE — audit utama 1366 × 768
+   Tetap nyaman untuk 1536 × 864 dan 1920 × 1080
+   ========================================================= */
+@media (min-width:951px){
+
+  .module-shell{
+    width:min(1060px,calc(100% - 32px))!important;
+  }
+
+  /* Topbar */
+  .module-topbar-row{
+    min-height:54px!important;
+    gap:10px!important;
+  }
+  .portal-link{
+    font-size:.86rem!important;
+  }
+  .module-title-mini span{
+    font-size:.58rem!important;
+  }
+  .module-title-mini strong{
+    font-size:.82rem!important;
+  }
+  .reset-learning{
+    min-height:34px!important;
+    padding:0 10px!important;
+    border-radius:9px!important;
+    font-size:.74rem!important;
+  }
+
+  /* Main spacing */
+  .module-main{
+    padding:12px 0 46px!important;
+  }
+
+  /* Hero */
+  .module-hero{
+    padding:18px 20px!important;
+    border-radius:20px!important;
+    grid-template-columns:minmax(0,1.55fr) minmax(245px,.45fr)!important;
+    gap:16px!important;
+    align-items:center!important;
+  }
+  .module-hero .u-eyebrow{
+    font-size:.6rem!important;
+    letter-spacing:.09em!important;
+  }
+  .module-hero h1{
+    margin:4px 0 5px!important;
+    font-size:2.05rem!important;
+    line-height:1.02!important;
+    letter-spacing:-.028em!important;
+  }
+  .module-hero>div:first-child>p:not(.u-eyebrow){
+    font-size:.78rem!important;
+    line-height:1.35!important;
+  }
+
+  /* Mode card */
+  .module-mode{
+    padding:11px!important;
+    border-radius:13px!important;
+  }
+  .module-mode>strong{
+    margin-bottom:6px!important;
+    font-size:.76rem!important;
+  }
+  .mode-switch{
+    gap:3px!important;
+    padding:3px!important;
+    border-radius:10px!important;
+  }
+  .mode-switch button{
+    min-height:34px!important;
+    border-radius:8px!important;
+    font-size:.68rem!important;
+    padding:3px 6px!important;
+  }
+  .mode-help{
+    margin-top:6px!important;
+    font-size:.62rem!important;
+    line-height:1.3!important;
+  }
+
+  /* Progress */
+  .progress-wrap{
+    margin-top:8px!important;
+    padding:8px 11px!important;
+    border-radius:11px!important;
+  }
+  .progress-line{
+    margin-bottom:4px!important;
+    font-size:.68rem!important;
+  }
+  .progress-track{
+    height:6px!important;
+  }
+
+  /* Stage menu */
+  .u-stage-nav{
+    top:54px!important;
+    margin:8px 0!important;
+    padding:4px!important;
+    gap:4px!important;
+    border-radius:12px!important;
+    grid-template-columns:repeat(7,minmax(112px,1fr))!important;
+  }
+  .u-stage-tab{
+    min-height:39px!important;
+    padding:4px 6px!important;
+    border-radius:8px!important;
+    font-size:.67rem!important;
+  }
+  .u-stage-tab b{
+    width:21px!important;
+    height:21px!important;
+    border-radius:6px!important;
+    margin-right:3px!important;
+    font-size:.64rem!important;
+  }
+
+  /* Stage panels */
+  .u-panel-card{
+    padding:17px!important;
+    border-radius:18px!important;
+    min-height:360px!important;
+  }
+  .u-stage-head{
+    gap:12px!important;
+    margin-bottom:12px!important;
+  }
+  .u-stage-head h2{
+    margin-top:2px!important;
+    font-size:1.72rem!important;
+  }
+  .u-stage-kicker{
+    font-size:.62rem!important;
+  }
+  .u-principle{
+    padding:5px 8px!important;
+    font-size:.66rem!important;
+  }
+
+  /* Generic cards/forms */
+  .u-grid-2{
+    gap:10px!important;
+  }
+  .u-card{
+    padding:13px!important;
+    border-radius:13px!important;
+  }
+  .u-card h3{
+    margin-bottom:8px!important;
+    font-size:.98rem!important;
+  }
+  .u-card p,
+  .u-card li{
+    font-size:.79rem!important;
+    line-height:1.45!important;
+  }
+  .identity-grid{
+    gap:8px!important;
+  }
+  .identity-grid label,
+  .reflection-grid label{
+    gap:4px!important;
+    font-size:.73rem!important;
+  }
+  .identity-grid input,
+  .reflection-grid textarea{
+    padding:8px!important;
+    border-radius:9px!important;
+  }
+  .identity-grid input{
+    min-height:38px!important;
+  }
+
+  /* Stage cards inside CPA flow */
+  .u-stage-panel .stage-card{
+    padding:11px!important;
+  }
+  .stage-topline{
+    margin-bottom:7px!important;
+  }
+  .stage-topline h2{
+    font-size:1.05rem!important;
+  }
+  .stage-nav{
+    margin-top:7px!important;
+    padding-top:7px!important;
+  }
+  .stage-nav button{
+    min-height:34px!important;
+    padding:4px 9px!important;
+    font-size:.68rem!important;
+  }
+
+  /* Bottom nav */
+  .u-bottom-nav{
+    bottom:5px!important;
+    margin:8px 0 14px!important;
+    padding:5px!important;
+    border-radius:12px!important;
+    gap:5px!important;
+  }
+  .u-bottom-nav button{
+    min-height:38px!important;
+    border-radius:8px!important;
+    font-size:.72rem!important;
+  }
+}
