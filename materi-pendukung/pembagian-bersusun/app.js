@@ -155,8 +155,8 @@ const processSteps=[
   },
   {
     phase:"KURANGI",
-    title:"Kurangkan",
-    text:"240 − 210 = 30. Jadi sisanya 30.",
+    title:"240 − 210 = 30",
+    text:"Sisa pembagiannya 30.",
     rule:"Kurangkan untuk mengetahui sisa pembagian.",
     quotientHTML:"6",
     dividendHTML:'<span class="ld-red">240</span>',
@@ -168,7 +168,7 @@ const processSteps=[
   },
   {
     phase:"DESIMAL",
-    title:"Lanjutkan ke desimal",
+    title:"Tambahkan koma dan 0",
     text:"",
     rule:"Jika masih ada sisa, tambahkan koma pada hasil dan 0 pada sisa untuk melanjutkan.",
     quotientHTML:'6<span class="ld-red">,</span>',
@@ -198,8 +198,8 @@ const processSteps=[
   },
   {
     phase:"KALI",
-    title:"Kalikan kembali",
-    text:"8 × 35 = 280. Tulis 280 tepat di bawah 300.",
+    title:"Kalikan 8 × 35 = 280",
+    text:"Tulis 280 tepat di bawah 300.",
     rule:"Kalikan digit hasil bagi yang baru dengan pembagi.",
     quotientHTML:'6<span class="ld-red">,8</span>',
     dividendHTML:"240",
@@ -212,8 +212,8 @@ const processSteps=[
   },
   {
     phase:"KURANGI",
-    title:"Kurangkan lagi",
-    text:"300 − 280 = 20. Jadi sisanya 20.",
+    title:"300 − 280 = 20",
+    text:"Sisa pembagiannya 20.",
     rule:"Jika masih ada sisa, proses belum selesai.",
     quotientHTML:'6<span class="ld-red">,8</span>',
     dividendHTML:"240",
@@ -228,7 +228,7 @@ const processSteps=[
   },
   {
     phase:"ULANGI",
-    title:"Teruskan pola yang sama",
+    title:"Bagi 200 dengan 35",
     text:"20 menjadi 200. Pilih 5 karena 35 × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
     rule:"Ulangi bagi → kali → kurangi. Jika hasil pengurangan menjadi 0, pembagian selesai. Jika belum 0, lanjutkan lagi.",
     compare:[
@@ -251,8 +251,8 @@ const processSteps=[
   },
   {
     phase:"HASIL",
-    title:"Hasil pembagian",
-    text:"Jika diteruskan, 240 ÷ 35 = 6,857142…",
+    title:"240 ÷ 35 = 6,857142…",
+    text:"",
     rule:"Jika suatu tahap menghasilkan sisa 0, pembagian selesai. Jika sisanya tidak 0, pola dapat diteruskan sesuai ketelitian yang dibutuhkan.",
     quotientHTML:'6,857142<span class="ld-red">…</span>',
     dividendHTML:"240",
