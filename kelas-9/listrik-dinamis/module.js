@@ -96,8 +96,8 @@ function applyMode(){
   document.body.dataset.learningMode=mode;
   document.querySelectorAll("[data-learning-mode]").forEach(b=>b.classList.toggle("active",b.dataset.learningMode===mode));
   document.getElementById("modeHelp").textContent=mode==="guru"
-    ?"Sebagian feedback ditahan agar guru dapat memfasilitasi prediksi, diskusi, dan pembahasan sebelum jawaban dibuka."
-    :"Petunjuk dan feedback otomatis diberikan lebih langsung agar kamu dapat belajar tanpa menunggu bantuan guru.";
+    ?"Feedback ditahan agar guru dapat memandu prediksi dan diskusi."
+    :"Petunjuk dan feedback otomatis membantu kamu belajar mandiri.";
   if(mode==="guru") document.querySelectorAll(".teacher-reveal-target").forEach(x=>x.classList.remove("teacher-revealed"));
   window.dispatchEvent(new CustomEvent("learningmodechange",{detail:{mode}}));
 }
