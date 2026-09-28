@@ -233,19 +233,6 @@ function updateConcrete(){
   $('#it').textContent = fmt(m.It,'A');
   $('#vb').textContent = fmt(m.Vb,'V');
   $('#ib').textContent = fmt(m.branchI,'A');
-
-  let text='';
-  if(!state.on){
-    text='Sakelar terbuka: rangkaian terputus sehingga arus tidak mengalir.';
-  } else if(state.type==='series'){
-    if(state.removed) text='Lampu 1 dilepas → satu-satunya jalur terputus. Semua lampu padam.';
-    else text=`Rangkaian seri memiliki satu jalur. Arus yang sama melewati setiap lampu. Dengan ${state.bulbs} lampu identik, tegangan sumber terbagi pada lampu-lampu tersebut.`;
-  } else {
-    if(state.removed) text='Lampu 1 dilepas → cabang itu terbuka, tetapi cabang lain masih memiliki jalur lengkap sehingga lampu lain tetap menyala.';
-    else text=`Rangkaian paralel memiliki ${state.bulbs} cabang lampu. Setiap lampu terhubung pada dua titik sumber yang sama, sehingga masing-masing mendapat tegangan sumber yang sama.`;
-  }
-  const brightInfo = !state.on ? 'Semua lampu mati.' : `Indikator terang kualitatif tiap lampu saat ini: <b>${brightnessText(brightnessRatio())}</b>.`;
-  $('#observation').innerHTML=`<b>Amati:</b> ${text}<br>${brightInfo}`;
   drawCircuit();
 }
 
