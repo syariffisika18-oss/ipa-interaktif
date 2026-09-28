@@ -696,3 +696,31 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
     margin-left:0!important;
   }
 }
+
+
+/* =========================================================
+   CONSISTENT DIGIT SIZE — angka kerja sama besar dengan dividend
+   ========================================================= */
+.ld-work{
+  font-size:var(--ld-font)!important;
+  line-height:1.05!important;
+}
+
+.ld-work-row{
+  font-size:var(--ld-font)!important;
+  line-height:1.05!important;
+}
+
+@media(max-width:640px){
+  .ld-work,
+  .ld-work-row{
+    font-size:var(--ld-font)!important;
+  }
+}
+
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .ld-work,
+  .ld-work-row{
+    font-size:var(--ld-font)!important;
+  }
+}
