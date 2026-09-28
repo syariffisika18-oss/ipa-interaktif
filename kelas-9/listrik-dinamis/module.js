@@ -1,5 +1,15 @@
 (() => {
-const config=window.IPA_MODULE_CONFIG||{}, KEY="ipa-interaktif:listrik-dinamis:v1", N=7, state=load();
+const config=window.IPA_MODULE_CONFIG||{}, KEY="ipa-interaktif:listrik-dinamis:v1", N=7;
+const RESET_PREFIX="ipa-interaktif:listrik-dinamis:";
+const resetRequested=new URLSearchParams(location.search).has("_reset");
+
+if(resetRequested){
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith(RESET_PREFIX)) localStorage.removeItem(k);
+  });
+}
+
+const state=load();
 let active=Number.isInteger(state.activeStage)?state.activeStage:0, done=new Set(Array.isArray(state.completed)?state.completed:[]), mode=state.mode||config.defaultMode||"mandiri";
 if(!state.sessionId) state.sessionId=id();
 const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.querySelectorAll(".u-stage-panel")], fill=document.getElementById("learningProgressFill"), ptxt=document.getElementById("learningProgressText"), prev=document.getElementById("uPrev"), next=document.getElementById("uNext"), complete=document.getElementById("uComplete"), toast=document.getElementById("uToast");
@@ -56,7 +66,27 @@ function scrollToLearningContent(target,behavior="smooth"){
 }
 window.scrollToLearningContent=scrollToLearningContent;
 
-initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active,false);refreshSend();save();
+initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active,false);
+
+if(resetRequested){
+  document.querySelectorAll(".selected,.correct,.wrong,.revealed-correct,.complete,.done")
+    .forEach(el=>el.classList.remove("selected","correct","wrong","revealed-correct","complete","done"));
+
+  document.querySelectorAll(".diagnostic-feedback").forEach(el=>{
+    el.textContent="";
+    el.classList.remove("correct","wrong");
+  });
+
+  document.querySelectorAll(".engage-option").forEach(el=>el.classList.remove("selected"));
+
+  document.querySelectorAll("[data-confidence]").forEach(el=>el.classList.remove("selected"));
+  document.querySelectorAll("[data-difficulty]").forEach(el=>{el.checked=false});
+
+  const cleanUrl=location.pathname+location.hash;
+  try{history.replaceState(null,"",cleanUrl)}catch(_){}
+}
+
+refreshSend();save();
 
 function initMode(){document.querySelectorAll("[data-learning-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.learningMode==="guru"?"guru":"mandiri";applyMode();changed();save()});applyMode()}
 function applyMode(){
@@ -153,9 +183,8 @@ function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.o
   if(!confirm("Reset seluruh progres, jawaban, identitas, dan refleksi modul ini?")) return;
 
   // 1) Hapus seluruh penyimpanan lokal yang khusus modul ini.
-  const prefix="ipa-interaktif:listrik-dinamis:";
   Object.keys(localStorage).forEach(k=>{
-    if(k.startsWith(prefix)) localStorage.removeItem(k);
+    if(k.startsWith(RESET_PREFIX)) localStorage.removeItem(k);
   });
 
   // 2) Bersihkan state UI yang sedang hidup sebelum reload.
