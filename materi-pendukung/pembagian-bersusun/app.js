@@ -61,54 +61,143 @@ document.querySelectorAll("#diagChoices button").forEach(b=>b.onclick=()=>{
   save();
 });
 
-// Multiples helper
-function buildMultiples(divisor,target,container,markBest=true){
+// Tabel kelipatan interaktif: tidak ada jawaban yang dipilih otomatis.
+function buildMultiples(divisor,target,container,{interactive=false,markBest=false,onPick=null}={}){
   container.innerHTML="";
   let best=0;
   for(let i=1;i<=10;i++)if(i*divisor<=target)best=i;
+
   for(let i=1;i<=10;i++){
     const value=i*divisor;
-    const d=document.createElement("div");
-    d.className="multiple-item"+(value>target?" too-high":"")+(markBest&&i===best?" best":"");
-    d.innerHTML="<b>"+divisor+" × "+i+"</b><br>"+value;
-    container.appendChild(d);
+    const el=document.createElement(interactive?"button":"div");
+    el.type=interactive?"button":undefined;
+    el.className="multiple-item";
+    el.dataset.multiplier=String(i);
+    el.dataset.value=String(value);
+    el.innerHTML="<b>"+divisor+" × "+i+"</b><br>"+value;
+
+    if(markBest && i===best) el.classList.add("best");
+
+    if(interactive){
+      el.addEventListener("click",()=>{
+        [...container.children].forEach(x=>x.classList.remove("best","picked-wrong","picked-over"));
+        if(i===best){
+          el.classList.add("best");
+        }else if(value>target){
+          el.classList.add("picked-over");
+        }else{
+          el.classList.add("picked-wrong");
+        }
+        onPick?.({multiplier:i,value,best,target,divisor,element:el});
+      });
+    }
+    container.appendChild(el);
   }
 }
-const multPanel=document.getElementById("multiplePanel");
-buildMultiples(35,240,document.getElementById("multipleGrid"));
-document.getElementById("toggleMultiples").onclick=()=>{
-  multPanel.hidden=!multPanel.hidden;
-  document.getElementById("toggleMultiples").textContent=multPanel.hidden?"Tampilkan kelipatan 35":"Sembunyikan bantuan";
-};
-document.getElementById("checkFirstDigit").onclick=()=>{
-  const v=Number(document.getElementById("firstDigit").value);
-  const fb=document.getElementById("firstDigitFeedback");
-  if(v===6){fb.className="feedback good";fb.innerHTML="<b>Benar.</b> 6 × 35 = 210, sedangkan 7 × 35 = 245 sudah melewati 240.";state.firstDigit=true}
-  else{fb.className="feedback warn";fb.innerHTML="Belum tepat. Cari hasil perkalian 35 yang paling besar tetapi masih ≤ 240. Buka bantuan kelipatan jika perlu.";state.firstDigit=false}
-  save();
-};
 
-// Process
+buildMultiples(35,240,document.getElementById("multipleGrid"),{
+  interactive:true,
+  onPick:({multiplier,value,best,target})=>{
+    const fb=document.getElementById("multipleChoiceFeedback");
+    if(multiplier===best){
+      fb.className="feedback good";
+      fb.innerHTML="<b>Tepat.</b> 35 × "+multiplier+" = "+value+" adalah hasil terbesar yang masih tidak melebihi "+target+".";
+      state.firstDigit=true;
+    }else if(value>target){
+      fb.className="feedback warn";
+      fb.innerHTML="35 × "+multiplier+" = "+value+" <b>sudah melewati "+target+"</b>. Pilih kelipatan yang lebih kecil.";
+      state.firstDigit=false;
+    }else{
+      fb.className="feedback warn";
+      fb.innerHTML="35 × "+multiplier+" = "+value+" masih di bawah "+target+", tetapi <b>belum yang paling dekat</b>. Coba kelipatan yang lebih besar.";
+      state.firstDigit=false;
+    }
+    save();
+  }
+});
+
+// Proses pembagian bersusun 156 ÷ 3, dibangun satu langkah setiap kali.
 const processSteps=[
-  ["Bagi","35 masuk ke 240 sebanyak 6 kali karena 6 × 35 = 210 dan 7 × 35 = 245 terlalu besar.","240 ÷ 35 → pilih 6"],
-  ["Kali","Kalikan angka hasil bagi dengan pembagi: 6 × 35 = 210.","6 × 35 = 210"],
-  ["Kurang","Kurangkan 240 − 210 sehingga tersisa 30.","240 − 210 = 30"],
-  ["Tambahkan desimal","Karena masih bersisa dan tidak ada angka lagi untuk diturunkan, tulis koma pada hasil lalu tambahkan 0 pada sisa: 30 menjadi 300.","6, ... dan 30 → 300"],
-  ["Ulangi pola","35 masuk ke 300 sebanyak 8 kali. 8 × 35 = 280, sisanya 20. Lanjutkan pola yang sama.","300 ÷ 35 → 8, sisa 20"],
-  ["Hasil sementara","Proses dapat diteruskan. Beberapa angka pertama hasilnya adalah 6,8571...","240 ÷ 35 = 6,8571..."]
+  {
+    phase:"BAGI",title:"Tentukan bagian pertama yang dibagi",
+    text:"Karena 1 lebih kecil daripada 3, gunakan dua angka pertama: 15.",
+    rule:"Jika angka pertama lebih kecil daripada pembagi, ambil digit berikutnya.",
+    stack:["      ","   ______","3 ) 156"]
+  },
+  {
+    phase:"BAGI",title:"Bagi 15 dengan 3",
+    text:"15 ÷ 3 = 5. Tulis 5 di atas angka 5 pada 156.",
+    rule:"Angka hasil bagi ditulis sejajar dengan digit terakhir yang sedang dibagi.",
+    stack:["    5 ","   ______","3 ) 156"]
+  },
+  {
+    phase:"KALI",title:"Kalikan kembali",
+    text:"5 × 3 = 15. Tulis 15 tepat di bawah 15.",
+    rule:"Kalikan angka hasil bagi dengan pembagi.",
+    stack:["    5 ","   ______","3 ) 156","    15"]
+  },
+  {
+    phase:"KURANGI",title:"Kurangkan",
+    text:"15 − 15 = 0. Bagian pertama habis terbagi.",
+    rule:"Kurangkan untuk mengetahui sisa.",
+    stack:["    5 ","   ______","3 ) 156","    15","    --","     0"]
+  },
+  {
+    phase:"TURUNKAN",title:"Turunkan angka berikutnya",
+    text:"Turunkan angka 6. Sekarang yang dibagi adalah 6.",
+    rule:"Setelah mengurangi, turunkan digit berikutnya.",
+    stack:["    5 ","   ______","3 ) 156","    15","    --","     06"]
+  },
+  {
+    phase:"BAGI",title:"Bagi lagi",
+    text:"6 ÷ 3 = 2. Tulis 2 di sebelah kanan angka 5.",
+    rule:"Ulangi pola yang sama: bagi → kali → kurangi.",
+    stack:["    52","   ______","3 ) 156","    15","    --","     06"]
+  },
+  {
+    phase:"KALI",title:"Kalikan kembali",
+    text:"2 × 3 = 6. Tulis 6 di bawah angka 6.",
+    rule:"2 adalah digit kedua hasil bagi.",
+    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6"]
+  },
+  {
+    phase:"KURANGI",title:"Kurangkan lagi",
+    text:"6 − 6 = 0. Tidak ada sisa dan tidak ada angka lagi untuk diturunkan.",
+    rule:"Jika sisa 0 dan semua digit sudah dipakai, pembagian selesai.",
+    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6","     --","      0"]
+  },
+  {
+    phase:"SELESAI",title:"Hasil pembagian",
+    text:"156 ÷ 3 = 52.",
+    rule:"Pola dasarnya: tentukan bagian yang dibagi → bagi → kali → kurangi → turunkan → ulangi.",
+    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6","     --","      0"]
+  }
 ];
-let processIndex=state.processIndex||0;
+let processIndex=Math.min(state.processIndex||0,processSteps.length-1);
 function renderProcess(){
   const s=processSteps[processIndex];
   document.getElementById("processIndex").textContent=processIndex+1;
-  document.getElementById("processTitle").textContent=s[0];
-  document.getElementById("processText").textContent=s[1];
-  document.getElementById("processEquation").textContent=s[2];
-  document.getElementById("processNext").textContent=processIndex===processSteps.length-1?"Ulangi proses":"Langkah berikutnya →";
+  document.getElementById("processTotal").textContent=processSteps.length;
+  document.getElementById("processPhase").textContent=s.phase;
+  document.getElementById("processTitle").textContent=s.title;
+  document.getElementById("processText").textContent=s.text;
+  document.getElementById("processRule").textContent=s.rule;
+  document.getElementById("divisionStack").innerHTML=s.stack.map((line,i)=>{
+    const current=i===s.stack.length-1 && processIndex>0 ? " current-line" : "";
+    return '<div class="division-line'+current+'">'+line.replace(/ /g,"&nbsp;")+'</div>';
+  }).join("");
+  document.getElementById("processNext").textContent=processIndex===processSteps.length-1?"Ulangi dari awal":"Langkah berikutnya →";
   const strip=document.getElementById("processStrip");strip.innerHTML="";
-  processSteps.forEach((_,i)=>{const d=document.createElement("div");d.className="process-dot "+(i<processIndex?"done":i===processIndex?"active":"");strip.appendChild(d)});
+  processSteps.forEach((_,i)=>{
+    const d=document.createElement("div");
+    d.className="process-dot "+(i<processIndex?"done":i===processIndex?"active":"");
+    strip.appendChild(d);
+  });
 }
-document.getElementById("processNext").onclick=()=>{processIndex=processIndex===processSteps.length-1?0:processIndex+1;state.processIndex=processIndex;save();renderProcess()};
+document.getElementById("processNext").onclick=()=>{
+  processIndex=processIndex===processSteps.length-1?0:processIndex+1;
+  state.processIndex=processIndex;save();renderProcess();
+};
 renderProcess();
 
 // Practice
@@ -134,7 +223,7 @@ document.getElementById("practiceHelper").onclick=()=>{
   panel.hidden=!panel.hidden;
   if(!panel.hidden){
     panel.innerHTML='<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari yang membantu langkah awal</span></div><div class="multiple-grid"></div>';
-    buildMultiples(q.b,q.a,panel.querySelector(".multiple-grid"),true);
+    buildMultiples(q.b,q.a,panel.querySelector(".multiple-grid"),{markBest:true});
   }
 };
 document.getElementById("practiceCheck").onclick=()=>{
