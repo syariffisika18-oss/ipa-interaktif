@@ -279,6 +279,7 @@ function initSwipeNavigation(){
     "[data-elab-answer]",
     "[data-elab-reason]",
     "#quizBox .option",
+    ".difficulty-option",
     "[data-confidence]"
   ].join(",");
 
