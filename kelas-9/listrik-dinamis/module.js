@@ -149,7 +149,39 @@ function initTeacherControls(){
     if(target) btn.textContent="Buka ringkasan observasi";
   }));
 }
-function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{if(confirm("Reset progres dan identitas lokal modul ini?")){localStorage.removeItem(KEY);location.reload()}}}
+function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{
+  if(!confirm("Reset seluruh progres, jawaban, identitas, dan refleksi modul ini?")) return;
+
+  // 1) Hapus seluruh penyimpanan lokal yang khusus modul ini.
+  const prefix="ipa-interaktif:listrik-dinamis:";
+  Object.keys(localStorage).forEach(k=>{
+    if(k.startsWith(prefix)) localStorage.removeItem(k);
+  });
+
+  // 2) Bersihkan state UI yang sedang hidup sebelum reload.
+  try{window.resetListrikDinamisInteractiveState?.()}catch(_){}
+
+  document.querySelectorAll(".selected,.correct,.wrong,.revealed-correct,.complete,.done")
+    .forEach(el=>el.classList.remove("selected","correct","wrong","revealed-correct","complete","done"));
+
+  document.querySelectorAll("input,textarea").forEach(el=>{
+    if(el.type==="checkbox"||el.type==="radio") el.checked=false;
+    else if(el.type!=="range") el.value="";
+  });
+
+  document.querySelectorAll(".diagnostic-feedback").forEach(el=>{
+    el.textContent="";
+    el.classList.remove("correct","wrong");
+  });
+
+  const engageFeedback=document.getElementById("engageFeedback");
+  if(engageFeedback) engageFeedback.textContent="Pilih prediksi. Jawaban belum dinilai pada tahap ini.";
+
+  // 3) Hard reload dengan URL bersih + cache-buster agar browser tidak memulihkan state form lama.
+  const url=new URL(location.href);
+  url.searchParams.set("_reset",Date.now().toString());
+  location.replace(url.toString());
+}}
 function show(i,doScroll=true){
   active=Math.max(0,Math.min(N-1,i));
   panels.forEach((p,j)=>p.classList.toggle("active",j===active));
