@@ -25,6 +25,23 @@ function keepActiveStageTabVisible(index,behavior="smooth"){
   });
 }
 
+function naturalDocumentTop(el){
+  let y=0,node=el;
+  while(node){y+=node.offsetTop||0;node=node.offsetParent}
+  return y;
+}
+function scrollToStageMenu(behavior="smooth"){
+  const nav=document.querySelector(".u-stage-nav");
+  if(!nav) return;
+  requestAnimationFrame(()=>{
+    const topbar=document.querySelector(".module-topbar");
+    const topbarH=topbar?topbar.getBoundingClientRect().height:0;
+    const y=naturalDocumentTop(nav)-topbarH-2;
+    window.scrollTo({top:Math.max(0,y),behavior});
+  });
+}
+window.scrollToStageMenu=scrollToStageMenu;
+
 function scrollToLearningContent(target,behavior="smooth"){
   if(!target) return;
   requestAnimationFrame(()=>{
@@ -146,8 +163,7 @@ function show(i,doScroll=true){
   render();
   save();
   if(doScroll){
-    const target=panels[active]?.querySelector(".u-stage-head")||panels[active];
-    scrollToLearningContent(target);
+    scrollToStageMenu();
   }
 }
 function render(){const c=done.size,p=Math.round(c/N*100);fill.style.width=p+"%";ptxt.textContent=c+" dari "+N+" tahap • "+p+"%";tabs.forEach((t,j)=>t.classList.toggle("complete",done.has(j)))}
