@@ -116,61 +116,67 @@ buildMultiples(35,240,document.getElementById("multipleGrid"),{
   }
 });
 
-// Proses pembagian bersusun 156 ÷ 3, dibangun satu langkah setiap kali.
+// Proses pembagian bersusun 240 ÷ 35, konsisten dengan tahap sebelumnya.
 const processSteps=[
   {
     phase:"BAGI",title:"Tentukan bagian pertama yang dibagi",
-    text:"Karena 1 lebih kecil daripada 3, gunakan dua angka pertama: 15.",
-    rule:"Jika angka pertama lebih kecil daripada pembagi, ambil digit berikutnya.",
-    stack:["      ","   ______","3 ) 156"]
+    text:"35 tidak dapat masuk ke 2 atau 24. Karena itu gunakan 240 sebagai bagian pertama yang dibagi.",
+    rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
+    stack:["       ","    ______","35 ) 240"]
   },
   {
-    phase:"BAGI",title:"Bagi 15 dengan 3",
-    text:"15 ÷ 3 = 5. Tulis 5 di atas angka 5 pada 156.",
-    rule:"Angka hasil bagi ditulis sejajar dengan digit terakhir yang sedang dibagi.",
-    stack:["    5 ","   ______","3 ) 156"]
+    phase:"BAGI",title:"Bagi 240 dengan 35",
+    text:"Dari tabel kelipatan, 35 × 6 = 210 dan 35 × 7 = 245 sudah terlalu besar. Jadi pilih 6.",
+    rule:"Pilih kelipatan terbesar yang tidak melebihi bilangan yang sedang dibagi.",
+    stack:["      6","    ______","35 ) 240"]
   },
   {
     phase:"KALI",title:"Kalikan kembali",
-    text:"5 × 3 = 15. Tulis 15 tepat di bawah 15.",
-    rule:"Kalikan angka hasil bagi dengan pembagi.",
-    stack:["    5 ","   ______","3 ) 156","    15"]
+    text:"Kalikan 6 × 35 = 210. Tulis 210 di bawah 240.",
+    rule:"Kalikan digit hasil bagi dengan pembagi.",
+    stack:["      6","    ______","35 ) 240","     210"]
   },
   {
     phase:"KURANGI",title:"Kurangkan",
-    text:"15 − 15 = 0. Bagian pertama habis terbagi.",
-    rule:"Kurangkan untuk mengetahui sisa.",
-    stack:["    5 ","   ______","3 ) 156","    15","    --","     0"]
+    text:"240 − 210 = 30. Jadi sisanya 30.",
+    rule:"Kurangkan untuk mengetahui sisa pembagian.",
+    stack:["      6","    ______","35 ) 240","     210","     ---","      30"]
   },
   {
-    phase:"TURUNKAN",title:"Turunkan angka berikutnya",
-    text:"Turunkan angka 6. Sekarang yang dibagi adalah 6.",
-    rule:"Setelah mengurangi, turunkan digit berikutnya.",
-    stack:["    5 ","   ______","3 ) 156","    15","    --","     06"]
+    phase:"DESIMAL",title:"Lanjutkan ke desimal",
+    text:"Tidak ada digit lagi untuk diturunkan, tetapi masih ada sisa 30. Tulis koma pada hasil, lalu tambahkan 0 sehingga 30 menjadi 300.",
+    rule:"Jika masih ada sisa, tambahkan koma pada hasil dan 0 pada sisa untuk melanjutkan.",
+    stack:["      6,","    ______","35 ) 240,0","     210","     ---","      300"]
   },
   {
-    phase:"BAGI",title:"Bagi lagi",
-    text:"6 ÷ 3 = 2. Tulis 2 di sebelah kanan angka 5.",
-    rule:"Ulangi pola yang sama: bagi → kali → kurangi.",
-    stack:["    52","   ______","3 ) 156","    15","    --","     06"]
+    phase:"BAGI",title:"Bagi 300 dengan 35",
+    text:"35 × 8 = 280 dan 35 × 9 = 315 terlalu besar. Jadi digit berikutnya adalah 8.",
+    rule:"Ulangi cara yang sama pada bilangan baru.",
+    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300"]
   },
   {
     phase:"KALI",title:"Kalikan kembali",
-    text:"2 × 3 = 6. Tulis 6 di bawah angka 6.",
-    rule:"2 adalah digit kedua hasil bagi.",
-    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6"]
+    text:"8 × 35 = 280. Tulis 280 di bawah 300.",
+    rule:"Kalikan digit hasil bagi yang baru dengan pembagi.",
+    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300","      280"]
   },
   {
     phase:"KURANGI",title:"Kurangkan lagi",
-    text:"6 − 6 = 0. Tidak ada sisa dan tidak ada angka lagi untuk diturunkan.",
-    rule:"Jika sisa 0 dan semua digit sudah dipakai, pembagian selesai.",
-    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6","     --","      0"]
+    text:"300 − 280 = 20. Masih ada sisa 20.",
+    rule:"Karena masih ada sisa, proses dapat diteruskan dengan menambahkan 0 lagi.",
+    stack:["      6,8","    ______","35 ) 240,0","     210","     ---","      300","      280","      ---","       20"]
   },
   {
-    phase:"SELESAI",title:"Hasil pembagian",
-    text:"156 ÷ 3 = 52.",
-    rule:"Pola dasarnya: tentukan bagian yang dibagi → bagi → kali → kurangi → turunkan → ulangi.",
-    stack:["    52","   ______","3 ) 156","    15","    --","     06","      6","     --","      0"]
+    phase:"ULANGI",title:"Teruskan pola yang sama",
+    text:"20 menjadi 200. Kemudian 200 ÷ 35 memberi digit 5, lalu proses bagi → kali → kurangi diulang lagi.",
+    rule:"Pola selanjutnya tetap sama sampai ketelitian desimal yang dibutuhkan tercapai.",
+    stack:["      6,85…","    ______","35 ) 240,00…","     210","     ---","      300","      280","      ---","       200","       175","       ---","        25"]
+  },
+  {
+    phase:"HASIL",title:"Hasil pembagian",
+    text:"Jika diteruskan, 240 ÷ 35 = 6,857142…",
+    rule:"Untuk pembagian yang tidak habis, hasil desimal dapat berlanjut atau berulang.",
+    stack:["   6,857142…","    _________","35 ) 240,000000…"]
   }
 ];
 let processIndex=Math.min(state.processIndex||0,processSteps.length-1);
