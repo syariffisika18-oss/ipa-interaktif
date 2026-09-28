@@ -7,6 +7,24 @@ window.setLearningStage=show;
 window.getEngagePrediction=()=>state.engagePrediction||"";
 window.getLearningMode=()=>mode;
 
+function keepActiveStageTabVisible(index,behavior="smooth"){
+  const nav=document.querySelector(".u-stage-nav");
+  const tab=tabs[index];
+  if(!nav||!tab) return;
+  requestAnimationFrame(()=>{
+    const navRect=nav.getBoundingClientRect();
+    const tabRect=tab.getBoundingClientRect();
+    const currentLeft=nav.scrollLeft;
+    const tabCenter=(tabRect.left-navRect.left)+currentLeft+(tabRect.width/2);
+    const targetLeft=tabCenter-(nav.clientWidth/2);
+    const maxLeft=Math.max(0,nav.scrollWidth-nav.clientWidth);
+    nav.scrollTo({
+      left:Math.max(0,Math.min(maxLeft,targetLeft)),
+      behavior
+    });
+  });
+}
+
 function scrollToLearningContent(target,behavior="smooth"){
   if(!target) return;
   requestAnimationFrame(()=>{
@@ -119,6 +137,7 @@ function show(i,doScroll=true){
   active=Math.max(0,Math.min(N-1,i));
   panels.forEach((p,j)=>p.classList.toggle("active",j===active));
   tabs.forEach((t,j)=>{t.classList.toggle("active",j===active);t.classList.toggle("complete",done.has(j))});
+  keepActiveStageTabVisible(active,doScroll?"smooth":"auto");
   prev.disabled=active===0;
   next.disabled=active===N-1;
   next.style.opacity=active===N-1?".45":"1";
