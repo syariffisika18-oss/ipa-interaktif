@@ -2403,3 +2403,47 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     transition:none!important;
   }
 }
+
+
+/* Evaluate — score/retry controls stay above the question, away from next navigation */
+.quiz-footer-top{
+  margin:4px 0 7px;
+}
+@media(max-width:640px){
+  .evaluate-panel .quiz-footer-top{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:6px!important;
+    margin:2px 0 5px!important;
+    padding:0!important;
+  }
+  .evaluate-panel .quiz-footer-top .chip{
+    padding:5px 8px!important;
+    font-size:.68rem!important;
+  }
+  .evaluate-panel .quiz-footer-top #resetQuiz{
+    min-height:31px!important;
+    padding:4px 9px!important;
+    font-size:.68rem!important;
+    width:auto!important;
+  }
+}
+@media (orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .evaluate-panel .quiz-footer-top{
+    display:flex!important;
+    align-items:center!important;
+    justify-content:space-between!important;
+    gap:5px!important;
+    margin:1px 0 4px!important;
+  }
+  .evaluate-panel .quiz-footer-top .chip{
+    padding:3px 6px!important;
+    font-size:.56rem!important;
+  }
+  .evaluate-panel .quiz-footer-top #resetQuiz{
+    min-height:27px!important;
+    padding:3px 7px!important;
+    font-size:.56rem!important;
+  }
+}
