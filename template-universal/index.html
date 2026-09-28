@@ -6,14 +6,14 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Template universal IPA Interaktif SMP">
   <title>Template Universal — IPA Interaktif</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=20260928-master1">
 </head>
 <body>
   <header class="app-header">
     <div class="shell header-row">
       <a class="back-link" href="../">← Portal IPA</a>
       <div class="header-title">
-        <span class="version">Template Universal v0.4</span>
+        <span class="version">Template Universal • Master Scaffold</span>
         <strong id="appTitle">IPA Interaktif</strong>
       </div>
       <button class="ghost-button" id="resetProgress" type="button">Reset progres</button>
@@ -23,12 +23,11 @@
   <main class="shell app-shell">
     <section class="intro-card">
       <div class="intro-copy">
-        <p class="eyebrow">Kerangka universal kelas VII–IX</p>
+        <p class="eyebrow">Pratinjau template universal kelas VII–IX</p>
         <h1 id="materialTitle">Judul Materi</h1>
         <p id="materialMeta" class="material-meta">Kelas • Alokasi waktu • Topik</p>
         <p class="intro-text">
-          Alur utama tetap konsisten, sedangkan pendekatan tambahan dapat dipilih
-          sesuai karakter materi, tujuan pembelajaran, dan konteks kelas.
+          Struktur inti tetap konsisten. Isi, strategi, visual, simulasi, dan evaluasi dapat diganti sesuai karakter materi.
         </p>
       </div>
 
@@ -62,7 +61,7 @@
       <button class="stage-tab" data-stage="6"><span>7</span>Reflect</button>
     </nav>
 
-    <section class="stage-panel is-active" data-panel="0">
+    <section class="stage-panel is-active orientation-panel" data-panel="0">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 1</p><h2>Orientasi</h2></div>
         <span class="principle">Tujuan • Prasyarat • Diagnostik</span>
@@ -83,8 +82,8 @@
       <section class="identity-card" aria-labelledby="identityTitle">
         <div>
           <p class="stage-kicker">Identitas sesi</p>
-          <h3 id="identityTitle">Agar refleksi dapat dibaca guru</h3>
-          <p>Isi seperlunya. Data ini tersimpan di perangkat dan digunakan saat siswa mengirim refleksi.</p>
+          <h3 id="identityTitle">Identitas sesi</h3>
+          <p>Isi nama/nomor absen dan kelas untuk mengirim refleksi ke guru.</p>
         </div>
         <div class="identity-grid">
           <label>
@@ -103,7 +102,7 @@
       </aside>
     </section>
 
-    <section class="stage-panel" data-panel="1">
+    <section class="stage-panel engage-panel" data-panel="1">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 2</p><h2>Engage</h2></div>
         <span class="principle">Fenomena • Apersepsi • Prediksi</span>
@@ -127,7 +126,7 @@
       </div>
     </section>
 
-    <section class="stage-panel" data-panel="2">
+    <section class="stage-panel explore-panel" data-panel="2">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 3</p><h2>Explore</h2></div>
         <span class="principle">Manipulasi • Pengamatan • Data</span>
@@ -151,7 +150,7 @@
       </div>
     </section>
 
-    <section class="stage-panel" data-panel="3">
+    <section class="stage-panel explain-panel" data-panel="3">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 4</p><h2>Explain</h2></div>
         <span class="principle">Representasi • Konsep • Self-explanation</span>
@@ -166,7 +165,7 @@
       </div>
     </section>
 
-    <section class="stage-panel" data-panel="4">
+    <section class="stage-panel elaborate-panel" data-panel="4">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 5</p><h2>Elaborate</h2></div>
         <span class="principle">Transfer • Aplikasi • Scaffolding</span>
@@ -179,7 +178,7 @@
       </div>
     </section>
 
-    <section class="stage-panel" data-panel="5">
+    <section class="stage-panel evaluate-panel" data-panel="5">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 6</p><h2>Evaluate</h2></div>
         <span class="principle">Retrieval • Feedback • Diagnostik</span>
@@ -197,7 +196,7 @@
       <p class="evaluation-note">Evaluasi akhir dapat berisi 10–20 soal, tetapi cek konsep singkat juga ditempatkan di sepanjang proses belajar.</p>
     </section>
 
-    <section class="stage-panel" data-panel="6">
+    <section class="stage-panel reflect-panel" data-panel="6">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 7</p><h2>Reflect</h2></div>
         <span class="principle">Monitoring • Refleksi • Tindak lanjut</span>
@@ -236,7 +235,9 @@
       <button id="nextStage" class="primary-button" type="button">Berikutnya →</button>
     </div>
 
-    <section class="design-note">
+    <section class="design-note template-customize-note">
+      <p class="eyebrow">Mudah disesuaikan</p>
+      <p class="template-customize-copy">Ganti identitas materi di <code>config.js?v=20260928-master1</code>, lalu isi tiap tahap pada <code>index.html</code>. Perilaku umum seperti progres, mode, reset, refleksi, responsif, dan gesture tetap dipertahankan oleh template.</p>
       <p class="eyebrow">Fondasi desain</p>
       <div class="design-grid">
         <div><strong>5E + Orientasi & Refleksi</strong><span>alur universal</span></div>
@@ -251,6 +252,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js"></script>
-  <script src="template.js"></script>
+  <script src="template.js?v=20260928-master1"></script>
 </body>
 </html>
