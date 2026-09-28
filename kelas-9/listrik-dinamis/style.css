@@ -1702,3 +1702,34 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     font-size:.7rem!important;
   }
 }
+
+
+/* Explore — tombol uji prediksi dibuat kompak */
+.prediction-start-btn{
+  display:block;
+  width:max-content;
+  max-width:100%;
+  margin:7px auto 0;
+  min-height:36px;
+  padding:7px 16px;
+  border:0;
+  border-radius:10px;
+  background:#4863e8;
+  color:#fff;
+  font-weight:900;
+  font-size:.82rem;
+  cursor:pointer;
+}
+.prediction-start-btn:disabled{
+  opacity:.5;
+  cursor:not-allowed;
+}
+@media(max-width:640px){
+  .prediction-start-btn{
+    min-height:34px;
+    padding:6px 14px;
+    margin-top:5px;
+    font-size:.74rem;
+    border-radius:9px;
+  }
+}
