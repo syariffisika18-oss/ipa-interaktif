@@ -1526,3 +1526,179 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     padding-bottom:48px!important;
   }
 }
+
+
+/* =========================================================
+   MOBILE STAGE COMPACTION — Orientasi sampai Reflect
+   ========================================================= */
+.orientation-prereq,
+.reflect-block{margin-top:14px}
+
+@media(max-width:640px){
+
+  /* Menu tahap sendiri sudah menyatakan tahap aktif; header besar menjadi redundan. */
+  .u-stage-panel>.u-panel-card{
+    padding:9px 10px 10px!important;
+    border-radius:14px!important;
+  }
+  .u-stage-panel .u-stage-head{
+    display:none!important;
+  }
+
+  /* Kartu umum */
+  .u-card{
+    padding:10px!important;
+    border-radius:12px!important;
+  }
+  .u-card h3{
+    margin:0 0 7px!important;
+    font-size:.9rem!important;
+    line-height:1.25!important;
+  }
+  .u-card p{
+    margin:4px 0 7px!important;
+    font-size:.72rem!important;
+    line-height:1.35!important;
+  }
+
+  /* ORIENTASI */
+  .orientation-panel .u-grid-2{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    gap:7px!important;
+  }
+  .orientation-panel .objectives{
+    margin:3px 0 0!important;
+    padding-left:18px!important;
+    display:grid!important;
+    gap:3px!important;
+  }
+  .orientation-panel .objectives li{
+    margin:0!important;
+    padding:0!important;
+    font-size:.74rem!important;
+    line-height:1.3!important;
+  }
+  .orientation-panel .identity-grid{
+    display:grid!important;
+    grid-template-columns:minmax(0,1.65fr) minmax(86px,.75fr)!important;
+    gap:6px!important;
+  }
+  .orientation-panel .identity-grid label span{
+    font-size:.67rem!important;
+    margin-bottom:3px!important;
+  }
+  .orientation-panel .identity-grid input{
+    min-height:36px!important;
+    padding:6px 8px!important;
+    border-radius:9px!important;
+    font-size:.74rem!important;
+  }
+  .orientation-panel .orientation-prereq{
+    margin-top:7px!important;
+  }
+  .orientation-panel .diagnostic-list{
+    gap:6px!important;
+  }
+  .orientation-panel .diagnostic-item{
+    padding:7px!important;
+    border-radius:10px!important;
+  }
+  .orientation-panel .diagnostic-item>b{
+    display:block!important;
+    font-size:.72rem!important;
+    line-height:1.28!important;
+    margin-bottom:5px!important;
+  }
+  .orientation-panel .diagnostic-options{
+    display:flex!important;
+    flex-wrap:wrap!important;
+    gap:4px!important;
+  }
+  .orientation-panel .diagnostic-options button{
+    min-height:32px!important;
+    padding:4px 9px!important;
+    border-radius:8px!important;
+    font-size:.7rem!important;
+  }
+  .orientation-panel .diagnostic-feedback{
+    margin-top:4px!important;
+    font-size:.66rem!important;
+    line-height:1.25!important;
+  }
+
+  /* ENGAGE / EXPLORE / EXPLAIN / ELABORATE / EVALUATE share tighter outer rhythm */
+  .engage-panel>.u-panel-card,
+  .explore-panel>.u-panel-card,
+  .explain-panel>.u-panel-card,
+  .elaborate-panel>.u-panel-card,
+  .evaluate-panel>.u-panel-card,
+  .reflect-panel>.u-panel-card{
+    padding-top:7px!important;
+  }
+
+  /* Evaluate */
+  .evaluate-panel .quiz-note{
+    margin:2px 0 6px!important;
+    padding:6px 8px!important;
+    font-size:.7rem!important;
+    line-height:1.3!important;
+  }
+  .evaluate-panel #quizBox{
+    padding:9px!important;
+  }
+
+  /* REFLECT */
+  .reflect-panel .reflection-grid{
+    display:grid!important;
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+  .reflect-panel .reflection-grid label span{
+    font-size:.68rem!important;
+    line-height:1.2!important;
+  }
+  .reflect-panel textarea{
+    min-height:68px!important;
+    height:68px!important;
+    padding:6px 7px!important;
+    font-size:.7rem!important;
+    border-radius:9px!important;
+  }
+  .reflect-panel .reflect-block{
+    margin-top:7px!important;
+    padding:8px!important;
+  }
+  .reflect-panel .reflect-block>b{
+    font-size:.72rem!important;
+    line-height:1.25!important;
+  }
+  .reflect-panel .difficulty-grid{
+    gap:4px!important;
+    margin-top:5px!important;
+  }
+  .reflect-panel .confidence-row{
+    margin-top:5px!important;
+    gap:4px!important;
+  }
+  .reflect-panel .confidence-row button{
+    min-height:34px!important;
+    padding:5px 7px!important;
+    font-size:.68rem!important;
+  }
+  .reflect-panel .send-card{
+    margin-top:7px!important;
+    padding:8px!important;
+    gap:6px!important;
+  }
+  .reflect-panel .send-card strong{font-size:.75rem!important}
+  .reflect-panel .send-card p{
+    margin:2px 0!important;
+    font-size:.65rem!important;
+  }
+  .reflect-panel .send-btn{
+    min-height:35px!important;
+    padding:5px 9px!important;
+    font-size:.7rem!important;
+  }
+}
