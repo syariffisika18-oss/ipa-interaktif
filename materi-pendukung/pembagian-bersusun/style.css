@@ -653,3 +653,46 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
     margin-left:1.25ch!important;
   }
 }
+
+
+/* =========================================================
+   FIX 20260929 — kolom kerja tepat di bawah 240
+   ========================================================= */
+.ld-work{
+  width:3ch!important;
+  min-width:3ch!important;
+  margin-left:0!important;
+  margin-right:0!important;
+  text-align:right!important;
+}
+.ld-work-row{
+  width:3ch!important;
+  min-width:3ch!important;
+  text-align:right!important;
+}
+.ld-work-row.ld-line{
+  width:3ch!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+.ld-dividend{
+  text-align:left!important;
+}
+@media(max-width:640px){
+  .ld-work,
+  .ld-work-row,
+  .ld-work-row.ld-line{
+    width:3ch!important;
+    min-width:3ch!important;
+    margin-left:0!important;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .ld-work,
+  .ld-work-row,
+  .ld-work-row.ld-line{
+    width:3ch!important;
+    min-width:3ch!important;
+    margin-left:0!important;
+  }
+}
