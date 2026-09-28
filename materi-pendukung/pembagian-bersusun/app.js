@@ -137,7 +137,8 @@ const processSteps=[
       {calc:"35 × 7",value:"245",status:"melebihi 240",ok:false}
     ],
     quotientHTML:'<span class="ld-red">6</span>',
-    dividendHTML:"240",
+    divisorHTML:'<span class="ld-red">35</span>',
+    dividendHTML:'<span class="ld-red">240</span>',
     rows:[]
   },
   {
@@ -146,9 +147,10 @@ const processSteps=[
     text:"Kalikan 6 × 35 = 210. Tulis 210 tepat di bawah 240.",
     rule:"Kalikan digit hasil bagi dengan pembagi.",
     quotientHTML:'<span class="ld-red">6</span>',
+    divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"240",
     rows:[
-      {html:"210",kind:"product",emphasis:true}
+      {html:'<span class="ld-red">210</span>',kind:"product"}
     ]
   },
   {
@@ -156,12 +158,12 @@ const processSteps=[
     title:"Kurangkan",
     text:"240 − 210 = 30. Jadi sisanya 30.",
     rule:"Kurangkan untuk mengetahui sisa pembagian.",
-    quotientHTML:'<span class="ld-red">6</span>',
-    dividendHTML:"240",
+    quotientHTML:"6",
+    dividendHTML:'<span class="ld-red">240</span>',
     rows:[
-      {html:"210",kind:"product"},
+      {html:'<span class="ld-red">210</span>',kind:"product"},
       {kind:"line",width:3},
-      {html:"30",kind:"remainder",emphasis:true}
+      {html:'<span class="ld-red">30</span>',kind:"remainder"}
     ]
   },
   {
@@ -170,11 +172,11 @@ const processSteps=[
     text:"",
     rule:"Jika masih ada sisa, tambahkan koma pada hasil dan 0 pada sisa untuk melanjutkan.",
     quotientHTML:'6<span class="ld-red">,</span>',
-    dividendHTML:'240<span class="ld-red">,0</span>',
+    dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
       {kind:"line",width:3},
-      {html:"300",kind:"remainder",emphasis:true}
+      {html:'<span class="ld-red">300</span>',kind:"remainder"}
     ]
   },
   {
@@ -187,7 +189,7 @@ const processSteps=[
       {calc:"35 × 9",value:"315",status:"melebihi 300",ok:false}
     ],
     quotientHTML:'6<span class="ld-red">,8</span>',
-    dividendHTML:'240<span class="ld-red">,0</span>',
+    dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
       {kind:"line",width:3},
@@ -200,7 +202,7 @@ const processSteps=[
     text:"8 × 35 = 280. Tulis 280 tepat di bawah 300.",
     rule:"Kalikan digit hasil bagi yang baru dengan pembagi.",
     quotientHTML:'6<span class="ld-red">,8</span>',
-    dividendHTML:'240<span class="ld-red">,0</span>',
+    dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
       {kind:"line",width:3},
@@ -214,7 +216,7 @@ const processSteps=[
     text:"300 − 280 = 20. Jadi sisanya 20.",
     rule:"Jika masih ada sisa, proses belum selesai.",
     quotientHTML:'6<span class="ld-red">,8</span>',
-    dividendHTML:'240<span class="ld-red">,0</span>',
+    dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
       {kind:"line",width:3},
@@ -234,7 +236,7 @@ const processSteps=[
       {calc:"35 × 6",value:"210",status:"melebihi 200",ok:false}
     ],
     quotientHTML:'6,8<span class="ld-red">5</span><span class="ld-red">…</span>',
-    dividendHTML:'240,00<span class="ld-red">…</span>',
+    dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
       {kind:"line",width:3},
@@ -253,7 +255,7 @@ const processSteps=[
     text:"Jika diteruskan, 240 ÷ 35 = 6,857142…",
     rule:"Jika suatu tahap menghasilkan sisa 0, pembagian selesai. Jika sisanya tidak 0, pola dapat diteruskan sesuai ketelitian yang dibutuhkan.",
     quotientHTML:'6,857142<span class="ld-red">…</span>',
-    dividendHTML:'240,000000<span class="ld-red">…</span>',
+    dividendHTML:"240",
     rows:[]
   }
 ];
@@ -293,7 +295,7 @@ function renderLongDivision(step){
 
   stack.innerHTML=
     '<div class="ld-quotient">'+step.quotientHTML+'</div>'+
-    '<div class="ld-divisor">35</div>'+
+    '<div class="ld-divisor">'+(step.divisorHTML||"35")+'</div>'+
     '<div class="ld-body">'+
       '<div class="ld-dividend">'+step.dividendHTML+'</div>'+
       '<div class="ld-work">'+rows+'</div>'+
