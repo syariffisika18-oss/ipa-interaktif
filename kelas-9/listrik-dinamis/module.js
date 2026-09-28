@@ -6,7 +6,22 @@ const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.q
 window.setLearningStage=show;
 window.getEngagePrediction=()=>state.engagePrediction||"";
 window.getLearningMode=()=>mode;
-initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active);refreshSend();save();
+
+function scrollToLearningContent(target,behavior="smooth"){
+  if(!target) return;
+  requestAnimationFrame(()=>{
+    const topbar=document.querySelector(".module-topbar");
+    const stageNav=document.querySelector(".u-stage-nav");
+    const topbarH=topbar?topbar.getBoundingClientRect().height:0;
+    const navH=stageNav?stageNav.getBoundingClientRect().height:0;
+    const offset=topbarH+navH+10;
+    const y=window.scrollY+target.getBoundingClientRect().top-offset;
+    window.scrollTo({top:Math.max(0,y),behavior});
+  });
+}
+window.scrollToLearningContent=scrollToLearningContent;
+
+initMode();initIdentity();initDiag();initEngage();initReflect();initNav();initTeacherControls();restoreReflect();show(active,false);refreshSend();save();
 
 function initMode(){document.querySelectorAll("[data-learning-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.learningMode==="guru"?"guru":"mandiri";applyMode();changed();save()});applyMode()}
 function applyMode(){
@@ -100,7 +115,22 @@ function initTeacherControls(){
   }));
 }
 function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{if(confirm("Reset progres dan identitas lokal modul ini?")){localStorage.removeItem(KEY);location.reload()}}}
-function show(i){active=Math.max(0,Math.min(N-1,i));panels.forEach((p,j)=>p.classList.toggle("active",j===active));tabs.forEach((t,j)=>{t.classList.toggle("active",j===active);t.classList.toggle("complete",done.has(j))});prev.disabled=active===0;next.disabled=active===N-1;next.style.opacity=active===N-1?".45":"1";complete.classList.toggle("done",done.has(active));complete.textContent=done.has(active)?"✓ Sudah selesai":"Tandai selesai";render();save();window.scrollTo({top:0,behavior:"smooth"})}
+function show(i,doScroll=true){
+  active=Math.max(0,Math.min(N-1,i));
+  panels.forEach((p,j)=>p.classList.toggle("active",j===active));
+  tabs.forEach((t,j)=>{t.classList.toggle("active",j===active);t.classList.toggle("complete",done.has(j))});
+  prev.disabled=active===0;
+  next.disabled=active===N-1;
+  next.style.opacity=active===N-1?".45":"1";
+  complete.classList.toggle("done",done.has(active));
+  complete.textContent=done.has(active)?"✓ Sudah selesai":"Tandai selesai";
+  render();
+  save();
+  if(doScroll){
+    const target=panels[active]?.querySelector(".u-stage-head")||panels[active];
+    scrollToLearningContent(target);
+  }
+}
 function render(){const c=done.size,p=Math.round(c/N*100);fill.style.width=p+"%";ptxt.textContent=c+" dari "+N+" tahap • "+p+"%";tabs.forEach((t,j)=>t.classList.toggle("complete",done.has(j)))}
 
 async function send(){const ep=(config.feedbackEndpoint||"").trim(), snap=snapshot(), fp=JSON.stringify(snap);if(!snap.studentName||!snap.className){msg("Isi nama/nomor absen dan kelas pada tahap Orientasi.");show(0);return}if(!snap.confused&&!snap.difficulties.length&&!snap.confidence){msg("Isi minimal satu bagian refleksi.");return}if(!ep){msg("Koneksi Google Sheets belum aktif.");return}if(state.lastSentFingerprint===fp){msg("Tidak ada perubahan sejak pengiriman terakhir.");refreshSend();return}let sid=state.pendingFingerprint===fp&&state.pendingSubmissionId?state.pendingSubmissionId:id();state.pendingSubmissionId=sid;state.pendingFingerprint=fp;save();sendUI("sending");const payload={timestampClient:new Date().toISOString(),studentName:snap.studentName,className:snap.className,materialId:config.materialId,materialTitle:config.materialTitle,mode:snap.mode,understood:snap.understood,confused:snap.confused,difficulties:snap.difficulties.join(", "),confidence:confLabel(snap.confidence),completedStages:String(snap.completedStages),totalStages:String(N),submissionId:sid,sessionId:state.sessionId,templateVersion:(config.templateVersion||"")+" / modul "+(config.moduleVersion||"")};try{await fetch(ep,{method:"POST",mode:"no-cors",body:new URLSearchParams(payload)});const ok=await verify(ep,sid);if(!ok){sendUI("warn");msg("Sudah dikirim dari browser, tetapi belum terverifikasi. Coba kirim ulang.");return}state.lastSentFingerprint=fp;state.lastSentAt=new Date().toISOString();state.lastSubmissionId=sid;state.pendingSubmissionId="";state.pendingFingerprint="";save();sendUI("ok");msg("Refleksi terverifikasi masuk ke dashboard guru.")}catch(e){sendUI("error");msg("Pengiriman gagal. Refleksi lokal tetap tersimpan.")}}
