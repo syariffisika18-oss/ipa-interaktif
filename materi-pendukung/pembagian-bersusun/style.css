@@ -207,3 +207,141 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
   .process-phase{margin-bottom:3px;font-size:.5rem}
   .process-rule{margin:4px 0;padding:4px 6px;font-size:.53rem}
 }
+
+
+/* =========================================================
+   BENTUK PEMBAGIAN BERSUSUN STANDAR
+   ========================================================= */
+.division-stack{
+  width:auto;
+  min-width:0;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  display:grid;
+  grid-template-columns:auto minmax(190px,auto);
+  grid-template-rows:auto auto;
+  align-items:start;
+  justify-content:center;
+  column-gap:12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-weight:850;
+  line-height:1.08;
+  letter-spacing:.02em;
+}
+.ld-quotient{
+  grid-column:2;
+  grid-row:1;
+  min-height:1.25em;
+  padding:0 18px 7px 22px;
+  font-size:2rem;
+  text-align:left;
+  color:#102f2b;
+}
+.ld-divisor{
+  grid-column:1;
+  grid-row:2;
+  padding:14px 0 0;
+  font-size:2rem;
+  color:#102f2b;
+}
+.ld-body{
+  grid-column:2;
+  grid-row:2;
+  min-width:210px;
+  min-height:120px;
+  padding:12px 18px 14px 22px;
+  border-top:4px solid #334155;
+  border-left:4px solid #334155;
+  border-radius:15px 0 0 0;
+  color:#102f2b;
+}
+.ld-dividend{
+  min-height:1.18em;
+  font-size:2rem;
+  text-align:left;
+  white-space:nowrap;
+}
+.ld-work{
+  width:max-content;
+  min-width:105px;
+  margin-top:3px;
+  margin-left:auto;
+  font-size:1.55rem;
+  text-align:right;
+}
+.ld-work-row{
+  min-height:1.05em;
+  white-space:nowrap;
+}
+.ld-work-row.product,
+.ld-work-row.remainder{
+  padding-right:.08em;
+}
+.ld-work-row.ld-line{
+  width:100%;
+  min-height:5px;
+  margin:0 0 2px auto;
+  border-top:2px solid #334155;
+}
+.ld-work-row.second{
+  margin-left:10px;
+}
+.ld-work-row.third{
+  margin-left:20px;
+}
+.ld-work-row.current-line{
+  color:#c83b32;
+  font-weight:950;
+  animation:divisionReveal .22s ease;
+}
+
+@media(max-width:640px){
+  .division-stack{
+    grid-template-columns:auto minmax(155px,auto);
+    column-gap:8px;
+  }
+  .ld-quotient{
+    padding:0 10px 5px 16px;
+    font-size:1.6rem;
+  }
+  .ld-divisor{
+    padding-top:10px;
+    font-size:1.6rem;
+  }
+  .ld-body{
+    min-width:165px;
+    min-height:100px;
+    padding:9px 10px 10px 16px;
+    border-top-width:3px;
+    border-left-width:3px;
+    border-radius:12px 0 0 0;
+  }
+  .ld-dividend{font-size:1.6rem}
+  .ld-work{min-width:86px;font-size:1.28rem}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .division-stack{
+    grid-template-columns:auto minmax(145px,auto);
+    column-gap:7px;
+  }
+  .ld-quotient{
+    padding:0 8px 4px 14px;
+    font-size:1.42rem;
+  }
+  .ld-divisor{
+    padding-top:8px;
+    font-size:1.42rem;
+  }
+  .ld-body{
+    min-width:155px;
+    min-height:92px;
+    padding:7px 9px 8px 14px;
+    border-top-width:3px;
+    border-left-width:3px;
+    border-radius:11px 0 0 0;
+  }
+  .ld-dividend{font-size:1.42rem}
+  .ld-work{min-width:78px;font-size:1.12rem}
+}
