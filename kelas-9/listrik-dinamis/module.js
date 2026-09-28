@@ -271,16 +271,58 @@ function initSwipeNavigation(){
   const root=document.querySelector(".module-main");
   if(!root) return;
 
-  let sx=0,sy=0,startedAt=0,blocked=false;
+  const answerSelector=[
+    ".engage-option",
+    ".diagnostic-options button",
+    "[data-prediction-compare]",
+    "[data-prediction-evidence]",
+    "[data-elab-answer]",
+    "[data-elab-reason]",
+    "#quizBox .option",
+    "[data-confidence]"
+  ].join(",");
 
-  const ignoreTarget=target=>!!target.closest(
-    "button,input,textarea,select,a,label,[contenteditable],.u-stage-nav,.u-bottom-nav,.zoom-overlay"
-  );
+  let sx=0,sy=0,startedAt=0,blocked=false;
+  let swipeOriginAnswer=null;
+  let suppressClickTarget=null;
+  let suppressClickUntil=0;
+
+  const answerTarget=target=>target.closest?.(answerSelector)||null;
+
+  const ignoreTarget=target=>{
+    // Opsi jawaban adalah pengecualian: tap memilih, swipe berpindah halaman.
+    if(answerTarget(target)) return false;
+
+    return !!target.closest(
+      "input,textarea,select,a,label,[contenteditable],.u-stage-nav,.u-bottom-nav,.zoom-overlay,button"
+    );
+  };
+
+  // Browser dapat menghasilkan click setelah touchend. Jika gesture tadi adalah
+  // swipe yang dimulai dari opsi jawaban, batalkan click tersebut.
+  root.addEventListener("click",e=>{
+    if(!e.isTrusted || !suppressClickTarget || Date.now()>suppressClickUntil) return;
+    const clicked=answerTarget(e.target);
+    if(clicked && clicked===suppressClickTarget){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      suppressClickTarget=null;
+      suppressClickUntil=0;
+    }
+  },true);
 
   root.addEventListener("touchstart",e=>{
     if(!isPhoneLayout()||e.touches.length!==1) return;
+
+    swipeOriginAnswer=answerTarget(e.target);
     blocked=ignoreTarget(e.target);
-    if(blocked) return;
+
+    if(blocked){
+      swipeOriginAnswer=null;
+      startedAt=0;
+      return;
+    }
+
     sx=e.touches[0].clientX;
     sy=e.touches[0].clientY;
     startedAt=Date.now();
@@ -288,20 +330,38 @@ function initSwipeNavigation(){
 
   root.addEventListener("touchend",e=>{
     if(!isPhoneLayout()||blocked||!startedAt||!e.changedTouches.length){
-      blocked=false;startedAt=0;return;
+      blocked=false;
+      startedAt=0;
+      swipeOriginAnswer=null;
+      return;
     }
 
     const dx=e.changedTouches[0].clientX-sx;
     const dy=e.changedTouches[0].clientY-sy;
     const ax=Math.abs(dx), ay=Math.abs(dy);
     const dt=Date.now()-startedAt;
-    blocked=false;startedAt=0;
 
-    // Deliberate horizontal swipe only; ordinary vertical scroll is untouched.
-    if(dt>900 || ax<64 || ax<ay*1.35) return;
+    blocked=false;
+    startedAt=0;
+
+    // Deliberate horizontal swipe only; ordinary vertical scroll remains intact.
+    const isSwipe=dt<=900 && ax>=64 && ax>=ay*1.35;
+
+    if(!isSwipe){
+      swipeOriginAnswer=null;
+      return;
+    }
+
+    // Prevent the option under the finger from also being selected.
+    if(swipeOriginAnswer){
+      suppressClickTarget=swipeOriginAnswer;
+      suppressClickUntil=Date.now()+650;
+    }
+    swipeOriginAnswer=null;
 
     const panel=panels[active];
     if(!panel) return;
+
     const forward=dx<0;
     const internal=panel.querySelector(forward?".stage-nav .stage-next":".stage-nav .stage-prev");
 
@@ -316,6 +376,12 @@ function initSwipeNavigation(){
     }else if(!forward && active>0){
       show(active-1);
     }
+  },{passive:true});
+
+  root.addEventListener("touchcancel",()=>{
+    blocked=false;
+    startedAt=0;
+    swipeOriginAnswer=null;
   },{passive:true});
 }
 
