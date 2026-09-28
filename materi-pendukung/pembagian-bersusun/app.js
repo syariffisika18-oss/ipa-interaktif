@@ -143,8 +143,8 @@ const processSteps=[
   },
   {
     phase:"KALI",
-    title:"Kalikan kembali",
-    text:"Kalikan 6 × 35 = 210. Tulis 210 tepat di bawah 240.",
+    title:"Kalikan 6 × 35 = 210",
+    text:"Tulis 210 tepat di bawah 240.",
     rule:"Kalikan digit hasil bagi dengan pembagi.",
     quotientHTML:'<span class="ld-red">6</span>',
     divisorHTML:'<span class="ld-red">35</span>',
