@@ -2447,3 +2447,138 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     font-size:.56rem!important;
   }
 }
+
+
+/* =========================================================
+   MOBILE HERO — compact on portrait + landscape
+   ========================================================= */
+@media(max-width:640px){
+  .module-main{
+    padding-top:6px!important;
+  }
+  .module-hero{
+    padding:12px!important;
+    border-radius:16px!important;
+    gap:10px!important;
+  }
+  .module-hero .u-eyebrow{
+    font-size:.58rem!important;
+    line-height:1.15!important;
+    letter-spacing:.08em!important;
+  }
+  .module-hero h1{
+    margin:4px 0 5px!important;
+    font-size:1.42rem!important;
+    line-height:1.02!important;
+    letter-spacing:-.025em!important;
+  }
+  .module-hero>div:first-child>p:not(.u-eyebrow){
+    font-size:.72rem!important;
+    line-height:1.35!important;
+  }
+  .module-mode{
+    padding:9px!important;
+    border-radius:12px!important;
+  }
+  .module-mode>strong{
+    margin-bottom:5px!important;
+    font-size:.74rem!important;
+  }
+  .mode-switch{
+    grid-template-columns:1fr 1fr!important;
+    gap:3px!important;
+    padding:3px!important;
+    border-radius:10px!important;
+  }
+  .mode-switch button{
+    min-height:34px!important;
+    padding:4px 6px!important;
+    border-radius:8px!important;
+    font-size:.7rem!important;
+    white-space:nowrap!important;
+  }
+  .mode-help{
+    margin-top:5px!important;
+    font-size:.64rem!important;
+    line-height:1.28!important;
+  }
+  .progress-wrap{
+    margin-top:7px!important;
+    padding:8px 10px!important;
+    border-radius:11px!important;
+  }
+  .progress-line{
+    margin-bottom:5px!important;
+    font-size:.67rem!important;
+  }
+  .progress-track{
+    height:6px!important;
+  }
+}
+
+@media (orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .module-main{
+    padding-top:4px!important;
+  }
+  .module-hero{
+    grid-template-columns:minmax(0,1.25fr) minmax(250px,.75fr)!important;
+    align-items:stretch!important;
+    padding:8px 10px!important;
+    gap:8px!important;
+    border-radius:12px!important;
+  }
+  .module-hero .u-eyebrow{
+    font-size:.48rem!important;
+    line-height:1.05!important;
+  }
+  .module-hero h1{
+    margin:2px 0 3px!important;
+    font-size:1.05rem!important;
+    line-height:1.02!important;
+  }
+  .module-hero>div:first-child>p:not(.u-eyebrow){
+    font-size:.56rem!important;
+    line-height:1.2!important;
+  }
+  .module-mode{
+    display:grid!important;
+    grid-template-columns:auto 1fr!important;
+    align-items:center!important;
+    column-gap:6px!important;
+    row-gap:3px!important;
+    padding:6px!important;
+    border-radius:10px!important;
+  }
+  .module-mode>strong{
+    margin:0!important;
+    font-size:.58rem!important;
+    white-space:nowrap!important;
+  }
+  .mode-switch{
+    grid-template-columns:1fr 1fr!important;
+    gap:2px!important;
+    padding:2px!important;
+  }
+  .mode-switch button{
+    min-height:29px!important;
+    padding:3px 5px!important;
+    font-size:.56rem!important;
+  }
+  .mode-help{
+    grid-column:1/-1!important;
+    margin-top:1px!important;
+    font-size:.5rem!important;
+    line-height:1.15!important;
+  }
+  .progress-wrap{
+    margin-top:4px!important;
+    padding:5px 7px!important;
+  }
+  .progress-line{
+    margin-bottom:3px!important;
+    font-size:.55rem!important;
+  }
+  .progress-track{
+    height:5px!important;
+  }
+}
