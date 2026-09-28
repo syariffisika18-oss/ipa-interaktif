@@ -256,7 +256,9 @@ const processSteps=[
     rule:"Jika suatu tahap menghasilkan sisa 0, pembagian selesai. Jika sisanya tidak 0, pola dapat diteruskan sesuai ketelitian yang dibutuhkan.",
     quotientHTML:'6,857142<span class="ld-red">…</span>',
     dividendHTML:"240",
-    rows:[]
+    rows:[
+      {html:'<span class="ld-red ld-continuation">…</span>',kind:"remainder"}
+    ]
   }
 ];
 
