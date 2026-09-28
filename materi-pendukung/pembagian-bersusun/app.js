@@ -133,8 +133,8 @@ const processSteps=[
     text:"",
     rule:"Pilih hasil kali terbesar yang tidak melebihi bilangan yang sedang dibagi.",
     compare:[
-      {calc:"35 × 6",value:"210",status:"mendekati 240",ok:true},
-      {calc:"35 × 7",value:"245",status:"melebihi 240",ok:false}
+      {calc:"35 × 6 =",value:"210",status:"mendekati 240",ok:true},
+      {calc:"35 × 7 =",value:"245",status:"melebihi 240",ok:false}
     ],
     quotientHTML:'<span class="ld-red">6</span>',
     divisorHTML:'<span class="ld-red">35</span>',
@@ -185,8 +185,8 @@ const processSteps=[
     text:"",
     rule:"Pilih lagi hasil kali terbesar yang tidak melebihi bilangan yang sedang dibagi.",
     compare:[
-      {calc:"35 × 8",value:"280",status:"mendekati 300",ok:true},
-      {calc:"35 × 9",value:"315",status:"melebihi 300",ok:false}
+      {calc:"35 × 8 =",value:"280",status:"mendekati 300",ok:true},
+      {calc:"35 × 9 =",value:"315",status:"melebihi 300",ok:false}
     ],
     quotientHTML:'6<span class="ld-red">,8</span>',
     dividendHTML:"240",
@@ -232,8 +232,8 @@ const processSteps=[
     text:"20 menjadi 200. Pilih 5 karena 35 × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
     rule:"Ulangi bagi → kali → kurangi. Jika hasil pengurangan menjadi 0, pembagian selesai. Jika belum 0, lanjutkan lagi.",
     compare:[
-      {calc:"35 × 5",value:"175",status:"mendekati 200",ok:true},
-      {calc:"35 × 6",value:"210",status:"melebihi 200",ok:false}
+      {calc:"35 × 5 =",value:"175",status:"mendekati 200",ok:true},
+      {calc:"35 × 6 =",value:"210",status:"melebihi 200",ok:false}
     ],
     quotientHTML:'6,8<span class="ld-red">5</span><span class="ld-red">…</span>',
     dividendHTML:"240",
