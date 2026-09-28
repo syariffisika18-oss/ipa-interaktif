@@ -1419,3 +1419,110 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     padding:4px 5px!important
   }
 }
+
+
+/* =========================================================
+   MOBILE NAVIGATION AUDIT — compact chrome, more learning space
+   ========================================================= */
+@media(max-width:640px){
+
+  /* 1. Topbar: cukup sebagai orientasi, jangan mengambil terlalu banyak tinggi */
+  .module-topbar-row{
+    min-height:52px!important;
+    gap:8px!important;
+  }
+  .portal-link{
+    font-size:.82rem!important;
+    line-height:1!important;
+  }
+  .reset-learning{
+    min-height:34px!important;
+    padding:0 10px!important;
+    border-radius:10px!important;
+    font-size:.78rem!important;
+  }
+
+  /* 2. Tahap 1–7: lebih padat dan lebih banyak tab terlihat sekaligus */
+  .u-stage-nav{
+    top:52px!important;
+    margin:5px 0 7px!important;
+    padding:4px!important;
+    gap:3px!important;
+    border-radius:12px!important;
+    grid-template-columns:repeat(7,minmax(86px,1fr))!important;
+    scrollbar-width:none;
+  }
+  .u-stage-nav::-webkit-scrollbar{display:none}
+  .u-stage-tab{
+    min-height:40px!important;
+    padding:4px 6px!important;
+    border-radius:9px!important;
+    font-size:.68rem!important;
+  }
+  .u-stage-tab b{
+    width:20px!important;
+    height:20px!important;
+    margin-right:3px!important;
+    border-radius:6px!important;
+    font-size:.66rem!important;
+  }
+
+  /* 3. Navigasi slide internal: tetap jelas, tetapi bukan tombol besar */
+  .stage-nav{
+    min-height:38px!important;
+    margin-top:5px!important;
+    padding-top:5px!important;
+    gap:5px!important;
+  }
+  .stage-nav button{
+    min-height:34px!important;
+    padding:4px 8px!important;
+    border-radius:9px!important;
+    font-size:.7rem!important;
+    white-space:nowrap!important;
+  }
+  .stage-dots{
+    gap:4px!important;
+  }
+  .stage-dots i{
+    width:6px!important;
+    height:6px!important;
+  }
+
+  /* 4. Navigasi utama bawah: satu baris, bukan 2 baris */
+  .u-bottom-nav{
+    grid-template-columns:.92fr 1.12fr .98fr!important;
+    align-items:center!important;
+    gap:5px!important;
+    margin:7px 0 10px!important;
+    padding:5px!important;
+    border-radius:12px!important;
+    bottom:4px!important;
+  }
+  .u-bottom-nav button{
+    min-height:38px!important;
+    padding:4px 6px!important;
+    border-radius:9px!important;
+    font-size:.72rem!important;
+    white-space:nowrap!important;
+  }
+  .u-complete,
+  .u-prev,
+  .u-next{
+    grid-column:auto!important;
+    grid-row:auto!important;
+  }
+
+  /* 5. CTA lintas tahap redundan di HP.
+        "Berikutnya" sticky sudah melakukan fungsi yang sama. */
+  #compareBtn,
+  #goElaborateBtn,
+  #goEvaluateBtn{
+    display:none!important;
+  }
+
+  /* Beri sedikit ruang karena bottom nav sekarang jauh lebih pendek */
+  .module-main{
+    padding-bottom:48px!important;
+  }
+}
