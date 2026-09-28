@@ -1,7 +1,16 @@
 (() => {
   const config = window.IPA_TEMPLATE_CONFIG || {};
-  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.4";
+  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.5";
+  const STORAGE_PREFIX = "ipa-interaktif:template-universal:";
   const stageCount = 7;
+
+  const resetRequested = new URLSearchParams(location.search).has("_reset");
+  if (resetRequested) {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+    });
+  }
+
   const state = loadState();
 
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
@@ -24,11 +33,19 @@
   bindStages();
   bindDemos();
   bindFeedbackForm();
+  initMobileChrome();
+  initSwipeNavigation();
   restoreReflections();
   restoreIdentity();
   restoreDifficulty();
   setMode(mode);
-  showStage(activeStage);
+  showStage(activeStage, false);
+
+  if (resetRequested) {
+    const cleanUrl = location.pathname + location.hash;
+    try { history.replaceState(null, "", cleanUrl); } catch {}
+  }
+
   updateFeedbackConnectionState();
   refreshSendState();
   saveState();
@@ -119,7 +136,44 @@
     });
   }
 
-  function showStage(index) {
+  function naturalDocumentTop(element) {
+    let y = 0;
+    let node = element;
+    while (node) {
+      y += node.offsetTop || 0;
+      node = node.offsetParent;
+    }
+    return y;
+  }
+
+  function isPhoneLayout() {
+    return window.matchMedia(
+      "(max-width:640px), (orientation: landscape) and (max-width:950px) and (max-height:500px)"
+    ).matches;
+  }
+
+  function keepActiveTabVisible(behavior = "smooth") {
+    tabs[activeStage]?.scrollIntoView({
+      behavior,
+      block: "nearest",
+      inline: "center"
+    });
+  }
+
+  function scrollToStageMenu(behavior = "smooth") {
+    const nav = document.querySelector(".stage-nav");
+    if (!nav) return;
+
+    requestAnimationFrame(() => {
+      const header = document.querySelector(".app-header");
+      const headerHidden = document.body.classList.contains("phone-topbar-hidden");
+      const headerH = header && !headerHidden ? header.getBoundingClientRect().height : 0;
+      const y = naturalDocumentTop(nav) - headerH - 2;
+      window.scrollTo({ top: Math.max(0, y), behavior });
+    });
+  }
+
+  function showStage(index, doScroll = true) {
     activeStage = Math.max(0, Math.min(stageCount - 1, index));
 
     panels.forEach((panel, i) => {
@@ -138,15 +192,177 @@
     completeButton.classList.toggle("is-complete", completed.has(activeStage));
     completeButton.textContent = completed.has(activeStage) ? "✓ Sudah selesai" : "Tandai selesai";
 
-    tabs[activeStage]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center"
-    });
+    keepActiveTabVisible(doScroll ? "smooth" : "auto");
+    if (doScroll) {
+      window.revealStageNav?.();
+      scrollToStageMenu();
+    }
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
     renderProgress();
     saveState();
+  }
+
+  function initMobileChrome() {
+    const body = document.body;
+    const nav = document.querySelector(".stage-nav");
+    const header = document.querySelector(".app-header");
+    if (!nav || !header) return;
+
+    let lastY = window.scrollY;
+    let hideTimer = 0;
+
+    const clearTimer = () => {
+      clearTimeout(hideTimer);
+      hideTimer = 0;
+    };
+
+    const scheduleHide = () => {
+      clearTimer();
+      if (!isPhoneLayout()) return;
+      const navTop = naturalDocumentTop(nav);
+      if (window.scrollY <= Math.max(18, navTop - 4)) return;
+
+      hideTimer = setTimeout(() => {
+        if (isPhoneLayout()) body.classList.add("phone-stage-nav-hidden");
+      }, 1800);
+    };
+
+    const revealStageNav = (hold = false) => {
+      if (!isPhoneLayout()) return;
+      body.classList.remove("phone-stage-nav-hidden");
+      clearTimer();
+      if (!hold) scheduleHide();
+    };
+
+    window.revealStageNav = revealStageNav;
+
+    window.addEventListener("scroll", () => {
+      if (!isPhoneLayout()) {
+        clearTimer();
+        body.classList.remove("phone-topbar-hidden", "phone-stage-nav-hidden");
+        lastY = window.scrollY;
+        return;
+      }
+
+      const y = window.scrollY;
+      const dy = y - lastY;
+
+      if (Math.abs(dy) > 1) revealStageNav();
+
+      if (y < 24 || dy < -3) {
+        body.classList.remove("phone-topbar-hidden");
+      } else if (dy > 3 && y > 64) {
+        body.classList.add("phone-topbar-hidden");
+      }
+
+      lastY = y;
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      if (!isPhoneLayout()) {
+        body.classList.remove("phone-topbar-hidden", "phone-stage-nav-hidden");
+      } else {
+        revealStageNav();
+      }
+    }, { passive: true });
+
+    revealStageNav(true);
+  }
+
+  function initSwipeNavigation() {
+    const root = document.querySelector(".app-shell");
+    if (!root) return;
+
+    const answerSelector = [
+      ".choice",
+      ".answer-list button",
+      ".difficulty-option",
+      "[data-confidence]"
+    ].join(",");
+
+    let sx = 0, sy = 0, startedAt = 0, blocked = false;
+    let swipeOriginAnswer = null;
+    let suppressClickTarget = null;
+    let suppressClickUntil = 0;
+
+    const answerTarget = target => target.closest?.(answerSelector) || null;
+
+    const ignoreTarget = target => {
+      if (answerTarget(target)) return false;
+      return !!target.closest(
+        "input,textarea,select,a,label,[contenteditable],.stage-nav,.bottom-nav,.mode-card,button"
+      );
+    };
+
+    root.addEventListener("click", event => {
+      if (!event.isTrusted || !suppressClickTarget || Date.now() > suppressClickUntil) return;
+      const clicked = answerTarget(event.target);
+      if (clicked && clicked === suppressClickTarget) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        suppressClickTarget = null;
+        suppressClickUntil = 0;
+      }
+    }, true);
+
+    root.addEventListener("touchstart", event => {
+      if (!isPhoneLayout() || event.touches.length !== 1) return;
+
+      swipeOriginAnswer = answerTarget(event.target);
+      blocked = ignoreTarget(event.target);
+
+      if (blocked) {
+        swipeOriginAnswer = null;
+        startedAt = 0;
+        return;
+      }
+
+      sx = event.touches[0].clientX;
+      sy = event.touches[0].clientY;
+      startedAt = Date.now();
+    }, { passive: true });
+
+    root.addEventListener("touchend", event => {
+      if (!isPhoneLayout() || blocked || !startedAt || !event.changedTouches.length) {
+        blocked = false;
+        startedAt = 0;
+        swipeOriginAnswer = null;
+        return;
+      }
+
+      const dx = event.changedTouches[0].clientX - sx;
+      const dy = event.changedTouches[0].clientY - sy;
+      const ax = Math.abs(dx);
+      const ay = Math.abs(dy);
+      const dt = Date.now() - startedAt;
+
+      blocked = false;
+      startedAt = 0;
+
+      const isSwipe = dt <= 900 && ax >= 64 && ax >= ay * 1.35;
+      if (!isSwipe) {
+        swipeOriginAnswer = null;
+        return;
+      }
+
+      if (swipeOriginAnswer) {
+        suppressClickTarget = swipeOriginAnswer;
+        suppressClickUntil = Date.now() + 650;
+      }
+      swipeOriginAnswer = null;
+
+      if (dx < 0 && activeStage < stageCount - 1) {
+        showStage(activeStage + 1);
+      } else if (dx > 0 && activeStage > 0) {
+        showStage(activeStage - 1);
+      }
+    }, { passive: true });
+
+    root.addEventListener("touchcancel", () => {
+      blocked = false;
+      startedAt = 0;
+      swipeOriginAnswer = null;
+    }, { passive: true });
   }
 
   function renderProgress() {
@@ -229,33 +445,15 @@
     });
 
     document.getElementById("resetProgress").addEventListener("click", () => {
-      localStorage.removeItem(STORAGE_KEY);
+      if (!confirm("Reset seluruh progres, jawaban, identitas, dan refleksi template ini?")) return;
 
-      completed = new Set();
-      activeStage = 0;
-      state.reflections = {};
-      state.identity = {};
-      state.difficulties = [];
-      state.confidence = 0;
-      state.sessionId = makeId();
-      state.lastSentFingerprint = "";
-      state.lastSentAt = "";
-      state.pendingSubmissionId = "";
-      state.pendingFingerprint = "";
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+      });
 
-      document.querySelectorAll("[data-reflection]").forEach(field => field.value = "");
-      document.querySelectorAll("[data-confidence]").forEach(button => button.classList.remove("is-selected"));
-      document.querySelectorAll("[data-difficulty]").forEach(input => input.checked = false);
-
-      const nameField = document.getElementById("studentName");
-      const classField = document.getElementById("studentClass");
-      if (nameField) nameField.value = "";
-      if (classField) classField.value = "";
-
-      setMode(config.defaultMode || "mandiri");
-      showStage(0);
-      refreshSendState();
-      showToast("Progres dan sesi lokal direset.");
+      const url = new URL(location.href);
+      url.searchParams.set("_reset", Date.now().toString());
+      location.replace(url.toString());
     });
   }
 
