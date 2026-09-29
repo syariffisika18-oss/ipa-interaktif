@@ -43,7 +43,7 @@
       name:"Usus halus",
       icon:"🧬",
       observe:"Makanan bergerak melalui usus halus yang panjang dan berkelok-kelok.",
-      process:"Dinding usus halus memiliki banyak lipatan dan vili yang membantu menyerap zat gizi.",
+      process:"Dinding usus halus memiliki banyak lipatan dan vili.",
       result:"Zat gizi masuk ke tubuh, sedangkan sisanya bergerak menuju usus besar.",
       terms:[["Vili","tonjolan sangat kecil pada dinding usus halus yang membantu penyerapan zat gizi."]],
       prompt:"Mengapa menurutmu usus halus memiliki banyak lipatan dan permukaan yang luas?"
