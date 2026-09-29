@@ -807,6 +807,9 @@
   // ---------------------------------------------------------
   // Prasyarat: mini game Makanan → Nutrisi → Fungsi
   // ---------------------------------------------------------
+  // Pastikan label nutrisi tidak menampilkan ikon/emoji sebagai petunjuk jawaban.
+  document.querySelectorAll(".nutrient-fixed-emoji").forEach(el=>el.remove());
+
   const nutritionRelations=[
     {
       key:"karbohidrat",
