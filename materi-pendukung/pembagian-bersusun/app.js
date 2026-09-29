@@ -520,22 +520,34 @@ function renderPracticeDivision(q,step){
 
   // Pada langkah BAGI, digit hasil baru tidak ditampilkan sebelum pilihan benar.
   if(isDivideStep){
-    if(String(step.q).includes("ld-red")){
-      quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
+    if(!solved){
+      if(String(step.q).includes("ld-red")){
+        quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
+      }else{
+        quotientHtml='<span class="ld-red">...</span>';
+      }
     }else{
-      quotientHtml='<span class="ld-red">...</span>';
+      if(step.q==="?"){
+        quotientHtml='<span class="ld-red">'+step.expected+'</span>';
+      }else{
+        quotientHtml=step.q;
+      }
     }
   }
 
   // Pada langkah KALI, hanya digit hasil yang sedang dipakai yang diberi fokus merah.
   if(isMultiplyStep){
     const plain=String(step.q).replace(/<[^>]*>/g,"");
-    quotientHtml=plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
+    quotientHtml=solved
+      ? highlightLastDigit(plain)
+      : plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
   }
 
   // Pada langkah DESIMAL, koma baru muncul setelah siswa menekan tindakannya.
   if(isActionStep && step.phase==="DESIMAL"){
-    quotientHtml=String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
+    quotientHtml=solved
+      ? step.q
+      : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
 
   const divisorHtml=isMultiplyStep
@@ -553,7 +565,9 @@ function renderPracticeDivision(q,step){
     // bahkan setelah jawaban benar. Nilai sebenarnya baru tampak sebagai konteks
     // pada langkah berikutnya.
     if(row.active && (isMultiplyStep || isSubtractStep || isActionStep)){
-      rowHtml='<span class="ld-red">...</span>';
+      rowHtml=solved
+        ? '<span class="ld-red">'+row.html+'</span>'
+        : '<span class="ld-red">...</span>';
     }
 
     return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
@@ -871,18 +885,30 @@ function renderEvalDivision(q,step){
 
   let quotientHtml=step.q;
   if(isDivide){
-    if(String(step.q).includes("ld-red")){
-      quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
+    if(!solved){
+      if(String(step.q).includes("ld-red")){
+        quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
+      }else{
+        quotientHtml='<span class="ld-red">...</span>';
+      }
     }else{
-      quotientHtml='<span class="ld-red">...</span>';
+      if(step.q==="?"){
+        quotientHtml='<span class="ld-red">'+step.expected+'</span>';
+      }else{
+        quotientHtml=step.q;
+      }
     }
   }
   if(isMultiply){
     const plain=String(step.q).replace(/<[^>]*>/g,"");
-    quotientHtml=plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
+    quotientHtml=solved
+      ? highlightLastDigit(plain)
+      : plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
   }
   if(isAction&&step.phase==="DESIMAL"){
-    quotientHtml=String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
+    quotientHtml=solved
+      ? step.q
+      : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
 
   const divisorHtml=isMultiply?'<span class="ld-red">'+q.b+'</span>':q.b;
@@ -893,7 +919,9 @@ function renderEvalDivision(q,step){
     }
     let rowHtml=row.html;
     if(row.active&&(isMultiply||isSubtract||isAction)){
-      rowHtml='<span class="ld-red">...</span>';
+      rowHtml=solved
+        ? '<span class="ld-red">'+row.html+'</span>'
+        : '<span class="ld-red">...</span>';
     }
     return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
   }).join("");
