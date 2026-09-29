@@ -382,6 +382,28 @@
       :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
   };
 
+  let explainPageIndex=0;
+  const explainPageTabs=[...document.querySelectorAll(".explain-page-tab")];
+  const explainPages=[...document.querySelectorAll("[data-explain-content]")];
+
+  function showExplainPage(index){
+    explainPageIndex=Math.max(0,Math.min(explainPages.length-1,index));
+    explainPageTabs.forEach((b,i)=>b.classList.toggle("is-active",i===explainPageIndex));
+    explainPages.forEach((p,i)=>p.classList.toggle("is-active",i===explainPageIndex));
+    if(explainPageIndex===1){
+      requestAnimationFrame(()=>{
+        applyVisualCalibration();
+        renderModel(modelIndex,false);
+      });
+    }
+  }
+
+  explainPageTabs.forEach((button,i)=>{
+    button.addEventListener("click",()=>showExplainPage(i));
+  });
+  const explainConceptNext=document.getElementById("explainConceptNext");
+  if(explainConceptNext)explainConceptNext.addEventListener("click",()=>showExplainPage(1));
+
   const modelTabs=document.getElementById("modelTabs");
   modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'><span>'+(i+1)+'</span>'+m.name+'</button>').join("");
 
@@ -418,6 +440,7 @@
   applyVisualCalibration();
   renderJourney(false);
   renderModel(0,false);
+  showExplainPage(0);
 
   document.querySelectorAll(".elab-tab").forEach(btn=>btn.addEventListener("click",()=>{
     const i=btn.dataset.elab;
