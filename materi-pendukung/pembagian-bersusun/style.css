@@ -1343,3 +1343,29 @@ button,input,select,textarea{font:inherit}
 
 /* Hindari kartu terakhir tertutup bottom navigation saat keyboard/viewport sempit. */
 .stage-panel.active{padding-bottom:max(7px,env(safe-area-inset-bottom))}
+
+/* 2026-09-29: perbaikan alignment kartu istilah pada Bentuk pembagian */
+.meaning-card>div{
+  display:grid;
+  grid-template-columns:minmax(38px,auto) minmax(0,1fr);
+  justify-content:initial;
+  align-items:start;
+  column-gap:12px;
+  text-align:left;
+}
+.meaning-card>div b,
+.meaning-card>div span{
+  text-align:left;
+}
+@media(max-width:640px){
+  .meaning-card>div{
+    grid-template-columns:36px minmax(0,1fr);
+    column-gap:8px;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .meaning-card>div{
+    grid-template-columns:30px minmax(0,1fr);
+    column-gap:5px;
+  }
+}
