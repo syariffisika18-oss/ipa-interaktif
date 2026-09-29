@@ -488,6 +488,7 @@ let practiceIndex=Math.min(state.practiceIndex||0,practices.length-1);
 let practiceStepIndex=0;
 let practiceCompleted=new Set(state.practiceCompleted||[]);
 let practiceSolvedSteps=new Set(state.practiceSolvedSteps||[]);
+let practiceRevealedSteps=new Set();
 let practiceStepSolved=false;
 
 function practiceStepKey(){
@@ -511,6 +512,7 @@ function highlightLastDigit(value){
 function renderPracticeDivision(q,step){
   const box=document.getElementById("practiceDivision");
   const solved=isPracticeStepSolved();
+  const revealed=practiceRevealedSteps.has(practiceStepKey());
   const isMultiplyStep=step.phase==="KALI" && step.type==="number";
   const isSubtractStep=step.phase==="KURANGI" && step.type==="number";
   const isDivideStep=step.type==="divide";
@@ -520,7 +522,7 @@ function renderPracticeDivision(q,step){
 
   // Pada langkah BAGI, digit hasil baru tidak ditampilkan sebelum pilihan benar.
   if(isDivideStep){
-    if(!solved){
+    if(!revealed){
       if(String(step.q).includes("ld-red")){
         quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
       }else{
@@ -538,14 +540,14 @@ function renderPracticeDivision(q,step){
   // Pada langkah KALI, hanya digit hasil yang sedang dipakai yang diberi fokus merah.
   if(isMultiplyStep){
     const plain=String(step.q).replace(/<[^>]*>/g,"");
-    quotientHtml=solved
+    quotientHtml=revealed
       ? highlightLastDigit(plain)
       : plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
   }
 
   // Pada langkah DESIMAL, koma baru muncul setelah siswa menekan tindakannya.
   if(isActionStep && step.phase==="DESIMAL"){
-    quotientHtml=solved
+    quotientHtml=revealed
       ? step.q
       : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
@@ -565,7 +567,7 @@ function renderPracticeDivision(q,step){
     // bahkan setelah jawaban benar. Nilai sebenarnya baru tampak sebagai konteks
     // pada langkah berikutnya.
     if(row.active && (isMultiplyStep || isSubtractStep || isActionStep)){
-      rowHtml=solved
+      rowHtml=revealed
         ? '<span class="ld-red">'+row.html+'</span>'
         : '<span class="ld-red">...</span>';
     }
@@ -613,6 +615,7 @@ function renderPracticeResponse(q,step){
           fb.innerHTML="<b>Tepat.</b> "+q.b+" × "+multiplier+" = "+value+" adalah kelipatan terbesar yang tidak melebihi "+step.target+".";
           practiceStepSolved=true;
           markPracticeStepSolved();
+          practiceRevealedSteps.add(practiceStepKey());
           renderPracticeDivision(q,step);
           document.getElementById("practiceStepNext").disabled=false;
         }else if(value>step.target){
@@ -646,6 +649,7 @@ function renderPracticeResponse(q,step){
         feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
         practiceStepSolved=true;
         markPracticeStepSolved();
+        practiceRevealedSteps.add(practiceStepKey());
         renderPracticeDivision(q,step);
         document.getElementById("practiceStepNext").disabled=false;
       }else{
@@ -660,6 +664,7 @@ function renderPracticeResponse(q,step){
       feedback.textContent="Benar. Perhatikan perubahan pada bentuk pembagian bersusun.";
       practiceStepSolved=true;
       markPracticeStepSolved();
+      practiceRevealedSteps.add(practiceStepKey());
       renderPracticeDivision(q,step);
       document.getElementById("practiceStepNext").disabled=false;
     };
@@ -831,6 +836,7 @@ let evalIndex=0;
 let evalStepIndex=0;
 let evalCompleted=new Set(state.evalCompleted||[]);
 let evalSolvedSteps=new Set(state.evalSolvedSteps||[]);
+let evalRevealedSteps=new Set();
 let evalAttempts={...(state.evalAttempts||{})};
 let evalHelpUsed=new Set(state.evalHelpUsed||[]);
 let evalFirstTry=new Set(state.evalFirstTry||[]);
@@ -878,6 +884,7 @@ function evalWeakPhases(){
 function renderEvalDivision(q,step){
   const box=document.getElementById("evalDivision");
   const solved=isEvalStepSolved();
+  const revealed=evalRevealedSteps.has(evalStepKey());
   const isMultiply=step.phase==="KALI"&&step.type==="number";
   const isSubtract=step.phase==="KURANGI"&&step.type==="number";
   const isDivide=step.type==="divide";
@@ -885,7 +892,7 @@ function renderEvalDivision(q,step){
 
   let quotientHtml=step.q;
   if(isDivide){
-    if(!solved){
+    if(!revealed){
       if(String(step.q).includes("ld-red")){
         quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1...$2');
       }else{
@@ -901,12 +908,12 @@ function renderEvalDivision(q,step){
   }
   if(isMultiply){
     const plain=String(step.q).replace(/<[^>]*>/g,"");
-    quotientHtml=solved
+    quotientHtml=revealed
       ? highlightLastDigit(plain)
       : plain.replace(/(\d)([^\d]*)$/,'<span class="ld-red">...</span>$2');
   }
   if(isAction&&step.phase==="DESIMAL"){
-    quotientHtml=solved
+    quotientHtml=revealed
       ? step.q
       : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
@@ -919,7 +926,7 @@ function renderEvalDivision(q,step){
     }
     let rowHtml=row.html;
     if(row.active&&(isMultiply||isSubtract||isAction)){
-      rowHtml=solved
+      rowHtml=revealed
         ? '<span class="ld-red">'+row.html+'</span>'
         : '<span class="ld-red">...</span>';
     }
@@ -999,6 +1006,7 @@ function renderEvalResponse(q,step){
         feedback.textContent="Benar. Lanjutkan.";
         evalStepSolved=true;
         markEvalStepSolved();
+        evalRevealedSteps.add(evalStepKey());
         renderEvalDivision(q,step);
         document.getElementById("evalStepNext").disabled=false;
         helpBtn.hidden=true;
@@ -1034,6 +1042,7 @@ function renderEvalResponse(q,step){
         feedback.textContent="Benar. Lanjutkan.";
         evalStepSolved=true;
         markEvalStepSolved();
+        evalRevealedSteps.add(evalStepKey());
         renderEvalDivision(q,step);
         document.getElementById("evalStepNext").disabled=false;
       }else{
@@ -1052,6 +1061,7 @@ function renderEvalResponse(q,step){
       feedback.textContent="Langkah diterapkan. Lanjutkan.";
       evalStepSolved=true;
       markEvalStepSolved();
+      evalRevealedSteps.add(evalStepKey());
       renderEvalDivision(q,step);
       document.getElementById("evalStepNext").disabled=false;
     };
@@ -1139,6 +1149,7 @@ document.getElementById("evalReset").onclick=()=>{
   evalStepIndex=0;
   evalCompleted.clear();
   evalSolvedSteps.clear();
+  evalRevealedSteps.clear();
   evalHelpUsed.clear();
   evalFirstTry.clear();
   evalAttempts={};
