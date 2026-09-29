@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-11">
+  <link rel="stylesheet" href="digestive.css?v=20260929-12">
 </head>
 <body>
   <header class="app-header">
@@ -271,8 +271,8 @@
       <section class="explain-page" data-explain-content="2">
         <div class="digestion-result-card">
           <p class="stage-kicker">Hasil pencernaan</p>
-          <h3>Dari nutrisi menjadi zat yang dapat diserap</h3>
-          <p class="result-intro">Pilih nutrisi untuk melihat enzim yang bekerja, pengaktifnya bila ada, dan hasil akhir pencernaannya.</p>
+          <h3>Bagaimana nutrisi dipecah?</h3>
+          <p class="result-intro">Bagian ini tidak lagi membahas fungsi organ. Fokusnya adalah hubungan antara nutrisi, enzim, penghasil enzim, pengaktifnya bila ada, dan hasil akhirnya.</p>
 
           <div class="nutrient-tabs" id="nutrientTabs" role="tablist" aria-label="Pilih nutrisi">
             <button type="button" class="nutrient-tab is-active" data-nutrient="0">Karbohidrat</button>
@@ -281,49 +281,33 @@
           </div>
 
           <div class="nutrient-model" id="nutrientModel">
-            <div class="nutrient-model-title">
-              <span id="nutrientIcon">🍚</span>
-              <div>
-                <small>NUTRISI YANG DIOLAH</small>
-                <h4 id="nutrientName">Karbohidrat</h4>
+            <div class="nutrient-summary">
+              <div class="nutrient-model-title">
+                <span id="nutrientIcon">🍚</span>
+                <div>
+                  <small>NUTRISI YANG DIOLAH</small>
+                  <h4 id="nutrientName">Karbohidrat</h4>
+                </div>
+              </div>
+              <div class="nutrient-final-result">
+                <small>HASIL AKHIR</small>
+                <strong id="nutrientFinal"></strong>
               </div>
             </div>
 
-            <div class="nutrient-flow-diagram">
-              <div class="nutrient-flow-box">
-                <span>NUTRISI</span>
-                <strong id="nutrientSource">Karbohidrat</strong>
-              </div>
-              <i>→</i>
-              <div class="nutrient-flow-box">
-                <span>ENZIM YANG MENGOLAH</span>
-                <strong id="nutrientEnzymes"></strong>
-              </div>
-              <i>→</i>
-              <div class="nutrient-flow-box activator-box">
-                <span>PENGAKTIF / KONDISI</span>
-                <strong id="nutrientActivator"></strong>
-              </div>
-              <i>→</i>
-              <div class="nutrient-flow-box result-box">
-                <span>HASIL</span>
-                <strong id="nutrientResult"></strong>
-              </div>
-            </div>
+            <div class="enzyme-pathway" id="enzymePathway" aria-label="Diagram enzim pencernaan"></div>
 
-            <div class="nutrient-detail-grid">
-              <article>
-                <span>Tempat utama</span>
-                <strong id="nutrientPlace"></strong>
-              </article>
-              <article>
-                <span>Catatan penting</span>
-                <strong id="nutrientNote"></strong>
-              </article>
+            <div class="nutrient-helper" id="nutrientHelper" hidden>
+              <span>ZAT PEMBANTU</span>
+              <strong id="nutrientHelperText"></strong>
             </div>
           </div>
 
           <div class="digestion-note">
+            <b>Catatan:</b> tanda “tidak ada pengaktif khusus” berarti enzim tidak harus diubah dari bentuk tidak aktif oleh zat tertentu. Enzim tetap memerlukan kondisi lingkungan yang sesuai untuk bekerja.
+          </div>
+
+          <div class="digestion-note secondary-note">
             <b>Tidak semua zat makanan perlu dicerna.</b> Air, vitamin, dan mineral dapat diserap tanpa dipecah menjadi molekul yang lebih kecil terlebih dahulu.
           </div>
 
@@ -452,6 +436,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-20"></script>
+  <script src="digestive.js?v=20260929-21"></script>
 </body>
 </html>
