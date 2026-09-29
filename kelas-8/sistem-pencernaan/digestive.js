@@ -62,7 +62,7 @@
       observe:"Feses sampai di bagian akhir usus besar.",
       process:"Feses ditampung sementara di rektum.",
       result:"Muncul dorongan untuk buang air besar.",
-      terms:[["Rektum","bagian akhir usus besar yang menyimpan feses sementara."]],
+      terms:[],
       prompt:"Mengapa feses tidak langsung keluar begitu sampai di bagian akhir usus?"
     },
     {
