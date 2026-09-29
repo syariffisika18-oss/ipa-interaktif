@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
   <title>Pembagian Bersusun — Materi Pendukung</title>
-  <link rel="stylesheet" href="style.css?v=20260929-15">
+  <link rel="stylesheet" href="style.css?v=20260929-16">
 </head>
 <body>
 <header class="topbar">
@@ -138,25 +138,44 @@
 
   <section class="stage-panel" data-panel="4">
     <div class="stage-title"><span>LANGKAH 5</span><h2>Coba sendiri</h2></div>
-    <div class="practice-shell">
+
+    <div class="practice-shell practice-process-shell">
       <div class="practice-top">
         <span id="practiceCount">Soal 1 dari 3</span>
-        <strong id="practiceScore">Benar 0</strong>
+        <strong id="practiceScore">Selesai 0/3</strong>
       </div>
-      <div class="practice-question">
-        <span>Hitung dengan pembagian bersusun</span>
-        <h3 id="practiceProblem">156 ÷ 12</h3>
-        <label>Hasil bagi
-          <input id="practiceAnswer" inputmode="decimal" placeholder="Masukkan jawaban">
-        </label>
-        <div class="practice-actions">
-          <button id="practiceCheck" type="button">Periksa jawaban</button>
-          <button id="practiceHelper" class="secondary" type="button">Bantuan kelipatan</button>
+
+      <div class="practice-process-head">
+        <span>KERJAKAN DENGAN PEMBAGIAN BERSUSUN</span>
+        <strong id="practiceProblem">156 ÷ 12</strong>
+      </div>
+
+      <div class="practice-process-grid">
+        <div class="practice-visual-panel">
+          <div id="practiceDivision" class="practice-division" aria-live="polite"></div>
         </div>
-        <div id="practiceFeedback" class="feedback neutral">Kerjakan sendiri. Bantuan tersedia bila diperlukan.</div>
+
+        <div class="practice-step-panel">
+          <div class="practice-step-meta">
+            <span id="practicePhase" class="process-phase">BAGI</span>
+            <span id="practiceStepCount" class="practice-step-count">1/8</span>
+          </div>
+
+          <h3 id="practiceStepTitle">Tentukan digit hasil bagi</h3>
+          <p id="practiceInstruction">Pilih kelipatan pembagi yang paling besar tetapi tidak melebihi bilangan yang sedang dibagi.</p>
+
+          <div id="practiceMultiples" class="multiple-panel compact practice-multiples" hidden></div>
+          <div id="practiceResponse" class="practice-response"></div>
+          <div id="practiceFeedback" class="feedback neutral">Kerjakan langkah ini sendiri.</div>
+
+          <div class="practice-step-actions">
+            <button id="practiceStepPrev" class="secondary" type="button">← Langkah sebelumnya</button>
+            <button id="practiceStepNext" type="button" disabled>Langkah berikutnya →</button>
+          </div>
+        </div>
       </div>
-      <div id="practiceMultiples" class="multiple-panel compact" hidden></div>
-      <button id="practiceNext" class="next-practice" type="button" hidden>Soal berikutnya →</button>
+
+      <button id="practiceNextProblem" class="next-practice" type="button" hidden>Soal berikutnya →</button>
     </div>
   </section>
 
@@ -184,6 +203,6 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="app.js?v=20260929-15"></script>
+<script src="app.js?v=20260929-16"></script>
 </body>
 </html>
