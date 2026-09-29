@@ -25,7 +25,7 @@
       name:"Kerongkongan",
       icon:"〰️",
       observe:"Makanan bergerak turun melalui kerongkongan.",
-      process:"Dinding kerongkongan melakukan gerak peristaltik, yaitu gerakan seperti gelombang yang mendorong makanan menuju lambung.",
+      process:"Dinding kerongkongan melakukan gerak peristaltik untuk mendorong makanan menuju lambung.",
       result:"Makanan sampai ke lambung.",
       terms:[["Peristaltik","gerakan seperti gelombang yang mendorong makanan di dalam saluran pencernaan."]],
       prompt:"Menurutmu, apakah makanan hanya jatuh ke lambung karena gravitasi?"
