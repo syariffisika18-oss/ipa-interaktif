@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-8">
+  <link rel="stylesheet" href="digestive.css?v=20260929-9">
 </head>
 <body>
   <header class="app-header">
@@ -191,6 +191,7 @@
       <div class="explain-page-nav" role="tablist" aria-label="Halaman Explain">
         <button type="button" class="explain-page-tab is-active" data-explain-page="0"><span>1</span>Apa itu pencernaan?</button>
         <button type="button" class="explain-page-tab" data-explain-page="1"><span>2</span>Model organ</button>
+        <button type="button" class="explain-page-tab" data-explain-page="2"><span>3</span>Contoh hasil pencernaan</button>
       </div>
 
       <section class="explain-page is-active" data-explain-content="0">
@@ -209,14 +210,8 @@
             <div><span>🩸</span><b>Diserap tubuh</b></div>
           </div>
 
-          <div class="simple-digestion-examples">
-            <article><span>Karbohidrat</span><b>→ Glukosa</b></article>
-            <article><span>Protein</span><b>→ Asam amino</b></article>
-            <article><span>Lemak</span><b>→ Asam lemak + gliserol</b></article>
-          </div>
-
           <div class="digestion-note">
-            <b>Intinya:</b> makanan yang kita makan perlu diubah menjadi bentuk yang cukup sederhana agar tubuh dapat memanfaatkannya.
+            <b>Intinya:</b> makanan perlu dipecah menjadi bentuk yang lebih sederhana agar dapat diserap dan digunakan oleh tubuh.
           </div>
 
           <button type="button" class="primary-inline explain-concept-next" id="explainConceptNext">Lihat proses pada setiap organ →</button>
@@ -267,6 +262,37 @@
           <article><b>Hati & kantung empedu</b><span>Empedu membantu mengemulsikan lemak. Empedu bukan enzim.</span></article>
           <article><b>Pankreas</b><span>Mengirim enzim pencernaan ke usus halus.</span></article>
           <article><b>Vili usus</b><span>Memperluas permukaan sehingga penyerapan zat gizi lebih efektif.</span></article>
+        </div>
+
+        <button type="button" class="primary-inline explain-model-next" id="explainModelNext">Lihat contoh hasil pencernaan →</button>
+      </section>
+
+      <section class="explain-page" data-explain-content="2">
+        <div class="digestion-example-card">
+          <p class="stage-kicker">Contoh sederhana</p>
+          <h3>Hasil pencernaan zat makanan</h3>
+          <p class="example-intro">Setelah melalui proses pencernaan, beberapa zat makanan diubah menjadi bentuk yang lebih sederhana sehingga dapat diserap tubuh.</p>
+
+          <div class="simple-digestion-examples">
+            <article>
+              <span class="food-example-icon">🍚</span>
+              <div><small>Karbohidrat</small><b>→ Glukosa</b></div>
+            </article>
+            <article>
+              <span class="food-example-icon">🥚</span>
+              <div><small>Protein</small><b>→ Asam amino</b></div>
+            </article>
+            <article>
+              <span class="food-example-icon">🥑</span>
+              <div><small>Lemak</small><b>→ Asam lemak + gliserol</b></div>
+            </article>
+          </div>
+
+          <div class="digestion-note">
+            <b>Perhatikan:</b> air, vitamin, dan mineral tidak perlu dipecah menjadi molekul yang lebih kecil terlebih dahulu seperti karbohidrat, protein, dan lemak.
+          </div>
+
+          <button type="button" class="secondary-inline explain-example-back" id="explainExampleBack">← Kembali ke model organ</button>
         </div>
       </section>
     </section>
@@ -391,6 +417,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-17"></script>
+  <script src="digestive.js?v=20260929-18"></script>
 </body>
 </html>
