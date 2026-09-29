@@ -11,24 +11,78 @@
   ];
 
   const model=[
-    {name:"Mulut",icon:"👄",process:"Mengunyah + mencampur dengan saliva",type:"Mekanik + kimiawi",agent:"Gigi, lidah, amilase saliva",result:"Bolus; pencernaan pati mulai",why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."},
-    {name:"Kerongkongan",icon:"〰️",process:"Peristaltik",type:"Transport",agent:"Kontraksi otot dinding",result:"Bolus menuju lambung",why:"Gerak peristaltik menjaga makanan tetap bergerak menuju lambung."},
-    {name:"Lambung",icon:"🥣",process:"Mengaduk + mencerna protein",type:"Mekanik + kimiawi",agent:"Otot lambung, HCl, pepsin",result:"Kimus; protein mulai dipecah",why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."},
-    {name:"Usus halus",icon:"🧬",process:"Pencernaan lanjutan + absorpsi",type:"Kimiawi + penyerapan",agent:"Enzim pankreas/usus, empedu, vili",result:"Molekul sederhana diserap",why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."},
-    {name:"Usus besar",icon:"🔄",process:"Penyerapan air + pembentukan feses",type:"Penyerapan",agent:"Dinding usus + mikrobiota",result:"Sisa lebih padat",why:"Pengaturan air membantu menjaga konsistensi feses dan keseimbangan cairan."}
+    {name:"Mulut",process:"Mengunyah + mencampur makanan dengan saliva",type:"Mekanik + kimiawi",agent:"Gigi, lidah, amilase saliva",result:"Bolus; pencernaan pati mulai",term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."},
+    {name:"Faring",process:"Menelan dan mengarahkan bolus",type:"Transport",agent:"Otot faring + epiglotis",result:"Bolus masuk ke kerongkongan",term:"Epiglotis = lipatan yang membantu menutup jalan napas ketika menelan.",why:"Arah bolus harus tepat agar makanan tidak masuk ke saluran pernapasan."},
+    {name:"Kerongkongan",process:"Peristaltik",type:"Transport",agent:"Kontraksi otot dinding",result:"Bolus menuju lambung",term:"Peristaltik = gerak kontraksi bergelombang yang mendorong makanan.",why:"Gerak peristaltik menjaga makanan tetap bergerak menuju lambung."},
+    {name:"Lambung",process:"Mengaduk + mencerna protein",type:"Mekanik + kimiawi",agent:"Otot lambung, HCl, pepsin",result:"Kimus; protein mulai dipecah",term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung.",why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."},
+    {name:"Usus halus",process:"Pencernaan lanjutan + absorpsi",type:"Kimiawi + penyerapan",agent:"Enzim pankreas/usus, empedu, vili",result:"Molekul sederhana diserap",term:"Vili = tonjolan kecil yang memperluas permukaan penyerapan.",why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."},
+    {name:"Usus besar",process:"Penyerapan air + pembentukan feses",type:"Penyerapan",agent:"Dinding usus + mikrobiota",result:"Sisa lebih padat membentuk feses",term:"Feses = sisa pencernaan yang tidak digunakan tubuh.",why:"Pengaturan air membantu menjaga konsistensi feses dan keseimbangan cairan."},
+    {name:"Rektum",process:"Penyimpanan sementara feses",type:"Penyimpanan",agent:"Dinding rektum",result:"Feses menunggu dikeluarkan",term:"Rektum = bagian akhir usus besar tempat feses disimpan sementara.",why:"Penyimpanan sementara memungkinkan pengeluaran feses berlangsung terkontrol."},
+    {name:"Anus",process:"Pengeluaran feses",type:"Eliminasi",agent:"Otot sfingter",result:"Feses keluar dari tubuh",term:"Sfingter = otot berbentuk cincin yang mengatur buka-tutup anus.",why:"Sfingter membantu mengendalikan waktu pengeluaran feses."}
   ];
 
   let prediction="";
   let journeyIndex=0;
   let furthestJourney=0;
+  let modelIndex=0;
+
+  const organPositions=[
+    {x:39,y:18},{x:44,y:24},{x:50,y:39},{x:59,y:58},
+    {x:52,y:73},{x:64,y:73},{x:57,y:89},{x:57,y:96}
+  ];
+  const ballTimers=new WeakMap();
+
+  function placeBall(ball,index,instant=false){
+    if(!ball)return;
+    const p=organPositions[index];
+    if(instant)ball.classList.add("no-transition");
+    ball.style.left=p.x+"%";
+    ball.style.top=p.y+"%";
+    ball.dataset.index=String(index);
+    if(instant)requestAnimationFrame(()=>ball.classList.remove("no-transition"));
+  }
+
+  function animateBall(ball,target){
+    if(!ball)return;
+    const oldTimer=ballTimers.get(ball);
+    if(oldTimer)clearTimeout(oldTimer);
+    let current=Number(ball.dataset.index||0);
+    target=Math.max(0,Math.min(organPositions.length-1,target));
+    if(current===target){
+      ball.classList.remove("arrived");
+      void ball.offsetWidth;
+      ball.classList.add("arrived");
+      return;
+    }
+    const dir=target>current?1:-1;
+    const advance=()=>{
+      current+=dir;
+      placeBall(ball,current);
+      if(current!==target){
+        const timer=setTimeout(advance,300);
+        ballTimers.set(ball,timer);
+      }else{
+        ball.classList.remove("arrived");
+        void ball.offsetWidth;
+        ball.classList.add("arrived");
+      }
+    };
+    advance();
+  }
+
+  function setHotspots(selector,index){
+    document.querySelectorAll(selector).forEach((b,i)=>{
+      b.classList.toggle("is-active",i===index);
+      b.classList.toggle("is-passed",i<index);
+    });
+  }
 
   const route=document.getElementById("organRoute");
   route.innerHTML=journey.map((o,i)=>'<button type="button" data-organ="'+i+'"><b>'+(i+1)+'.</b> '+o.name+'</button>').join("");
 
-  function renderJourney(){
+  function renderJourney(animate=true){
     const o=journey[journeyIndex];
     document.getElementById("journeyCounter").textContent=(journeyIndex+1)+" / "+journey.length;
-    document.getElementById("organSymbol").textContent=o.icon;
     document.getElementById("organNumber").textContent="Organ "+(journeyIndex+1);
     document.getElementById("organName").textContent=o.name;
     document.getElementById("organObserve").textContent=o.observe;
@@ -46,20 +100,32 @@
       b.classList.toggle("is-active",i===journeyIndex);
       b.classList.toggle("is-visited",i<=furthestJourney);
     });
+    setHotspots("[data-explore-organ]",journeyIndex);
+    const ball=document.getElementById("exploreFoodBall");
+    animate?animateBall(ball,journeyIndex):placeBall(ball,journeyIndex,true);
     document.getElementById("journeyPrev").disabled=journeyIndex===0;
     document.getElementById("journeyNext").textContent=journeyIndex===journey.length-1?"Kembali ke awal":"Organ berikutnya →";
   }
 
+  function selectJourney(index){
+    journeyIndex=Math.max(0,Math.min(journey.length-1,index));
+    furthestJourney=Math.max(furthestJourney,journeyIndex);
+    renderJourney(true);
+  }
+
   route.addEventListener("click",e=>{
     const b=e.target.closest("[data-organ]"); if(!b)return;
-    journeyIndex=Number(b.dataset.organ); furthestJourney=Math.max(furthestJourney,journeyIndex); renderJourney();
+    selectJourney(Number(b.dataset.organ));
   });
-  document.getElementById("journeyPrev").onclick=()=>{if(journeyIndex>0){journeyIndex--;renderJourney()}};
+  document.getElementById("exploreAnatomy").addEventListener("click",e=>{
+    const b=e.target.closest("[data-explore-organ]");if(!b)return;
+    selectJourney(Number(b.dataset.exploreOrgan));
+  });
+  document.getElementById("journeyPrev").onclick=()=>{if(journeyIndex>0)selectJourney(journeyIndex-1)};
   document.getElementById("journeyNext").onclick=()=>{
-    journeyIndex=journeyIndex===journey.length-1?0:journeyIndex+1;
-    furthestJourney=Math.max(furthestJourney,journeyIndex); renderJourney();
+    selectJourney(journeyIndex===journey.length-1?0:journeyIndex+1);
   };
-  renderJourney();
+  renderJourney(false);
 
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
@@ -78,20 +144,37 @@
   };
 
   const modelTabs=document.getElementById("modelTabs");
-  modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'">'+m.name+'</button>').join("");
-  function renderModel(i){
-    const m=model[i];
-    modelTabs.querySelectorAll("button").forEach((b,j)=>b.classList.toggle("is-active",j===i));
-    document.getElementById("modelVisual").textContent=m.icon;
+  modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'><span>'+(i+1)+'</span>'+m.name+'</button>').join("");
+
+  function renderModel(i,animate=true){
+    modelIndex=Math.max(0,Math.min(model.length-1,i));
+    const m=model[modelIndex];
+    modelTabs.querySelectorAll("button").forEach((b,j)=>b.classList.toggle("is-active",j===modelIndex));
+    setHotspots("[data-explain-organ]",modelIndex);
+    const ball=document.getElementById("explainFoodBall");
+    animate?animateBall(ball,modelIndex):placeBall(ball,modelIndex,true);
+    document.getElementById("modelNumber").textContent="Organ "+(modelIndex+1);
     document.getElementById("modelName").textContent=m.name;
     document.getElementById("modelProcess").textContent=m.process;
     document.getElementById("modelType").textContent=m.type;
     document.getElementById("modelAgent").textContent=m.agent;
     document.getElementById("modelResult").textContent=m.result;
+    document.getElementById("modelTerm").textContent=m.term;
     document.getElementById("modelWhy").textContent=m.why;
+    document.getElementById("modelRouteText").innerHTML=
+      '<b>Perjalanan makanan:</b> '+model.map((x,j)=>
+        j===modelIndex?'<strong>'+x.name+'</strong>':x.name
+      ).join(' → ');
   }
-  modelTabs.addEventListener("click",e=>{const b=e.target.closest("[data-model]");if(b)renderModel(Number(b.dataset.model))});
-  renderModel(0);
+
+  modelTabs.addEventListener("click",e=>{
+    const b=e.target.closest("[data-model]");if(b)renderModel(Number(b.dataset.model),true);
+  });
+  document.getElementById("explainAnatomy").addEventListener("click",e=>{
+    const b=e.target.closest("[data-explain-organ]");if(!b)return;
+    renderModel(Number(b.dataset.explainOrgan),true);
+  });
+  renderModel(0,false);
 
   document.querySelectorAll(".elab-tab").forEach(btn=>btn.addEventListener("click",()=>{
     const i=btn.dataset.elab;
