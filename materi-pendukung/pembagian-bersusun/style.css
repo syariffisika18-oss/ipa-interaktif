@@ -1021,3 +1021,19 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
 .eval-process-shell .feedback.good{
   background:#e7f7ef;
 }
+
+
+/* Evaluasi: fading scaffolding */
+.eval-help-btn{
+  width:100%;
+  margin-top:7px;
+  min-height:36px;
+  border:1px dashed #8aa7a1;
+  background:#fff;
+  color:var(--primary);
+  font-weight:850;
+}
+.eval-help-btn[hidden]{display:none!important}
+#masteryText{
+  line-height:1.55;
+}
