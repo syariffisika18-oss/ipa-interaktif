@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-19">
+  <link rel="stylesheet" href="digestive.css?v=20260929-20">
 </head>
 <body>
   <header class="app-header">
@@ -439,31 +439,30 @@
       </section>
 
       <section class="elab-page" data-elab-page="1">
-        <p class="stage-kicker">Analisis kasus • Sebab–akibat</p>
-        <div class="case-card hots-case">
-          <h3>Dika sulit buang air besar.</h3>
-          <p>Selama beberapa hari Dika jarang minum air, hampir tidak makan sayur, sering duduk lama, dan fesesnya menjadi keras.</p>
-        </div>
+        <p class="stage-kicker">Analisis kasus • Bukti → Mekanisme → Transfer</p>
 
-        <div class="evidence-step">
-          <p><b>Langkah 1 — Pilih dua bukti yang paling langsung berkaitan dengan kondisi feses.</b></p>
-          <div id="evidenceOptions" class="evidence-options">
-            <button type="button" data-evidence="water">Jarang minum air</button>
-            <button type="button" data-evidence="fiber">Hampir tidak makan sayur</button>
-            <button type="button" data-evidence="sitting">Sering duduk lama</button>
-            <button type="button" data-evidence="hard">Feses sudah keras</button>
+        <div class="hots-case-suite">
+          <div class="hots-case-suite-head">
+            <div>
+              <h3>Tiga kasus, tiga pola penalaran</h3>
+              <p>Gunakan bukti pada kasus untuk membangun penjelasan. Langkah berikutnya terbuka setelah alasan sebelumnya tepat.</p>
+            </div>
+            <span id="hotsCaseProgress" class="hots-case-progress">0 / 3 kasus tuntas</span>
           </div>
-          <div id="evidenceFeedback" class="digest-feedback neutral">Pilih dua faktor penyebab, bukan akibat.</div>
-        </div>
 
-        <div class="reasoning-question locked-step" id="constipationReasoning">
-          <p><b>Langkah 2 — Susun hubungan sebab–akibat yang paling masuk akal.</b></p>
-          <div id="caseOptions" class="reason-options">
-            <button data-case="0">Kurang air dan serat → isi usus lebih sulit bergerak dan lebih kering → feses menjadi keras → sulit dikeluarkan</button>
-            <button data-case="1">Kurang air → lambung menyerap semua air → feses terbentuk di lambung</button>
-            <button data-case="2">Kurang serat → usus halus berhenti mencerna semua makanan → feses tidak terbentuk</button>
+          <div id="hotsCaseTabs" class="hots-case-tabs" role="tablist" aria-label="Pilih kasus analisis">
+            <button type="button" class="hots-case-tab is-active" data-hots-case="0" role="tab" aria-selected="true">
+              <span>Kasus 1</span><b>Feses keras</b>
+            </button>
+            <button type="button" class="hots-case-tab" data-hots-case="1" role="tab" aria-selected="false">
+              <span>Kasus 2</span><b>Roti terasa lebih manis</b>
+            </button>
+            <button type="button" class="hots-case-tab" data-hots-case="2" role="tab" aria-selected="false">
+              <span>Kasus 3</span><b>Vili berkurang</b>
+            </button>
           </div>
-          <div id="caseFeedback" class="digest-feedback neutral">Selesaikan analisis bukti terlebih dahulu.</div>
+
+          <article id="hotsCasePanel" class="hots-case-panel" aria-live="polite"></article>
         </div>
       </section>
 
@@ -575,6 +574,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-32"></script>
+  <script src="digestive.js?v=20260929-33"></script>
 </body>
 </html>
