@@ -35,7 +35,7 @@
 
   // Delapan organ tetap menjadi titik tujuan utama, tetapi animasi bergerak
   // melalui banyak waypoint di antaranya agar mengikuti bentuk saluran pencernaan.
-  const organWaypointIndices=[0,2,6,11,16,25,29,31];
+  const organWaypointIndices=[0,2,6,11,16,25,34,36];
   const defaultRouteWaypoints=[
     {x:39,y:18}, // 0 Mulut
     {x:41,y:20},
@@ -63,12 +63,17 @@
     {x:52,y:61.5},
     {x:59,y:63},
     {x:64,y:73}, // 25 Usus besar
-    {x:63,y:78},
-    {x:60.5,y:82},
-    {x:58,y:86},
-    {x:57,y:89}, // 29 Rektum
+    {x:65.5,y:75.5},
+    {x:66.5,y:78},
+    {x:66,y:80.5},
+    {x:64.8,y:82.5},
+    {x:63,y:84.2},
+    {x:61,y:85.8},
+    {x:59.2,y:87.2},
+    {x:58,y:88.2},
+    {x:57,y:89}, // 34 Rektum
     {x:57,y:93},
-    {x:57,y:96}  // 31 Anus
+    {x:57,y:96}  // 36 Anus
   ];
 
   const clonePositions=list=>list.map(p=>({x:p.x,y:p.y}));
