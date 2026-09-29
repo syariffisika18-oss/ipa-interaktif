@@ -447,3 +447,126 @@
   .model-term,.model-route-text{margin-top:4px;padding:4px 6px;font-size:.52rem}
   .model-term strong{font-size:.55rem}
 }
+
+
+/* =========================================================
+   MODE KALIBRASI VISUAL — hanya untuk mode Bersama Guru
+   ========================================================= */
+.anatomy-caption{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:7px;
+}
+.visual-editor-toggle{
+  display:none;
+  min-height:28px;
+  padding:3px 8px;
+  border:1px solid #8fc8be;
+  border-radius:8px;
+  background:#fff;
+  color:var(--primary);
+  font-size:.6rem;
+  font-weight:850;
+  cursor:pointer;
+  white-space:nowrap;
+}
+body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:center}
+.visual-editor-toggle.is-active{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+.visual-editor-panel{
+  padding:8px 10px;
+  border-top:1px solid var(--line);
+  background:#fffbea;
+}
+.visual-editor-panel[hidden]{display:none!important}
+.visual-editor-panel p{
+  margin:0 0 6px;
+  color:#625b37;
+  font-size:.68rem;
+  line-height:1.35;
+}
+.visual-editor-actions{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+}
+.visual-editor-actions button{
+  min-height:30px;
+  padding:4px 8px;
+  border:1px solid #ddcc86;
+  border-radius:8px;
+  background:#fff;
+  font-size:.62rem;
+  font-weight:800;
+  cursor:pointer;
+}
+.visual-coordinate-output{
+  width:100%;
+  margin-top:6px;
+  padding:6px;
+  border:1px solid #ddcc86;
+  border-radius:8px;
+  background:#fff;
+  font:600 .58rem/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;
+  resize:vertical;
+}
+.visual-editor-panel small{
+  display:block;
+  margin-top:5px;
+  color:#756d49;
+  font-size:.58rem;
+}
+.digestive-anatomy-figure.is-editing{
+  outline:3px dashed #e0b532;
+  outline-offset:-4px;
+  background:#fffdf3;
+}
+.digestive-anatomy-figure.is-editing::after{
+  content:"MODE ATUR POSISI";
+  position:absolute;
+  left:8px;
+  bottom:8px;
+  z-index:7;
+  padding:3px 6px;
+  border-radius:6px;
+  background:rgba(117,86,0,.82);
+  color:#fff;
+  font-size:.5rem;
+  font-weight:900;
+  pointer-events:none;
+}
+.digestive-anatomy-figure.is-editing .anatomy-hotspot,
+.digestive-anatomy-figure.is-editing .food-ball{
+  pointer-events:auto;
+  touch-action:none;
+  cursor:grab;
+}
+.digestive-anatomy-figure.is-editing .anatomy-hotspot{
+  box-shadow:0 0 0 4px rgba(224,181,50,.28),0 2px 7px rgba(0,0,0,.18);
+}
+.digestive-anatomy-figure.is-editing .food-ball{
+  box-shadow:0 0 0 5px rgba(243,155,23,.28),0 2px 9px rgba(174,91,0,.45);
+}
+.digestive-anatomy-figure .is-dragging{
+  cursor:grabbing!important;
+  z-index:20!important;
+  transition:none!important;
+}
+@media(max-width:640px){
+  .anatomy-caption{align-items:flex-start}
+  .visual-editor-toggle{font-size:.56rem;padding:3px 6px}
+  .visual-editor-panel{padding:6px}
+  .visual-editor-panel p{font-size:.61rem}
+  .visual-editor-actions button{min-height:29px;font-size:.56rem}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .visual-editor-toggle{min-height:24px;font-size:.48rem;padding:2px 5px}
+  .visual-editor-panel{padding:4px 5px}
+  .visual-editor-panel p,.visual-editor-panel small{font-size:.47rem}
+  .visual-editor-actions button{min-height:24px;font-size:.47rem;padding:2px 5px}
+  .visual-coordinate-output{font-size:.46rem}
+}
