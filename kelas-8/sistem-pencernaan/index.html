@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-16">
+  <link rel="stylesheet" href="digestive.css?v=20260929-17">
 </head>
 <body>
   <header class="app-header">
@@ -84,73 +84,79 @@
         <div class="nutrient-game-head">
           <div>
             <p class="stage-kicker">Prasyarat • Mini game</p>
-            <h3>🍽️ Kenali 7 zat gizi pada makanan</h3>
-            <p>Tempatkan setiap kartu makanan ke kelompok zat gizi yang paling sesuai.</p>
+            <h3>🍽️ Hubungkan makanan, nutrisi, dan fungsinya</h3>
+            <p>Lengkapi setiap rantai: <b>Makanan → Nutrisi → Fungsi</b>.</p>
           </div>
-          <div class="nutrient-game-score" id="nutrientGameScore">0 / 7 tepat</div>
+          <div class="nutrient-game-score" id="nutrientGameScore">0 / 7 rantai tepat</div>
         </div>
 
         <div class="nutrient-game-instruction">
-          <b>Desktop:</b> seret kartu ke kotak tujuan. 
+          <b>Desktop:</b> seret kartu makanan dan kartu fungsi ke tempat yang sesuai.
           <b>HP:</b> sentuh kartu, lalu sentuh kotak tujuan.
-          <span>Satu makanan dapat mengandung beberapa zat gizi; pada permainan ini pilih zat gizi yang paling ditonjolkan.</span>
+          <span>Satu makanan dapat mengandung lebih dari satu zat gizi. Pada permainan ini gunakan zat gizi yang paling ditonjolkan.</span>
         </div>
 
-        <div class="nutrient-card-bank" id="nutrientCardBank" aria-label="Kartu makanan"></div>
+        <div class="relation-bank-grid">
+          <section class="relation-bank">
+            <div class="relation-bank-title"><span>1</span><b>Kartu makanan</b></div>
+            <div class="relation-card-bank" id="foodCardBank" aria-label="Kartu makanan"></div>
+          </section>
+          <section class="relation-bank">
+            <div class="relation-bank-title"><span>3</span><b>Kartu fungsi</b></div>
+            <div class="relation-card-bank" id="functionCardBank" aria-label="Kartu fungsi nutrisi"></div>
+          </section>
+        </div>
 
-        <div class="nutrient-drop-grid" id="nutrientDropGrid" aria-label="Kelompok zat gizi">
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="karbohidrat">
-            <span class="nutrient-zone-icon">⚡</span>
-            <strong>Karbohidrat</strong>
-            <small>Sumber energi utama</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="protein">
-            <span class="nutrient-zone-icon">💪</span>
-            <strong>Protein</strong>
-            <small>Pembangun dan perbaikan jaringan</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="lemak">
-            <span class="nutrient-zone-icon">🟡</span>
-            <strong>Lemak</strong>
-            <small>Cadangan energi</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="vitamin">
-            <span class="nutrient-zone-icon">🍊</span>
-            <strong>Vitamin</strong>
-            <small>Membantu berbagai fungsi tubuh</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="mineral">
-            <span class="nutrient-zone-icon">🧂</span>
-            <strong>Mineral</strong>
-            <small>Dibutuhkan tubuh dalam jumlah tertentu</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="serat">
-            <span class="nutrient-zone-icon">🌿</span>
-            <strong>Serat</strong>
-            <small>Membantu kerja saluran pencernaan</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
-          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="air">
-            <span class="nutrient-zone-icon">💧</span>
-            <strong>Air</strong>
-            <small>Pelarut dan membantu transport zat</small>
-            <div class="nutrient-zone-slot"></div>
-          </button>
+        <div class="relation-column-head" aria-hidden="true">
+          <b>Makanan</b><b>Nutrisi</b><b>Fungsi</b>
+        </div>
+
+        <div class="nutrition-chain-grid" id="nutritionChainGrid">
+          <div class="nutrition-chain-row" data-chain="karbohidrat">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="karbohidrat"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>⚡</span><strong>Karbohidrat</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="karbohidrat"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="protein">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="protein"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>💪</span><strong>Protein</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="protein"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="lemak">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="lemak"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>🟡</span><strong>Lemak</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="lemak"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="vitamin">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="vitamin"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>🍊</span><strong>Vitamin</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="vitamin"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="mineral">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="mineral"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>🧂</span><strong>Mineral</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="mineral"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="serat">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="serat"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>🌿</span><strong>Serat</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="serat"><span>Tempatkan fungsi</span></button>
+          </div>
+          <div class="nutrition-chain-row" data-chain="air">
+            <button type="button" class="relation-slot food-slot" data-slot-type="food" data-chain-slot="air"><span>Tempatkan makanan</span></button>
+            <div class="fixed-nutrient"><span>💧</span><strong>Air</strong></div>
+            <button type="button" class="relation-slot function-slot" data-slot-type="function" data-chain-slot="air"><span>Tempatkan fungsi</span></button>
+          </div>
         </div>
 
         <div class="nutrient-game-actions">
-          <button type="button" class="primary-inline" id="checkNutrientGame">Periksa jawaban</button>
+          <button type="button" class="primary-inline" id="checkNutrientGame">Periksa hubungan</button>
           <button type="button" class="secondary-inline" id="shuffleNutrientGame">Acak kartu</button>
           <button type="button" class="secondary-inline" id="resetNutrientGame">Ulangi</button>
         </div>
 
         <div id="nutrientGameFeedback" class="digest-feedback neutral">
-          Tempatkan semua kartu terlebih dahulu, lalu periksa jawabanmu.
+          Lengkapi tujuh rantai makanan → nutrisi → fungsi.
         </div>
       </article>
     </section>
@@ -562,6 +568,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-28"></script>
+  <script src="digestive.js?v=20260929-29"></script>
 </body>
 </html>
