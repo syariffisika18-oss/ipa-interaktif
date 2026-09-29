@@ -360,42 +360,288 @@ document.getElementById("processNext").onclick=()=>{
 };
 renderProcess();
 
-// Practice
+// Practice — latihan langkah demi langkah, mengikuti format "Ikuti proses".
 const practices=[
-  {a:156,b:12,ans:13},
-  {a:378,b:27,ans:14},
-  {a:125,b:8,ans:15.625}
+  {
+    a:156,b:12,answer:"13",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 15 dengan 12",target:15,expected:1,
+       instruction:"Pilih kelipatan 12 yang paling besar tetapi tidak melebihi 15.",
+       q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 1 × 12",expected:12,
+       instruction:"Tulis hasil perkalian 1 × 12.",q:"1",
+       rows:[{html:"12",pos:"left",active:true}]},
+      {phase:"KURANGI",type:"number",title:"15 − 12",expected:3,
+       instruction:"Kurangkan 15 dengan 12.",q:"1",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"3",pos:"left",active:true}]},
+      {phase:"TURUNKAN",type:"action",title:"Turunkan angka 6",actionLabel:"Turunkan 6",
+       instruction:"Turunkan digit berikutnya agar sisa 3 menjadi 36.",q:"1",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"36",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 36 dengan 12",target:36,expected:3,
+       instruction:"Gunakan kelipatan 12 untuk menentukan digit berikutnya.",q:"1<span class=\"ld-red\">3</span>",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"36",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 3 × 12",expected:36,
+       instruction:"Tulis hasil perkalian 3 × 12.",q:"13",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"36",pos:"right"},{html:"36",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"36 − 36",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"13",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"156 ÷ 12 = 13",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"13",
+       rows:[{html:"12",pos:"left"},{line:true,pos:"left",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
+    ]
+  },
+  {
+    a:378,b:27,answer:"14",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 37 dengan 27",target:37,expected:1,
+       instruction:"Pilih kelipatan 27 yang paling besar tetapi tidak melebihi 37.",q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 1 × 27",expected:27,
+       instruction:"Tulis hasil perkalian 1 × 27.",q:"1",
+       rows:[{html:"27",pos:"left",active:true}]},
+      {phase:"KURANGI",type:"number",title:"37 − 27",expected:10,
+       instruction:"Kurangkan 37 dengan 27.",q:"1",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"10",pos:"left",active:true}]},
+      {phase:"TURUNKAN",type:"action",title:"Turunkan angka 8",actionLabel:"Turunkan 8",
+       instruction:"Turunkan digit berikutnya agar 10 menjadi 108.",q:"1",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"108",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 108 dengan 27",target:108,expected:4,
+       instruction:"Gunakan kelipatan 27 untuk menentukan digit berikutnya.",q:"1<span class=\"ld-red\">4</span>",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"108",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 4 × 27",expected:108,
+       instruction:"Tulis hasil perkalian 4 × 27.",q:"14",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"108",pos:"right"},{html:"108",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"108 − 108",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"14",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"378 ÷ 27 = 14",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"14",
+       rows:[{html:"27",pos:"left"},{line:true,pos:"left",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
+    ]
+  },
+  {
+    a:125,b:8,answer:"15,625",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 12 dengan 8",target:12,expected:1,
+       instruction:"Pilih kelipatan 8 yang paling besar tetapi tidak melebihi 12.",q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 1 × 8",expected:8,
+       instruction:"Tulis hasil perkalian 1 × 8.",q:"1",rows:[{html:"8",pos:"left",active:true}]},
+      {phase:"KURANGI",type:"number",title:"12 − 8",expected:4,
+       instruction:"Kurangkan 12 dengan 8.",q:"1",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"4",pos:"left",active:true}]},
+      {phase:"TURUNKAN",type:"action",title:"Turunkan angka 5",actionLabel:"Turunkan 5",
+       instruction:"Turunkan digit berikutnya agar 4 menjadi 45.",q:"1",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 45 dengan 8",target:45,expected:5,
+       instruction:"Gunakan kelipatan 8 untuk menentukan digit berikutnya.",q:"1<span class=\"ld-red\">5</span>",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 5 × 8",expected:40,
+       instruction:"Tulis hasil perkalian 5 × 8.",q:"15",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"45 − 40",expected:5,
+       instruction:"Kurangkan 45 dengan 40.",q:"15",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"5",pos:"right",active:true}]},
+      {phase:"DESIMAL",type:"action",title:"Tambahkan koma dan 0",actionLabel:"Tambahkan koma dan 0",
+       instruction:"Tidak ada digit lagi untuk diturunkan. Tambahkan koma pada hasil dan 0 pada sisa agar 5 menjadi 50.",q:'15<span class="ld-red">,</span>',
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 50 dengan 8",target:50,expected:6,
+       instruction:"Gunakan kelipatan 8 untuk menentukan digit berikutnya.",q:'15,<span class="ld-red">6</span>',
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 6 × 8",expected:48,
+       instruction:"Tulis hasil perkalian 6 × 8.",q:"15,6",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"50 − 48",expected:2,
+       instruction:"Kurangkan 50 dengan 48.",q:"15,6",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right",active:true}]},
+      {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
+       instruction:"Tambahkan 0 pada sisa 2 sehingga menjadi 20.",q:"15,6",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 20 dengan 8",target:20,expected:2,
+       instruction:"Gunakan kelipatan 8 untuk menentukan digit berikutnya.",q:'15,6<span class="ld-red">2</span>',
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 2 × 8",expected:16,
+       instruction:"Tulis hasil perkalian 2 × 8.",q:"15,62",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"20 − 16",expected:4,
+       instruction:"Kurangkan 20 dengan 16.",q:"15,62",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"4",pos:"right",active:true}]},
+      {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
+       instruction:"Tambahkan 0 pada sisa 4 sehingga menjadi 40.",q:"15,62",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 40 dengan 8",target:40,expected:5,
+       instruction:"Gunakan kelipatan 8 untuk menentukan digit berikutnya.",q:'15,62<span class="ld-red">5</span>',
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 5 × 8",expected:40,
+       instruction:"Tulis hasil perkalian 5 × 8.",q:"15,625",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"40 − 40",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"15,625",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"125 ÷ 8 = 15,625",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15,625",
+       rows:[{html:"8",pos:"left"},{line:true,pos:"left",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
+    ]
+  }
 ];
-let practiceIndex=state.practiceIndex||0,practiceCorrect=state.practiceCorrect||0;
+
+let practiceIndex=Math.min(state.practiceIndex||0,practices.length-1);
+let practiceStepIndex=0;
+let practiceCompleted=new Set(state.practiceCompleted||[]);
+let practiceStepSolved=false;
+
+function renderPracticeDivision(q,step){
+  const box=document.getElementById("practiceDivision");
+  const rows=step.rows.map(row=>{
+    if(row.line){
+      return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
+    }
+    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+row.html+'</div>';
+  }).join("");
+
+  box.innerHTML=
+    '<div class="practice-quotient">'+step.q+'</div>'+
+    '<div class="practice-divisor">'+q.b+'</div>'+
+    '<div class="practice-body">'+
+      '<div class="practice-dividend">'+q.a+'</div>'+
+      '<div class="practice-work">'+rows+'</div>'+
+    '</div>';
+}
+
+function renderPracticeResponse(q,step){
+  const response=document.getElementById("practiceResponse");
+  const multiplePanel=document.getElementById("practiceMultiples");
+  const feedback=document.getElementById("practiceFeedback");
+
+  response.innerHTML="";
+  multiplePanel.innerHTML="";
+  multiplePanel.hidden=true;
+  feedback.className="feedback neutral";
+  feedback.textContent="Kerjakan langkah ini sendiri.";
+  practiceStepSolved=step.type==="done";
+
+  if(step.type==="divide"){
+    multiplePanel.hidden=false;
+    multiplePanel.innerHTML=
+      '<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari hasil terbesar ≤ '+step.target+'</span></div>'+
+      '<div class="multiple-grid"></div>';
+
+    buildMultiples(q.b,step.target,multiplePanel.querySelector(".multiple-grid"),{
+      interactive:true,
+      onPick:({multiplier,value,best})=>{
+        const fb=document.getElementById("practiceFeedback");
+        if(multiplier===step.expected){
+          fb.className="feedback good";
+          fb.innerHTML="<b>Tepat.</b> "+q.b+" × "+multiplier+" = "+value+" adalah kelipatan terbesar yang tidak melebihi "+step.target+".";
+          practiceStepSolved=true;
+          document.getElementById("practiceStepNext").disabled=false;
+        }else if(value>step.target){
+          fb.className="feedback warn";
+          fb.textContent=q.b+" × "+multiplier+" = "+value+" sudah melebihi "+step.target+". Pilih kelipatan yang lebih kecil.";
+        }else{
+          fb.className="feedback warn";
+          fb.textContent=q.b+" × "+multiplier+" = "+value+" masih dapat diperbesar. Cari yang paling dekat dengan "+step.target+".";
+        }
+      }
+    });
+  }else if(step.type==="number"){
+    response.innerHTML=
+      '<label class="practice-answer-label">Jawaban'+
+        '<div class="practice-answer-row">'+
+          '<input id="practiceStepAnswer" inputmode="decimal" placeholder="?">'+
+          '<button id="practiceStepCheck" type="button">Periksa</button>'+
+        '</div>'+
+      '</label>';
+
+    document.getElementById("practiceStepCheck").onclick=()=>{
+      const raw=document.getElementById("practiceStepAnswer").value.trim().replace(",",".");
+      const value=Number(raw);
+      if(!Number.isFinite(value)){
+        feedback.className="feedback warn";
+        feedback.textContent="Masukkan angka terlebih dahulu.";
+        return;
+      }
+      if(Math.abs(value-step.expected)<1e-9){
+        feedback.className="feedback good";
+        feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
+        practiceStepSolved=true;
+        document.getElementById("practiceStepNext").disabled=false;
+      }else{
+        feedback.className="feedback warn";
+        feedback.textContent="Belum tepat. Periksa kembali operasi pada langkah ini.";
+      }
+    };
+  }else if(step.type==="action"){
+    response.innerHTML='<button id="practiceActionBtn" class="practice-action-btn" type="button">'+step.actionLabel+'</button>';
+    document.getElementById("practiceActionBtn").onclick=()=>{
+      feedback.className="feedback good";
+      feedback.textContent="Benar. Perhatikan perubahan pada bentuk pembagian bersusun.";
+      practiceStepSolved=true;
+      document.getElementById("practiceStepNext").disabled=false;
+    };
+  }else if(step.type==="done"){
+    feedback.className="feedback good";
+    feedback.textContent=step.instruction;
+    response.innerHTML='<div class="practice-result-chip">Hasil: <b>'+q.answer+'</b></div>';
+    practiceStepSolved=true;
+  }
+}
+
 function renderPractice(){
   const q=practices[practiceIndex];
+  const step=q.steps[practiceStepIndex];
+
   document.getElementById("practiceCount").textContent="Soal "+(practiceIndex+1)+" dari "+practices.length;
-  document.getElementById("practiceScore").textContent="Benar "+practiceCorrect;
+  document.getElementById("practiceScore").textContent="Selesai "+practiceCompleted.size+"/"+practices.length;
   document.getElementById("practiceProblem").textContent=q.a+" ÷ "+q.b;
-  document.getElementById("practiceAnswer").value="";
-  document.getElementById("practiceFeedback").className="feedback neutral";
-  document.getElementById("practiceFeedback").textContent="Kerjakan sendiri. Bantuan tersedia bila diperlukan.";
-  document.getElementById("practiceMultiples").hidden=true;
-  document.getElementById("practiceNext").hidden=true;
-}
-document.getElementById("practiceHelper").onclick=()=>{
-  const q=practices[practiceIndex],panel=document.getElementById("practiceMultiples");
-  panel.hidden=!panel.hidden;
-  if(!panel.hidden){
-    panel.innerHTML='<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari yang membantu langkah awal</span></div><div class="multiple-grid"></div>';
-    buildMultiples(q.b,q.a,panel.querySelector(".multiple-grid"),{markBest:true});
+  document.getElementById("practicePhase").textContent=step.phase;
+  document.getElementById("practiceStepCount").textContent=(practiceStepIndex+1)+"/"+q.steps.length;
+  document.getElementById("practiceStepTitle").textContent=step.title;
+  document.getElementById("practiceInstruction").textContent=step.instruction;
+
+  renderPracticeDivision(q,step);
+  renderPracticeResponse(q,step);
+
+  document.getElementById("practiceStepPrev").disabled=practiceStepIndex===0;
+  document.getElementById("practiceStepNext").disabled=!practiceStepSolved;
+  document.getElementById("practiceStepNext").hidden=step.type==="done";
+
+  const nextProblem=document.getElementById("practiceNextProblem");
+  nextProblem.hidden=step.type!=="done";
+  if(step.type==="done"){
+    if(!practiceCompleted.has(practiceIndex)){
+      practiceCompleted.add(practiceIndex);
+      state.practiceCompleted=[...practiceCompleted];
+      save();
+      document.getElementById("practiceScore").textContent="Selesai "+practiceCompleted.size+"/"+practices.length;
+    }
+    nextProblem.textContent=practiceIndex===practices.length-1?"Ulangi latihan dari awal":"Soal berikutnya →";
   }
+
+  state.practiceIndex=practiceIndex;
+  save();
+}
+
+document.getElementById("practiceStepPrev").onclick=()=>{
+  if(practiceStepIndex===0)return;
+  practiceStepIndex--;
+  renderPractice();
 };
-document.getElementById("practiceCheck").onclick=()=>{
-  const q=practices[practiceIndex],v=Number(String(document.getElementById("practiceAnswer").value).replace(",","."));
-  const fb=document.getElementById("practiceFeedback");
-  if(Math.abs(v-q.ans)<1e-9){fb.className="feedback good";fb.textContent="Benar. "+q.a+" ÷ "+q.b+" = "+String(q.ans).replace(".",",")+".";if(!state["practiceDone"+practiceIndex]){practiceCorrect++;state["practiceDone"+practiceIndex]=true}}
-  else{fb.className="feedback warn";fb.textContent="Belum tepat. Periksa kembali langkah bagi → kali → kurang → turunkan. Gunakan bantuan kelipatan bila perlu."}
-  state.practiceCorrect=practiceCorrect;save();
-  document.getElementById("practiceScore").textContent="Benar "+practiceCorrect;
-  document.getElementById("practiceNext").hidden=false;
+
+document.getElementById("practiceStepNext").onclick=()=>{
+  const q=practices[practiceIndex];
+  if(!practiceStepSolved || practiceStepIndex>=q.steps.length-1)return;
+  practiceStepIndex++;
+  renderPractice();
 };
-document.getElementById("practiceNext").onclick=()=>{practiceIndex=(practiceIndex+1)%practices.length;state.practiceIndex=practiceIndex;save();renderPractice()};
+
+document.getElementById("practiceNextProblem").onclick=()=>{
+  practiceIndex=practiceIndex===practices.length-1?0:practiceIndex+1;
+  practiceStepIndex=0;
+  state.practiceIndex=practiceIndex;
+  save();
+  renderPractice();
+};
+
 renderPractice();
 
 // Evaluation
