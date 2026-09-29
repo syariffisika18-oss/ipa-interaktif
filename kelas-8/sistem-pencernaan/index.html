@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-10">
+  <link rel="stylesheet" href="digestive.css?v=20260929-11">
 </head>
 <body>
   <header class="app-header">
@@ -191,7 +191,7 @@
       <div class="explain-page-nav" role="tablist" aria-label="Halaman Explain">
         <button type="button" class="explain-page-tab is-active" data-explain-page="0"><span>1</span>Apa itu pencernaan?</button>
         <button type="button" class="explain-page-tab" data-explain-page="1"><span>2</span>Model organ</button>
-        <button type="button" class="explain-page-tab" data-explain-page="2"><span>3</span>Contoh hasil pencernaan</button>
+        <button type="button" class="explain-page-tab" data-explain-page="2"><span>3</span>Hasil pencernaan</button>
       </div>
 
       <section class="explain-page is-active" data-explain-content="0">
@@ -265,32 +265,66 @@
           <article><b>Vili usus</b><span>Memperluas permukaan sehingga penyerapan zat gizi lebih efektif.</span></article>
         </div>
 
-        <button type="button" class="primary-inline explain-model-next" id="explainModelNext">Lihat contoh hasil pencernaan →</button>
+        <button type="button" class="primary-inline explain-model-next" id="explainModelNext">Lihat hasil pencernaan →</button>
       </section>
 
       <section class="explain-page" data-explain-content="2">
-        <div class="digestion-example-card">
-          <p class="stage-kicker">Contoh sederhana</p>
-          <h3>Hasil pencernaan zat makanan</h3>
-          <p class="example-intro">Setelah melalui proses pencernaan, beberapa zat makanan diubah menjadi bentuk yang lebih sederhana sehingga dapat diserap tubuh.</p>
+        <div class="digestion-result-card">
+          <p class="stage-kicker">Hasil pencernaan</p>
+          <h3>Dari nutrisi menjadi zat yang dapat diserap</h3>
+          <p class="result-intro">Pilih nutrisi untuk melihat enzim yang bekerja, pengaktifnya bila ada, dan hasil akhir pencernaannya.</p>
 
-          <div class="simple-digestion-examples">
-            <article>
-              <span class="food-example-icon">🍚</span>
-              <div><small>Karbohidrat</small><b>→ Glukosa</b></div>
-            </article>
-            <article>
-              <span class="food-example-icon">🥚</span>
-              <div><small>Protein</small><b>→ Asam amino</b></div>
-            </article>
-            <article>
-              <span class="food-example-icon">🥑</span>
-              <div><small>Lemak</small><b>→ Asam lemak + gliserol</b></div>
-            </article>
+          <div class="nutrient-tabs" id="nutrientTabs" role="tablist" aria-label="Pilih nutrisi">
+            <button type="button" class="nutrient-tab is-active" data-nutrient="0">Karbohidrat</button>
+            <button type="button" class="nutrient-tab" data-nutrient="1">Protein</button>
+            <button type="button" class="nutrient-tab" data-nutrient="2">Lemak</button>
+          </div>
+
+          <div class="nutrient-model" id="nutrientModel">
+            <div class="nutrient-model-title">
+              <span id="nutrientIcon">🍚</span>
+              <div>
+                <small>NUTRISI YANG DIOLAH</small>
+                <h4 id="nutrientName">Karbohidrat</h4>
+              </div>
+            </div>
+
+            <div class="nutrient-flow-diagram">
+              <div class="nutrient-flow-box">
+                <span>NUTRISI</span>
+                <strong id="nutrientSource">Karbohidrat</strong>
+              </div>
+              <i>→</i>
+              <div class="nutrient-flow-box">
+                <span>ENZIM YANG MENGOLAH</span>
+                <strong id="nutrientEnzymes"></strong>
+              </div>
+              <i>→</i>
+              <div class="nutrient-flow-box activator-box">
+                <span>PENGAKTIF / KONDISI</span>
+                <strong id="nutrientActivator"></strong>
+              </div>
+              <i>→</i>
+              <div class="nutrient-flow-box result-box">
+                <span>HASIL</span>
+                <strong id="nutrientResult"></strong>
+              </div>
+            </div>
+
+            <div class="nutrient-detail-grid">
+              <article>
+                <span>Tempat utama</span>
+                <strong id="nutrientPlace"></strong>
+              </article>
+              <article>
+                <span>Catatan penting</span>
+                <strong id="nutrientNote"></strong>
+              </article>
+            </div>
           </div>
 
           <div class="digestion-note">
-            <b>Perhatikan:</b> air, vitamin, dan mineral tidak perlu dipecah menjadi molekul yang lebih kecil terlebih dahulu seperti karbohidrat, protein, dan lemak.
+            <b>Tidak semua zat makanan perlu dicerna.</b> Air, vitamin, dan mineral dapat diserap tanpa dipecah menjadi molekul yang lebih kecil terlebih dahulu.
           </div>
 
           <button type="button" class="secondary-inline explain-example-back" id="explainExampleBack">← Kembali ke model organ</button>
@@ -418,6 +452,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-19"></script>
+  <script src="digestive.js?v=20260929-20"></script>
 </body>
 </html>
