@@ -552,10 +552,14 @@ function renderPracticeDivision(q,step){
 
     let rowHtml=row.html;
 
-    // Jangan bocorkan hasil langkah yang sedang dikerjakan.
-    if(row.active && !solved && (isMultiplyStep || isSubtractStep || isActionStep)){
+    // Coba sendiri: hasil KALI dan KURANGI tetap disamarkan pada langkah aktif,
+    // bahkan setelah jawaban benar. Nilai sebenarnya baru tampak sebagai konteks
+    // pada langkah berikutnya.
+    if(row.active && (isMultiplyStep || isSubtractStep)){
       rowHtml='<span class="ld-red">...</span>';
-    }else if(row.active && solved && (isMultiplyStep || isSubtractStep || isActionStep)){
+    }else if(row.active && isActionStep && !solved){
+      rowHtml='<span class="ld-red">...</span>';
+    }else if(row.active && isActionStep && solved){
       rowHtml='<span class="ld-red">'+row.html+'</span>';
     }
 
