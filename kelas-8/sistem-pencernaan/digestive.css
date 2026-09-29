@@ -86,3 +86,104 @@
   .elab-tabs{margin-bottom:4px}.elab-tab{min-height:29px;font-size:.54rem;padding:3px 5px}.elab-page{padding:6px}.elab-page h3{font-size:.72rem;margin:3px 0 5px}.concept-map{gap:4px}.concept-row{padding:5px;grid-template-columns:95px 1fr}.concept-row>strong{font-size:.64rem}.concept-choices button{min-height:27px;font-size:.52rem;padding:3px 5px}.case-card{padding:6px}.case-card h3{font-size:.7rem}.case-card p{font-size:.55rem}.reason-options{gap:3px}.reason-options button{min-height:29px;font-size:.54rem}
   .eval-shell{padding:6px}.eval-progress-track{margin:5px 0 6px}.eval-question h3{font-size:.72rem;margin:4px 0}.eval-option-list{grid-template-columns:1fr 1fr;gap:4px}.eval-option-list button{min-height:31px;padding:4px 6px;font-size:.56rem}.eval-actions{margin-top:5px;gap:4px}.eval-actions button{min-height:29px;font-size:.55rem}
 }
+
+/* =========================================================
+   IDENTITAS SESI — layout rapi desktop + HP
+   ========================================================= */
+.digest-identity{
+  margin:0;
+  display:grid!important;
+  grid-template-columns:1fr!important;
+  gap:10px!important;
+  align-content:start;
+  align-items:start!important;
+  padding:16px!important;
+}
+.digest-identity > div:first-child{
+  min-width:0;
+}
+.digest-identity .stage-kicker{
+  margin:0 0 3px;
+}
+.digest-identity h3{
+  margin:0!important;
+  font-size:1.05rem;
+  line-height:1.2;
+}
+.digest-identity .identity-grid{
+  display:grid!important;
+  grid-template-columns:minmax(0,1.7fr) minmax(92px,.7fr)!important;
+  gap:10px!important;
+  align-items:end;
+}
+.digest-identity .identity-grid label{
+  min-width:0;
+  display:grid;
+  gap:6px;
+  font-size:.78rem;
+  line-height:1.2;
+}
+.digest-identity .identity-grid label span{
+  white-space:normal;
+  overflow-wrap:normal;
+  word-break:normal;
+}
+.digest-identity .identity-grid input{
+  min-width:0;
+  width:100%;
+  min-height:42px;
+  padding:0 10px;
+  font-size:.78rem;
+}
+
+@media(max-width:640px){
+  .digest-identity{
+    padding:10px!important;
+    gap:8px!important;
+  }
+  .digest-identity h3{
+    font-size:.9rem;
+  }
+  .digest-identity .identity-grid{
+    grid-template-columns:minmax(0,1.55fr) minmax(82px,.75fr)!important;
+    gap:7px!important;
+  }
+  .digest-identity .identity-grid label{
+    font-size:.68rem;
+    gap:4px;
+  }
+  .digest-identity .identity-grid input{
+    min-height:38px;
+    padding:0 8px;
+    font-size:.7rem;
+  }
+}
+
+@media(max-width:390px){
+  .digest-identity .identity-grid{
+    grid-template-columns:1fr!important;
+  }
+}
+
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .digest-identity{
+    padding:7px!important;
+    gap:5px!important;
+  }
+  .digest-identity h3{
+    font-size:.7rem;
+  }
+  .digest-identity .identity-grid{
+    grid-template-columns:minmax(0,1.7fr) minmax(75px,.65fr)!important;
+    gap:5px!important;
+  }
+  .digest-identity .identity-grid label{
+    font-size:.56rem;
+    gap:3px;
+  }
+  .digest-identity .identity-grid input{
+    min-height:31px;
+    padding:0 6px;
+    font-size:.58rem;
+  }
+}
