@@ -719,44 +719,334 @@ document.getElementById("practiceNextProblem").onclick=()=>{
 
 renderPractice();
 
-// Evaluation
-const evals=[
-  {q:"Pada 240 ÷ 35, mengapa angka awalnya 6?",a:["6 × 35 = 210 dan 7 × 35 = 245 terlalu besar","Karena 240 berakhir dengan 0","Karena 35 dibulatkan menjadi 40"],c:0,f:"Kita memilih kelipatan terbesar yang tidak melewati bilangan yang sedang dibagi."},
-  {q:"Setelah memilih 6 pada 240 ÷ 35, langkah berikutnya adalah...",a:["Mengalikan 6 × 35","Menambah 35 ke 240","Langsung menulis desimal"],c:0,f:"Urutannya adalah bagi → kali → kurang → turunkan."},
-  {q:"240 − 210 menghasilkan sisa...",a:["20","30","35"],c:1,f:"Sisa 30 kemudian dapat dilanjutkan ke desimal."},
-  {q:"Jika masih ada sisa tetapi tidak ada angka lagi untuk diturunkan, kita dapat...",a:["Berhenti selalu","Menambahkan koma pada hasil dan 0 pada sisa","Menghapus sisanya"],c:1,f:"Untuk melanjutkan ke desimal, tambahkan koma pada hasil lalu 0 pada sisa."},
-  {q:"Kelipatan 27 terbesar yang tidak melebihi 378 adalah...",a:["27 × 12 = 324","27 × 14 = 378","27 × 15 = 405"],c:1,f:"27 × 14 tepat sama dengan 378."}
+// Evaluation — format proses bertahap seperti Coba sendiri.
+const evaluations=[
+  {
+    a:168,b:14,answer:"12",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 16 dengan 14",target:16,expected:1,
+       instruction:"Pilih kelipatan 14 yang paling besar tetapi tidak melebihi 16.",q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 1 × 14",expected:14,
+       instruction:"Tulis hasil perkalian 1 × 14.",q:"1",rows:[{html:"14",pos:"left",active:true}]},
+      {phase:"KURANGI",type:"number",title:"16 − 14",expected:2,
+       instruction:"Kurangkan 16 dengan 14.",q:"1",
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"2",pos:"left",active:true}]},
+      {phase:"TURUNKAN",type:"action",title:"Turunkan angka 8",actionLabel:"Turunkan 8",
+       instruction:"Turunkan digit berikutnya agar sisa 2 menjadi 28.",q:"1",
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"28",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 28 dengan 14",target:28,expected:2,
+       instruction:"Gunakan kelipatan 14 untuk menentukan digit berikutnya.",q:'1<span class="ld-red">2</span>',
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"28",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 2 × 14",expected:28,
+       instruction:"Tulis hasil perkalian 2 × 14.",q:"12",
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"28",pos:"right"},{html:"28",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"28 − 28",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"12",
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"168 ÷ 14 = 12",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"12",
+       rows:[{html:"14",pos:"left"},{line:true,pos:"left",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
+    ]
+  },
+  {
+    a:375,b:25,answer:"15",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 37 dengan 25",target:37,expected:1,
+       instruction:"Pilih kelipatan 25 yang paling besar tetapi tidak melebihi 37.",q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 1 × 25",expected:25,
+       instruction:"Tulis hasil perkalian 1 × 25.",q:"1",rows:[{html:"25",pos:"left",active:true}]},
+      {phase:"KURANGI",type:"number",title:"37 − 25",expected:12,
+       instruction:"Kurangkan 37 dengan 25.",q:"1",
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"12",pos:"left",active:true}]},
+      {phase:"TURUNKAN",type:"action",title:"Turunkan angka 5",actionLabel:"Turunkan 5",
+       instruction:"Turunkan digit berikutnya agar 12 menjadi 125.",q:"1",
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"125",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 125 dengan 25",target:125,expected:5,
+       instruction:"Gunakan kelipatan 25 untuk menentukan digit berikutnya.",q:'1<span class="ld-red">5</span>',
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"125",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 5 × 25",expected:125,
+       instruction:"Tulis hasil perkalian 5 × 25.",q:"15",
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"125",pos:"right"},{html:"125",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"125 − 125",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"15",
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"375 ÷ 25 = 15",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15",
+       rows:[{html:"25",pos:"left"},{line:true,pos:"left",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
+    ]
+  },
+  {
+    a:25,b:4,answer:"6,25",
+    steps:[
+      {phase:"BAGI",type:"divide",title:"Bagi 25 dengan 4",target:25,expected:6,
+       instruction:"Pilih kelipatan 4 yang paling besar tetapi tidak melebihi 25.",q:"?",rows:[]},
+      {phase:"KALI",type:"number",title:"Kalikan 6 × 4",expected:24,
+       instruction:"Tulis hasil perkalian 6 × 4.",q:"6",rows:[{html:"24",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"25 − 24",expected:1,
+       instruction:"Kurangkan 25 dengan 24.",q:"6",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"1",pos:"right",active:true}]},
+      {phase:"DESIMAL",type:"action",title:"Tambahkan koma dan 0",actionLabel:"Tambahkan koma dan 0",
+       instruction:"Tidak ada digit lagi untuk diturunkan. Tambahkan koma pada hasil dan 0 pada sisa agar 1 menjadi 10.",q:'6<span class="ld-red">,</span>',
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 10 dengan 4",target:10,expected:2,
+       instruction:"Gunakan kelipatan 4 untuk menentukan digit berikutnya.",q:'6,<span class="ld-red">2</span>',
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 2 × 4",expected:8,
+       instruction:"Tulis hasil perkalian 2 × 4.",q:"6,2",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"10 − 8",expected:2,
+       instruction:"Kurangkan 10 dengan 8.",q:"6,2",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right",active:true}]},
+      {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
+       instruction:"Tambahkan 0 pada sisa 2 sehingga menjadi 20.",q:"6,2",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right",active:true}]},
+      {phase:"BAGI",type:"divide",title:"Bagi 20 dengan 4",target:20,expected:5,
+       instruction:"Gunakan kelipatan 4 untuk menentukan digit berikutnya.",q:'6,2<span class="ld-red">5</span>',
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"}]},
+      {phase:"KALI",type:"number",title:"Kalikan 5 × 4",expected:20,
+       instruction:"Tulis hasil perkalian 5 × 4.",q:"6,25",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right",active:true}]},
+      {phase:"KURANGI",type:"number",title:"20 − 20",expected:0,
+       instruction:"Kurangkan untuk mengetahui sisanya.",q:"6,25",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"SELESAI",type:"done",title:"25 ÷ 4 = 6,25",
+       instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"6,25",
+       rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
+    ]
+  }
 ];
-let evalIndex=0,evalScore=0,evalAnswered=false;
-function renderEval(){
-  const q=evals[evalIndex];evalAnswered=false;
-  document.getElementById("evalCount").textContent=(evalIndex+1)+"/"+evals.length;
-  document.getElementById("evalScore").textContent="Skor "+evalScore;
-  document.getElementById("evalQuestion").textContent=q.q;
-  const box=document.getElementById("evalChoices");box.innerHTML="";
-  q.a.forEach((a,i)=>{const b=document.createElement("button");b.textContent=a;b.onclick=()=>answerEval(i,b);box.appendChild(b)});
-  document.getElementById("evalFeedback").className="feedback neutral";
-  document.getElementById("evalFeedback").textContent="Pilih jawaban yang paling tepat.";
-  document.getElementById("evalNext").hidden=true;
+
+let evalIndex=0;
+let evalStepIndex=0;
+let evalCompleted=new Set(state.evalCompleted||[]);
+let evalSolvedSteps=new Set(state.evalSolvedSteps||[]);
+let evalStepSolved=false;
+
+function evalStepKey(){return evalIndex+":"+evalStepIndex}
+function isEvalStepSolved(){
+  const step=evaluations[evalIndex].steps[evalStepIndex];
+  return step.type==="done" || evalSolvedSteps.has(evalStepKey());
 }
-function answerEval(i,btn){
-  if(evalAnswered)return;evalAnswered=true;const q=evals[evalIndex];
-  [...document.getElementById("evalChoices").children].forEach((b,k)=>{if(k===q.c)b.classList.add("correct");else if(k===i)b.classList.add("wrong");b.disabled=true});
-  const fb=document.getElementById("evalFeedback");
-  if(i===q.c){evalScore++;fb.className="feedback good";fb.textContent="Benar. "+q.f}else{fb.className="feedback warn";fb.textContent="Belum tepat. "+q.f}
-  document.getElementById("evalScore").textContent="Skor "+evalScore;
-  document.getElementById("evalNext").hidden=false;
+function markEvalStepSolved(){
+  evalSolvedSteps.add(evalStepKey());
+  state.evalSolvedSteps=[...evalSolvedSteps];
+  save();
 }
-document.getElementById("evalNext").onclick=()=>{
-  if(evalIndex<evals.length-1){evalIndex++;renderEval()}else{
-    const card=document.getElementById("masteryCard");card.hidden=false;
-    document.getElementById("masteryTitle").textContent=evalScore>=4?"Penguasaan dasar sudah baik":"Masih perlu latihan";
-    document.getElementById("masteryText").textContent=evalScore>=4?"Kamu sudah memahami pola utama pembagian bersusun.":"Ulangi terutama langkah memilih kelipatan, mengalikan, dan mengurangkan.";
-    done.add(5);render();
+
+function renderEvalDivision(q,step){
+  const box=document.getElementById("evalDivision");
+  const solved=isEvalStepSolved();
+  const isMultiply=step.phase==="KALI"&&step.type==="number";
+  const isSubtract=step.phase==="KURANGI"&&step.type==="number";
+  const isDivide=step.type==="divide";
+  const isAction=step.type==="action";
+
+  let quotientHtml=step.q;
+  if(isDivide){
+    if(!solved){
+      if(String(step.q).includes("ld-red")){
+        quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1?$2');
+      }else{
+        quotientHtml='<span class="ld-red">?</span>';
+      }
+    }else if(step.q==="?"){
+      quotientHtml='<span class="ld-red">'+step.expected+'</span>';
+    }
+  }
+  if(isMultiply){
+    quotientHtml=highlightLastDigit(String(step.q).replace(/<[^>]*>/g,""));
+  }
+  if(isAction&&step.phase==="DESIMAL"&&!solved){
+    quotientHtml=String(step.q).replace(/<span class="ld-red">,?<\/span>/,"");
+  }
+
+  const divisorHtml=isMultiply?'<span class="ld-red">'+q.b+'</span>':q.b;
+
+  const rows=step.rows.map(row=>{
+    if(row.line){
+      return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
+    }
+    let rowHtml=row.html;
+    if(row.active&&!solved&&(isMultiply||isSubtract||isAction)){
+      rowHtml='<span class="ld-red">...</span>';
+    }else if(row.active&&solved&&(isMultiply||isSubtract||isAction)){
+      rowHtml='<span class="ld-red">'+row.html+'</span>';
+    }
+    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
+  }).join("");
+
+  box.innerHTML=
+    '<div class="practice-quotient">'+quotientHtml+'</div>'+
+    '<div class="practice-divisor">'+divisorHtml+'</div>'+
+    '<div class="practice-body">'+
+      '<div class="practice-dividend">'+q.a+'</div>'+
+      '<div class="practice-work">'+rows+'</div>'+
+    '</div>';
+}
+
+function renderEvalResponse(q,step){
+  const response=document.getElementById("evalResponse");
+  const multiples=document.getElementById("evalMultiples");
+  const feedback=document.getElementById("evalFeedback");
+
+  response.innerHTML="";
+  multiples.innerHTML="";
+  multiples.hidden=true;
+  evalStepSolved=isEvalStepSolved();
+
+  feedback.className=evalStepSolved?"feedback good":"feedback neutral";
+  feedback.textContent=evalStepSolved&&step.type!=="done"
+    ?"Langkah ini sudah benar."
+    :"Kerjakan langkah ini sendiri.";
+
+  if(step.type==="divide"){
+    multiples.hidden=false;
+    multiples.innerHTML=
+      '<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari hasil terbesar ≤ '+step.target+'</span></div>'+
+      '<div class="multiple-grid"></div>';
+    buildMultiples(q.b,step.target,multiples.querySelector(".multiple-grid"),{
+      interactive:true,
+      onPick:({multiplier,value})=>{
+        if(multiplier===step.expected){
+          feedback.className="feedback good";
+          feedback.textContent="Tepat. Lanjutkan ke langkah berikutnya.";
+          evalStepSolved=true;
+          markEvalStepSolved();
+          renderEvalDivision(q,step);
+          document.getElementById("evalStepNext").disabled=false;
+        }else if(value>step.target){
+          feedback.className="feedback warn";
+          feedback.textContent="Nilai itu sudah melebihi "+step.target+".";
+        }else{
+          feedback.className="feedback warn";
+          feedback.textContent="Masih ada kelipatan yang lebih dekat dengan "+step.target+".";
+        }
+      }
+    });
+  }else if(step.type==="number"){
+    response.innerHTML=
+      '<label class="practice-answer-label">Jawaban'+
+        '<div class="practice-answer-row">'+
+          '<input id="evalStepAnswer" inputmode="decimal" placeholder="?">'+
+          '<button id="evalStepCheck" type="button">Periksa</button>'+
+        '</div>'+
+      '</label>';
+    document.getElementById("evalStepCheck").onclick=()=>{
+      const raw=document.getElementById("evalStepAnswer").value.trim().replace(",",".");
+      const value=Number(raw);
+      if(!Number.isFinite(value)){
+        feedback.className="feedback warn";
+        feedback.textContent="Masukkan angka terlebih dahulu.";
+        return;
+      }
+      if(Math.abs(value-step.expected)<1e-9){
+        feedback.className="feedback good";
+        feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
+        evalStepSolved=true;
+        markEvalStepSolved();
+        renderEvalDivision(q,step);
+        document.getElementById("evalStepNext").disabled=false;
+      }else{
+        feedback.className="feedback warn";
+        feedback.textContent="Belum tepat. Hitung kembali langkah ini.";
+      }
+    };
+  }else if(step.type==="action"){
+    response.innerHTML='<button id="evalActionBtn" class="practice-action-btn" type="button">'+step.actionLabel+'</button>';
+    document.getElementById("evalActionBtn").onclick=()=>{
+      feedback.className="feedback good";
+      feedback.textContent="Langkah diterapkan. Perhatikan perubahan pada bentuk pembagian.";
+      evalStepSolved=true;
+      markEvalStepSolved();
+      renderEvalDivision(q,step);
+      document.getElementById("evalStepNext").disabled=false;
+    };
+  }else if(step.type==="done"){
+    response.innerHTML='<div class="practice-result-chip">Hasil: <b>'+q.answer+'</b></div>';
+    feedback.className="feedback good";
+    feedback.textContent=step.instruction;
+    evalStepSolved=true;
+  }
+}
+
+function renderEvaluation(){
+  const q=evaluations[evalIndex];
+  const step=q.steps[evalStepIndex];
+
+  document.getElementById("evalCount").textContent="Soal "+(evalIndex+1)+" dari "+evaluations.length;
+  document.getElementById("evalScore").textContent="Selesai "+evalCompleted.size+"/"+evaluations.length;
+  document.getElementById("evalProblem").textContent=q.a+" ÷ "+q.b;
+  document.getElementById("evalPhase").textContent=step.phase;
+  document.getElementById("evalStepCount").textContent=(evalStepIndex+1)+"/"+q.steps.length;
+  document.getElementById("evalStepTitle").textContent=step.title;
+  document.getElementById("evalInstruction").textContent=step.instruction;
+
+  evalStepSolved=isEvalStepSolved();
+  renderEvalDivision(q,step);
+  renderEvalResponse(q,step);
+
+  document.getElementById("evalStepPrev").disabled=evalStepIndex===0;
+  document.getElementById("evalStepNext").disabled=!evalStepSolved;
+  document.getElementById("evalStepNext").hidden=step.type==="done";
+
+  const nextProblem=document.getElementById("evalNextProblem");
+  nextProblem.hidden=step.type!=="done";
+
+  if(step.type==="done"){
+    if(!evalCompleted.has(evalIndex)){
+      evalCompleted.add(evalIndex);
+      state.evalCompleted=[...evalCompleted];
+      save();
+    }
+    document.getElementById("evalScore").textContent="Selesai "+evalCompleted.size+"/"+evaluations.length;
+    nextProblem.textContent=evalIndex===evaluations.length-1?"Selesaikan evaluasi":"Soal berikutnya →";
+  }
+}
+
+document.getElementById("evalStepPrev").onclick=()=>{
+  if(evalStepIndex===0)return;
+  evalStepIndex--;
+  renderEvaluation();
+};
+
+document.getElementById("evalStepNext").onclick=()=>{
+  const q=evaluations[evalIndex];
+  if(!evalStepSolved||evalStepIndex>=q.steps.length-1)return;
+  evalStepIndex++;
+  renderEvaluation();
+};
+
+document.getElementById("evalNextProblem").onclick=()=>{
+  if(evalIndex<evaluations.length-1){
+    evalIndex++;
+    evalStepIndex=0;
+    renderEvaluation();
+  }else{
+    const card=document.getElementById("masteryCard");
+    card.hidden=false;
+    document.getElementById("masteryTitle").textContent="Evaluasi selesai";
+    document.getElementById("masteryText").textContent=
+      "Kamu telah menyelesaikan tiga pembagian bersusun: dua hasil bulat dan satu hasil desimal.";
+    done.add(5);
+    save();
+    render();
   }
 };
-document.getElementById("evalReset").onclick=()=>{evalIndex=0;evalScore=0;document.getElementById("masteryCard").hidden=true;renderEval()};
-renderEval();
+
+document.getElementById("evalReset").onclick=()=>{
+  evalIndex=0;
+  evalStepIndex=0;
+  evalCompleted.clear();
+  evalSolvedSteps.clear();
+  state.evalCompleted=[];
+  state.evalSolvedSteps=[];
+  document.getElementById("masteryCard").hidden=true;
+  save();
+  renderEvaluation();
+};
+
+renderEvaluation();
+
 
 // Swipe stage navigation on empty/content areas; preserve form controls.
 let sx=0,sy=0,st=0,blocked=false;
