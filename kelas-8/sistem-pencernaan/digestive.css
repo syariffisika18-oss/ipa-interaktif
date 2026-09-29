@@ -1807,3 +1807,207 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .relation-slot{min-height:29px;padding:2px;font-size:.38rem}
   .relation-slot .relation-card{min-height:25px;font-size:.38rem}
 }
+
+
+/* =========================================================
+   ELABORATE HOTS CASE SUITE — 3 kasus bertingkat
+   ========================================================= */
+.hots-case-suite{
+  display:grid;
+  gap:12px;
+}
+.hots-case-suite-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 16px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#f8fbfa;
+}
+.hots-case-suite-head h3{
+  margin:0 0 4px;
+  font-size:1.05rem;
+}
+.hots-case-suite-head p{
+  margin:0;
+  color:var(--muted);
+  font-size:.76rem;
+  line-height:1.45;
+}
+.hots-case-progress{
+  flex:0 0 auto;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#eef8f5;
+  color:var(--primary);
+  font-size:.68rem;
+  font-weight:900;
+  white-space:nowrap;
+}
+.hots-case-tabs{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+.hots-case-tab{
+  min-height:58px;
+  display:grid;
+  align-content:center;
+  gap:2px;
+  padding:8px 10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+  color:var(--ink);
+  text-align:left;
+  cursor:pointer;
+}
+.hots-case-tab span{
+  color:var(--muted);
+  font-size:.62rem;
+  font-weight:850;
+  text-transform:uppercase;
+  letter-spacing:.05em;
+}
+.hots-case-tab b{
+  font-size:.78rem;
+  line-height:1.2;
+}
+.hots-case-tab.is-active{
+  border-color:var(--primary);
+  background:#eaf6f3;
+  box-shadow:0 0 0 2px rgba(15,118,110,.08);
+}
+.hots-case-tab.is-done::after{
+  content:"✓ Tuntas";
+  margin-top:3px;
+  color:#147454;
+  font-size:.58rem;
+  font-weight:900;
+}
+.hots-case-panel{
+  display:grid;
+  gap:10px;
+}
+.hots-case-panel .hots-case{
+  margin:0;
+}
+.hots-case-number{
+  display:block;
+  margin-bottom:4px;
+  color:var(--primary);
+  font-size:.64rem;
+  font-weight:900;
+  letter-spacing:.07em;
+}
+.hots-case-step{
+  padding:12px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:#fff;
+}
+.hots-case-step>p{
+  margin:0 0 9px;
+  line-height:1.45;
+}
+.hots-case-step.locked-step{
+  opacity:.5;
+  pointer-events:none;
+}
+.hots-evidence-options{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.hots-evidence-options button,
+.hots-case-step .reason-options button{
+  min-height:42px;
+  text-align:left;
+}
+.hots-case-step .digest-feedback{
+  margin-top:8px;
+}
+
+@media(max-width:640px){
+  .hots-case-suite{gap:7px}
+  .hots-case-suite-head{
+    padding:9px;
+    border-radius:11px;
+  }
+  .hots-case-suite-head h3{font-size:.82rem}
+  .hots-case-suite-head p{font-size:.62rem}
+  .hots-case-progress{font-size:.55rem;padding:5px 7px}
+  .hots-case-tabs{gap:4px}
+  .hots-case-tab{
+    min-height:48px;
+    padding:5px 6px;
+    border-radius:9px;
+  }
+  .hots-case-tab span{font-size:.48rem}
+  .hots-case-tab b{font-size:.59rem}
+  .hots-case-tab.is-done::after{font-size:.47rem}
+  .hots-case-panel{gap:6px}
+  .hots-case-step{padding:7px;border-radius:10px}
+  .hots-case-step>p{font-size:.65rem;margin-bottom:6px}
+  .hots-evidence-options{gap:4px}
+  .hots-evidence-options button,
+  .hots-case-step .reason-options button{
+    min-height:34px;
+    padding:5px 7px;
+    font-size:.59rem;
+  }
+  .hots-case-step .digest-feedback{font-size:.59rem;margin-top:5px}
+}
+@media(max-width:430px){
+  .hots-case-suite-head{
+    display:grid;
+  }
+  .hots-case-progress{
+    justify-self:start;
+  }
+  .hots-case-tabs{
+    grid-template-columns:1fr;
+  }
+  .hots-case-tab{
+    min-height:40px;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:6px;
+  }
+  .hots-case-tab.is-done::after{
+    margin-top:0;
+  }
+  .hots-evidence-options{
+    grid-template-columns:1fr;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .hots-case-suite{gap:4px}
+  .hots-case-suite-head{padding:5px 7px}
+  .hots-case-suite-head h3{font-size:.62rem}
+  .hots-case-suite-head p{font-size:.48rem}
+  .hots-case-progress{font-size:.45rem;padding:3px 5px}
+  .hots-case-tabs{gap:3px}
+  .hots-case-tab{min-height:34px;padding:3px 5px}
+  .hots-case-tab span{font-size:.4rem}
+  .hots-case-tab b{font-size:.48rem}
+  .hots-case-tab.is-done::after{font-size:.38rem}
+  .hots-case-panel{gap:4px}
+  .hots-case-panel .case-card{padding:6px}
+  .hots-case-panel .case-card h3{font-size:.65rem}
+  .hots-case-panel .case-card p{font-size:.48rem}
+  .hots-case-number{font-size:.4rem;margin-bottom:2px}
+  .hots-case-step{padding:5px}
+  .hots-case-step>p{font-size:.49rem;margin-bottom:4px}
+  .hots-evidence-options,
+  .hots-case-step .reason-options{gap:3px}
+  .hots-evidence-options button,
+  .hots-case-step .reason-options button{
+    min-height:25px;
+    padding:3px 5px;
+    font-size:.45rem;
+  }
+  .hots-case-step .digest-feedback{font-size:.45rem;padding:4px 5px;margin-top:3px}
+}
