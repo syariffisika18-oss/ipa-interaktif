@@ -820,6 +820,10 @@ let evalIndex=0;
 let evalStepIndex=0;
 let evalCompleted=new Set(state.evalCompleted||[]);
 let evalSolvedSteps=new Set(state.evalSolvedSteps||[]);
+let evalAttempts={...(state.evalAttempts||{})};
+let evalHelpUsed=new Set(state.evalHelpUsed||[]);
+let evalFirstTry=new Set(state.evalFirstTry||[]);
+let evalMistakePhases={...(state.evalMistakePhases||{})};
 let evalStepSolved=false;
 
 function evalStepKey(){return evalIndex+":"+evalStepIndex}
@@ -827,10 +831,37 @@ function isEvalStepSolved(){
   const step=evaluations[evalIndex].steps[evalStepIndex];
   return step.type==="done" || evalSolvedSteps.has(evalStepKey());
 }
-function markEvalStepSolved(){
-  evalSolvedSteps.add(evalStepKey());
-  state.evalSolvedSteps=[...evalSolvedSteps];
+function saveEvalMetrics(){
+  state.evalAttempts=evalAttempts;
+  state.evalHelpUsed=[...evalHelpUsed];
+  state.evalFirstTry=[...evalFirstTry];
+  state.evalMistakePhases=evalMistakePhases;
   save();
+}
+function recordEvalMistake(step){
+  const key=evalStepKey();
+  evalAttempts[key]=(evalAttempts[key]||0)+1;
+  evalMistakePhases[step.phase]=(evalMistakePhases[step.phase]||0)+1;
+  saveEvalMetrics();
+}
+function markEvalStepSolved(){
+  const key=evalStepKey();
+  if((evalAttempts[key]||0)===0 && !evalHelpUsed.has(key)){
+    evalFirstTry.add(key);
+  }
+  evalSolvedSteps.add(key);
+  state.evalSolvedSteps=[...evalSolvedSteps];
+  saveEvalMetrics();
+}
+function evalScoredStepTotal(){
+  return evaluations.reduce((sum,q)=>sum+q.steps.filter(s=>s.type==="divide"||s.type==="number").length,0);
+}
+function evalWeakPhases(){
+  const labels={BAGI:"Bagi",KALI:"Kali",KURANGI:"Kurangi"};
+  const entries=Object.entries(evalMistakePhases).filter(([,n])=>n>0);
+  if(!entries.length)return "tidak ada yang menonjol";
+  const max=Math.max(...entries.map(([,n])=>n));
+  return entries.filter(([,n])=>n===max).map(([p])=>labels[p]||p).join(", ");
 }
 
 function renderEvalDivision(q,step){
@@ -888,6 +919,8 @@ function renderEvalResponse(q,step){
   const response=document.getElementById("evalResponse");
   const multiples=document.getElementById("evalMultiples");
   const feedback=document.getElementById("evalFeedback");
+  const key=evalStepKey();
+  const attempts=evalAttempts[key]||0;
 
   response.innerHTML="";
   multiples.innerHTML="";
@@ -897,32 +930,68 @@ function renderEvalResponse(q,step){
   feedback.className=evalStepSolved?"feedback good":"feedback neutral";
   feedback.textContent=evalStepSolved&&step.type!=="done"
     ?"Langkah ini sudah benar."
-    :"Kerjakan langkah ini sendiri.";
+    :"Kerjakan tanpa bantuan terlebih dahulu.";
 
   if(step.type==="divide"){
-    multiples.hidden=false;
-    multiples.innerHTML=
-      '<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari hasil terbesar ≤ '+step.target+'</span></div>'+
-      '<div class="multiple-grid"></div>';
-    buildMultiples(q.b,step.target,multiples.querySelector(".multiple-grid"),{
-      interactive:true,
-      onPick:({multiplier,value})=>{
-        if(multiplier===step.expected){
-          feedback.className="feedback good";
-          feedback.textContent="Tepat. Lanjutkan ke langkah berikutnya.";
-          evalStepSolved=true;
-          markEvalStepSolved();
-          renderEvalDivision(q,step);
-          document.getElementById("evalStepNext").disabled=false;
-        }else if(value>step.target){
-          feedback.className="feedback warn";
-          feedback.textContent="Nilai itu sudah melebihi "+step.target+".";
-        }else{
-          feedback.className="feedback warn";
-          feedback.textContent="Masih ada kelipatan yang lebih dekat dengan "+step.target+".";
-        }
+    response.innerHTML=
+      '<label class="practice-answer-label">Digit hasil bagi'+
+        '<div class="practice-answer-row">'+
+          '<input id="evalStepAnswer" inputmode="numeric" placeholder="?">'+
+          '<button id="evalStepCheck" type="button">Periksa</button>'+
+        '</div>'+
+      '</label>'+
+      '<button id="evalHelpBtn" class="secondary eval-help-btn" type="button" hidden>Tampilkan kelipatan '+q.b+'</button>';
+
+    const helpBtn=document.getElementById("evalHelpBtn");
+    const revealHelp=()=>{
+      multiples.hidden=false;
+      multiples.innerHTML=
+        '<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Gunakan untuk membantu memilih digit</span></div>'+
+        '<div class="multiple-grid"></div>';
+      buildMultiples(q.b,step.target,multiples.querySelector(".multiple-grid"),{
+        interactive:false,
+        markBest:false
+      });
+      evalHelpUsed.add(key);
+      saveEvalMetrics();
+      helpBtn.hidden=true;
+    };
+
+    if(attempts>=2 && !evalStepSolved && !evalHelpUsed.has(key)){
+      helpBtn.hidden=false;
+    }
+    if(evalHelpUsed.has(key) && !evalStepSolved){
+      revealHelp();
+    }else{
+      helpBtn.onclick=revealHelp;
+    }
+
+    document.getElementById("evalStepCheck").onclick=()=>{
+      const raw=document.getElementById("evalStepAnswer").value.trim();
+      const value=Number(raw);
+      if(!Number.isFinite(value)){
+        feedback.className="feedback warn";
+        feedback.textContent="Masukkan digit terlebih dahulu.";
+        return;
       }
-    });
+      if(value===step.expected){
+        feedback.className="feedback good";
+        feedback.textContent="Benar. Lanjutkan.";
+        evalStepSolved=true;
+        markEvalStepSolved();
+        renderEvalDivision(q,step);
+        document.getElementById("evalStepNext").disabled=false;
+        helpBtn.hidden=true;
+      }else{
+        recordEvalMistake(step);
+        const n=evalAttempts[key]||0;
+        feedback.className="feedback warn";
+        feedback.textContent=n===1
+          ?"Belum tepat. Cari kelipatan "+q.b+" terbesar yang tidak melebihi "+step.target+"."
+          :"Belum tepat. Coba lagi; bantuan kelipatan sekarang tersedia.";
+        if(n>=2 && !evalHelpUsed.has(key))helpBtn.hidden=false;
+      }
+    };
   }else if(step.type==="number"){
     response.innerHTML=
       '<label class="practice-answer-label">Jawaban'+
@@ -931,6 +1000,7 @@ function renderEvalResponse(q,step){
           '<button id="evalStepCheck" type="button">Periksa</button>'+
         '</div>'+
       '</label>';
+
     document.getElementById("evalStepCheck").onclick=()=>{
       const raw=document.getElementById("evalStepAnswer").value.trim().replace(",",".");
       const value=Number(raw);
@@ -941,21 +1011,25 @@ function renderEvalResponse(q,step){
       }
       if(Math.abs(value-step.expected)<1e-9){
         feedback.className="feedback good";
-        feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
+        feedback.textContent="Benar. Lanjutkan.";
         evalStepSolved=true;
         markEvalStepSolved();
         renderEvalDivision(q,step);
         document.getElementById("evalStepNext").disabled=false;
       }else{
+        recordEvalMistake(step);
+        const n=evalAttempts[key]||0;
         feedback.className="feedback warn";
-        feedback.textContent="Belum tepat. Hitung kembali langkah ini.";
+        feedback.textContent=n===1
+          ?"Belum tepat. Coba lagi."
+          :"Belum tepat. Periksa kembali operasi pada langkah ini.";
       }
     };
   }else if(step.type==="action"){
     response.innerHTML='<button id="evalActionBtn" class="practice-action-btn" type="button">'+step.actionLabel+'</button>';
     document.getElementById("evalActionBtn").onclick=()=>{
       feedback.className="feedback good";
-      feedback.textContent="Langkah diterapkan. Perhatikan perubahan pada bentuk pembagian.";
+      feedback.textContent="Langkah diterapkan. Lanjutkan.";
       evalStepSolved=true;
       markEvalStepSolved();
       renderEvalDivision(q,step);
@@ -1025,8 +1099,15 @@ document.getElementById("evalNextProblem").onclick=()=>{
     const card=document.getElementById("masteryCard");
     card.hidden=false;
     document.getElementById("masteryTitle").textContent="Evaluasi selesai";
-    document.getElementById("masteryText").textContent=
-      "Kamu telah menyelesaikan tiga pembagian bersusun: dua hasil bulat dan satu hasil desimal.";
+    const total=evalScoredStepTotal();
+    const firstTry=evalFirstTry.size;
+    const helpCount=evalHelpUsed.size;
+    const weak=evalWeakPhases();
+    document.getElementById("masteryText").innerHTML=
+      "Soal selesai: <b>"+evalCompleted.size+"/"+evaluations.length+"</b><br>"+
+      "Langkah hitung benar pada percobaan pertama: <b>"+firstTry+"/"+total+"</b><br>"+
+      "Bantuan kelipatan digunakan: <b>"+helpCount+" kali</b><br>"+
+      "Bagian yang perlu lebih banyak latihan: <b>"+weak+"</b>.";
     done.add(5);
     save();
     render();
@@ -1038,8 +1119,16 @@ document.getElementById("evalReset").onclick=()=>{
   evalStepIndex=0;
   evalCompleted.clear();
   evalSolvedSteps.clear();
+  evalHelpUsed.clear();
+  evalFirstTry.clear();
+  evalAttempts={};
+  evalMistakePhases={};
   state.evalCompleted=[];
   state.evalSolvedSteps=[];
+  state.evalHelpUsed=[];
+  state.evalFirstTry=[];
+  state.evalAttempts={};
+  state.evalMistakePhases={};
   document.getElementById("masteryCard").hidden=true;
   save();
   renderEvaluation();
