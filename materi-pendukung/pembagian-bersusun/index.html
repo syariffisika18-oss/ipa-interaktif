@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
   <title>Pembagian Bersusun — Materi Pendukung</title>
-  <link rel="stylesheet" href="style.css?v=20260929-17">
+  <link rel="stylesheet" href="style.css?v=20260929-19">
 </head>
 <body>
 <header class="topbar">
@@ -180,18 +180,51 @@
   </section>
 
   <section class="stage-panel" data-panel="5">
-    <div class="stage-title"><span>LANGKAH 6</span><h2>Evaluasi singkat</h2></div>
-    <div class="evaluation-card">
-      <div class="eval-top"><span id="evalCount">1/5</span><strong id="evalScore">Skor 0</strong></div>
-      <h3 id="evalQuestion"></h3>
-      <div id="evalChoices" class="eval-choices"></div>
-      <div id="evalFeedback" class="feedback neutral">Pilih jawaban yang paling tepat.</div>
-      <button id="evalNext" type="button" hidden>Berikutnya →</button>
-      <button id="evalReset" class="secondary" type="button">Ulangi evaluasi</button>
+    <div class="stage-title"><span>LANGKAH 6</span><h2>Evaluasi</h2></div>
+
+    <div class="practice-shell practice-process-shell eval-process-shell">
+      <div class="practice-top">
+        <span id="evalCount">Soal 1 dari 3</span>
+        <strong id="evalScore">Selesai 0/3</strong>
+      </div>
+
+      <div class="practice-process-head">
+        <span>KERJAKAN DENGAN PEMBAGIAN BERSUSUN</span>
+        <strong id="evalProblem">168 ÷ 14</strong>
+      </div>
+
+      <div class="practice-process-grid">
+        <div class="practice-visual-panel">
+          <div id="evalDivision" class="practice-division" aria-live="polite"></div>
+        </div>
+
+        <div class="practice-step-panel">
+          <div class="practice-step-meta">
+            <span id="evalPhase" class="process-phase">BAGI</span>
+            <span id="evalStepCount" class="practice-step-count">1/8</span>
+          </div>
+
+          <h3 id="evalStepTitle">Tentukan digit hasil bagi</h3>
+          <p id="evalInstruction">Pilih kelipatan pembagi yang paling besar tetapi tidak melebihi bilangan yang sedang dibagi.</p>
+
+          <div id="evalMultiples" class="multiple-panel compact practice-multiples" hidden></div>
+          <div id="evalResponse" class="practice-response"></div>
+          <div id="evalFeedback" class="feedback neutral">Kerjakan langkah ini sendiri.</div>
+
+          <div class="practice-step-actions">
+            <button id="evalStepPrev" class="secondary" type="button">← Langkah sebelumnya</button>
+            <button id="evalStepNext" type="button" disabled>Langkah berikutnya →</button>
+          </div>
+        </div>
+      </div>
+
+      <button id="evalNextProblem" class="next-practice" type="button" hidden>Soal berikutnya →</button>
     </div>
+
     <div id="masteryCard" class="mastery-card" hidden>
       <strong id="masteryTitle"></strong>
       <p id="masteryText"></p>
+      <button id="evalReset" class="secondary" type="button">Ulangi evaluasi</button>
     </div>
   </section>
 
@@ -203,6 +236,6 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="app.js?v=20260929-18"></script>
+<script src="app.js?v=20260929-19"></script>
 </body>
 </html>
