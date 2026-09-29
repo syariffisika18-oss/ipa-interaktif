@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
   <title>Pembagian Bersusun — Materi Pendukung</title>
-  <link rel="stylesheet" href="style.css?v=20260929-31">
+  <link rel="stylesheet" href="style.css?v=20260929-32">
 </head>
 <body>
 <header class="topbar">
@@ -49,7 +49,7 @@
     <div class="two-col">
       <article class="card">
         <h3>Tanpa menghitung panjang</h3>
-        <p>Perhatikan <strong>240 ÷ 35</strong>. Menurutmu, angka satuan awal hasil bagi yang paling masuk akal adalah...</p>
+        <p>Perhatikan <strong>240 ÷ 35</strong>. Menurutmu, angka pertama pada hasil bagi yang paling masuk akal adalah...</p>
         <div class="choices" id="diagChoices">
           <button data-value="5">5</button>
           <button data-value="6">6</button>
@@ -114,6 +114,13 @@
     <div class="process-example-head">
       <div><span>CONTOH PROSES</span><strong>240 ÷ 35</strong></div>
       <p>Perhatikan bagaimana bentuk pembagian bersusun bertambah sedikit demi sedikit.</p>
+    </div>
+
+    <div class="algorithm-cycle" aria-label="Pola pembagian bersusun">
+      <span data-cycle="BAGI">1. Bagi</span>
+      <span data-cycle="KALI">2. Kali</span>
+      <span data-cycle="KURANGI">3. Kurangi</span>
+      <span data-cycle="TURUNKAN">4. Turunkan / tambah 0</span>
     </div>
 
     <div class="process-grid division-process-grid">
@@ -236,6 +243,6 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="app.js?v=20260929-31"></script>
+<script src="app.js?v=20260929-32"></script>
 </body>
 </html>
