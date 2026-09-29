@@ -1593,7 +1593,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
    ========================================================= */
 .relation-bank-grid{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:1.15fr .82fr 1.7fr;
   gap:8px;
   margin-top:10px;
 }
@@ -1614,6 +1614,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 .relation-bank-title span{
   width:21px;height:21px;
   display:grid;place-items:center;
+  flex:0 0 auto;
   border-radius:7px;
   background:var(--primary);
   color:#fff;
@@ -1644,8 +1645,9 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   touch-action:manipulation;
 }
 .food-relation-card{min-width:104px}
-.function-relation-card{max-width:215px}
-.relation-card-emoji{font-size:1rem}
+.nutrient-relation-card{min-width:92px}
+.function-relation-card{max-width:235px}
+.relation-card-emoji{font-size:1rem;flex:0 0 auto}
 .relation-card.is-selected{
   border-color:#5268e8;
   background:#eef2ff;
@@ -1657,7 +1659,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 
 .relation-column-head{
   display:grid;
-  grid-template-columns:1.15fr .72fr 1.7fr;
+  grid-template-columns:1.15fr .82fr 1.7fr;
   gap:6px;
   margin-top:10px;
   padding:0 5px;
@@ -1674,7 +1676,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 }
 .nutrition-chain-row{
   display:grid;
-  grid-template-columns:1.15fr .72fr 1.7fr;
+  grid-template-columns:1.15fr .82fr 1.7fr;
   gap:6px;
   align-items:stretch;
   padding:5px;
@@ -1682,20 +1684,6 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   border-radius:11px;
   background:#fff;
 }
-.fixed-nutrient{
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  gap:2px;
-  min-height:54px;
-  padding:5px;
-  border-radius:9px;
-  background:#eef8f5;
-  text-align:center;
-}
-.fixed-nutrient span{font-size:1rem}
-.fixed-nutrient strong{font-size:.69rem;color:var(--primary)}
 .relation-slot{
   min-width:0;
   min-height:54px;
@@ -1710,6 +1698,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   font-size:.6rem;
   cursor:pointer;
 }
+.nutrient-slot{background:#f5faf8}
 .relation-slot .relation-card{
   width:100%;
   min-height:40px;
@@ -1732,76 +1721,79 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 }
 
 @media(max-width:760px){
-  .relation-bank-grid{grid-template-columns:1fr}
+  .relation-bank-grid,
   .relation-column-head,
   .nutrition-chain-row{
-    grid-template-columns:1fr .72fr 1.45fr;
+    grid-template-columns:1.05fr .78fr 1.45fr;
   }
-  .function-relation-card{max-width:none}
+  .relation-bank-grid{gap:5px}
+  .relation-bank{padding:6px}
+  .relation-bank-title{font-size:.6rem;gap:4px}
+  .relation-bank-title span{width:18px;height:18px;font-size:.5rem}
+  .relation-card-bank{gap:4px}
+  .relation-card{font-size:.58rem;padding:4px 5px}
+  .food-relation-card,
+  .nutrient-relation-card,
+  .function-relation-card{width:100%;min-width:0;max-width:none}
 }
 @media(max-width:520px){
-  .relation-bank{padding:6px}
-  .relation-card-bank{min-height:58px}
-  .relation-card{min-height:34px;font-size:.58rem;padding:4px 5px}
-  .food-relation-card{min-width:calc(50% - 3px)}
-  .function-relation-card{width:100%}
-  .relation-column-head{display:none}
+  .relation-bank-grid{
+    grid-template-columns:1.02fr .8fr 1.48fr;
+    gap:3px;
+    margin-top:6px;
+  }
+  .relation-bank{padding:4px;border-radius:8px}
+  .relation-bank-title{font-size:.48rem;margin-bottom:4px}
+  .relation-bank-title span{width:15px;height:15px;border-radius:5px;font-size:.4rem}
+  .relation-card-bank{min-height:48px;gap:3px}
+  .relation-card{
+    min-height:32px;
+    font-size:.49rem;
+    line-height:1.15;
+    padding:3px 4px;
+    border-radius:7px;
+  }
+  .relation-card-emoji{font-size:.72rem}
+  .relation-column-head{
+    grid-template-columns:1.02fr .8fr 1.48fr;
+    gap:3px;
+    margin-top:6px;
+    font-size:.47rem;
+  }
+  .nutrition-chain-grid{gap:3px}
   .nutrition-chain-row{
-    grid-template-columns:1fr;
-    gap:4px;
-    padding:6px;
+    grid-template-columns:1.02fr .8fr 1.48fr;
+    gap:3px;
+    padding:3px;
+    border-radius:8px;
   }
-  .nutrition-chain-row::before{
-    content:"Makanan  →  Nutrisi  →  Fungsi";
-    color:#71807d;
-    font-size:.52rem;
-    font-weight:850;
-    text-align:center;
+  .relation-slot{
+    min-height:46px;
+    padding:3px;
+    font-size:.46rem;
+    border-radius:7px;
   }
-  .fixed-nutrient{
-    min-height:38px;
-    flex-direction:row;
-  }
-  .relation-slot{min-height:42px}
-  .food-slot::before{
-    content:"Makanan";
-    margin-right:6px;
-    color:#74817e;
-    font-size:.52rem;
-    font-weight:900;
-  }
-  .function-slot::before{
-    content:"Fungsi";
-    margin-right:6px;
-    color:#74817e;
-    font-size:.52rem;
-    font-weight:900;
-  }
-  .relation-slot:has(.relation-card)::before{display:none}
+  .relation-slot .relation-card{min-height:38px;font-size:.47rem}
 }
 @media(orientation:landscape) and (max-width:950px) and (max-height:500px){
-  .relation-bank-grid{grid-template-columns:1fr 1fr;gap:3px;margin-top:4px}
+  .relation-bank-grid{grid-template-columns:1.05fr .72fr 1.5fr;gap:3px;margin-top:4px}
   .relation-bank{padding:4px}
   .relation-bank-title{font-size:.45rem;margin-bottom:3px}
   .relation-bank-title span{width:15px;height:15px;font-size:.4rem}
   .relation-card-bank{min-height:38px;gap:2px}
   .relation-card{min-height:25px;padding:2px 4px;font-size:.4rem}
-  .food-relation-card{min-width:auto}
-  .function-relation-card{max-width:130px}
+  .food-relation-card,.nutrient-relation-card,.function-relation-card{width:auto;min-width:auto;max-width:130px}
   .relation-card-emoji{font-size:.65rem}
   .relation-column-head{
-    grid-template-columns:1.05fr .65fr 1.55fr;
+    grid-template-columns:1.05fr .72fr 1.5fr;
     margin-top:3px;
     font-size:.4rem;
   }
   .nutrition-chain-grid{gap:2px;margin-top:2px}
   .nutrition-chain-row{
-    grid-template-columns:1.05fr .65fr 1.55fr;
+    grid-template-columns:1.05fr .72fr 1.5fr;
     gap:3px;padding:2px;border-radius:6px;
   }
-  .fixed-nutrient{min-height:29px;padding:2px}
-  .fixed-nutrient span{font-size:.58rem}
-  .fixed-nutrient strong{font-size:.4rem}
   .relation-slot{min-height:29px;padding:2px;font-size:.38rem}
   .relation-slot .relation-card{min-height:25px;font-size:.38rem}
 }
