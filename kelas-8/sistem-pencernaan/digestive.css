@@ -612,3 +612,20 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .route-waypoint{width:8px;height:8px;border-width:1px}
   .route-waypoint.is-organ-anchor{width:11px;height:11px}
 }
+
+
+/* =========================================================
+   VISUAL LOCK — posisi label & waypoint final
+   ========================================================= */
+.visual-editor-toggle,
+.visual-editor-panel,
+.route-waypoint{
+  display:none!important;
+}
+.digestive-anatomy-figure{
+  outline:none!important;
+}
+.digestive-anatomy-figure .anatomy-hotspot,
+.digestive-anatomy-figure .food-ball{
+  touch-action:auto;
+}
