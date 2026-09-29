@@ -517,6 +517,12 @@ function renderPracticeDivision(q,step){
   const isSubtractStep=step.phase==="KURANGI" && step.type==="number";
   const isDivideStep=step.type==="divide";
   const isActionStep=step.type==="action";
+  const previousPracticeStep=practiceStepIndex>0
+    ? practices[practiceIndex].steps[practiceStepIndex-1]
+    : null;
+  const previousPracticeAnswer=previousPracticeStep && typeof previousPracticeStep.expected!=="undefined"
+    ? String(previousPracticeStep.expected).replace(".",",")
+    : null;
 
   let quotientHtml=step.q;
 
@@ -567,9 +573,14 @@ function renderPracticeDivision(q,step){
     // bahkan setelah jawaban benar. Nilai sebenarnya baru tampak sebagai konteks
     // pada langkah berikutnya.
     if(row.active && (isMultiplyStep || isSubtractStep || isActionStep)){
-      rowHtml=revealed
-        ? '<span class="ld-red">'+row.html+'</span>'
-        : '<span class="ld-red">...</span>';
+      if(isActionStep && !revealed && previousPracticeAnswer!==null){
+        // Pertahankan sisa dari langkah sebelumnya sampai tombol tindakan ditekan.
+        rowHtml='<span class="ld-red">'+previousPracticeAnswer+'</span>';
+      }else{
+        rowHtml=revealed
+          ? '<span class="ld-red">'+row.html+'</span>'
+          : '<span class="ld-red">...</span>';
+      }
     }
 
     return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
@@ -889,6 +900,12 @@ function renderEvalDivision(q,step){
   const isSubtract=step.phase==="KURANGI"&&step.type==="number";
   const isDivide=step.type==="divide";
   const isAction=step.type==="action";
+  const previousEvalStep=evalStepIndex>0
+    ? evaluations[evalIndex].steps[evalStepIndex-1]
+    : null;
+  const previousEvalAnswer=previousEvalStep && typeof previousEvalStep.expected!=="undefined"
+    ? String(previousEvalStep.expected).replace(".",",")
+    : null;
 
   let quotientHtml=step.q;
   if(isDivide){
@@ -926,9 +943,14 @@ function renderEvalDivision(q,step){
     }
     let rowHtml=row.html;
     if(row.active&&(isMultiply||isSubtract||isAction)){
-      rowHtml=revealed
-        ? '<span class="ld-red">'+row.html+'</span>'
-        : '<span class="ld-red">...</span>';
+      if(isAction && !revealed && previousEvalAnswer!==null){
+        // Pertahankan sisa sebelumnya sampai tindakan dilakukan.
+        rowHtml='<span class="ld-red">'+previousEvalAnswer+'</span>';
+      }else{
+        rowHtml=revealed
+          ? '<span class="ld-red">'+row.html+'</span>'
+          : '<span class="ld-red">...</span>';
+      }
     }
     return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
   }).join("");
