@@ -1085,3 +1085,153 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .nutrient-detail-grid span{font-size:.4rem}
   .nutrient-detail-grid strong{font-size:.47rem;line-height:1.25}
 }
+
+
+/* Hasil pencernaan — fokus nutrisi, enzim, penghasil, pengaktif, hasil */
+.nutrient-summary{
+  display:grid;
+  grid-template-columns:1fr 1.4fr;
+  gap:8px;
+  align-items:stretch;
+  margin-bottom:10px;
+}
+.nutrient-summary .nutrient-model-title{
+  margin:0;
+  padding:10px;
+  border-radius:12px;
+  background:#f7faf9;
+}
+.nutrient-final-result{
+  padding:10px 12px;
+  border-radius:12px;
+  background:#eef8f5;
+  border:1px solid #cfe6df;
+}
+.nutrient-final-result small,
+.nutrient-helper span,
+.enzyme-step-grid span{
+  display:block;
+  color:var(--muted);
+  font-size:.56rem;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+.nutrient-final-result strong{
+  display:block;
+  margin-top:4px;
+  font-size:.9rem;
+  line-height:1.35;
+}
+.enzyme-pathway{
+  display:grid;
+  gap:4px;
+}
+.enzyme-step{
+  position:relative;
+  padding:10px 10px 9px 42px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+.enzyme-step-number{
+  position:absolute;
+  left:10px;
+  top:10px;
+  width:24px;
+  height:24px;
+  display:grid;
+  place-items:center;
+  border-radius:8px;
+  background:var(--primary);
+  color:#fff;
+  font-size:.68rem;
+  font-weight:900;
+}
+.enzyme-step-place{
+  margin-bottom:6px;
+  color:var(--primary);
+  font-size:.68rem;
+  font-weight:900;
+}
+.enzyme-step-grid{
+  display:grid;
+  grid-template-columns:1fr 1.15fr 1.45fr;
+  gap:6px;
+}
+.enzyme-step-grid>div{
+  min-width:0;
+  padding:7px 8px;
+  border-radius:9px;
+  background:#f7faf9;
+}
+.enzyme-step-grid strong{
+  display:block;
+  margin-top:3px;
+  font-size:.72rem;
+  line-height:1.35;
+}
+.enzyme-step p{
+  margin:7px 0 0;
+  color:var(--muted);
+  font-size:.68rem;
+  line-height:1.4;
+}
+.enzyme-step-arrow{
+  justify-self:center;
+  color:var(--primary);
+  font-size:1.1rem;
+  line-height:1;
+  font-weight:900;
+}
+.nutrient-helper{
+  margin-top:8px;
+  padding:9px 11px;
+  border-radius:11px;
+  background:#fff8df;
+  border:1px solid #edd993;
+}
+.nutrient-helper[hidden]{display:none!important}
+.nutrient-helper strong{
+  display:block;
+  margin-top:3px;
+  color:#675413;
+  font-size:.72rem;
+  line-height:1.4;
+}
+.secondary-note{
+  background:#f7f8fc;
+  color:var(--muted);
+}
+
+@media(max-width:640px){
+  .nutrient-summary{grid-template-columns:1fr;gap:4px}
+  .enzyme-step{padding:8px 7px 7px 36px}
+  .enzyme-step-number{left:7px;top:8px;width:22px;height:22px}
+  .enzyme-step-place{font-size:.62rem}
+  .enzyme-step-grid{grid-template-columns:1fr;gap:4px}
+  .enzyme-step-grid>div{padding:6px}
+  .enzyme-step-grid strong{font-size:.65rem}
+  .enzyme-step p{font-size:.62rem}
+  .nutrient-final-result strong{font-size:.72rem}
+  .nutrient-helper strong{font-size:.64rem}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .nutrient-summary{grid-template-columns:1fr 1.4fr;gap:3px;margin-bottom:4px}
+  .nutrient-summary .nutrient-model-title,
+  .nutrient-final-result{padding:4px}
+  .nutrient-final-result small,
+  .nutrient-helper span,
+  .enzyme-step-grid span{font-size:.38rem}
+  .nutrient-final-result strong{font-size:.48rem}
+  .enzyme-pathway{gap:2px}
+  .enzyme-step{padding:4px 4px 4px 24px;border-radius:7px}
+  .enzyme-step-number{left:4px;top:4px;width:16px;height:16px;border-radius:5px;font-size:.42rem}
+  .enzyme-step-place{margin-bottom:3px;font-size:.44rem}
+  .enzyme-step-grid{grid-template-columns:1fr 1.15fr 1.45fr;gap:2px}
+  .enzyme-step-grid>div{padding:3px}
+  .enzyme-step-grid strong{font-size:.42rem;line-height:1.2}
+  .enzyme-step p{margin-top:3px;font-size:.4rem;line-height:1.2}
+  .enzyme-step-arrow{font-size:.6rem}
+  .nutrient-helper{margin-top:3px;padding:4px}
+  .nutrient-helper strong{font-size:.42rem;line-height:1.2}
+}
