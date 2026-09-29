@@ -794,6 +794,66 @@
       ],
       transferGood:"Tepat. Kamu menggunakan kasus baru untuk mengevaluasi batas sebuah pernyataan, bukan sekadar mengulang definisi.",
       transferWarn:"Belum tepat. Bedakan 'sudah dicerna' dari 'sudah diserap'. Keduanya merupakan proses yang berbeda."
+    },
+    {
+      title:"Apakah asam lambung selalu berarti 'maag'?",
+      scenario:"Raka mengatakan bahwa asam di lambung pasti berbahaya dan harus dihilangkan agar tidak terjadi 'maag'. Dalam data kasus disebutkan bahwa kondisi asam membantu pepsin bekerja, sedangkan dinding lambung memiliki lapisan pelindung yang membantu mengurangi kontak langsung jaringan dengan isi lambung. Istilah 'maag' di sini digunakan sebagai sebutan umum untuk keluhan lambung, bukan diagnosis tertentu.",
+      evidencePrompt:"Pilih dua informasi yang paling penting untuk mengevaluasi pendapat Raka.",
+      evidence:[
+        {id:"acid",label:"Kondisi asam membantu pepsin bekerja"},
+        {id:"protection",label:"Dinding lambung memiliki lapisan pelindung"},
+        {id:"chyme",label:"Lambung mengaduk makanan menjadi kimus"},
+        {id:"colon",label:"Usus besar menyerap kembali air"}
+      ],
+      evidenceCorrect:["acid","protection"],
+      evidenceGood:"Tepat. Satu bukti menunjukkan fungsi normal kondisi asam, sedangkan bukti lain menunjukkan adanya perlindungan pada dinding lambung.",
+      evidenceWarn:"Belum tepat. Pilih bukti yang langsung berkaitan dengan fungsi kondisi asam dan perlindungan dinding lambung.",
+      mechanismPrompt:"Penjelasan mana yang paling hati-hati dan konsisten dengan kedua bukti itu?",
+      mechanisms:[
+        {id:"0",label:"Kondisi asam merupakan bagian normal pencernaan karena membantu kerja pepsin; keluhan lambung tidak dapat dijelaskan hanya dengan mengatakan bahwa asam lambung ada",correct:true},
+        {id:"1",label:"Asam lambung tidak memiliki fungsi pencernaan dan keberadaannya selalu menandakan penyakit",correct:false},
+        {id:"2",label:"Lapisan pelindung lambung menghasilkan semua enzim pencernaan sehingga kondisi asam tidak diperlukan",correct:false}
+      ],
+      mechanismGood:"Tepat. Kamu membedakan fungsi normal kondisi asam dari kemungkinan gangguan pada lambung dan tidak membuat diagnosis dari satu gejala.",
+      mechanismWarn:"Belum tepat. Ingat bahwa kondisi asam mempunyai fungsi normal dalam pencernaan protein.",
+      transferPrompt:"Bagaimana sebaiknya mengevaluasi pernyataan: “Seseorang merasa perih di lambung, berarti penyebabnya pasti terlalu banyak asam lambung”?",
+      transfers:[
+        {id:"0",label:"Pernyataan itu terlalu pasti; rasa perih saja tidak cukup untuk menentukan penyebab, sedangkan kondisi asam sendiri merupakan bagian normal fungsi lambung",correct:true},
+        {id:"1",label:"Pernyataan itu selalu benar karena setiap rasa perih pasti disebabkan jumlah asam yang berlebihan",correct:false},
+        {id:"2",label:"Pernyataan itu benar karena lambung seharusnya tidak memiliki kondisi asam",correct:false}
+      ],
+      transferGood:"Tepat. Kamu mengevaluasi klaim berdasarkan bukti dan menghindari kesimpulan medis yang lebih jauh daripada data kasus.",
+      transferWarn:"Belum tepat. Bedakan fungsi normal lambung dari kesimpulan tentang penyebab suatu keluhan."
+    },
+    {
+      title:"Mengapa feses menjadi sangat cair saat diare?",
+      scenario:"Pada sebuah simulasi, sisa makanan pada kondisi A bergerak lebih lambat melalui usus besar dan lebih banyak air diserap kembali. Pada kondisi B, isi usus bergerak jauh lebih cepat dan feses yang keluar mengandung lebih banyak air. Kondisi B digunakan sebagai model sederhana untuk memahami diare.",
+      evidencePrompt:"Pilih dua hasil simulasi yang paling penting untuk menjelaskan feses cair.",
+      evidence:[
+        {id:"fast",label:"Isi usus bergerak lebih cepat pada kondisi B"},
+        {id:"watery",label:"Feses kondisi B mengandung lebih banyak air"},
+        {id:"stomach",label:"Lambung tetap mengaduk makanan"},
+        {id:"mouth",label:"Makanan tetap dikunyah di mulut"}
+      ],
+      evidenceCorrect:["fast","watery"],
+      evidenceGood:"Tepat. Kedua bukti itu menghubungkan perubahan waktu perjalanan isi usus dengan jumlah air yang tersisa di dalam feses.",
+      evidenceWarn:"Belum tepat. Cari bukti yang langsung menghubungkan perjalanan isi usus dengan kadar air feses.",
+      mechanismPrompt:"Mekanisme mana yang paling masuk akal berdasarkan fungsi usus besar yang sudah dipelajari?",
+      mechanisms:[
+        {id:"0",label:"Isi usus bergerak lebih cepat → kesempatan penyerapan kembali air di usus besar berkurang → lebih banyak air tetap berada dalam feses → feses menjadi cair",correct:true},
+        {id:"1",label:"Isi usus bergerak lebih cepat → lambung berhenti menghasilkan kimus → seluruh air berpindah dari darah ke mulut → feses menjadi cair",correct:false},
+        {id:"2",label:"Diare terjadi karena pepsin mencerna air menjadi zat yang lebih sederhana di usus besar",correct:false}
+      ],
+      mechanismGood:"Tepat. Penjelasan menggunakan fungsi penyerapan air di usus besar untuk menerangkan perubahan konsistensi feses.",
+      mechanismWarn:"Belum tepat. Fokuskan penjelasan pada fungsi usus besar dalam menyerap kembali air.",
+      transferPrompt:"Jika feses cair terjadi berulang kali, kesimpulan apa yang paling logis tentang keseimbangan cairan tubuh?",
+      transfers:[
+        {id:"0",label:"Tubuh dapat kehilangan lebih banyak air melalui feses sehingga kebutuhan mengganti cairan menjadi lebih penting",correct:true},
+        {id:"1",label:"Tubuh pasti menyimpan semakin banyak air karena usus besar menyerap semuanya",correct:false},
+        {id:"2",label:"Tidak ada kaitan dengan cairan tubuh karena air hanya berfungsi di lambung",correct:false}
+      ],
+      transferGood:"Tepat. Kamu mentransfer konsep penyerapan air di usus besar untuk menjelaskan konsekuensi feses yang sangat cair.",
+      transferWarn:"Belum tepat. Hubungkan kembali banyaknya air yang keluar bersama feses dengan keseimbangan cairan tubuh."
     }
   ];
 
@@ -818,7 +878,7 @@
       tab.setAttribute("aria-selected",active?"true":"false");
     });
     const done=hotsCaseStates.filter(s=>s.transferCorrect).length;
-    document.getElementById("hotsCaseProgress").textContent=done+" / 3 kasus tuntas";
+    document.getElementById("hotsCaseProgress").textContent=done+" / "+hotsCases.length+" kasus tuntas";
   }
 
   function renderHotsCase(){
