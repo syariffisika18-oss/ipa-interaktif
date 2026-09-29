@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
+  <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
+  <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
+  <link rel="stylesheet" href="digestive.css?v=20260929-1">
+</head>
+<body>
+  <header class="app-header">
+    <div class="shell header-row">
+      <a class="back-link" href="../">← Kelas VIII</a>
+      <div class="header-title">
+        <span class="version">IPA INTERAKTIF • KELAS VIII</span>
+        <strong id="appTitle">Sistem Pencernaan</strong>
+      </div>
+      <button class="ghost-button" id="resetProgress" type="button">Reset progres</button>
+    </div>
+  </header>
+
+  <main class="shell app-shell">
+    <section class="intro-card">
+      <div class="intro-copy">
+        <p class="eyebrow">Sistem tubuh manusia</p>
+        <h1 id="materialTitle">Sistem Pencernaan Manusia</h1>
+        <p id="materialMeta" class="material-meta">Kelas VIII • 7 tahap</p>
+        <p class="intro-text">Ikuti perjalanan makanan dari mulut hingga dikeluarkan. Bangun model hubungan organ, proses, zat yang berperan, dan hasil pencernaan.</p>
+      </div>
+      <div class="mode-card" aria-labelledby="modeLabel">
+        <p id="modeLabel" class="mode-label">Mode penggunaan</p>
+        <div class="segmented" role="group" aria-label="Pilih mode penggunaan">
+          <button class="mode-button is-active" type="button" data-mode="mandiri">👤 Mandiri</button>
+          <button class="mode-button" type="button" data-mode="guru">👨‍🏫 Bersama Guru</button>
+        </div>
+        <p class="mode-note" id="modeNote"></p>
+      </div>
+    </section>
+
+    <section class="progress-card" aria-label="Progres pembelajaran">
+      <div class="progress-copy"><strong>Progres</strong><span id="progressText">0 dari 7 tahap</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+    </section>
+
+    <nav class="stage-nav" aria-label="Tahapan pembelajaran">
+      <button class="stage-tab is-active" data-stage="0"><span>1</span>Orientasi</button>
+      <button class="stage-tab" data-stage="1"><span>2</span>Engage</button>
+      <button class="stage-tab" data-stage="2"><span>3</span>Explore</button>
+      <button class="stage-tab" data-stage="3"><span>4</span>Explain</button>
+      <button class="stage-tab" data-stage="4"><span>5</span>Elaborate</button>
+      <button class="stage-tab" data-stage="5"><span>6</span>Evaluate</button>
+      <button class="stage-tab" data-stage="6"><span>7</span>Reflect</button>
+    </nav>
+
+    <section class="stage-panel is-active orientation-panel" data-panel="0">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 1</p><h2>Orientasi</h2></div>
+        <span class="principle">Tujuan • Prasyarat • Identitas</span>
+      </div>
+
+      <div class="orientation-compact">
+        <article class="learning-card objective-card">
+          <h3>🎯 Tujuan pembelajaran</h3>
+          <ul class="digest-list">
+            <li>Menjelaskan urutan organ yang dilalui makanan.</li>
+            <li>Membedakan pencernaan mekanik dan kimiawi.</li>
+            <li>Menghubungkan organ dengan proses, zat yang berperan, dan hasilnya.</li>
+            <li>Menerapkan konsep pencernaan pada situasi sehari-hari.</li>
+          </ul>
+        </article>
+
+        <section class="identity-card digest-identity" aria-labelledby="identityTitle">
+          <div><p class="stage-kicker">Identitas sesi</p><h3 id="identityTitle">Siapa yang belajar?</h3></div>
+          <div class="identity-grid">
+            <label><span>Nama / nomor absen</span><input id="studentName" type="text" maxlength="80" placeholder="Contoh: Andi / 12"></label>
+            <label><span>Kelas</span><input id="studentClass" type="text" maxlength="30" placeholder="Contoh: VIII A"></label>
+          </div>
+        </section>
+      </div>
+
+      <article class="learning-card prereq-card">
+        <h3>🧩 Cek prasyarat singkat</h3>
+        <div class="prereq-grid">
+          <div class="mini-question" data-prereq="0">
+            <p><b>1.</b> Zat makanan yang terutama menjadi sumber energi adalah...</p>
+            <div class="mini-options">
+              <button data-value="protein">Protein</button><button data-value="karbohidrat">Karbohidrat</button><button data-value="vitamin">Vitamin</button>
+            </div>
+            <small class="mini-feedback">Pilih satu jawaban.</small>
+          </div>
+          <div class="mini-question" data-prereq="1">
+            <p><b>2.</b> Agar dapat digunakan sel tubuh, makanan perlu...</p>
+            <div class="mini-options">
+              <button data-value="dipecah">Dipecah menjadi bentuk lebih sederhana</button><button data-value="tetap">Tetap utuh</button>
+            </div>
+            <small class="mini-feedback">Pilih satu jawaban.</small>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="stage-panel engage-panel" data-panel="1">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 2</p><h2>Engage</h2></div>
+        <span class="principle">Fenomena • Prediksi</span>
+      </div>
+
+      <div class="phenomenon-card">
+        <div class="meal-visual" aria-hidden="true"><span>🍚</span><span>🥚</span><span>🥬</span><span>🥄</span></div>
+        <div>
+          <p class="stage-kicker">Fenomena</p>
+          <h3>Nasi, telur, dan sayur masuk ke tubuh dalam bentuk yang masih dapat kita kenali.</h3>
+          <p>Beberapa jam kemudian, bentuknya berubah dan zat gizinya dapat masuk ke dalam tubuh. Di bagian mana sebagian besar zat gizi diserap?</p>
+        </div>
+      </div>
+
+      <div class="prediction-card">
+        <p class="question-kicker">Prediksi dulu</p>
+        <h3>Organ mana yang menurutmu paling berperan dalam penyerapan zat gizi?</h3>
+        <div class="prediction-options" id="predictionOptions">
+          <button data-prediction="lambung">Lambung</button>
+          <button data-prediction="usus-halus">Usus halus</button>
+          <button data-prediction="usus-besar">Usus besar</button>
+        </div>
+        <div id="predictionFeedback" class="digest-feedback neutral">Prediksimu akan diperiksa kembali setelah Explore.</div>
+        <p class="teacher-note">Minta beberapa siswa menjelaskan alasannya. Jangan membuka jawaban final dulu.</p>
+      </div>
+    </section>
+
+    <section class="stage-panel explore-panel" data-panel="2">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 3</p><h2>Explore</h2></div>
+        <span class="principle">Guided Inquiry • Amati • Bandingkan</span>
+      </div>
+
+      <div class="inquiry-head">
+        <div><p class="stage-kicker">Perjalanan makanan</p><h3>Ikuti makanan melalui 8 bagian saluran pencernaan</h3></div>
+        <span id="journeyCounter">1 / 8</span>
+      </div>
+
+      <div class="journey-layout">
+        <nav class="organ-route" id="organRoute" aria-label="Urutan organ pencernaan"></nav>
+        <article class="organ-observation">
+          <div class="organ-symbol" id="organSymbol">👄</div>
+          <div class="organ-copy">
+            <p class="stage-kicker" id="organNumber">Organ 1</p>
+            <h3 id="organName">Mulut</h3>
+            <p id="organObserve"></p>
+            <div class="inquiry-columns">
+              <div><b>Apa yang terjadi?</b><p id="organProcess"></p></div>
+              <div><b>Apa hasilnya?</b><p id="organResult"></p></div>
+            </div>
+            <div class="inquiry-prompt" id="organPrompt"></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="journey-actions">
+        <button id="journeyPrev" type="button">← Organ sebelumnya</button>
+        <button id="journeyNext" type="button" class="primary-inline">Organ berikutnya →</button>
+      </div>
+
+      <article class="prediction-check">
+        <div><strong>Periksa prediksi Engage</strong><p>Setelah mengamati usus halus, apakah prediksimu masih sama?</p></div>
+        <button id="checkPrediction" type="button">Periksa prediksi saya</button>
+        <div id="predictionCheckResult" class="digest-feedback neutral">Jelajahi organ sampai usus halus terlebih dahulu.</div>
+      </article>
+    </section>
+
+    <section class="stage-panel explain-panel" data-panel="3">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 4</p><h2>Explain</h2></div>
+        <span class="principle">Model-Based Learning</span>
+      </div>
+
+      <div class="model-intro">
+        <p class="stage-kicker">Bangun model</p>
+        <h3>Organ → proses → zat yang berperan → hasil</h3>
+        <p>Gunakan model ini untuk menjelaskan apa yang terjadi, bukan sekadar menghafal nama organ.</p>
+      </div>
+
+      <div class="model-tabs" id="modelTabs"></div>
+      <article class="model-detail">
+        <div class="model-visual" id="modelVisual">👄</div>
+        <div class="model-data">
+          <h3 id="modelName">Mulut</h3>
+          <div class="model-four">
+            <div><span>PROSES</span><strong id="modelProcess"></strong></div>
+            <div><span>JENIS</span><strong id="modelType"></strong></div>
+            <div><span>ZAT / ENZIM</span><strong id="modelAgent"></strong></div>
+            <div><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
+          </div>
+          <div class="model-why"><b>Mengapa penting?</b><p id="modelWhy"></p></div>
+        </div>
+      </article>
+
+      <div class="accessory-grid">
+        <article><b>Hati & kantung empedu</b><span>Empedu membantu mengemulsikan lemak. Empedu bukan enzim.</span></article>
+        <article><b>Pankreas</b><span>Mengirim enzim pencernaan ke usus halus.</span></article>
+        <article><b>Vili usus</b><span>Memperluas permukaan sehingga penyerapan zat gizi lebih efektif.</span></article>
+      </div>
+    </section>
+
+    <section class="stage-panel elaborate-panel" data-panel="4">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 5</p><h2>Elaborate</h2></div>
+        <span class="principle">Transfer • Concept Mapping • PBL</span>
+      </div>
+
+      <div class="elab-tabs">
+        <button class="elab-tab is-active" data-elab="0">1. Peta zat makanan</button>
+        <button class="elab-tab" data-elab="1">2. Kasus konstipasi</button>
+        <button class="elab-tab" data-elab="2">3. Uji model</button>
+      </div>
+
+      <section class="elab-page is-active" data-elab-page="0">
+        <p class="stage-kicker">Concept Mapping</p>
+        <h3>Hubungkan zat makanan dengan lokasi proses dan hasil akhirnya</h3>
+        <div id="conceptMap" class="concept-map"></div>
+        <div id="conceptFeedback" class="digest-feedback neutral">Lengkapi tiga hubungan.</div>
+      </section>
+
+      <section class="elab-page" data-elab-page="1">
+        <p class="stage-kicker">PBL ringan</p>
+        <div class="case-card">
+          <h3>Dika jarang minum air dan hampir tidak pernah makan sayur.</h3>
+          <p>Beberapa hari kemudian ia mengalami kesulitan buang air besar dan fesesnya keras.</p>
+        </div>
+        <div class="reasoning-question">
+          <p><b>Susunan penjelasan yang paling sesuai adalah...</b></p>
+          <div id="caseOptions" class="reason-options">
+            <button data-case="0">Kurang air/serat → isi usus lebih sulit bergerak → feses cenderung keras</button>
+            <button data-case="1">Lambung menyerap seluruh air → feses mengeras di lambung</button>
+            <button data-case="2">Usus halus berhenti mencerna semua makanan → feses tidak terbentuk</button>
+          </div>
+          <div id="caseFeedback" class="digest-feedback neutral">Pilih penjelasan yang paling sesuai dengan fungsi organ.</div>
+        </div>
+      </section>
+
+      <section class="elab-page" data-elab-page="2">
+        <p class="stage-kicker">Model-Based Transfer</p>
+        <div class="case-card">
+          <h3>Aliran empedu menuju usus halus terganggu.</h3>
+          <p>Gunakan model pencernaan untuk memprediksi proses yang paling langsung terdampak.</p>
+        </div>
+        <div id="bileOptions" class="reason-options">
+          <button data-bile="protein">Pemecahan protein oleh pepsin di lambung</button>
+          <button data-bile="fat">Pengemulsian lemak di usus halus</button>
+          <button data-bile="water">Penyerapan air di usus besar</button>
+        </div>
+        <div id="bileFeedback" class="digest-feedback neutral">Pilih berdasarkan fungsi empedu.</div>
+      </section>
+    </section>
+
+    <section class="stage-panel evaluate-panel" data-panel="5">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 6</p><h2>Evaluate</h2></div>
+        <span class="principle">Retrieval • Feedback • Mudah → Sulit</span>
+      </div>
+
+      <article class="eval-shell">
+        <div class="eval-head">
+          <div><span id="evalTier">Dasar</span><strong id="evalProgress">Soal 1 dari 20</strong></div>
+          <div class="score-pill">Skor <b id="evalScore">0</b>/20</div>
+        </div>
+        <div class="eval-progress-track"><div id="evalProgressFill"></div></div>
+        <div class="eval-question">
+          <h3 id="evalQuestion"></h3>
+          <div id="evalOptions" class="eval-option-list"></div>
+          <div id="evalFeedback" class="digest-feedback neutral">Pilih satu jawaban.</div>
+        </div>
+        <div class="eval-actions">
+          <button id="evalPrev" type="button">← Sebelumnya</button>
+          <button id="evalNext" type="button" class="primary-inline" disabled>Berikutnya →</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="stage-panel reflect-panel" data-panel="6">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 7</p><h2>Reflect</h2></div>
+        <span class="principle">SRL • Monitoring • Tindak lanjut</span>
+      </div>
+
+      <div class="reflection-grid">
+        <label><span>Apa yang sekarang kamu pahami tentang perjalanan makanan?</span><textarea rows="4" data-reflection="understood" placeholder="Contoh: saya memahami mengapa usus halus menjadi tempat utama penyerapan..."></textarea></label>
+        <label><span>Bagian mana yang masih membingungkan?</span><textarea rows="4" data-reflection="confused" placeholder="Tuliskan secara spesifik."></textarea></label>
+      </div>
+
+      <div class="difficulty-card">
+        <p class="field-title">Pada bagian mana kamu masih mengalami kesulitan?</p>
+        <div class="difficulty-grid" id="difficultyGrid"></div>
+      </div>
+
+      <div class="confidence-box">
+        <p>Seberapa yakin kamu memahami materi?</p>
+        <div class="confidence-row">
+          <button type="button" data-confidence="1">Perlu bantuan</button>
+          <button type="button" data-confidence="2">Cukup paham</button>
+          <button type="button" data-confidence="3">Sudah yakin</button>
+        </div>
+      </div>
+
+      <div class="send-feedback-card">
+        <div>
+          <strong>Kirim refleksi ke guru</strong>
+          <p id="feedbackConnectionNote">Refleksi tersimpan pada sesi ini dan dapat dikirim ke guru.</p>
+          <p id="sendStatus" class="send-status" aria-live="polite">Belum pernah dikirim.</p>
+        </div>
+        <button id="sendFeedback" class="send-feedback-button" type="button">Kirim Refleksi</button>
+      </div>
+    </section>
+
+    <div class="bottom-nav">
+      <button id="prevStage" type="button">← Sebelumnya</button>
+      <button id="completeStage" class="complete-button" type="button">Tandai selesai</button>
+      <button id="nextStage" class="primary-button" type="button">Berikutnya →</button>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js?v=20260929-1"></script>
+  <script src="../../template-universal/template.js?v=20260928-master1"></script>
+  <script src="digestive.js?v=20260929-1"></script>
+</body>
+</html>
