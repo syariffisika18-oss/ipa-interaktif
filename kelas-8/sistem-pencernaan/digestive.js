@@ -80,25 +80,8 @@
   let markerPositions=clonePositions(defaultMarkerPositions);
   let routeWaypoints=clonePositions(defaultRouteWaypoints);
 
-  // Muat kalibrasi baru. Jika pengguna sebelumnya sudah mengatur 8 posisi bola,
-  // pakai delapan titik itu sebagai anchor organ pada jalur baru.
-  try{
-    const saved=JSON.parse(localStorage.getItem(calibrationKey)||"null");
-    const legacy=JSON.parse(localStorage.getItem(legacyCalibrationKey)||"null");
-    const source=saved||legacy;
-    if(source&&Array.isArray(source.markers)&&source.markers.length===8){
-      markerPositions=source.markers.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }
-    if(saved&&Array.isArray(saved.waypoints)&&saved.waypoints.length===defaultRouteWaypoints.length){
-      routeWaypoints=saved.waypoints.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }else if(source&&Array.isArray(source.balls)&&source.balls.length===8){
-      source.balls.forEach((p,i)=>{
-        const wi=organWaypointIndices[i];
-        routeWaypoints[wi]={x:Number(p.x),y:Number(p.y)};
-      });
-    }
-  }catch(_){}
-
+  // Posisi visual dikunci permanen dari repository.
+  // Tidak lagi membaca koordinat kalibrasi dari localStorage.
   const ballTimers=new WeakMap();
   let visualDragSuppressUntil=0;
 
@@ -107,13 +90,7 @@
     return routeWaypoints[organWaypointIndices[index]];
   }
   function saveCalibration(){
-    try{
-      localStorage.setItem(calibrationKey,JSON.stringify({
-        markers:markerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
-        balls:organWaypointIndices.map(i=>routeWaypoints[i]).map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
-        waypoints:routeWaypoints.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
-      }));
-    }catch(_){}
+    // Dikunci: tidak menyimpan perubahan posisi ke browser.
   }
 
   function hotspotIndex(el){
@@ -147,23 +124,7 @@
   }
 
   function ensureWaypointEditors(){
-    document.querySelectorAll(".digestive-anatomy-figure").forEach(figure=>{
-      if(figure.querySelector(".route-waypoint"))return;
-      routeWaypoints.forEach((p,i)=>{
-        const dot=document.createElement("button");
-        dot.type="button";
-        dot.className="route-waypoint"+(organWaypointIndices.includes(i)?" is-organ-anchor":"");
-        dot.dataset.waypoint=String(i);
-        const organIndex=organWaypointIndices.indexOf(i);
-        dot.setAttribute("aria-label",organIndex>=0
-          ?"Titik organ "+(organIndex+1)+" "+journey[organIndex].name
-          :"Waypoint animasi "+(i+1));
-        dot.title=organIndex>=0
-          ?"Titik organ "+(organIndex+1)+" • "+journey[organIndex].name
-          :"Waypoint "+(i+1);
-        figure.appendChild(dot);
-      });
-    });
+    // Dikunci: waypoint tidak ditampilkan sebagai kontrol drag.
     updateRoutePaths();
   }
 
@@ -248,162 +209,11 @@
     });
   }
 
-  function visualPayload(){
-    return JSON.stringify({
-      label_1_sampai_8:markerPositions.map((p,i)=>({label:i+1,x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
-      titik_organ_bola_1_sampai_8:organWaypointIndices.map((wi,i)=>{
-        const p=routeWaypoints[wi];
-        return {animasi:i+1,organ:journey[i]?.name||String(i+1),waypoint:wi+1,x:+p.x.toFixed(2),y:+p.y.toFixed(2)};
-      }),
-      waypoint_jalur:routeWaypoints.map((p,i)=>({
-        waypoint:i+1,
-        organ:organWaypointIndices.includes(i)?journey[organWaypointIndices.indexOf(i)]?.name:null,
-        x:+p.x.toFixed(2),y:+p.y.toFixed(2)
-      }))
-    },null,2);
+  function applyVisualCalibration(){
+    ensureWaypointEditors();
+    applyMarkerPositions();
+    refreshAllBallPositions();
   }
-
-  function setVisualStatus(stage,message){
-    const el=document.querySelector('[data-visual-status="'+stage+'"]');
-    if(el)el.textContent=message;
-  }
-
-  function setEditor(stage,on){
-    const figure=document.getElementById(stage+"Anatomy");
-    const panel=document.querySelector('[data-visual-panel="'+stage+'"]');
-    const button=document.querySelector('[data-visual-editor="'+stage+'"]');
-    if(!figure||!panel||!button)return;
-    figure.classList.toggle("is-editing",on);
-    panel.hidden=!on;
-    button.classList.toggle("is-active",on);
-    button.textContent=on?"Selesai atur posisi":"Atur posisi visual";
-    if(on){
-      ensureWaypointEditors();
-      setVisualStatus(stage,"Seret label 1–8, bola organ, atau titik-titik kuning kecil untuk membentuk jalur animasi yang mengikuti saluran pencernaan.");
-    }
-  }
-
-  document.querySelectorAll("[data-visual-editor]").forEach(button=>{
-    button.addEventListener("click",()=>{
-      const stage=button.dataset.visualEditor;
-      const figure=document.getElementById(stage+"Anatomy");
-      setEditor(stage,!figure.classList.contains("is-editing"));
-    });
-  });
-
-  document.querySelectorAll("[data-copy-visual]").forEach(button=>{
-    button.addEventListener("click",async()=>{
-      const stage=button.dataset.copyVisual;
-      const payload=visualPayload();
-      const output=document.querySelector('[data-visual-output="'+stage+'"]');
-      if(output){
-        output.hidden=false;
-        output.value=payload;
-        output.focus();
-        output.select();
-      }
-      try{
-        await navigator.clipboard.writeText(payload);
-        setVisualStatus(stage,"Koordinat label, 8 titik organ, dan seluruh waypoint berhasil disalin.");
-      }catch(_){
-        setVisualStatus(stage,"Koordinat ditampilkan di kotak. Salin manual bila clipboard diblokir browser.");
-      }
-    });
-  });
-
-  document.querySelectorAll("[data-reset-visual]").forEach(button=>{
-    button.addEventListener("click",()=>{
-      markerPositions=clonePositions(defaultMarkerPositions);
-      routeWaypoints=clonePositions(defaultRouteWaypoints);
-      saveCalibration();
-      applyVisualCalibration();
-      setVisualStatus(button.dataset.resetVisual,"Label dan seluruh waypoint jalur dikembalikan ke posisi awal.");
-    });
-  });
-
-  function enableVisualDragging(figure,stage){
-    let drag=null;
-
-    figure.addEventListener("pointerdown",e=>{
-      if(!figure.classList.contains("is-editing"))return;
-      const marker=e.target.closest(".anatomy-hotspot");
-      const ball=e.target.closest(".food-ball");
-      const waypoint=e.target.closest(".route-waypoint");
-      if(!marker&&!ball&&!waypoint)return;
-
-      e.preventDefault();
-      e.stopPropagation();
-
-      const rect=figure.getBoundingClientRect();
-      let type="marker";
-      let index=marker?hotspotIndex(marker):-1;
-      if(ball){
-        type="ball";
-        index=Number(ball.dataset.index||0);
-      }else if(waypoint){
-        type="waypoint";
-        index=Number(waypoint.dataset.waypoint);
-      }
-
-      drag={
-        type,index,pointerId:e.pointerId,rect,
-        target:marker||ball||waypoint,
-        startX:e.clientX,startY:e.clientY,moved:false
-      };
-      drag.target.classList.add("is-dragging");
-      try{figure.setPointerCapture(e.pointerId)}catch(_){}
-    });
-
-    figure.addEventListener("pointermove",e=>{
-      if(!drag||drag.pointerId!==e.pointerId)return;
-      e.preventDefault();
-      const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
-      if(Math.hypot(dx,dy)>3)drag.moved=true;
-
-      const x=clampPercent((e.clientX-drag.rect.left)/drag.rect.width*100);
-      const y=clampPercent((e.clientY-drag.rect.top)/drag.rect.height*100);
-
-      if(drag.type==="marker"){
-        markerPositions[drag.index]={x,y};
-        applyMarkerPositions();
-        setVisualStatus(stage,"Label "+(drag.index+1)+" → x "+x.toFixed(1)+"%, y "+y.toFixed(1)+"%");
-      }else if(drag.type==="ball"){
-        const wi=organWaypointIndices[drag.index];
-        routeWaypoints[wi]={x,y};
-        refreshAllBallPositions();
-        setVisualStatus(stage,"Titik organ "+(drag.index+1)+" ("+(journey[drag.index]?.name||"")+") → x "+x.toFixed(1)+"%, y "+y.toFixed(1)+"%");
-      }else{
-        routeWaypoints[drag.index]={x,y};
-        updateRoutePaths();
-        const organIndex=organWaypointIndices.indexOf(drag.index);
-        if(organIndex>=0)refreshAllBallPositions();
-        setVisualStatus(stage,(organIndex>=0
-          ?"Titik organ "+(organIndex+1)+" ("+(journey[organIndex]?.name||"")+")"
-          :"Waypoint "+(drag.index+1))+" → x "+x.toFixed(1)+"%, y "+y.toFixed(1)+"%");
-      }
-    });
-
-    const endDrag=e=>{
-      if(!drag||drag.pointerId!==e.pointerId)return;
-      if(drag.moved)visualDragSuppressUntil=Date.now()+350;
-      drag.target.classList.remove("is-dragging");
-      saveCalibration();
-      try{figure.releasePointerCapture(e.pointerId)}catch(_){}
-      drag=null;
-    };
-    figure.addEventListener("pointerup",endDrag);
-    figure.addEventListener("pointercancel",endDrag);
-
-    figure.addEventListener("click",e=>{
-      if(Date.now()<visualDragSuppressUntil){
-        e.preventDefault();
-        e.stopImmediatePropagation();
-      }
-    },true);
-  }
-
-  enableVisualDragging(document.getElementById("exploreAnatomy"),"explore");
-  enableVisualDragging(document.getElementById("explainAnatomy"),"explain");
 
   const route=document.getElementById("organRoute");
   route.innerHTML=journey.map((o,i)=>'<button type="button" data-organ="'+i+'"><b>'+(i+1)+'.</b> '+o.name+'</button>').join("");
