@@ -126,10 +126,11 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Tentukan bagian pertama yang dibagi",
-    text:"<b>Pertama,</b> lihat dari kiri: <span class=\"num-chip\">2</span> &lt; 35. Gabungkan menjadi <span class=\"num-chip red\">24</span>. Masih &lt; 35. Jadi gunakan <span class=\"num-chip\">240</span>.",
+    text:"<b>Pertama,</b> lihat dari kiri: <span class=\"num-chip\">2</span> &lt; <span class=\"num-chip red\">35</span>. Gabungkan menjadi <span class=\"num-chip red\">24</span>. Karena <span class=\"num-chip red\">24</span> masih &lt; <span class=\"num-chip red\">35</span>, gunakan <span class=\"num-chip\">240</span>.",
     rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
     quotientHTML:"?",
-    dividendHTML:"240",
+    divisorHTML:'<span class="ld-red">35</span>',
+    dividendHTML:'<span class="ld-red">24</span>0',
     rows:[]
   },
   {
@@ -236,13 +237,14 @@ const processSteps=[
   {
     phase:"ULANGI",
     title:"",
-    text:"20 menjadi 200. Pilih 5 karena 35 × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
+    text:"<span class=\"num-chip red\">20</span> menjadi <span class=\"num-chip red\">200</span>. Pilih <span class=\"num-chip red\">5</span> karena <span class=\"num-chip red\">35</span> × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
     rule:"Ulangi: bagi → kali → kurangi. Sisa 0 = selesai.",
     compare:[
       {calc:"35 × 5 =",value:"175",status:"mendekati 200",ok:true},
       {calc:"35 × 6 =",value:"210",status:"melebihi 200",ok:false}
     ],
     quotientHTML:'6,8<span class="ld-red">5</span><span class="ld-red">…</span>',
+    divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"240",
     rows:[
       {html:"210",kind:"product"},
@@ -250,7 +252,7 @@ const processSteps=[
       {html:"300",kind:"remainder"},
       {html:"280",kind:"product"},
       {kind:"line",width:3},
-      {html:"200",kind:"remainder"},
+      {html:'<span class="ld-red">200</span>',kind:"remainder"},
       {html:'<span class="ld-red">175</span>',kind:"product"},
       {kind:"line",width:3},
       {html:'<span class="ld-red">25</span>',kind:"remainder"}
