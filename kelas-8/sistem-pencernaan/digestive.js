@@ -703,56 +703,221 @@
     }
   });
 
-  // 2. Analisis kasus konstipasi
-  const evidenceSelected=new Set();
-  document.getElementById("evidenceOptions").addEventListener("click",e=>{
-    const b=e.target.closest("[data-evidence]");if(!b)return;
-    const key=b.dataset.evidence;
-    if(evidenceSelected.has(key)){
-      evidenceSelected.delete(key);
-      b.classList.remove("is-selected");
-    }else{
-      if(evidenceSelected.size>=2){
-        const first=[...evidenceSelected][0];
-        evidenceSelected.delete(first);
-        e.currentTarget.querySelector('[data-evidence="'+first+'"]')?.classList.remove("is-selected");
+  // 2. Analisis kasus HOTS — tiga konteks, tiga langkah penalaran
+  const hotsCases=[
+    {
+      title:"Mengapa feses Dika menjadi keras?",
+      scenario:"Selama beberapa hari Dika hanya minum sedikit air, jarang makan sayur atau buah, aktivitas hariannya tetap seperti biasa, dan frekuensi makannya tidak berubah. Setelah itu fesesnya menjadi keras dan sulit dikeluarkan.",
+      evidencePrompt:"Pilih dua bukti yang paling kuat untuk menjelaskan perubahan sifat feses.",
+      evidence:[
+        {id:"water",label:"Dika hanya minum sedikit air"},
+        {id:"fiber",label:"Dika jarang makan sayur atau buah"},
+        {id:"activity",label:"Aktivitas hariannya tetap seperti biasa"},
+        {id:"hard",label:"Fesesnya sudah menjadi keras"}
+      ],
+      evidenceCorrect:["water","fiber"],
+      evidenceGood:"Tepat. Kedua informasi itu dapat digunakan sebagai faktor awal untuk menjelaskan mengapa feses menjadi lebih kering dan sulit bergerak.",
+      evidenceWarn:"Belum kuat. Bedakan faktor awal yang dapat menjelaskan perubahan feses dari keadaan yang netral atau akibat yang sudah muncul.",
+      mechanismPrompt:"Pilih mekanisme sebab–akibat yang paling konsisten dengan bukti tersebut.",
+      mechanisms:[
+        {id:"0",label:"Kurang air dan serat → isi usus besar cenderung lebih kering dan pergerakan massa feses kurang terbantu → feses mengeras → lebih sulit dikeluarkan",correct:true},
+        {id:"1",label:"Kurang air → lambung menyerap seluruh air makanan → feses terbentuk di lambung → feses menjadi keras",correct:false},
+        {id:"2",label:"Kurang serat → usus halus berhenti mencerna semua zat makanan → tidak terbentuk hasil pencernaan → feses mengeras",correct:false}
+      ],
+      mechanismGood:"Tepat. Rantai penjelasan menghubungkan faktor awal, perubahan pada isi saluran pencernaan, sifat feses, lalu akibatnya.",
+      mechanismWarn:"Belum konsisten. Periksa kembali organ yang berperan dalam pembentukan feses dan fungsi air serta serat.",
+      transferPrompt:"Jika Dika ingin menguji penjelasan tersebut selama beberapa hari, perubahan mana yang paling relevan dan hasil apa yang diprediksi?",
+      transfers:[
+        {id:"0",label:"Menambah minum dan makanan berserat; feses diprediksi lebih lunak dan lebih mudah bergerak",correct:true},
+        {id:"1",label:"Mengurangi frekuensi mengunyah; feses diprediksi menjadi lebih lunak karena kerja gigi berkurang",correct:false},
+        {id:"2",label:"Mengurangi makanan berprotein; feses diprediksi langsung lebih lunak karena pepsin bekerja lebih sedikit",correct:false}
+      ],
+      transferGood:"Tepat. Prediksi tersebut langsung diturunkan dari mekanisme yang sudah kamu bangun.",
+      transferWarn:"Belum tepat. Pilih perubahan yang secara langsung menguji faktor penyebab pada penjelasanmu."
+    },
+    {
+      title:"Mengapa roti terasa lebih manis setelah dikunyah lebih lama?",
+      scenario:"Salsa membandingkan dua potong roti tawar yang sama. Potongan A dikunyah lebih lama sehingga lebih lama bercampur dengan saliva. Potongan B hanya dikunyah sebentar. Salsa merasakan potongan A menjadi lebih manis.",
+      evidencePrompt:"Pilih dua hasil pengamatan yang paling penting untuk mendukung dugaan bahwa saliva ikut mengubah makanan.",
+      evidence:[
+        {id:"contact",label:"Potongan A lebih lama bercampur dengan saliva"},
+        {id:"sweet",label:"Potongan A terasa lebih manis"},
+        {id:"same",label:"Kedua potong roti berasal dari jenis yang sama"},
+        {id:"plate",label:"Kedua roti diletakkan pada piring yang sama"}
+      ],
+      evidenceCorrect:["contact","sweet"],
+      evidenceGood:"Tepat. Ada perubahan lama kontak dengan saliva dan ada perubahan hasil yang diamati, yaitu rasa yang lebih manis.",
+      evidenceWarn:"Belum cukup untuk menjelaskan perubahan. Cari satu bukti tentang perlakuan dan satu bukti tentang hasil yang berubah.",
+      mechanismPrompt:"Penjelasan mekanisme mana yang paling sesuai dengan kedua bukti tersebut?",
+      mechanisms:[
+        {id:"0",label:"Kontak dengan saliva lebih lama → amilase saliva bekerja lebih lama → sebagian karbohidrat mulai dipecah menjadi maltosa dan dekstrin → rasa manis lebih terasa",correct:true},
+        {id:"1",label:"Kontak dengan saliva lebih lama → pepsin dalam saliva mengubah protein roti menjadi glukosa → rasa manis meningkat",correct:false},
+        {id:"2",label:"Mengunyah lebih lama → empedu masuk ke mulut → lemak diubah menjadi gula → rasa manis meningkat",correct:false}
+      ],
+      mechanismGood:"Tepat. Penjelasan menggunakan enzim yang benar, substrat yang sesuai, dan perubahan hasil yang dapat menjelaskan pengamatan.",
+      mechanismWarn:"Belum tepat. Periksa kembali enzim yang terdapat pada saliva dan zat makanan yang mulai dicerna di mulut.",
+      transferPrompt:"Prediksi manakah yang paling baik untuk menguji apakah perubahan rasa itu benar-benar berkaitan dengan enzim dalam saliva?",
+      transfers:[
+        {id:"0",label:"Jika roti hanya dibasahi air dengan waktu yang sama, peningkatan rasa manis diprediksi lebih kecil karena air tidak mengandung amilase saliva",correct:true},
+        {id:"1",label:"Jika roti dibasahi air, rasa manis pasti sama karena air dan saliva memiliki enzim yang sama",correct:false},
+        {id:"2",label:"Jika roti dikunyah lebih lama, rasa manis terjadi karena lambung sudah mulai mencerna roti di dalam mulut",correct:false}
+      ],
+      transferGood:"Tepat. Kamu mengubah satu komponen penting—keberadaan enzim saliva—untuk menguji mekanisme yang diajukan.",
+      transferWarn:"Belum tepat. Uji yang baik harus membedakan pengaruh saliva ber-enzim dari sekadar keberadaan cairan."
+    },
+    {
+      title:"Mengapa zat gizi sudah terbentuk tetapi penyerapannya tetap menurun?",
+      scenario:"Dalam sebuah model, enzim pencernaan bekerja normal sehingga glukosa dan asam amino tetap terbentuk di usus halus. Namun jumlah vili pada permukaan usus halus dibuat jauh lebih sedikit. Hasil simulasi menunjukkan lebih sedikit glukosa dan asam amino yang masuk ke tubuh.",
+      evidencePrompt:"Pilih dua bukti yang paling penting untuk menentukan bagian proses yang terganggu.",
+      evidence:[
+        {id:"products",label:"Glukosa dan asam amino tetap terbentuk"},
+        {id:"villi",label:"Jumlah vili usus halus jauh berkurang"},
+        {id:"stomach",label:"Lambung masih dapat mengaduk makanan"},
+        {id:"colon",label:"Usus besar masih menyerap sebagian air"}
+      ],
+      evidenceCorrect:["products","villi"],
+      evidenceGood:"Tepat. Hasil pencernaan tetap tersedia, tetapi struktur utama yang memperluas permukaan penyerapan justru berkurang.",
+      evidenceWarn:"Belum tepat. Cari bukti yang membedakan apakah masalah terjadi pada pencernaan kimiawi atau pada penyerapan.",
+      mechanismPrompt:"Mekanisme mana yang paling tepat menjelaskan hasil simulasi?",
+      mechanisms:[
+        {id:"0",label:"Vili berkurang → luas permukaan usus halus untuk penyerapan menurun → kontak hasil pencernaan dengan permukaan penyerap berkurang → lebih sedikit zat gizi masuk ke tubuh",correct:true},
+        {id:"1",label:"Vili berkurang → amilase dan pepsin tidak dapat dibuat → semua pencernaan berhenti di lambung",correct:false},
+        {id:"2",label:"Vili berkurang → usus besar berhenti menyerap air → glukosa dan asam amino tidak lagi terbentuk",correct:false}
+      ],
+      mechanismGood:"Tepat. Kamu membedakan proses pencernaan dari proses penyerapan dan menghubungkannya dengan struktur vili.",
+      mechanismWarn:"Belum tepat. Pada kasus ini hasil pencernaan sudah terbentuk; cari penjelasan yang berfokus pada masuknya zat gizi melalui permukaan usus halus.",
+      transferPrompt:"Seorang siswa menyimpulkan: “Jika makanan sudah dicerna menjadi molekul kecil, zat gizinya pasti terserap dengan baik.” Bagaimana kamu mengevaluasi kesimpulan itu?",
+      transfers:[
+        {id:"0",label:"Tidak selalu benar; hasil pencernaan dapat sudah terbentuk tetapi penyerapan tetap menurun jika luas permukaan usus halus berkurang",correct:true},
+        {id:"1",label:"Benar; pembentukan molekul kecil otomatis menjamin seluruh zat gizi masuk ke tubuh",correct:false},
+        {id:"2",label:"Benar; vili hanya berfungsi menggerakkan makanan dan tidak berkaitan dengan penyerapan",correct:false}
+      ],
+      transferGood:"Tepat. Kamu menggunakan kasus baru untuk mengevaluasi batas sebuah pernyataan, bukan sekadar mengulang definisi.",
+      transferWarn:"Belum tepat. Bedakan 'sudah dicerna' dari 'sudah diserap'. Keduanya merupakan proses yang berbeda."
+    }
+  ];
+
+  const hotsCaseStates=hotsCases.map(()=>({
+    evidence:new Set(),
+    mechanism:null,
+    mechanismCorrect:false,
+    transfer:null,
+    transferCorrect:false
+  }));
+  let activeHotsCase=0;
+
+  function hotsCaseDone(index){
+    return hotsCaseStates[index].transferCorrect;
+  }
+
+  function updateHotsCaseTabs(){
+    document.querySelectorAll("[data-hots-case]").forEach((tab,i)=>{
+      const active=i===activeHotsCase;
+      tab.classList.toggle("is-active",active);
+      tab.classList.toggle("is-done",hotsCaseDone(i));
+      tab.setAttribute("aria-selected",active?"true":"false");
+    });
+    const done=hotsCaseStates.filter(s=>s.transferCorrect).length;
+    document.getElementById("hotsCaseProgress").textContent=done+" / 3 kasus tuntas";
+  }
+
+  function renderHotsCase(){
+    const data=hotsCases[activeHotsCase];
+    const state=hotsCaseStates[activeHotsCase];
+    const evidenceGood=state.evidence.size===data.evidenceCorrect.length&&
+      data.evidenceCorrect.every(id=>state.evidence.has(id));
+    const panel=document.getElementById("hotsCasePanel");
+
+    panel.innerHTML=
+      '<div class="case-card hots-case">'+
+        '<span class="hots-case-number">KASUS '+(activeHotsCase+1)+'</span>'+
+        '<h3>'+data.title+'</h3>'+
+        '<p>'+data.scenario+'</p>'+
+      '</div>'+
+      '<div class="hots-case-step">'+
+        '<p><b>Langkah 1 — Analisis bukti.</b> '+data.evidencePrompt+'</p>'+
+        '<div class="evidence-options hots-evidence-options">'+
+          data.evidence.map(opt=>'<button type="button" data-hots-evidence="'+opt.id+'" class="'+(state.evidence.has(opt.id)?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+        '</div>'+
+        '<div id="hotsEvidenceFeedback" class="digest-feedback '+(state.evidence.size===2?(evidenceGood?'good':'warn'):'neutral')+'">'+
+          (state.evidence.size<2?'Pilih tepat dua bukti.':(evidenceGood?data.evidenceGood:data.evidenceWarn))+
+        '</div>'+
+      '</div>'+
+      '<div id="hotsMechanismStep" class="hots-case-step '+(evidenceGood?'':'locked-step')+'">'+
+        '<p><b>Langkah 2 — Bangun mekanisme.</b> '+data.mechanismPrompt+'</p>'+
+        '<div class="reason-options">'+
+          data.mechanisms.map(opt=>'<button type="button" data-hots-mechanism="'+opt.id+'" class="'+(state.mechanism===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+        '</div>'+
+        '<div class="digest-feedback '+(state.mechanism===null?'neutral':(state.mechanismCorrect?'good':'warn'))+'">'+
+          (state.mechanism===null?(evidenceGood?'Pilih penjelasan yang paling konsisten dengan bukti.':'Selesaikan analisis bukti terlebih dahulu.'):(state.mechanismCorrect?data.mechanismGood:data.mechanismWarn))+
+        '</div>'+
+      '</div>'+
+      '<div id="hotsTransferStep" class="hots-case-step '+(state.mechanismCorrect?'':'locked-step')+'">'+
+        '<p><b>Langkah 3 — Evaluasi dan transfer.</b> '+data.transferPrompt+'</p>'+
+        '<div class="reason-options">'+
+          data.transfers.map(opt=>'<button type="button" data-hots-transfer="'+opt.id+'" class="'+(state.transfer===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+        '</div>'+
+        '<div class="digest-feedback '+(state.transfer===null?'neutral':(state.transferCorrect?'good':'warn'))+'">'+
+          (state.transfer===null?(state.mechanismCorrect?'Gunakan mekanisme yang sudah benar untuk menilai situasi baru.':'Bangun mekanisme terlebih dahulu.'):(state.transferCorrect?data.transferGood:data.transferWarn))+
+        '</div>'+
+      '</div>';
+
+    updateHotsCaseTabs();
+  }
+
+  document.getElementById("hotsCaseTabs").addEventListener("click",e=>{
+    const b=e.target.closest("[data-hots-case]");if(!b)return;
+    activeHotsCase=Number(b.dataset.hotsCase);
+    renderHotsCase();
+  });
+
+  document.getElementById("hotsCasePanel").addEventListener("click",e=>{
+    const data=hotsCases[activeHotsCase];
+    const state=hotsCaseStates[activeHotsCase];
+
+    const evidenceButton=e.target.closest("[data-hots-evidence]");
+    if(evidenceButton){
+      const key=evidenceButton.dataset.hotsEvidence;
+      if(state.evidence.has(key)){
+        state.evidence.delete(key);
+      }else{
+        if(state.evidence.size>=2){
+          const first=[...state.evidence][0];
+          state.evidence.delete(first);
+        }
+        state.evidence.add(key);
       }
-      evidenceSelected.add(key);
-      b.classList.add("is-selected");
+      state.mechanism=null;
+      state.mechanismCorrect=false;
+      state.transfer=null;
+      state.transferCorrect=false;
+      renderHotsCase();
+      return;
     }
 
-    const fb=document.getElementById("evidenceFeedback");
-    const good=evidenceSelected.size===2&&evidenceSelected.has("water")&&evidenceSelected.has("fiber");
-    const step=document.getElementById("constipationReasoning");
-    if(evidenceSelected.size<2){
-      fb.className="digest-feedback neutral";
-      fb.textContent="Pilih dua faktor penyebab, bukan akibat.";
-      step.classList.add("locked-step");
-    }else if(good){
-      fb.className="digest-feedback good";
-      fb.textContent="Tepat. Jarang minum dan rendah serat merupakan bukti yang paling langsung untuk membangun penjelasan.";
-      step.classList.remove("locked-step");
-      document.getElementById("caseFeedback").textContent="Sekarang susun hubungan sebab–akibatnya.";
-    }else{
-      fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Bedakan faktor penyebab dengan tanda/akibat yang sudah muncul.";
-      step.classList.add("locked-step");
+    const mechanismButton=e.target.closest("[data-hots-mechanism]");
+    if(mechanismButton){
+      const evidenceGood=state.evidence.size===data.evidenceCorrect.length&&
+        data.evidenceCorrect.every(id=>state.evidence.has(id));
+      if(!evidenceGood)return;
+      state.mechanism=mechanismButton.dataset.hotsMechanism;
+      state.mechanismCorrect=!!data.mechanisms.find(opt=>opt.id===state.mechanism)?.correct;
+      state.transfer=null;
+      state.transferCorrect=false;
+      renderHotsCase();
+      return;
+    }
+
+    const transferButton=e.target.closest("[data-hots-transfer]");
+    if(transferButton){
+      if(!state.mechanismCorrect)return;
+      state.transfer=transferButton.dataset.hotsTransfer;
+      state.transferCorrect=!!data.transfers.find(opt=>opt.id===state.transfer)?.correct;
+      renderHotsCase();
     }
   });
 
-  document.getElementById("caseOptions").addEventListener("click",e=>{
-    if(document.getElementById("constipationReasoning").classList.contains("locked-step"))return;
-    const b=e.target.closest("[data-case]");if(!b)return;
-    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
-    const fb=document.getElementById("caseFeedback");
-    if(b.dataset.case==="0"){
-      fb.className="digest-feedback good";
-      fb.textContent="Tepat. Kamu menghubungkan faktor awal, perubahan pada isi usus, sifat feses, dan akibat akhirnya.";
-    }else{
-      fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Periksa organ yang berperan dalam pembentukan dan pengeluaran feses.";
-    }
-  });
+  renderHotsCase();
 
   // 3. Evaluasi dan perbaiki model empedu
   document.getElementById("modelErrorOptions").addEventListener("click",e=>{
