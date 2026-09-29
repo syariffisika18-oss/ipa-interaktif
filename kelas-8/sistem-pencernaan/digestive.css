@@ -1708,7 +1708,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   gap:2px;
   font-weight:900;
 }
-.nutrient-fixed-emoji{font-size:1rem;line-height:1}
+.nutrient-fixed-emoji{display:none!important}
 .relation-slot .relation-card{
   width:100%;
   min-height:40px;
