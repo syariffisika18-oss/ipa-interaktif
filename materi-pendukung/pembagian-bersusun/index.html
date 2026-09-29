@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0f766e">
   <meta name="description" content="Modul interaktif pembagian bersusun untuk penguatan numerasi dasar">
   <title>Pembagian Bersusun — Materi Pendukung</title>
-  <link rel="stylesheet" href="style.css?v=20260929-9">
+  <link rel="stylesheet" href="style.css?v=20260929-15">
 </head>
 <body>
 <header class="topbar">
@@ -127,7 +127,10 @@
         <p id="processText">35 tidak dapat masuk ke 2 atau 24. Karena itu gunakan 240 sebagai bagian pertama yang dibagi.</p>
         <div id="processCompare" class="process-compare" hidden></div>
         <div id="processRule" class="process-rule">Jika angka pertama lebih kecil daripada pembagi, ambil digit berikutnya.</div>
-        <button id="processNext" type="button">Langkah berikutnya →</button>
+        <div class="process-actions">
+          <button id="processPrev" class="process-prev" type="button">← Langkah sebelumnya</button>
+          <button id="processNext" type="button">Langkah berikutnya →</button>
+        </div>
       </div>
     </div>
     <div class="process-strip" id="processStrip"></div>
@@ -181,6 +184,6 @@
 </main>
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
-<script src="app.js?v=20260929-14"></script>
+<script src="app.js?v=20260929-15"></script>
 </body>
 </html>
