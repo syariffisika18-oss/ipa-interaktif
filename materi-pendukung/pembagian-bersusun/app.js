@@ -40,7 +40,12 @@ function render(){
   progressText.textContent=done.size+" dari "+N+" langkah • "+pct+"%";
   centerTab(active);save();
 }
-function show(i,scroll=true){active=Math.max(0,Math.min(N-1,i));render();if(scroll)stageMenuTop()}
+function show(i,scroll=true){
+  document.body.classList.remove("mobile-chrome-hidden");
+  active=Math.max(0,Math.min(N-1,i));
+  render();
+  if(scroll)stageMenuTop();
+}
 tabs.forEach((t,i)=>t.onclick=()=>show(i));
 prev.onclick=()=>show(active-1);next.onclick=()=>show(active+1);
 complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);render();flash(done.has(active)?"Langkah ditandai selesai.":"Tanda selesai dibatalkan.")};
@@ -1204,21 +1209,177 @@ document.getElementById("evalReset").onclick=()=>{
 renderEvaluation();
 
 
-// Swipe stage navigation on empty/content areas; preserve form controls.
-let sx=0,sy=0,st=0,blocked=false;
+// Smart swipe navigation for mobile portrait + landscape.
+// Internal steps move first; only at the edge do we change the main stage.
+let sx=0,sy=0,st=0,blocked=false,suppressClickUntil=0;
 const swipeRoot=document.querySelector(".app-main");
+
+function revealMobileChrome(){
+  document.body.classList.remove("mobile-chrome-hidden");
+}
+
+function smartSwipe(direction){
+  revealMobileChrome();
+
+  // 4. Ikuti proses
+  if(active===3){
+    if(direction==="left"){
+      if(processIndex<processSteps.length-1){
+        processIndex++;
+        state.processIndex=processIndex;
+        save();
+        renderProcess();
+        return true;
+      }
+      if(active<N-1){show(active+1);return true}
+    }else{
+      if(processIndex>0){
+        processIndex--;
+        state.processIndex=processIndex;
+        save();
+        renderProcess();
+        return true;
+      }
+      if(active>0){show(active-1);return true}
+    }
+    return false;
+  }
+
+  // 5. Coba sendiri
+  if(active===4){
+    const q=practices[practiceIndex];
+    if(direction==="left"){
+      if(practiceStepIndex<q.steps.length-1){
+        if(!practiceStepSolved){
+          flash("Selesaikan langkah ini terlebih dahulu.");
+          return false;
+        }
+        practiceStepIndex++;
+        renderPractice();
+        return true;
+      }
+      if(practiceIndex<practices.length-1){
+        practiceIndex++;
+        practiceStepIndex=0;
+        state.practiceIndex=practiceIndex;
+        save();
+        renderPractice();
+        return true;
+      }
+      if(active<N-1){show(active+1);return true}
+    }else{
+      if(practiceStepIndex>0){
+        practiceStepIndex--;
+        renderPractice();
+        return true;
+      }
+      if(practiceIndex>0){
+        practiceIndex--;
+        practiceStepIndex=practices[practiceIndex].steps.length-1;
+        state.practiceIndex=practiceIndex;
+        save();
+        renderPractice();
+        return true;
+      }
+      if(active>0){show(active-1);return true}
+    }
+    return false;
+  }
+
+  // 6. Evaluasi
+  if(active===5){
+    const q=evaluations[evalIndex];
+    if(direction==="left"){
+      if(evalStepIndex<q.steps.length-1){
+        if(!evalStepSolved){
+          flash("Selesaikan langkah ini terlebih dahulu.");
+          return false;
+        }
+        evalStepIndex++;
+        renderEvaluation();
+        return true;
+      }
+      if(evalIndex<evaluations.length-1){
+        evalIndex++;
+        evalStepIndex=0;
+        renderEvaluation();
+        return true;
+      }
+    }else{
+      if(evalStepIndex>0){
+        evalStepIndex--;
+        renderEvaluation();
+        return true;
+      }
+      if(evalIndex>0){
+        evalIndex--;
+        evalStepIndex=evaluations[evalIndex].steps.length-1;
+        renderEvaluation();
+        return true;
+      }
+      if(active>0){show(active-1);return true}
+    }
+    return false;
+  }
+
+  // Stages without internal pagination.
+  if(direction==="left"&&active<N-1){show(active+1);return true}
+  if(direction==="right"&&active>0){show(active-1);return true}
+  return false;
+}
+
 swipeRoot.addEventListener("touchstart",e=>{
   if(e.touches.length!==1)return;
-  blocked=!!e.target.closest("input,button,a,.stage-nav,.bottom-nav");
-  if(blocked)return;sx=e.touches[0].clientX;sy=e.touches[0].clientY;st=Date.now();
+  // Keep native behavior for fields and navigation bars. Buttons/options are
+  // intentionally swipe-capable; their click is suppressed after a real swipe.
+  blocked=!!e.target.closest("input,textarea,select,[contenteditable='true'],input[type='range'],.stage-nav,.bottom-nav,.topbar");
+  if(blocked)return;
+  sx=e.touches[0].clientX;
+  sy=e.touches[0].clientY;
+  st=Date.now();
 },{passive:true});
+
 swipeRoot.addEventListener("touchend",e=>{
-  if(blocked||!st||!e.changedTouches.length){blocked=false;st=0;return}
-  const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
-  if(Date.now()-st<=900&&Math.abs(dx)>=64&&Math.abs(dx)>=Math.abs(dy)*1.35){
-    if(dx<0&&active<N-1)show(active+1);else if(dx>0&&active>0)show(active-1);
+  if(blocked||!st||!e.changedTouches.length){
+    blocked=false;st=0;return;
   }
-  blocked=false;st=0;
+  const dx=e.changedTouches[0].clientX-sx;
+  const dy=e.changedTouches[0].clientY-sy;
+  const elapsed=Date.now()-st;
+  if(elapsed<=1000&&Math.abs(dx)>=48&&Math.abs(dx)>=Math.abs(dy)*1.2){
+    const moved=smartSwipe(dx<0?"left":"right");
+    if(moved)suppressClickUntil=Date.now()+400;
+  }
+  blocked=false;
+  st=0;
+},{passive:true});
+
+// Prevent a button underneath the finger from firing after a horizontal swipe.
+swipeRoot.addEventListener("click",e=>{
+  if(Date.now()<suppressClickUntil){
+    e.preventDefault();
+    e.stopPropagation();
+  }
+},true);
+
+// Mobile chrome: compact while reading, reappears as soon as the user scrolls up.
+let lastScrollY=window.scrollY;
+let chromeTicking=false;
+window.addEventListener("scroll",()=>{
+  if(window.innerWidth>950)return;
+  if(chromeTicking)return;
+  chromeTicking=true;
+  requestAnimationFrame(()=>{
+    const y=window.scrollY;
+    const delta=y-lastScrollY;
+    if(y<70||delta<-7){
+      document.body.classList.remove("mobile-chrome-hidden");
+    }else if(delta>10&&y>120){
+      document.body.classList.add("mobile-chrome-hidden");
+    }
+    lastScrollY=y;
+    chromeTicking=false;
+  });
 },{passive:true});
 
 render();
