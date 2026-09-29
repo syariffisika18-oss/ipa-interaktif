@@ -491,16 +491,37 @@ let practiceStepSolved=false;
 
 function renderPracticeDivision(q,step){
   const box=document.getElementById("practiceDivision");
+  const isMultiplyStep=step.phase==="KALI" && step.type==="number";
+
+  const quotientHtml=isMultiplyStep
+    ? '<span class="ld-red">'+step.q+'</span>'
+    : step.q;
+
+  const divisorHtml=isMultiplyStep
+    ? '<span class="ld-red">'+q.b+'</span>'
+    : q.b;
+
   const rows=step.rows.map(row=>{
     if(row.line){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
-    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+row.html+'</div>';
+
+    let html=row.html;
+
+    // Pada langkah KALI, hasil perkalian belum langsung diberikan.
+    // Ditampilkan sebagai elipsis merah sampai siswa menjawab benar.
+    if(isMultiplyStep && row.active && !practiceStepSolved){
+      html='<span class="ld-red">...</span>';
+    }else if(isMultiplyStep && row.active && practiceStepSolved){
+      html='<span class="ld-red">'+row.html+'</span>';
+    }
+
+    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+html+'</div>';
   }).join("");
 
   box.innerHTML=
-    '<div class="practice-quotient">'+step.q+'</div>'+
-    '<div class="practice-divisor">'+q.b+'</div>'+
+    '<div class="practice-quotient">'+quotientHtml+'</div>'+
+    '<div class="practice-divisor">'+divisorHtml+'</div>'+
     '<div class="practice-body">'+
       '<div class="practice-dividend">'+q.a+'</div>'+
       '<div class="practice-work">'+rows+'</div>'+
@@ -564,6 +585,7 @@ function renderPracticeResponse(q,step){
         feedback.className="feedback good";
         feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
         practiceStepSolved=true;
+        renderPracticeDivision(q,step);
         document.getElementById("practiceStepNext").disabled=false;
       }else{
         feedback.className="feedback warn";
