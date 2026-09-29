@@ -4,8 +4,8 @@
       name:"Mulut",
       icon:"👄",
       observe:"Makanan masuk ke mulut, lalu dikunyah dan bercampur dengan air liur.",
-      process:"Gigi menghancurkan makanan menjadi bagian yang lebih kecil dan lebih lembut.",
-      result:"Makanan menjadi gumpalan lunak yang disebut bolus dan mudah ditelan.",
+      process:"Makanan dikunyah dan bercampur dengan air liur.",
+      result:"Terbentuk bolus yang lebih mudah ditelan.",
       terms:[["Bolus","gumpalan makanan yang sudah dikunyah dan bercampur dengan air liur."]],
       prompt:"Mengapa makanan perlu dikunyah sebelum ditelan?"
     },
@@ -25,8 +25,8 @@
       name:"Kerongkongan",
       icon:"〰️",
       observe:"Makanan bergerak turun melalui kerongkongan.",
-      process:"Dinding kerongkongan melakukan gerak peristaltik untuk mendorong makanan menuju lambung.",
-      result:"Makanan sampai ke lambung.",
+      process:"Gerak peristaltik mendorong makanan sepanjang kerongkongan.",
+      result:"Makanan berpindah dari kerongkongan ke lambung.",
       terms:[["Peristaltik","gerakan seperti gelombang yang mendorong makanan di dalam saluran pencernaan."]],
       prompt:"Menurutmu, apakah makanan hanya jatuh ke lambung karena gravitasi?"
     },
@@ -34,8 +34,8 @@
       name:"Lambung",
       icon:"🥣",
       observe:"Makanan masuk ke lambung, lalu diaduk dan bercampur dengan cairan lambung.",
-      process:"Makanan dibuat semakin halus dan lebih cair.",
-      result:"Makanan berubah menjadi bubur makanan yang disebut kimus.",
+      process:"Makanan diaduk dan bercampur dengan cairan lambung.",
+      result:"Terbentuk campuran semi-cair yang disebut kimus.",
       terms:[["Kimus","campuran makanan berbentuk semi-cair setelah berada di lambung."]],
       prompt:"Apa perubahan yang kamu lihat pada makanan setelah berada di lambung?"
     },
@@ -43,8 +43,8 @@
       name:"Usus halus",
       icon:"🧬",
       observe:"Makanan bergerak melalui usus halus yang panjang dan berkelok-kelok.",
-      process:"Dinding usus halus memiliki banyak lipatan dan vili.",
-      result:"Zat gizi masuk ke tubuh, sedangkan sisanya bergerak menuju usus besar.",
+      process:"Zat gizi dari makanan diserap melalui dinding usus halus yang memiliki banyak lipatan dan vili.",
+      result:"Zat gizi masuk ke tubuh dan sisa makanan bergerak ke usus besar.",
       terms:[["Vili","tonjolan sangat kecil pada dinding usus halus yang membantu penyerapan zat gizi."]],
       prompt:"Mengapa menurutmu usus halus memiliki banyak lipatan dan permukaan yang luas?"
     },
@@ -52,8 +52,8 @@
       name:"Usus besar",
       icon:"🔄",
       observe:"Sisa makanan masuk ke usus besar dan bergerak lebih lambat.",
-      process:"Sebagian air dari sisa makanan diambil kembali oleh tubuh.",
-      result:"Sisa makanan menjadi lebih padat dan membentuk feses.",
+      process:"Air dari sisa makanan diserap kembali oleh tubuh.",
+      result:"Sisa makanan menjadi lebih padat dan terbentuk feses.",
       terms:[["Feses","sisa pencernaan yang akan dikeluarkan dari tubuh."]],
       prompt:"Apa yang terjadi pada sisa makanan jika semakin banyak air yang diambil?"
     },
@@ -61,8 +61,8 @@
       name:"Rektum",
       icon:"📦",
       observe:"Feses sampai di bagian akhir usus besar.",
-      process:"Feses disimpan sementara sebelum dikeluarkan.",
-      result:"Tubuh memberi tanda bahwa kita perlu buang air besar.",
+      process:"Feses ditampung sementara di rektum.",
+      result:"Muncul dorongan untuk buang air besar.",
       terms:[["Rektum","bagian akhir usus besar yang menyimpan feses sementara."]],
       prompt:"Mengapa feses tidak langsung keluar begitu sampai di bagian akhir usus?"
     },
@@ -70,8 +70,8 @@
       name:"Anus",
       icon:"🚪",
       observe:"Feses bergerak menuju bagian paling akhir saluran pencernaan.",
-      process:"Feses dikeluarkan dari tubuh.",
-      result:"Perjalanan sisa makanan berakhir di sini.",
+      process:"Feses melewati anus dan keluar dari tubuh.",
+      result:"Sisa pencernaan keluar dari tubuh.",
       terms:[["Anus","bagian akhir saluran pencernaan tempat feses keluar dari tubuh."]],
       prompt:"Apa yang sudah berubah dari makanan sejak masuk melalui mulut hingga keluar dari tubuh?"
     }
@@ -318,7 +318,6 @@
     document.getElementById("journeyCounter").textContent=(explorePos+1)+" / "+exploreOrder.length;
     document.getElementById("organNumber").textContent="Bagian "+(explorePos+1);
     document.getElementById("organName").textContent=o.name;
-    document.getElementById("organObserve").textContent=o.observe;
     document.getElementById("organProcess").textContent=o.process;
     document.getElementById("organResult").textContent=o.result;
     const termBox=document.getElementById("organTerms");
