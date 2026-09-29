@@ -811,43 +811,43 @@
     {
       key:"karbohidrat",
       food:{id:"nasi",emoji:"🍚",label:"Nasi"},
-      nutrient:{id:"karbohidrat",emoji:"⚡",label:"Karbohidrat"},
+      nutrient:{id:"karbohidrat",emoji:"",label:"Karbohidrat"},
       function:{id:"energi",label:"Sumber energi utama"}
     },
     {
       key:"protein",
       food:{id:"telur",emoji:"🥚",label:"Telur"},
-      nutrient:{id:"protein",emoji:"💪",label:"Protein"},
+      nutrient:{id:"protein",emoji:"",label:"Protein"},
       function:{id:"jaringan",label:"Membangun dan memperbaiki jaringan"}
     },
     {
       key:"lemak",
       food:{id:"minyak",emoji:"🫒",label:"Minyak"},
-      nutrient:{id:"lemak",emoji:"🟡",label:"Lemak"},
+      nutrient:{id:"lemak",emoji:"",label:"Lemak"},
       function:{id:"cadangan",label:"Cadangan energi dan membantu melindungi organ"}
     },
     {
       key:"vitamin",
       food:{id:"jeruk",emoji:"🍊",label:"Jeruk"},
-      nutrient:{id:"vitamin",emoji:"🍊",label:"Vitamin"},
+      nutrient:{id:"vitamin",emoji:"",label:"Vitamin"},
       function:{id:"mengatur",label:"Membantu mengatur berbagai proses tubuh"}
     },
     {
       key:"mineral",
       food:{id:"susu",emoji:"🥛",label:"Susu"},
-      nutrient:{id:"mineral",emoji:"🔹",label:"Mineral"},
+      nutrient:{id:"mineral",emoji:"",label:"Mineral"},
       function:{id:"tulang-gigi",label:"Membantu membentuk dan menjaga kekuatan tulang dan gigi"}
     },
     {
       key:"serat",
       food:{id:"sayur",emoji:"🥬",label:"Sayur berserat"},
-      nutrient:{id:"serat",emoji:"🌿",label:"Serat"},
+      nutrient:{id:"serat",emoji:"",label:"Serat"},
       function:{id:"pencernaan",label:"Membantu pergerakan isi saluran pencernaan"}
     },
     {
       key:"air",
       food:{id:"airputih",emoji:"💧",label:"Air putih"},
-      nutrient:{id:"air",emoji:"💧",label:"Air"},
+      nutrient:{id:"air",emoji:"",label:"Air"},
       function:{id:"pelarut",label:"Pelarut dan membantu mengangkut zat"}
     }
   ];
