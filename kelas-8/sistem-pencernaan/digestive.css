@@ -570,3 +570,45 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .visual-editor-actions button{min-height:24px;font-size:.47rem;padding:2px 5px}
   .visual-coordinate-output{font-size:.46rem}
 }
+
+
+/* Waypoint perantara jalur bola — terlihat hanya saat kalibrasi */
+.route-waypoint{
+  display:none;
+  position:absolute;
+  z-index:9;
+  width:11px;
+  height:11px;
+  padding:0;
+  transform:translate(-50%,-50%);
+  border:2px solid #fff;
+  border-radius:50%;
+  background:#f2b934;
+  box-shadow:0 1px 5px rgba(90,65,0,.35);
+  cursor:grab;
+  touch-action:none;
+}
+.digestive-anatomy-figure.is-editing .route-waypoint{display:block}
+.route-waypoint.is-organ-anchor{
+  width:15px;
+  height:15px;
+  background:#f08b25;
+  box-shadow:0 0 0 3px rgba(240,139,37,.18),0 1px 5px rgba(90,65,0,.35);
+}
+.route-waypoint.is-dragging{
+  transform:translate(-50%,-50%) scale(1.35)!important;
+  background:#e9533f;
+}
+.digestive-anatomy-figure.is-editing .food-route-svg path{
+  stroke-width:1.45;
+  stroke-dasharray:none;
+  opacity:.8;
+}
+@media(max-width:640px){
+  .route-waypoint{width:10px;height:10px;border-width:1px}
+  .route-waypoint.is-organ-anchor{width:13px;height:13px}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .route-waypoint{width:8px;height:8px;border-width:1px}
+  .route-waypoint.is-organ-anchor{width:11px;height:11px}
+}
