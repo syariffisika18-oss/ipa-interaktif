@@ -26,15 +26,66 @@
   let furthestJourney=0;
   let modelIndex=0;
 
-  const organPositions=[
+  const calibrationKey="digestiveVisualCalibration.v1";
+  const defaultMarkerPositions=[
+    {x:32,y:17},{x:43,y:24},{x:51,y:39},{x:69,y:58},
+    {x:43,y:73},{x:74,y:72},{x:57,y:89},{x:57,y:96}
+  ];
+  const defaultBallPositions=[
     {x:39,y:18},{x:44,y:24},{x:50,y:39},{x:59,y:58},
     {x:52,y:73},{x:64,y:73},{x:57,y:89},{x:57,y:96}
   ];
+
+  const clonePositions=list=>list.map(p=>({x:p.x,y:p.y}));
+  let markerPositions=clonePositions(defaultMarkerPositions);
+  let ballPositions=clonePositions(defaultBallPositions);
+
+  try{
+    const saved=JSON.parse(localStorage.getItem(calibrationKey)||"null");
+    if(saved&&Array.isArray(saved.markers)&&saved.markers.length===8){
+      markerPositions=saved.markers.map(p=>({x:Number(p.x),y:Number(p.y)}));
+    }
+    if(saved&&Array.isArray(saved.balls)&&saved.balls.length===8){
+      ballPositions=saved.balls.map(p=>({x:Number(p.x),y:Number(p.y)}));
+    }
+  }catch(_){}
+
   const ballTimers=new WeakMap();
+  let visualDragSuppressUntil=0;
+
+  function clampPercent(n){return Math.max(2,Math.min(98,n))}
+  function saveCalibration(){
+    try{
+      localStorage.setItem(calibrationKey,JSON.stringify({
+        markers:markerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
+        balls:ballPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
+      }));
+    }catch(_){}
+  }
+
+  function hotspotIndex(el){
+    if(el.dataset.exploreOrgan!==undefined)return Number(el.dataset.exploreOrgan);
+    if(el.dataset.explainOrgan!==undefined)return Number(el.dataset.explainOrgan);
+    return -1;
+  }
+
+  function applyMarkerPositions(){
+    document.querySelectorAll(".anatomy-hotspot").forEach(el=>{
+      const i=hotspotIndex(el);
+      if(i<0||!markerPositions[i])return;
+      el.style.left=markerPositions[i].x+"%";
+      el.style.top=markerPositions[i].y+"%";
+    });
+  }
+
+  function updateRoutePaths(){
+    const d=ballPositions.map((p,i)=>(i?"L":"M")+p.x.toFixed(2)+" "+p.y.toFixed(2)).join(" ");
+    document.querySelectorAll(".food-route-svg path").forEach(path=>path.setAttribute("d",d));
+  }
 
   function placeBall(ball,index,instant=false){
     if(!ball)return;
-    const p=organPositions[index];
+    const p=ballPositions[index];
     if(instant)ball.classList.add("no-transition");
     ball.style.left=p.x+"%";
     ball.style.top=p.y+"%";
@@ -42,13 +93,27 @@
     if(instant)requestAnimationFrame(()=>ball.classList.remove("no-transition"));
   }
 
+  function refreshAllBallPositions(){
+    const eb=document.getElementById("exploreFoodBall");
+    const xb=document.getElementById("explainFoodBall");
+    if(eb)placeBall(eb,Number(eb.dataset.index||journeyIndex),true);
+    if(xb)placeBall(xb,Number(xb.dataset.index||modelIndex),true);
+    updateRoutePaths();
+  }
+
+  function applyVisualCalibration(){
+    applyMarkerPositions();
+    refreshAllBallPositions();
+  }
+
   function animateBall(ball,target){
     if(!ball)return;
     const oldTimer=ballTimers.get(ball);
     if(oldTimer)clearTimeout(oldTimer);
     let current=Number(ball.dataset.index||0);
-    target=Math.max(0,Math.min(organPositions.length-1,target));
+    target=Math.max(0,Math.min(ballPositions.length-1,target));
     if(current===target){
+      placeBall(ball,target);
       ball.classList.remove("arrived");
       void ball.offsetWidth;
       ball.classList.add("arrived");
@@ -76,6 +141,137 @@
       b.classList.toggle("is-passed",i<index);
     });
   }
+
+  function visualPayload(){
+    return JSON.stringify({
+      label_1_sampai_8:markerPositions.map((p,i)=>({label:i+1,x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
+      bola_animasi_1_sampai_8:ballPositions.map((p,i)=>({animasi:i+1,organ:journey[i]?.name||String(i+1),x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
+    },null,2);
+  }
+
+  function setVisualStatus(stage,message){
+    const el=document.querySelector('[data-visual-status="'+stage+'"]');
+    if(el)el.textContent=message;
+  }
+
+  function setEditor(stage,on){
+    const figure=document.getElementById(stage+"Anatomy");
+    const panel=document.querySelector('[data-visual-panel="'+stage+'"]');
+    const button=document.querySelector('[data-visual-editor="'+stage+'"]');
+    if(!figure||!panel||!button)return;
+    figure.classList.toggle("is-editing",on);
+    panel.hidden=!on;
+    button.classList.toggle("is-active",on);
+    button.textContent=on?"Selesai atur posisi":"Atur posisi visual";
+    if(on)setVisualStatus(stage,"Seret label 1–8. Untuk bola: pilih organ terlebih dahulu, lalu seret bola kuning.");
+  }
+
+  document.querySelectorAll("[data-visual-editor]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      const stage=button.dataset.visualEditor;
+      const figure=document.getElementById(stage+"Anatomy");
+      setEditor(stage,!figure.classList.contains("is-editing"));
+    });
+  });
+
+  document.querySelectorAll("[data-copy-visual]").forEach(button=>{
+    button.addEventListener("click",async()=>{
+      const stage=button.dataset.copyVisual;
+      const payload=visualPayload();
+      const output=document.querySelector('[data-visual-output="'+stage+'"]');
+      if(output){
+        output.hidden=false;
+        output.value=payload;
+        output.focus();
+        output.select();
+      }
+      try{
+        await navigator.clipboard.writeText(payload);
+        setVisualStatus(stage,"Koordinat berhasil disalin. Kirimkan data ini untuk dijadikan posisi permanen di repository.");
+      }catch(_){
+        setVisualStatus(stage,"Koordinat ditampilkan di kotak. Salin manual bila clipboard diblokir browser.");
+      }
+    });
+  });
+
+  document.querySelectorAll("[data-reset-visual]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      markerPositions=clonePositions(defaultMarkerPositions);
+      ballPositions=clonePositions(defaultBallPositions);
+      saveCalibration();
+      applyVisualCalibration();
+      setVisualStatus(button.dataset.resetVisual,"Posisi dikembalikan ke pengaturan awal.");
+    });
+  });
+
+  function enableVisualDragging(figure,stage){
+    let drag=null;
+
+    figure.addEventListener("pointerdown",e=>{
+      if(!figure.classList.contains("is-editing"))return;
+      const marker=e.target.closest(".anatomy-hotspot");
+      const ball=e.target.closest(".food-ball");
+      if(!marker&&!ball)return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      const rect=figure.getBoundingClientRect();
+      drag={
+        type:marker?"marker":"ball",
+        index:marker?hotspotIndex(marker):Number(ball.dataset.index||0),
+        pointerId:e.pointerId,
+        rect,
+        target:marker||ball,
+        startX:e.clientX,
+        startY:e.clientY,
+        moved:false
+      };
+      drag.target.classList.add("is-dragging");
+      try{figure.setPointerCapture(e.pointerId)}catch(_){}
+    });
+
+    figure.addEventListener("pointermove",e=>{
+      if(!drag||drag.pointerId!==e.pointerId)return;
+      e.preventDefault();
+      const dx=e.clientX-drag.startX,dy=e.clientY-drag.startY;
+      if(Math.hypot(dx,dy)>3)drag.moved=true;
+
+      const x=clampPercent((e.clientX-drag.rect.left)/drag.rect.width*100);
+      const y=clampPercent((e.clientY-drag.rect.top)/drag.rect.height*100);
+
+      if(drag.type==="marker"){
+        markerPositions[drag.index]={x,y};
+        applyMarkerPositions();
+        setVisualStatus(stage,"Label "+(drag.index+1)+" → x "+x.toFixed(1)+"%, y "+y.toFixed(1)+"%");
+      }else{
+        ballPositions[drag.index]={x,y};
+        refreshAllBallPositions();
+        setVisualStatus(stage,"Bola animasi "+(drag.index+1)+" ("+(journey[drag.index]?.name||"")+") → x "+x.toFixed(1)+"%, y "+y.toFixed(1)+"%");
+      }
+    });
+
+    const endDrag=e=>{
+      if(!drag||drag.pointerId!==e.pointerId)return;
+      if(drag.moved)visualDragSuppressUntil=Date.now()+350;
+      drag.target.classList.remove("is-dragging");
+      saveCalibration();
+      try{figure.releasePointerCapture(e.pointerId)}catch(_){}
+      drag=null;
+    };
+    figure.addEventListener("pointerup",endDrag);
+    figure.addEventListener("pointercancel",endDrag);
+
+    figure.addEventListener("click",e=>{
+      if(Date.now()<visualDragSuppressUntil){
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    },true);
+  }
+
+  enableVisualDragging(document.getElementById("exploreAnatomy"),"explore");
+  enableVisualDragging(document.getElementById("explainAnatomy"),"explain");
 
   const route=document.getElementById("organRoute");
   route.innerHTML=journey.map((o,i)=>'<button type="button" data-organ="'+i+'"><b>'+(i+1)+'.</b> '+o.name+'</button>').join("");
@@ -118,6 +314,7 @@
     selectJourney(Number(b.dataset.organ));
   });
   document.getElementById("exploreAnatomy").addEventListener("click",e=>{
+    if(Date.now()<visualDragSuppressUntil)return;
     const b=e.target.closest("[data-explore-organ]");if(!b)return;
     selectJourney(Number(b.dataset.exploreOrgan));
   });
@@ -125,7 +322,6 @@
   document.getElementById("journeyNext").onclick=()=>{
     selectJourney(journeyIndex===journey.length-1?0:journeyIndex+1);
   };
-  renderJourney(false);
 
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
@@ -171,9 +367,13 @@
     const b=e.target.closest("[data-model]");if(b)renderModel(Number(b.dataset.model),true);
   });
   document.getElementById("explainAnatomy").addEventListener("click",e=>{
+    if(Date.now()<visualDragSuppressUntil)return;
     const b=e.target.closest("[data-explain-organ]");if(!b)return;
     renderModel(Number(b.dataset.explainOrgan),true);
   });
+
+  applyVisualCalibration();
+  renderJourney(false);
   renderModel(0,false);
 
   document.querySelectorAll(".elab-tab").forEach(btn=>btn.addEventListener("click",()=>{
