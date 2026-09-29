@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-13">
+  <link rel="stylesheet" href="digestive.css?v=20260929-14">
 </head>
 <body>
   <header class="app-header">
@@ -313,51 +313,129 @@
     <section class="stage-panel elaborate-panel" data-panel="4">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 5</p><h2>Elaborate</h2></div>
-        <span class="principle">Transfer • Concept Mapping • PBL</span>
+        <span class="principle">Analisis • Transfer • Evaluasi Model</span>
       </div>
 
       <div class="elab-tabs">
-        <button class="elab-tab is-active" data-elab="0">1. Peta zat makanan</button>
-        <button class="elab-tab" data-elab="1">2. Kasus konstipasi</button>
+        <button class="elab-tab is-active" data-elab="0">1. Analisis jalur</button>
+        <button class="elab-tab" data-elab="1">2. Analisis kasus</button>
         <button class="elab-tab" data-elab="2">3. Uji model</button>
       </div>
 
       <section class="elab-page is-active" data-elab-page="0">
-        <p class="stage-kicker">Concept Mapping</p>
-        <h3>Hubungkan zat makanan dengan lokasi proses dan hasil akhirnya</h3>
-        <div id="conceptMap" class="concept-map"></div>
-        <div id="conceptFeedback" class="digest-feedback neutral">Lengkapi tiga hubungan.</div>
+        <p class="stage-kicker">Analisis • Integrasi konsep</p>
+        <div class="hots-case-intro">
+          <h3>Satu menu, tiga jalur pencernaan</h3>
+          <p>Rani makan <b>nasi, telur, dan makanan berminyak</b>. Pilih jalur yang paling tepat untuk setiap zat makanan.</p>
+        </div>
+
+        <div id="pathwayChallenge" class="pathway-challenge">
+          <article class="pathway-task" data-pathway-row="0">
+            <div class="pathway-food">🍚 <b>Karbohidrat dari nasi</b></div>
+            <div class="pathway-options">
+              <button type="button" data-pathway-opt="0">Pati → amilase → gula sederhana → diserap di usus halus</button>
+              <button type="button" data-pathway-opt="1">Pati → pepsin → asam amino → diserap di lambung</button>
+              <button type="button" data-pathway-opt="2">Pati → empedu → asam lemak → diserap di usus besar</button>
+            </div>
+          </article>
+
+          <article class="pathway-task" data-pathway-row="1">
+            <div class="pathway-food">🥚 <b>Protein dari telur</b></div>
+            <div class="pathway-options">
+              <button type="button" data-pathway-opt="0">Protein → amilase → glukosa → diserap di mulut</button>
+              <button type="button" data-pathway-opt="1">Protein → pepsin/tripsin/peptidase → asam amino → diserap di usus halus</button>
+              <button type="button" data-pathway-opt="2">Protein → empedu → asam lemak → diserap di usus besar</button>
+            </div>
+          </article>
+
+          <article class="pathway-task" data-pathway-row="2">
+            <div class="pathway-food">🥑 <b>Lemak dari makanan berminyak</b></div>
+            <div class="pathway-options">
+              <button type="button" data-pathway-opt="0">Lemak → empedu membantu emulsifikasi + lipase → asam lemak/monogliserida → diserap di usus halus</button>
+              <button type="button" data-pathway-opt="1">Lemak → pepsin → asam amino → diserap di lambung</button>
+              <button type="button" data-pathway-opt="2">Lemak → amilase → glukosa → diserap di usus besar</button>
+            </div>
+          </article>
+        </div>
+
+        <div id="pathwayFeedback" class="digest-feedback neutral">Bangun ketiga jalur terlebih dahulu.</div>
+
+        <div class="transfer-question">
+          <p><b>Transfer konsep:</b> Jika permukaan penyerapan usus halus berkurang drastis, hasil pencernaan dari menu Rani yang paling mungkin terganggu penyerapannya adalah...</p>
+          <div id="absorptionOptions" class="reason-options compact-reason">
+            <button type="button" data-absorb="all">Glukosa, asam amino, dan hasil pencernaan lemak</button>
+            <button type="button" data-absorb="protein">Hanya asam amino</button>
+            <button type="button" data-absorb="water">Hanya air</button>
+          </div>
+          <div id="absorptionFeedback" class="digest-feedback neutral">Gunakan hubungan antara hasil pencernaan dan lokasi penyerapan.</div>
+        </div>
       </section>
 
       <section class="elab-page" data-elab-page="1">
-        <p class="stage-kicker">PBL ringan</p>
-        <div class="case-card">
-          <h3>Dika jarang minum air dan hampir tidak pernah makan sayur.</h3>
-          <p>Beberapa hari kemudian ia mengalami kesulitan buang air besar dan fesesnya keras.</p>
+        <p class="stage-kicker">Analisis kasus • Sebab–akibat</p>
+        <div class="case-card hots-case">
+          <h3>Dika sulit buang air besar.</h3>
+          <p>Selama beberapa hari Dika jarang minum air, hampir tidak makan sayur, sering duduk lama, dan fesesnya menjadi keras.</p>
         </div>
-        <div class="reasoning-question">
-          <p><b>Susunan penjelasan yang paling sesuai adalah...</b></p>
-          <div id="caseOptions" class="reason-options">
-            <button data-case="0">Kurang air/serat → isi usus lebih sulit bergerak → feses cenderung keras</button>
-            <button data-case="1">Lambung menyerap seluruh air → feses mengeras di lambung</button>
-            <button data-case="2">Usus halus berhenti mencerna semua makanan → feses tidak terbentuk</button>
+
+        <div class="evidence-step">
+          <p><b>Langkah 1 — Pilih dua bukti yang paling langsung berkaitan dengan kondisi feses.</b></p>
+          <div id="evidenceOptions" class="evidence-options">
+            <button type="button" data-evidence="water">Jarang minum air</button>
+            <button type="button" data-evidence="fiber">Hampir tidak makan sayur</button>
+            <button type="button" data-evidence="sitting">Sering duduk lama</button>
+            <button type="button" data-evidence="hard">Feses sudah keras</button>
           </div>
-          <div id="caseFeedback" class="digest-feedback neutral">Pilih penjelasan yang paling sesuai dengan fungsi organ.</div>
+          <div id="evidenceFeedback" class="digest-feedback neutral">Pilih dua faktor penyebab, bukan akibat.</div>
+        </div>
+
+        <div class="reasoning-question locked-step" id="constipationReasoning">
+          <p><b>Langkah 2 — Susun hubungan sebab–akibat yang paling masuk akal.</b></p>
+          <div id="caseOptions" class="reason-options">
+            <button data-case="0">Kurang air dan serat → isi usus lebih sulit bergerak dan lebih kering → feses menjadi keras → sulit dikeluarkan</button>
+            <button data-case="1">Kurang air → lambung menyerap semua air → feses terbentuk di lambung</button>
+            <button data-case="2">Kurang serat → usus halus berhenti mencerna semua makanan → feses tidak terbentuk</button>
+          </div>
+          <div id="caseFeedback" class="digest-feedback neutral">Selesaikan analisis bukti terlebih dahulu.</div>
         </div>
       </section>
 
       <section class="elab-page" data-elab-page="2">
-        <p class="stage-kicker">Model-Based Transfer</p>
-        <div class="case-card">
-          <h3>Aliran empedu menuju usus halus terganggu.</h3>
-          <p>Gunakan model pencernaan untuk memprediksi proses yang paling langsung terdampak.</p>
+        <p class="stage-kicker">Evaluasi model • Temukan dan perbaiki kesalahan</p>
+        <div class="wrong-model-card">
+          <span>MODEL YANG DIAJUKAN</span>
+          <h3>“Empedu adalah enzim yang memecah lemak menjadi asam lemak.”</h3>
         </div>
-        <div id="bileOptions" class="reason-options">
-          <button data-bile="protein">Pemecahan protein oleh pepsin di lambung</button>
-          <button data-bile="fat">Pengemulsian lemak di usus halus</button>
-          <button data-bile="water">Penyerapan air di usus besar</button>
+
+        <div class="model-critique-step">
+          <p><b>Langkah 1 — Bagian mana yang salah?</b></p>
+          <div id="modelErrorOptions" class="reason-options">
+            <button type="button" data-model-error="enzyme">Empedu disebut sebagai enzim</button>
+            <button type="button" data-model-error="fat">Empedu berhubungan dengan lemak</button>
+            <button type="button" data-model-error="intestine">Empedu bekerja di usus halus</button>
+          </div>
+          <div id="modelErrorFeedback" class="digest-feedback neutral">Identifikasi kesalahan konsep terlebih dahulu.</div>
         </div>
-        <div id="bileFeedback" class="digest-feedback neutral">Pilih berdasarkan fungsi empedu.</div>
+
+        <div class="model-critique-step locked-step" id="modelCorrectionStep">
+          <p><b>Langkah 2 — Pilih perbaikan model yang tepat.</b></p>
+          <div id="modelCorrectionOptions" class="reason-options">
+            <button type="button" data-correction="0">Empedu adalah enzim yang langsung menghasilkan asam lemak.</button>
+            <button type="button" data-correction="1">Empedu membantu mengemulsikan lemak; lipase yang mencerna lemak secara kimiawi.</button>
+            <button type="button" data-correction="2">Empedu mencerna protein agar pepsin dapat bekerja.</button>
+          </div>
+          <div id="modelCorrectionFeedback" class="digest-feedback neutral">Perbaiki hubungan antara empedu dan enzim.</div>
+        </div>
+
+        <div class="model-critique-step locked-step" id="bilePredictionStep">
+          <p><b>Langkah 3 — Jika aliran empedu ke usus halus terganggu, prediksi yang paling logis adalah...</b></p>
+          <div id="bileOptions" class="reason-options">
+            <button data-bile="protein">Pencernaan protein oleh pepsin di lambung berhenti</button>
+            <button data-bile="fat">Emulsifikasi lemak berkurang sehingga kerja lipase pada lemak menjadi kurang efektif</button>
+            <button data-bile="water">Penyerapan air di usus besar berhenti</button>
+          </div>
+          <div id="bileFeedback" class="digest-feedback neutral">Gunakan model yang sudah diperbaiki untuk membuat prediksi.</div>
+        </div>
       </section>
     </section>
 
@@ -430,6 +508,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-24"></script>
+  <script src="digestive.js?v=20260929-25"></script>
 </body>
 </html>
