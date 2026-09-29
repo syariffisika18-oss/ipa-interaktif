@@ -1593,7 +1593,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
    ========================================================= */
 .relation-bank-grid{
   display:grid;
-  grid-template-columns:1.15fr .82fr 1.7fr;
+  grid-template-columns:1fr 1.65fr;
   gap:8px;
   margin-top:10px;
 }
@@ -1698,7 +1698,17 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   font-size:.6rem;
   cursor:pointer;
 }
-.nutrient-slot{background:#f5faf8}
+.nutrient-slot{
+  background:#eef7f4;
+  border-style:solid;
+  border-color:#d4e6e0;
+  color:#0f665f;
+  cursor:default;
+  flex-direction:column;
+  gap:2px;
+  font-weight:900;
+}
+.nutrient-fixed-emoji{font-size:1rem;line-height:1}
 .relation-slot .relation-card{
   width:100%;
   min-height:40px;
@@ -1726,7 +1736,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .nutrition-chain-row{
     grid-template-columns:1.05fr .78fr 1.45fr;
   }
-  .relation-bank-grid{gap:5px}
+  .relation-bank-grid{grid-template-columns:1fr 1.5fr;gap:5px}
   .relation-bank{padding:6px}
   .relation-bank-title{font-size:.6rem;gap:4px}
   .relation-bank-title span{width:18px;height:18px;font-size:.5rem}
@@ -1738,7 +1748,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 }
 @media(max-width:520px){
   .relation-bank-grid{
-    grid-template-columns:1.02fr .8fr 1.48fr;
+    grid-template-columns:1fr 1.5fr;
     gap:3px;
     margin-top:6px;
   }
@@ -1776,7 +1786,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .relation-slot .relation-card{min-height:38px;font-size:.47rem}
 }
 @media(orientation:landscape) and (max-width:950px) and (max-height:500px){
-  .relation-bank-grid{grid-template-columns:1.05fr .72fr 1.5fr;gap:3px;margin-top:4px}
+  .relation-bank-grid{grid-template-columns:1fr 1.5fr;gap:3px;margin-top:4px}
   .relation-bank{padding:4px}
   .relation-bank-title{font-size:.45rem;margin-bottom:3px}
   .relation-bank-title span{width:15px;height:15px;font-size:.4rem}
