@@ -454,6 +454,59 @@
       :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
   };
 
+  const nutrientModels=[
+    {
+      icon:"🍚",
+      name:"Karbohidrat",
+      enzymes:"Amilase saliva → amilase pankreas → maltase/sukrase/laktase",
+      activator:"Tidak ada pengaktif khusus; enzim bekerja pada kondisi pH yang sesuai.",
+      result:"Monosakarida, terutama glukosa",
+      place:"Mulut dan usus halus",
+      note:"Karbohidrat kompleks dipecah bertahap hingga menjadi gula sederhana yang dapat diserap."
+    },
+    {
+      icon:"🥚",
+      name:"Protein",
+      enzymes:"Pepsin → tripsin/kimotripsin → peptidase",
+      activator:"HCl mengaktifkan pepsinogen menjadi pepsin; enteropeptidase mengaktifkan tripsinogen menjadi tripsin.",
+      result:"Asam amino",
+      place:"Lambung dan usus halus",
+      note:"Protein dipecah bertahap dari rantai panjang menjadi peptida, lalu menjadi asam amino."
+    },
+    {
+      icon:"🥑",
+      name:"Lemak",
+      enzymes:"Lipase, terutama lipase pankreas",
+      activator:"Tidak ada pengaktif khusus. Empedu membantu mengemulsikan lemak, tetapi empedu bukan enzim dan bukan pengaktif lipase.",
+      result:"Asam lemak + monogliserida/gliserol",
+      place:"Terutama usus halus",
+      note:"Emulsifikasi memperkecil butiran lemak sehingga lipase lebih mudah bekerja."
+    }
+  ];
+
+  function renderNutrientModel(index){
+    index=Math.max(0,Math.min(nutrientModels.length-1,index));
+    const n=nutrientModels[index];
+    document.querySelectorAll(".nutrient-tab").forEach((b,i)=>b.classList.toggle("is-active",i===index));
+    document.getElementById("nutrientIcon").textContent=n.icon;
+    document.getElementById("nutrientName").textContent=n.name;
+    document.getElementById("nutrientSource").textContent=n.name;
+    document.getElementById("nutrientEnzymes").textContent=n.enzymes;
+    document.getElementById("nutrientActivator").textContent=n.activator;
+    document.getElementById("nutrientResult").textContent=n.result;
+    document.getElementById("nutrientPlace").textContent=n.place;
+    document.getElementById("nutrientNote").textContent=n.note;
+  }
+
+  const nutrientTabs=document.getElementById("nutrientTabs");
+  if(nutrientTabs){
+    nutrientTabs.addEventListener("click",e=>{
+      const b=e.target.closest("[data-nutrient]");
+      if(b)renderNutrientModel(Number(b.dataset.nutrient));
+    });
+    renderNutrientModel(0);
+  }
+
   let explainPageIndex=0;
   const explainPageTabs=[...document.querySelectorAll(".explain-page-tab")];
   const explainPages=[...document.querySelectorAll("[data-explain-content]")];
