@@ -464,21 +464,18 @@
           place:"Mulut",
           enzyme:"Amilase saliva",
           producer:"Kelenjar ludah",
-          activator:"Tidak ada pengaktif khusus",
           note:"Mulai memecah pati menjadi molekul yang lebih sederhana."
         },
         {
           place:"Usus halus",
           enzyme:"Amilase pankreas",
           producer:"Pankreas",
-          activator:"Tidak ada pengaktif khusus; bekerja baik pada suasana usus yang sesuai",
           note:"Melanjutkan pemecahan pati."
         },
         {
           place:"Permukaan usus halus",
           enzyme:"Maltase, sukrase, laktase",
           producer:"Dinding usus halus",
-          activator:"Tidak ada pengaktif khusus",
           note:"Mengubah disakarida menjadi monosakarida yang dapat diserap."
         }
       ],
@@ -507,7 +504,6 @@
           place:"Permukaan usus halus",
           enzyme:"Peptidase",
           producer:"Dinding usus halus",
-          activator:"Tidak ada pengaktif khusus",
           note:"Menyelesaikan pemecahan peptida menjadi asam amino."
         }
       ],
@@ -522,7 +518,6 @@
           place:"Usus halus",
           enzyme:"Lipase pankreas",
           producer:"Pankreas",
-          activator:"Tidak ada pengaktif khusus",
           note:"Memecah trigliserida menjadi molekul yang lebih sederhana."
         }
       ],
@@ -543,7 +538,7 @@
       <article class="enzyme-step">
         <div class="enzyme-step-number">${i+1}</div>
         <div class="enzyme-step-place">${step.place}</div>
-        <div class="enzyme-step-grid">
+        <div class="enzyme-step-grid${step.activator?' has-activator':''}">
           <div>
             <span>ENZIM</span>
             <strong>${step.enzyme}</strong>
@@ -552,10 +547,10 @@
             <span>PENGHASIL / KELENJAR</span>
             <strong>${step.producer}</strong>
           </div>
-          <div>
-            <span>PENGAKTIF / KONDISI</span>
+          ${step.activator?`<div>
+            <span>PENGAKTIF</span>
             <strong>${step.activator}</strong>
-          </div>
+          </div>`:''}
         </div>
         <p>${step.note}</p>
       </article>
