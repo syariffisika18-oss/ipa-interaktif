@@ -646,41 +646,147 @@
     document.querySelectorAll("[data-elab-page]").forEach(p=>p.classList.toggle("is-active",p.dataset.elabPage===i));
   }));
 
-  const conceptData=[
-    {label:"Karbohidrat",correct:"glukosa",options:["Glukosa • diserap di usus halus","Asam amino • lambung","Feses • usus besar"]},
-    {label:"Protein",correct:"asam",options:["Glukosa • mulut","Asam amino • diserap di usus halus","Asam lemak • usus besar"]},
-    {label:"Lemak",correct:"lemak",options:["Asam lemak + gliserol • diserap di usus halus","Asam amino • lambung","Glukosa • usus besar"]}
-  ];
-  const cm=document.getElementById("conceptMap");
-  cm.innerHTML=conceptData.map((r,i)=>'<div class="concept-row"><strong>'+r.label+'</strong><div class="concept-choices">'+r.options.map((o,j)=>'<button type="button" data-row="'+i+'" data-opt="'+j+'">'+o+'</button>').join("")+'</div></div>').join("");
-  const conceptAnswers={};
-  cm.addEventListener("click",e=>{
-    const b=e.target.closest("[data-row]");if(!b)return;
-    const r=Number(b.dataset.row),o=Number(b.dataset.opt);
-    conceptAnswers[r]=o;
-    b.parentElement.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
-    const correct=[0,1,0];
-    const filled=Object.keys(conceptAnswers).length;
-    const good=filled===3&&correct.every((v,i)=>conceptAnswers[i]===v);
-    const fb=document.getElementById("conceptFeedback");
-    if(filled<3){fb.className="digest-feedback neutral";fb.textContent="Lengkapi semua hubungan."}
-    else if(good){fb.className="digest-feedback good";fb.textContent="Tepat. Hasil akhir karbohidrat, protein, dan lemak diserap terutama di usus halus."}
-    else{fb.className="digest-feedback warn";fb.textContent="Belum semuanya tepat. Gunakan model pada Explain untuk meninjau kembali."}
+  // 1. Analisis jalur nutrisi
+  const pathwayCorrect=[0,1,0];
+  const pathwayAnswers={};
+  document.getElementById("pathwayChallenge").addEventListener("click",e=>{
+    const b=e.target.closest("[data-pathway-opt]");
+    if(!b)return;
+    const row=b.closest("[data-pathway-row]");
+    const r=Number(row.dataset.pathwayRow);
+    const o=Number(b.dataset.pathwayOpt);
+    pathwayAnswers[r]=o;
+    row.querySelectorAll("[data-pathway-opt]").forEach(x=>x.classList.toggle("is-selected",x===b));
+
+    const filled=Object.keys(pathwayAnswers).length;
+    const fb=document.getElementById("pathwayFeedback");
+    if(filled<3){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Lengkapi semua jalur. Bandingkan nutrisi, enzim, hasil, dan tempat penyerapannya.";
+      return;
+    }
+    const good=pathwayCorrect.every((v,i)=>pathwayAnswers[i]===v);
+    if(good){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Ketiga nutrisi mengikuti jalur berbeda, tetapi hasil pencernaannya terutama diserap di usus halus.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum konsisten. Periksa apakah enzim dan hasil akhir sesuai dengan jenis nutrisinya.";
+    }
+  });
+
+  document.getElementById("absorptionOptions").addEventListener("click",e=>{
+    const b=e.target.closest("[data-absorb]");if(!b)return;
+    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
+    const fb=document.getElementById("absorptionFeedback");
+    if(b.dataset.absorb==="all"){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Usus halus merupakan lokasi utama penyerapan hasil pencernaan karbohidrat, protein, dan lemak.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Hubungkan kembali ketiga hasil pencernaan dengan lokasi utama penyerapannya.";
+    }
+  });
+
+  // 2. Analisis kasus konstipasi
+  const evidenceSelected=new Set();
+  document.getElementById("evidenceOptions").addEventListener("click",e=>{
+    const b=e.target.closest("[data-evidence]");if(!b)return;
+    const key=b.dataset.evidence;
+    if(evidenceSelected.has(key)){
+      evidenceSelected.delete(key);
+      b.classList.remove("is-selected");
+    }else{
+      if(evidenceSelected.size>=2){
+        const first=[...evidenceSelected][0];
+        evidenceSelected.delete(first);
+        e.currentTarget.querySelector('[data-evidence="'+first+'"]')?.classList.remove("is-selected");
+      }
+      evidenceSelected.add(key);
+      b.classList.add("is-selected");
+    }
+
+    const fb=document.getElementById("evidenceFeedback");
+    const good=evidenceSelected.size===2&&evidenceSelected.has("water")&&evidenceSelected.has("fiber");
+    const step=document.getElementById("constipationReasoning");
+    if(evidenceSelected.size<2){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Pilih dua faktor penyebab, bukan akibat.";
+      step.classList.add("locked-step");
+    }else if(good){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Jarang minum dan rendah serat merupakan bukti yang paling langsung untuk membangun penjelasan.";
+      step.classList.remove("locked-step");
+      document.getElementById("caseFeedback").textContent="Sekarang susun hubungan sebab–akibatnya.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Bedakan faktor penyebab dengan tanda/akibat yang sudah muncul.";
+      step.classList.add("locked-step");
+    }
   });
 
   document.getElementById("caseOptions").addEventListener("click",e=>{
+    if(document.getElementById("constipationReasoning").classList.contains("locked-step"))return;
     const b=e.target.closest("[data-case]");if(!b)return;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("caseFeedback");
-    if(b.dataset.case==="0"){fb.className="digest-feedback good";fb.textContent="Tepat. Air dan serat membantu menjaga konsistensi isi usus dan mendukung pergerakan feses."}
-    else{fb.className="digest-feedback warn";fb.textContent="Belum tepat. Tinjau kembali fungsi lambung dan usus besar."}
+    if(b.dataset.case==="0"){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Kamu menghubungkan faktor awal, perubahan pada isi usus, sifat feses, dan akibat akhirnya.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Periksa organ yang berperan dalam pembentukan dan pengeluaran feses.";
+    }
   });
+
+  // 3. Evaluasi dan perbaiki model empedu
+  document.getElementById("modelErrorOptions").addEventListener("click",e=>{
+    const b=e.target.closest("[data-model-error]");if(!b)return;
+    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
+    const fb=document.getElementById("modelErrorFeedback");
+    const next=document.getElementById("modelCorrectionStep");
+    if(b.dataset.modelError==="enzyme"){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Empedu bukan enzim.";
+      next.classList.remove("locked-step");
+      document.getElementById("modelCorrectionFeedback").textContent="Sekarang perbaiki model tersebut.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Hubungan empedu dengan lemak dan usus halus justru benar.";
+      next.classList.add("locked-step");
+    }
+  });
+
+  document.getElementById("modelCorrectionOptions").addEventListener("click",e=>{
+    if(document.getElementById("modelCorrectionStep").classList.contains("locked-step"))return;
+    const b=e.target.closest("[data-correction]");if(!b)return;
+    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
+    const fb=document.getElementById("modelCorrectionFeedback");
+    const next=document.getElementById("bilePredictionStep");
+    if(b.dataset.correction==="1"){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Empedu membantu secara fisik melalui emulsifikasi; lipase melakukan pencernaan kimiawi lemak.";
+      next.classList.remove("locked-step");
+      document.getElementById("bileFeedback").textContent="Gunakan model yang sudah benar untuk membuat prediksi.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Pisahkan fungsi empedu dari fungsi enzim lipase.";
+      next.classList.add("locked-step");
+    }
+  });
+
   document.getElementById("bileOptions").addEventListener("click",e=>{
+    if(document.getElementById("bilePredictionStep").classList.contains("locked-step"))return;
     const b=e.target.closest("[data-bile]");if(!b)return;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("bileFeedback");
-    if(b.dataset.bile==="fat"){fb.className="digest-feedback good";fb.textContent="Tepat. Empedu membantu mengemulsikan lemak sehingga luas permukaannya meningkat untuk kerja lipase."}
-    else{fb.className="digest-feedback warn";fb.textContent="Belum tepat. Ingat: empedu masuk ke usus halus dan terutama membantu pemrosesan lemak."}
+    if(b.dataset.bile==="fat"){
+      fb.className="digest-feedback good";
+      fb.textContent="Tepat. Tanpa emulsifikasi yang cukup, luas permukaan lemak untuk kerja lipase berkurang sehingga pencernaan lemak kurang efektif.";
+    }else{
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Prediksi harus mengikuti fungsi empedu yang sudah kamu perbaiki pada langkah sebelumnya.";
+    }
   });
 
   document.querySelectorAll(".mini-question").forEach((q,idx)=>{
