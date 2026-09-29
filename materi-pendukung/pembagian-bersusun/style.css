@@ -1369,3 +1369,15 @@ button,input,select,textarea{font:inherit}
     column-gap:5px;
   }
 }
+
+/* 2026-09-29: cegah ekspresi perkalian (mis. 35 × 10) ter-wrap */
+.multiple-btn strong,
+.multiple-btn b,
+.multiple-item strong,
+.multiple-item b,
+.times-grid button strong,
+.times-grid button b{
+  white-space:nowrap;
+  word-break:keep-all;
+  overflow-wrap:normal;
+}
