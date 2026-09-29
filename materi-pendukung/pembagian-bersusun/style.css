@@ -724,3 +724,50 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
     font-size:var(--ld-font)!important;
   }
 }
+
+
+/* Navigasi internal langkah pembagian */
+.process-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  margin-top:8px;
+}
+.process-actions button{
+  min-height:40px;
+  padding:0 13px;
+}
+.process-actions .process-prev{
+  border:1px solid var(--line);
+  background:#fff;
+  color:var(--text);
+}
+.process-actions .process-prev:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+}
+@media(max-width:640px){
+  .process-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+  }
+  .process-actions button{
+    min-height:35px;
+    padding:4px 7px;
+    font-size:.67rem;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .process-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:4px;
+    margin-top:5px;
+  }
+  .process-actions button{
+    min-height:30px;
+    padding:3px 6px;
+    font-size:.56rem;
+  }
+}
