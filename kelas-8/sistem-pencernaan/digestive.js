@@ -805,24 +805,51 @@
   });
 
   // ---------------------------------------------------------
-  // Prasyarat: mini game klasifikasi 7 zat gizi
+  // Prasyarat: mini game Makanan → Nutrisi → Fungsi
   // ---------------------------------------------------------
-  const nutrientGameCards=[
-    {id:"nasi",emoji:"🍚",label:"Nasi",nutrient:"karbohidrat",feedback:"Nasi dipakai sebagai contoh sumber karbohidrat."},
-    {id:"telur",emoji:"🥚",label:"Telur",nutrient:"protein",feedback:"Telur dipakai sebagai contoh sumber protein."},
-    {id:"minyak",emoji:"🫒",label:"Minyak",nutrient:"lemak",feedback:"Minyak dipakai sebagai contoh sumber lemak."},
-    {id:"jeruk",emoji:"🍊",label:"Jeruk",nutrient:"vitamin",feedback:"Jeruk dipakai sebagai contoh makanan kaya vitamin."},
-    {id:"garam",emoji:"🧂",label:"Garam beryodium",nutrient:"mineral",feedback:"Yodium pada garam merupakan mineral."},
-    {id:"sayur",emoji:"🥬",label:"Sayur berserat",nutrient:"serat",feedback:"Sayur dipakai sebagai contoh sumber serat."},
-    {id:"airputih",emoji:"💧",label:"Air putih",nutrient:"air",feedback:"Air putih mewakili kebutuhan air tubuh."}
+  const nutritionRelations=[
+    {
+      nutrient:"karbohidrat",
+      food:{id:"nasi",emoji:"🍚",label:"Nasi"},
+      function:{id:"energi",label:"Sumber energi utama"}
+    },
+    {
+      nutrient:"protein",
+      food:{id:"telur",emoji:"🥚",label:"Telur"},
+      function:{id:"jaringan",label:"Membangun dan memperbaiki jaringan"}
+    },
+    {
+      nutrient:"lemak",
+      food:{id:"minyak",emoji:"🫒",label:"Minyak"},
+      function:{id:"cadangan",label:"Cadangan energi dan membantu melindungi organ"}
+    },
+    {
+      nutrient:"vitamin",
+      food:{id:"jeruk",emoji:"🍊",label:"Jeruk"},
+      function:{id:"mengatur",label:"Membantu mengatur berbagai proses tubuh"}
+    },
+    {
+      nutrient:"mineral",
+      food:{id:"garam",emoji:"🧂",label:"Garam beryodium"},
+      function:{id:"fungsi-tubuh",label:"Membantu pembentukan dan fungsi tubuh"}
+    },
+    {
+      nutrient:"serat",
+      food:{id:"sayur",emoji:"🥬",label:"Sayur berserat"},
+      function:{id:"pencernaan",label:"Membantu pergerakan isi saluran pencernaan"}
+    },
+    {
+      nutrient:"air",
+      food:{id:"airputih",emoji:"💧",label:"Air putih"},
+      function:{id:"pelarut",label:"Pelarut dan membantu mengangkut zat"}
+    }
   ];
 
-  const nutrientCardBank=document.getElementById("nutrientCardBank");
-  const nutrientDropGrid=document.getElementById("nutrientDropGrid");
+  const foodCardBank=document.getElementById("foodCardBank");
+  const functionCardBank=document.getElementById("functionCardBank");
   const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
   const nutrientGameScore=document.getElementById("nutrientGameScore");
-  let selectedNutrientCard=null;
-  let nutrientGameOrder=shuffleArray(nutrientGameCards);
+  let selectedRelationCard=null;
 
   function shuffleArray(list){
     const a=[...list];
@@ -833,152 +860,189 @@
     return a;
   }
 
-  function makeNutrientCard(card){
+  function relationItems(type){
+    return nutritionRelations.map(r=>({
+      type,
+      id:r[type].id,
+      nutrient:r.nutrient,
+      emoji:type==="food"?r.food.emoji:"",
+      label:r[type].label
+    }));
+  }
+
+  function makeRelationCard(item){
     const el=document.createElement("button");
     el.type="button";
-    el.className="food-nutrient-card";
+    el.className="relation-card "+item.type+"-relation-card";
     el.draggable=true;
-    el.dataset.cardId=card.id;
-    el.dataset.correctNutrient=card.nutrient;
-    el.innerHTML='<span class="food-card-emoji">'+card.emoji+'</span><strong>'+card.label+'</strong>';
-    el.setAttribute("aria-label",card.label);
+    el.dataset.cardType=item.type;
+    el.dataset.cardId=item.id;
+    el.dataset.correctNutrient=item.nutrient;
+    el.innerHTML=(item.emoji?'<span class="relation-card-emoji">'+item.emoji+'</span>':'')+
+      '<strong>'+item.label+'</strong>';
+    el.setAttribute("aria-label",item.label);
     return el;
   }
 
-  function clearNutrientGameMarks(){
-    document.querySelectorAll(".food-nutrient-card").forEach(c=>c.classList.remove("is-selected","is-correct","is-wrong"));
-    document.querySelectorAll(".nutrient-drop-zone").forEach(z=>z.classList.remove("is-drop-target","has-correct","has-wrong"));
-  }
-
-  function renderNutrientBank(order=nutrientGameOrder){
-    nutrientCardBank.innerHTML="";
-    order.forEach(card=>nutrientCardBank.appendChild(makeNutrientCard(card)));
-    bindNutrientCards();
-  }
-
-  function findCardData(id){
-    return nutrientGameCards.find(c=>c.id===id);
-  }
-
-  function placeNutrientCard(cardEl,zone){
-    if(!cardEl||!zone)return;
-    const slot=zone.querySelector(".nutrient-zone-slot");
-    const existing=slot.querySelector(".food-nutrient-card");
-    if(existing&&existing!==cardEl){
-      nutrientCardBank.appendChild(existing);
-    }
-    slot.appendChild(cardEl);
-    selectedNutrientCard=null;
-    clearNutrientGameMarks();
-    nutrientGameFeedback.className="digest-feedback neutral";
-    nutrientGameFeedback.textContent="Lanjutkan sampai semua kartu ditempatkan.";
-  }
-
-  function bindNutrientCards(){
-    document.querySelectorAll(".food-nutrient-card").forEach(card=>{
-      card.addEventListener("click",e=>{
+  function bindRelationCards(){
+    document.querySelectorAll(".relation-card").forEach(card=>{
+      card.onclick=e=>{
         e.stopPropagation();
-        document.querySelectorAll(".food-nutrient-card").forEach(c=>c.classList.remove("is-selected"));
-        selectedNutrientCard=card;
+        document.querySelectorAll(".relation-card").forEach(c=>c.classList.remove("is-selected"));
+        selectedRelationCard=card;
         card.classList.add("is-selected");
         nutrientGameFeedback.className="digest-feedback neutral";
-        nutrientGameFeedback.textContent="Kartu "+findCardData(card.dataset.cardId).label+" dipilih. Sekarang sentuh kelompok zat gizi tujuannya.";
-      });
-      card.addEventListener("dragstart",e=>{
-        e.dataTransfer.setData("text/plain",card.dataset.cardId);
+        nutrientGameFeedback.textContent="Kartu dipilih. Sentuh kotak "+(card.dataset.cardType==="food"?"Makanan":"Fungsi")+" yang dituju.";
+      };
+      card.ondragstart=e=>{
+        e.dataTransfer.setData("text/plain",card.dataset.cardType+":"+card.dataset.cardId);
         e.dataTransfer.effectAllowed="move";
         card.classList.add("is-dragging");
-      });
-      card.addEventListener("dragend",()=>{
+      };
+      card.ondragend=()=>{
         card.classList.remove("is-dragging");
-        document.querySelectorAll(".nutrient-drop-zone").forEach(z=>z.classList.remove("is-drop-target"));
-      });
+        document.querySelectorAll(".relation-slot").forEach(s=>s.classList.remove("is-drop-target"));
+      };
     });
   }
 
-  document.querySelectorAll(".nutrient-drop-zone").forEach(zone=>{
-    zone.addEventListener("click",e=>{
-      if(e.target.closest(".food-nutrient-card"))return;
-      if(selectedNutrientCard)placeNutrientCard(selectedNutrientCard,zone);
+  function renderRelationBanks(){
+    foodCardBank.innerHTML="";
+    functionCardBank.innerHTML="";
+    shuffleArray(relationItems("food")).forEach(item=>foodCardBank.appendChild(makeRelationCard(item)));
+    shuffleArray(relationItems("function")).forEach(item=>functionCardBank.appendChild(makeRelationCard(item)));
+    bindRelationCards();
+  }
+
+  function clearRelationMarks(){
+    document.querySelectorAll(".relation-card").forEach(c=>c.classList.remove("is-selected","is-correct","is-wrong"));
+    document.querySelectorAll(".relation-slot").forEach(s=>s.classList.remove("is-drop-target","has-correct","has-wrong"));
+    document.querySelectorAll(".nutrition-chain-row").forEach(r=>r.classList.remove("chain-correct","chain-wrong"));
+  }
+
+  function returnCardToBank(card){
+    if(!card)return;
+    (card.dataset.cardType==="food"?foodCardBank:functionCardBank).appendChild(card);
+  }
+
+  function placeRelationCard(card,slot){
+    if(!card||!slot)return;
+    if(card.dataset.cardType!==slot.dataset.slotType){
+      nutrientGameFeedback.className="digest-feedback warn";
+      nutrientGameFeedback.textContent=card.dataset.cardType==="food"
+        ?"Kartu makanan hanya dapat ditempatkan pada kolom Makanan."
+        :"Kartu fungsi hanya dapat ditempatkan pada kolom Fungsi.";
+      return;
+    }
+    const existing=slot.querySelector(".relation-card");
+    if(existing&&existing!==card)returnCardToBank(existing);
+    slot.innerHTML="";
+    slot.appendChild(card);
+    selectedRelationCard=null;
+    clearRelationMarks();
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Lanjutkan sampai semua rantai lengkap.";
+  }
+
+  document.querySelectorAll(".relation-slot").forEach(slot=>{
+    slot.addEventListener("click",e=>{
+      if(e.target.closest(".relation-card"))return;
+      if(selectedRelationCard)placeRelationCard(selectedRelationCard,slot);
     });
-    zone.addEventListener("dragover",e=>{
+    slot.addEventListener("dragover",e=>{
       e.preventDefault();
-      zone.classList.add("is-drop-target");
+      slot.classList.add("is-drop-target");
     });
-    zone.addEventListener("dragleave",()=>zone.classList.remove("is-drop-target"));
-    zone.addEventListener("drop",e=>{
+    slot.addEventListener("dragleave",()=>slot.classList.remove("is-drop-target"));
+    slot.addEventListener("drop",e=>{
       e.preventDefault();
-      zone.classList.remove("is-drop-target");
-      const id=e.dataTransfer.getData("text/plain");
-      const card=document.querySelector('.food-nutrient-card[data-card-id="'+id+'"]');
-      placeNutrientCard(card,zone);
+      slot.classList.remove("is-drop-target");
+      const raw=e.dataTransfer.getData("text/plain");
+      const [type,id]=raw.split(":");
+      const card=document.querySelector('.relation-card[data-card-type="'+type+'"][data-card-id="'+id+'"]');
+      placeRelationCard(card,slot);
     });
   });
 
-  nutrientCardBank.addEventListener("dragover",e=>e.preventDefault());
-  nutrientCardBank.addEventListener("drop",e=>{
-    e.preventDefault();
-    const id=e.dataTransfer.getData("text/plain");
-    const card=document.querySelector('.food-nutrient-card[data-card-id="'+id+'"]');
-    if(card)nutrientCardBank.appendChild(card);
-    clearNutrientGameMarks();
+  [foodCardBank,functionCardBank].forEach(bank=>{
+    bank.addEventListener("dragover",e=>e.preventDefault());
+    bank.addEventListener("drop",e=>{
+      e.preventDefault();
+      const raw=e.dataTransfer.getData("text/plain");
+      const [type,id]=raw.split(":");
+      const card=document.querySelector('.relation-card[data-card-type="'+type+'"][data-card-id="'+id+'"]');
+      if(card&&((bank===foodCardBank&&type==="food")||(bank===functionCardBank&&type==="function"))){
+        bank.appendChild(card);
+        clearRelationMarks();
+      }
+    });
   });
 
   document.getElementById("checkNutrientGame").addEventListener("click",()=>{
-    const placed=[...document.querySelectorAll(".nutrient-drop-zone .food-nutrient-card")];
-    if(placed.length<nutrientGameCards.length){
+    const rows=[...document.querySelectorAll(".nutrition-chain-row")];
+    const incomplete=rows.filter(row=>
+      !row.querySelector(".food-slot .relation-card")||
+      !row.querySelector(".function-slot .relation-card")
+    );
+    if(incomplete.length){
       nutrientGameFeedback.className="digest-feedback warn";
-      nutrientGameFeedback.textContent="Masih ada "+(nutrientGameCards.length-placed.length)+" kartu yang belum ditempatkan.";
+      nutrientGameFeedback.textContent="Masih ada "+incomplete.length+" rantai yang belum lengkap.";
       return;
     }
 
-    let correct=0;
-    const wrong=[];
-    document.querySelectorAll(".nutrient-drop-zone").forEach(zone=>{
-      const card=zone.querySelector(".food-nutrient-card");
-      if(!card)return;
-      const ok=card.dataset.correctNutrient===zone.dataset.nutrientZone;
-      card.classList.toggle("is-correct",ok);
-      card.classList.toggle("is-wrong",!ok);
-      zone.classList.toggle("has-correct",ok);
-      zone.classList.toggle("has-wrong",!ok);
-      if(ok)correct++;
-      else wrong.push(findCardData(card.dataset.cardId));
+    let correctChains=0;
+    rows.forEach(row=>{
+      const nutrient=row.dataset.chain;
+      const food=row.querySelector(".food-slot .relation-card");
+      const func=row.querySelector(".function-slot .relation-card");
+      const foodOK=food.dataset.correctNutrient===nutrient;
+      const functionOK=func.dataset.correctNutrient===nutrient;
+      food.classList.toggle("is-correct",foodOK);
+      food.classList.toggle("is-wrong",!foodOK);
+      func.classList.toggle("is-correct",functionOK);
+      func.classList.toggle("is-wrong",!functionOK);
+      row.querySelector(".food-slot").classList.toggle("has-correct",foodOK);
+      row.querySelector(".food-slot").classList.toggle("has-wrong",!foodOK);
+      row.querySelector(".function-slot").classList.toggle("has-correct",functionOK);
+      row.querySelector(".function-slot").classList.toggle("has-wrong",!functionOK);
+      const chainOK=foodOK&&functionOK;
+      row.classList.toggle("chain-correct",chainOK);
+      row.classList.toggle("chain-wrong",!chainOK);
+      if(chainOK)correctChains++;
     });
 
-    nutrientGameScore.textContent=correct+" / 7 tepat";
-    if(correct===7){
+    nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
+    if(correctChains===7){
       nutrientGameFeedback.className="digest-feedback good";
-      nutrientGameFeedback.textContent="Semua tepat. Kamu sudah mengenali tujuh kelompok zat gizi yang akan digunakan sebagai bekal memahami sistem pencernaan.";
+      nutrientGameFeedback.textContent="Semua hubungan tepat. Kamu sudah menghubungkan makanan, jenis nutrisi, dan fungsi utamanya.";
     }else{
       nutrientGameFeedback.className="digest-feedback warn";
-      nutrientGameFeedback.innerHTML="<b>"+correct+" dari 7 tepat.</b> Tinjau lagi "+wrong.map(c=>c.label).join(", ")+".";
+      nutrientGameFeedback.textContent=correctChains+" dari 7 rantai sudah tepat. Perhatikan kartu yang ditandai dan perbaiki hubungannya.";
     }
   });
 
-  document.getElementById("shuffleNutrientGame").addEventListener("click",()=>{
-    document.querySelectorAll(".food-nutrient-card").forEach(c=>nutrientCardBank.appendChild(c));
-    nutrientGameOrder=shuffleArray(nutrientGameCards);
-    renderNutrientBank(nutrientGameOrder);
-    clearNutrientGameMarks();
-    selectedNutrientCard=null;
-    nutrientGameScore.textContent="0 / 7 tepat";
+  function resetNutritionRelationGame(message){
+    document.querySelectorAll(".relation-card").forEach(returnCardToBank);
+    document.querySelectorAll(".relation-slot").forEach(slot=>{
+      slot.innerHTML='<span>Tempatkan '+(slot.dataset.slotType==="food"?"makanan":"fungsi")+'</span>';
+    });
+    renderRelationBanks();
+    clearRelationMarks();
+    selectedRelationCard=null;
+    nutrientGameScore.textContent="0 / 7 rantai tepat";
     nutrientGameFeedback.className="digest-feedback neutral";
-    nutrientGameFeedback.textContent="Kartu sudah diacak. Tempatkan kembali ke kelompok yang sesuai.";
+    nutrientGameFeedback.textContent=message;
+  }
+
+  document.getElementById("shuffleNutrientGame").addEventListener("click",()=>{
+    resetNutritionRelationGame("Kartu makanan dan fungsi sudah diacak ulang.");
   });
 
   document.getElementById("resetNutrientGame").addEventListener("click",()=>{
-    nutrientGameOrder=[...nutrientGameCards];
-    renderNutrientBank(nutrientGameOrder);
-    document.querySelectorAll(".nutrient-zone-slot").forEach(s=>s.innerHTML="");
-    clearNutrientGameMarks();
-    selectedNutrientCard=null;
-    nutrientGameScore.textContent="0 / 7 tepat";
-    nutrientGameFeedback.className="digest-feedback neutral";
-    nutrientGameFeedback.textContent="Permainan diulang. Tempatkan semua kartu terlebih dahulu.";
+    resetNutritionRelationGame("Permainan diulang. Lengkapi tujuh rantai makanan → nutrisi → fungsi.");
   });
 
-  renderNutrientBank();
+  renderRelationBanks();
 
   document.querySelectorAll(".mini-question").forEach((q,idx)=>{
     q.querySelector(".mini-options").addEventListener("click",e=>{
