@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-17">
+  <link rel="stylesheet" href="digestive.css?v=20260929-18">
 </head>
 <body>
   <header class="app-header">
@@ -91,9 +91,9 @@
         </div>
 
         <div class="nutrient-game-instruction">
-          <b>Desktop:</b> seret kartu makanan, nutrisi, dan fungsi ke kotak yang sesuai.
-          <b>HP:</b> sentuh kartu, lalu sentuh kotak tujuan dengan kategori yang sama.
-          <span>Susun tujuh rantai yang benar. Satu makanan dapat mengandung lebih dari satu zat gizi; pada permainan ini gunakan zat gizi yang paling ditonjolkan.</span>
+          <b>Desktop:</b> seret kartu makanan dan fungsi ke baris nutrisi yang sesuai.
+          <b>HP:</b> sentuh kartu makanan atau fungsi, lalu sentuh kotak tujuan pada baris nutrisi yang sesuai.
+          <span>Nutrisi sudah ditempatkan di tengah. Pasangkan makanan dan fungsi yang paling sesuai dengan setiap nutrisi.</span>
         </div>
 
         <div class="relation-bank-grid">
@@ -102,11 +102,7 @@
             <div class="relation-card-bank" id="foodCardBank" data-bank-type="food" aria-label="Kartu makanan"></div>
           </section>
           <section class="relation-bank">
-            <div class="relation-bank-title"><span>2</span><b>Kartu nutrisi</b></div>
-            <div class="relation-card-bank" id="nutrientCardBank" data-bank-type="nutrient" aria-label="Kartu nutrisi"></div>
-          </section>
-          <section class="relation-bank">
-            <div class="relation-bank-title"><span>3</span><b>Kartu fungsi</b></div>
+            <div class="relation-bank-title"><span>2</span><b>Kartu fungsi</b></div>
             <div class="relation-card-bank" id="functionCardBank" data-bank-type="function" aria-label="Kartu fungsi nutrisi"></div>
           </section>
         </div>
@@ -116,39 +112,53 @@
         </div>
 
         <div class="nutrition-chain-grid" id="nutritionChainGrid">
-          <div class="nutrition-chain-row" aria-label="Rantai 1">
+          <div class="nutrition-chain-row" aria-label="Rantai 1 — Karbohidrat">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="karbohidrat" aria-label="Nutrisi Karbohidrat">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">⚡</span><strong>Karbohidrat</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 2">
+          <div class="nutrition-chain-row" aria-label="Rantai 2 — Protein">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="protein" aria-label="Nutrisi Protein">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">💪</span><strong>Protein</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 3">
+          <div class="nutrition-chain-row" aria-label="Rantai 3 — Lemak">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="lemak" aria-label="Nutrisi Lemak">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">🟡</span><strong>Lemak</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 4">
+          <div class="nutrition-chain-row" aria-label="Rantai 4 — Vitamin">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="vitamin" aria-label="Nutrisi Vitamin">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">🍊</span><strong>Vitamin</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 5">
+          <div class="nutrition-chain-row" aria-label="Rantai 5 — Mineral">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="mineral" aria-label="Nutrisi Mineral">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">🔹</span><strong>Mineral</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 6">
+          <div class="nutrition-chain-row" aria-label="Rantai 6 — Serat">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="serat" aria-label="Nutrisi Serat">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">🌿</span><strong>Serat</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
-          <div class="nutrition-chain-row" aria-label="Rantai 7">
+          <div class="nutrition-chain-row" aria-label="Rantai 7 — Air">
             <button type="button" class="relation-slot food-slot" data-slot-type="food"><span>Tempatkan makanan</span></button>
-            <button type="button" class="relation-slot nutrient-slot" data-slot-type="nutrient"><span>Tempatkan nutrisi</span></button>
+            <div class="relation-slot nutrient-slot" data-correct-nutrient="air" aria-label="Nutrisi Air">
+              <span class="nutrient-fixed-emoji" aria-hidden="true">💧</span><strong>Air</strong>
+            </div>
             <button type="button" class="relation-slot function-slot" data-slot-type="function"><span>Tempatkan fungsi</span></button>
           </div>
         </div>
@@ -572,6 +582,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-29"></script>
+  <script src="digestive.js?v=20260929-30"></script>
 </body>
 </html>
