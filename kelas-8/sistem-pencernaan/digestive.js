@@ -83,7 +83,7 @@
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
       chemical:"Saliva (air liur)",
-      result:"Bolus; pencernaan pati mulai",
+      result:"Bolus; pencernaan karbohidrat mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
       why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
     },
@@ -458,25 +458,37 @@
     {
       icon:"🍚",
       name:"Karbohidrat",
-      final:"Monosakarida: terutama glukosa, juga fruktosa dan galaktosa",
+      final:"Glukosa, fruktosa, dan galaktosa",
       steps:[
         {
           place:"Mulut",
           enzyme:"Amilase saliva",
           producer:"Kelenjar ludah",
-          note:"Mulai memecah pati menjadi molekul yang lebih sederhana."
+          product:"Maltosa + dekstrin"
         },
         {
           place:"Usus halus",
           enzyme:"Amilase pankreas",
           producer:"Pankreas",
-          note:"Melanjutkan pemecahan pati."
+          product:"Maltosa + oligosakarida"
         },
         {
           place:"Permukaan usus halus",
-          enzyme:"Maltase, sukrase, laktase",
+          enzyme:"Maltase",
           producer:"Dinding usus halus",
-          note:"Mengubah disakarida menjadi monosakarida yang dapat diserap."
+          product:"Glukosa"
+        },
+        {
+          place:"Permukaan usus halus",
+          enzyme:"Sukrase",
+          producer:"Dinding usus halus",
+          product:"Glukosa + fruktosa"
+        },
+        {
+          place:"Permukaan usus halus",
+          enzyme:"Laktase",
+          producer:"Dinding usus halus",
+          product:"Glukosa + galaktosa"
         }
       ],
       helper:"—"
@@ -491,20 +503,20 @@
           enzyme:"Pepsin",
           producer:"Kelenjar lambung, mula-mula sebagai pepsinogen",
           activator:"HCl mengaktifkan pepsinogen menjadi pepsin",
-          note:"Memecah protein menjadi rantai yang lebih pendek."
+          product:"Peptida"
         },
         {
           place:"Usus halus",
           enzyme:"Tripsin",
           producer:"Pankreas, mula-mula sebagai tripsinogen",
           activator:"Enteropeptidase dari usus halus mengaktifkan tripsinogen menjadi tripsin",
-          note:"Melanjutkan pemecahan protein/peptida."
+          product:"Peptida yang lebih kecil"
         },
         {
           place:"Permukaan usus halus",
           enzyme:"Peptidase",
           producer:"Dinding usus halus",
-          note:"Menyelesaikan pemecahan peptida menjadi asam amino."
+          product:"Asam amino"
         }
       ],
       helper:"—"
@@ -512,16 +524,16 @@
     {
       icon:"🥑",
       name:"Lemak",
-      final:"Asam lemak + monogliserida/gliserol",
+      final:"Asam lemak + monogliserida",
       steps:[
         {
           place:"Usus halus",
           enzyme:"Lipase pankreas",
           producer:"Pankreas",
-          note:"Memecah trigliserida menjadi molekul yang lebih sederhana."
+          product:"Asam lemak + monogliserida"
         }
       ],
-      helper:"Empedu membantu mengemulsikan lemak agar lipase lebih mudah bekerja. Empedu dibuat oleh hati dan disimpan di kantung empedu. Empedu bukan enzim dan bukan pengaktif lipase."
+      helper:"Empedu membantu mengemulsikan lemak agar lipase lebih mudah bekerja. Empedu dibuat oleh hati dan disimpan di kantung empedu. Empedu bukan enzim."
     }
   ];
 
@@ -551,8 +563,11 @@
             <span>PENGAKTIF</span>
             <strong>${step.activator}</strong>
           </div>`:''}
+          <div class="enzyme-product">
+            <span>HASIL ENZIM</span>
+            <strong>${step.product}</strong>
+          </div>
         </div>
-        <p>${step.note}</p>
       </article>
       ${i<n.steps.length-1?'<div class="enzyme-step-arrow">↓</div>':''}
     `).join("");
@@ -809,13 +824,13 @@
 
     {tier:"Pemahaman",q:"Contoh pencernaan mekanik di mulut adalah...",o:["Kerja amilase","Mengunyah dengan gigi","Pemecahan protein oleh pepsin","Emulsifikasi oleh empedu"],a:1,e:"Mengunyah mengubah ukuran fisik makanan tanpa mengubah molekulnya secara kimia."},
     {tier:"Pemahaman",q:"Enzim pepsin terutama membantu mencerna...",o:["Protein","Lemak","Vitamin","Mineral"],a:0,e:"Pepsin berperan dalam pencernaan protein di lambung."},
-    {tier:"Pemahaman",q:"Empedu membantu pencernaan dengan cara...",o:["Memecah protein menjadi asam amino","Mengemulsikan lemak menjadi butiran lebih kecil","Mengubah glukosa menjadi pati","Menyerap air dari feses"],a:1,e:"Empedu mengemulsikan lemak. Empedu bukan enzim."},
+    {tier:"Pemahaman",q:"Empedu membantu pencernaan dengan cara...",o:["Memecah protein menjadi asam amino","Mengemulsikan lemak menjadi butiran lebih kecil","Mengubah glukosa menjadi karbohidrat kompleks","Menyerap air dari feses"],a:1,e:"Empedu mengemulsikan lemak. Empedu bukan enzim."},
     {tier:"Pemahaman",q:"Vili pada usus halus terutama berguna untuk...",o:["Memperkecil luas permukaan","Memperluas permukaan penyerapan","Menutup saluran napas","Menyimpan feses"],a:1,e:"Vili meningkatkan luas permukaan sehingga absorpsi lebih efektif."},
-    {tier:"Pemahaman",q:"Rektum berfungsi terutama untuk...",o:["Menyimpan feses sementara","Mencerna pati","Menghasilkan HCl","Mengemulsikan lemak"],a:0,e:"Rektum menyimpan feses sementara sebelum dikeluarkan."},
+    {tier:"Pemahaman",q:"Rektum berfungsi terutama untuk...",o:["Menyimpan feses sementara","Mencerna karbohidrat","Menghasilkan HCl","Mengemulsikan lemak"],a:0,e:"Rektum menyimpan feses sementara sebelum dikeluarkan."},
 
     {tier:"Aplikasi",q:"Jika gerak peristaltik kerongkongan terganggu, proses yang paling langsung terhambat adalah...",o:["Pemindahan bolus ke lambung","Penyerapan glukosa","Produksi empedu","Pembentukan feses"],a:0,e:"Kerongkongan terutama berfungsi memindahkan bolus melalui peristaltik."},
     {tier:"Aplikasi",q:"Kerusakan vili usus halus paling mungkin menyebabkan...",o:["Penyerapan zat gizi menurun","Pengunyahan terganggu","Produksi saliva meningkat","Feses disimpan lebih lama di rektum"],a:0,e:"Vili merupakan struktur penting untuk memperluas area absorpsi."},
-    {tier:"Aplikasi",q:"Nasi terutama mulai mengalami pencernaan kimiawi di...",o:["Mulut","Rektum","Anus","Usus besar"],a:0,e:"Pati pada nasi mulai dicerna oleh amilase saliva di mulut."},
+    {tier:"Aplikasi",q:"Nasi terutama mulai mengalami pencernaan kimiawi di...",o:["Mulut","Rektum","Anus","Usus besar"],a:0,e:"Karbohidrat pada nasi mulai dicerna oleh amilase saliva di mulut."},
     {tier:"Aplikasi",q:"Protein pada telur mulai banyak mengalami pencernaan kimiawi di...",o:["Mulut","Lambung","Usus besar","Rektum"],a:1,e:"Pepsin di lambung memulai pencernaan protein secara bermakna."},
     {tier:"Aplikasi",q:"Setelah keluar dari lambung, kimus pertama kali masuk ke...",o:["Usus halus","Usus besar","Rektum","Kerongkongan"],a:0,e:"Kimus bergerak dari lambung menuju bagian awal usus halus."},
 
