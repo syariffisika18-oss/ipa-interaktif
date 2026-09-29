@@ -25,7 +25,7 @@
       name:"Kerongkongan",
       icon:"〰️",
       observe:"Makanan bergerak turun melalui kerongkongan.",
-      process:"Dinding kerongkongan mendorong makanan sedikit demi sedikit menuju lambung.",
+      process:"Dinding kerongkongan melakukan gerak peristaltik, yaitu gerakan seperti gelombang yang mendorong makanan menuju lambung.",
       result:"Makanan sampai ke lambung.",
       terms:[["Peristaltik","gerakan seperti gelombang yang mendorong makanan di dalam saluran pencernaan."]],
       prompt:"Menurutmu, apakah makanan hanya jatuh ke lambung karena gravitasi?"
@@ -305,13 +305,18 @@
     refreshAllBallPositions();
   }
 
+  const exploreOrder=[0,2,3,4,5,6,7];
   const route=document.getElementById("organRoute");
-  route.innerHTML=journey.map((o,i)=>'<button type="button" data-organ="'+i+'"><b>'+(i+1)+'.</b> '+o.name+'</button>').join("");
+  route.innerHTML=exploreOrder.map((organIndex,displayIndex)=>{
+    const o=journey[organIndex];
+    return '<button type="button" data-organ="'+organIndex+'"><b>'+(displayIndex+1)+'.</b> '+o.name+'</button>';
+  }).join("");
 
   function renderJourney(animate=true){
     const o=journey[journeyIndex];
-    document.getElementById("journeyCounter").textContent=(journeyIndex+1)+" / "+journey.length;
-    document.getElementById("organNumber").textContent="Organ "+(journeyIndex+1);
+    const explorePos=exploreOrder.indexOf(journeyIndex);
+    document.getElementById("journeyCounter").textContent=(explorePos+1)+" / "+exploreOrder.length;
+    document.getElementById("organNumber").textContent="Bagian "+(explorePos+1);
     document.getElementById("organName").textContent=o.name;
     document.getElementById("organObserve").textContent=o.observe;
     document.getElementById("organProcess").textContent=o.process;
@@ -324,19 +329,23 @@
       termBox.hidden=!o.terms||!o.terms.length;
     }
     document.getElementById("organPrompt").innerHTML="<b>Pertanyaan pengarah:</b> "+o.prompt;
-    route.querySelectorAll("button").forEach((b,i)=>{
-      b.classList.toggle("is-active",i===journeyIndex);
-      b.classList.toggle("is-visited",i<=furthestJourney);
+    route.querySelectorAll("button").forEach(b=>{
+      const organIndex=Number(b.dataset.organ);
+      const pos=exploreOrder.indexOf(organIndex);
+      const currentPos=exploreOrder.indexOf(journeyIndex);
+      b.classList.toggle("is-active",organIndex===journeyIndex);
+      b.classList.toggle("is-visited",pos<=currentPos);
     });
     setHotspots("[data-explore-organ]",journeyIndex);
     const ball=document.getElementById("exploreFoodBall");
     animate?animateBall(ball,journeyIndex):placeBall(ball,journeyIndex,true);
-    document.getElementById("journeyPrev").disabled=journeyIndex===0;
-    document.getElementById("journeyNext").textContent=journeyIndex===journey.length-1?"Kembali ke awal":"Organ berikutnya →";
+    document.getElementById("journeyPrev").disabled=explorePos===0;
+    document.getElementById("journeyNext").textContent=explorePos===exploreOrder.length-1?"Kembali ke awal":"Bagian berikutnya →";
   }
 
   function selectJourney(index){
-    journeyIndex=Math.max(0,Math.min(journey.length-1,index));
+    if(!exploreOrder.includes(index))return;
+    journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     renderJourney(true);
   }
@@ -348,11 +357,16 @@
   document.getElementById("exploreAnatomy").addEventListener("click",e=>{
     if(Date.now()<visualDragSuppressUntil)return;
     const b=e.target.closest("[data-explore-organ]");if(!b)return;
-    selectJourney(Number(b.dataset.exploreOrgan));
+    const organIndex=Number(b.dataset.exploreOrgan);
+    selectJourney(organIndex===1?2:organIndex);
   });
-  document.getElementById("journeyPrev").onclick=()=>{if(journeyIndex>0)selectJourney(journeyIndex-1)};
+  document.getElementById("journeyPrev").onclick=()=>{
+    const pos=exploreOrder.indexOf(journeyIndex);
+    if(pos>0)selectJourney(exploreOrder[pos-1]);
+  };
   document.getElementById("journeyNext").onclick=()=>{
-    selectJourney(journeyIndex===journey.length-1?0:journeyIndex+1);
+    const pos=exploreOrder.indexOf(journeyIndex);
+    selectJourney(pos===exploreOrder.length-1?exploreOrder[0]:exploreOrder[pos+1]);
   };
 
   document.getElementById("predictionOptions").addEventListener("click",e=>{
