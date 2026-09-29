@@ -126,7 +126,7 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Tentukan bagian pertama yang dibagi",
-    text:"Mulai dari kiri. 2 lebih kecil dari 35, lalu 24 juga masih lebih kecil dari 35. Karena itu, gunakan 240 sebagai bagian pertama yang dibagi.",
+    text:"<b>Pertama,</b> lihat dari kiri: <span class=\"num-chip\">2</span> &lt; 35. Gabungkan menjadi <span class=\"num-chip red\">24</span>. Masih &lt; 35. Jadi gunakan <span class=\"num-chip\">240</span>.",
     rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
     quotientHTML:"?",
     dividendHTML:"240",
@@ -136,7 +136,7 @@ const processSteps=[
     phase:"BAGI",
     title:"Bagi 240 dengan 35",
     text:"",
-    rule:"Pilih hasil kali terbesar yang tidak melebihi bilangan yang sedang dibagi.",
+    rule:"Pilih kelipatan terbesar yang tidak melewati angka yang dibagi.",
     compare:[
       {calc:"35 × 6 =",value:"210",status:"mendekati 240",ok:true},
       {calc:"35 × 7 =",value:"245",status:"melebihi 240",ok:false}
@@ -150,7 +150,7 @@ const processSteps=[
     phase:"KALI",
     title:"Kalikan 6 × 35 = 210",
     text:"Tulis 210 tepat di bawah 240.",
-    rule:"Kalikan digit hasil bagi dengan pembagi.",
+    rule:"Kalikan angka hasil dengan pembagi.",
     quotientHTML:'<span class="ld-red">6</span>',
     divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"240",
@@ -162,7 +162,7 @@ const processSteps=[
     phase:"KURANGI",
     title:"240 − 210 = 30",
     text:"Sisa pembagiannya 30.",
-    rule:"Kurangkan untuk mengetahui sisa pembagian.",
+    rule:"Kurangkan. Hasilnya adalah sisa.",
     quotientHTML:"6",
     dividendHTML:'<span class="ld-red">240</span>',
     rows:[
@@ -175,7 +175,7 @@ const processSteps=[
     phase:"DESIMAL",
     title:"Tambahkan koma dan 0",
     text:"",
-    rule:"Jika masih ada sisa, tambahkan koma pada hasil dan 0 pada sisa untuk melanjutkan.",
+    rule:"Masih ada sisa? Tulis koma, lalu tambahkan 0 pada sisa.",
     quotientHTML:'6<span class="ld-red">,</span>',
     dividendHTML:"240",
     rows:[
@@ -188,7 +188,7 @@ const processSteps=[
     phase:"BAGI",
     title:"Bagi 300 dengan 35",
     text:"",
-    rule:"Pilih lagi hasil kali terbesar yang tidak melebihi bilangan yang sedang dibagi.",
+    rule:"Pilih lagi kelipatan terbesar yang tidak melewati angka yang dibagi.",
     compare:[
       {calc:"35 × 8 =",value:"280",status:"mendekati 300",ok:true},
       {calc:"35 × 9 =",value:"315",status:"melebihi 300",ok:false}
@@ -206,7 +206,7 @@ const processSteps=[
     phase:"KALI",
     title:"Kalikan 8 × 35 = 280",
     text:"Tulis 280 tepat di bawah 300.",
-    rule:"Kalikan digit hasil bagi yang baru dengan pembagi.",
+    rule:"Kalikan angka hasil yang baru dengan pembagi.",
     quotientHTML:'6,<span class="ld-red">8</span>',
     divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"240",
@@ -221,7 +221,7 @@ const processSteps=[
     phase:"KURANGI",
     title:"300 − 280 = 20",
     text:"Sisa pembagiannya 20.",
-    rule:"Jika masih ada sisa, proses belum selesai.",
+    rule:"Sisa belum 0? Lanjutkan.",
     quotientHTML:"6,8",
     dividendHTML:"240",
     rows:[
@@ -237,7 +237,7 @@ const processSteps=[
     phase:"ULANGI",
     title:"",
     text:"20 menjadi 200. Pilih 5 karena 35 × 5 = 175, sedangkan 35 × 6 = 210 sudah melebihi 200.",
-    rule:"Ulangi bagi → kali → kurangi. Jika hasil pengurangan menjadi 0, pembagian selesai. Jika belum 0, lanjutkan lagi.",
+    rule:"Ulangi: bagi → kali → kurangi. Sisa 0 = selesai.",
     compare:[
       {calc:"35 × 5 =",value:"175",status:"mendekati 200",ok:true},
       {calc:"35 × 6 =",value:"210",status:"melebihi 200",ok:false}
@@ -260,7 +260,7 @@ const processSteps=[
     phase:"HASIL",
     title:"240 ÷ 35 = 6,857142…",
     text:"",
-    rule:"Jika suatu tahap menghasilkan sisa 0, pembagian selesai. Jika sisanya tidak 0, pola dapat diteruskan sesuai ketelitian yang dibutuhkan.",
+    rule:"Sisa 0 = selesai. Jika belum 0, ulangi pola.",
     quotientHTML:'6,857142<span class="ld-red">…</span>',
     dividendHTML:"240",
     rows:[
@@ -327,7 +327,7 @@ function renderProcess(){
   const processText=document.getElementById("processText");
   if(s.text){
     processText.hidden=false;
-    processText.textContent=s.text;
+    processText.innerHTML=s.text;
   }else{
     processText.hidden=true;
     processText.textContent="";
