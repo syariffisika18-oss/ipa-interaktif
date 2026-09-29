@@ -77,14 +77,86 @@
   ];
 
   const model=[
-    {name:"Mulut",process:"Mengunyah + mencampur makanan dengan saliva",type:"Mekanik + kimiawi",agent:"Gigi, lidah, amilase saliva",result:"Bolus; pencernaan pati mulai",term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."},
-    {name:"Faring",process:"Menelan dan mengarahkan bolus",type:"Transport",agent:"Otot faring + epiglotis",result:"Bolus masuk ke kerongkongan",term:"Epiglotis = lipatan yang membantu menutup jalan napas ketika menelan.",why:"Arah bolus harus tepat agar makanan tidak masuk ke saluran pernapasan."},
-    {name:"Kerongkongan",process:"Peristaltik",type:"Transport",agent:"Kontraksi otot dinding",result:"Bolus menuju lambung",term:"Peristaltik = gerak kontraksi bergelombang yang mendorong makanan.",why:"Gerak peristaltik menjaga makanan tetap bergerak menuju lambung."},
-    {name:"Lambung",process:"Mengaduk + mencerna protein",type:"Mekanik + kimiawi",agent:"Otot lambung, HCl, pepsin",result:"Kimus; protein mulai dipecah",term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung.",why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."},
-    {name:"Usus halus",process:"Pencernaan lanjutan + absorpsi",type:"Kimiawi + penyerapan",agent:"Enzim pankreas/usus, empedu, vili",result:"Molekul sederhana diserap",term:"Vili = tonjolan kecil yang memperluas permukaan penyerapan.",why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."},
-    {name:"Usus besar",process:"Penyerapan air + pembentukan feses",type:"Penyerapan",agent:"Dinding usus + mikrobiota",result:"Sisa lebih padat membentuk feses",term:"Feses = sisa pencernaan yang tidak digunakan tubuh.",why:"Pengaturan air membantu menjaga konsistensi feses dan keseimbangan cairan."},
-    {name:"Rektum",process:"Penyimpanan sementara feses",type:"Penyimpanan",agent:"Dinding rektum",result:"Feses menunggu dikeluarkan",term:"Rektum = bagian akhir usus besar tempat feses disimpan sementara.",why:"Penyimpanan sementara memungkinkan pengeluaran feses berlangsung terkontrol."},
-    {name:"Anus",process:"Pengeluaran feses",type:"Eliminasi",agent:"Otot sfingter",result:"Feses keluar dari tubuh",term:"Sfingter = otot berbentuk cincin yang mengatur buka-tutup anus.",why:"Sfingter membantu mengendalikan waktu pengeluaran feses."}
+    {
+      name:"Mulut",
+      process:"Mengunyah + mencampur makanan dengan saliva",
+      type:"Mekanik + kimiawi",
+      mechanical:"Gigi, lidah",
+      chemical:"Amilase saliva",
+      result:"Bolus; pencernaan pati mulai",
+      term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
+      why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
+    },
+    {
+      name:"Faring",
+      process:"Menelan dan mengarahkan bolus",
+      type:"Mekanik / transport",
+      mechanical:"Otot faring, epiglotis",
+      chemical:"—",
+      result:"Bolus masuk ke kerongkongan",
+      term:"Epiglotis = lipatan yang membantu menutup jalan napas ketika menelan.",
+      why:"Arah bolus harus tepat agar makanan tidak masuk ke saluran pernapasan."
+    },
+    {
+      name:"Kerongkongan",
+      process:"Gerak peristaltik",
+      type:"Mekanik / transport",
+      mechanical:"Otot dinding kerongkongan",
+      chemical:"—",
+      result:"Bolus menuju lambung",
+      term:"Peristaltik = gerak kontraksi bergelombang yang mendorong makanan.",
+      why:"Gerak peristaltik menjaga makanan tetap bergerak menuju lambung."
+    },
+    {
+      name:"Lambung",
+      process:"Mengaduk + mencerna protein",
+      type:"Mekanik + kimiawi",
+      mechanical:"Otot dinding lambung",
+      chemical:"HCl, pepsin",
+      result:"Kimus; protein mulai dipecah",
+      term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung.",
+      why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."
+    },
+    {
+      name:"Usus halus",
+      process:"Pencernaan lanjutan + penyerapan zat gizi",
+      type:"Mekanik + kimiawi + penyerapan",
+      mechanical:"Otot dinding usus",
+      chemical:"Empedu, enzim pankreas, enzim usus",
+      result:"Zat gizi sederhana diserap",
+      term:"Vili = tonjolan kecil yang memperluas permukaan penyerapan.",
+      why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."
+    },
+    {
+      name:"Usus besar",
+      process:"Penyerapan air + pembentukan feses",
+      type:"Penyerapan + gerak usus",
+      mechanical:"Otot dinding usus",
+      chemical:"—",
+      result:"Sisa lebih padat membentuk feses",
+      term:"Feses = sisa pencernaan yang tidak digunakan tubuh.",
+      why:"Penyerapan air membantu menjaga konsistensi feses dan keseimbangan cairan."
+    },
+    {
+      name:"Rektum",
+      process:"Penyimpanan sementara feses",
+      type:"Penyimpanan",
+      mechanical:"Otot dinding rektum",
+      chemical:"—",
+      result:"Feses menunggu dikeluarkan",
+      term:"Rektum = bagian akhir usus besar yang menyimpan feses sementara.",
+      why:"Penyimpanan sementara memungkinkan pengeluaran feses berlangsung terkontrol."
+    },
+    {
+      name:"Anus",
+      process:"Pengeluaran feses",
+      type:"Eliminasi",
+      mechanical:"Otot sfingter",
+      chemical:"—",
+      result:"Feses keluar dari tubuh",
+      term:"Sfingter = otot berbentuk cincin yang mengatur buka-tutup anus.",
+      why:"Sfingter membantu mengendalikan waktu pengeluaran feses."
+    }
   ];
 
   let prediction="";
@@ -424,7 +496,8 @@
     document.getElementById("modelName").textContent=m.name;
     document.getElementById("modelProcess").textContent=m.process;
     document.getElementById("modelType").textContent=m.type;
-    document.getElementById("modelAgent").textContent=m.agent;
+    document.getElementById("modelMechanical").textContent=m.mechanical;
+    document.getElementById("modelChemical").textContent=m.chemical;
     document.getElementById("modelResult").textContent=m.result;
     document.getElementById("modelTerm").textContent=m.term;
     document.getElementById("modelWhy").textContent=m.why;
