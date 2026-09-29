@@ -1258,3 +1258,120 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
     grid-template-columns:1fr 1.15fr 1.45fr;
   }
 }
+
+
+/* =========================================================
+   ELABORATE HOTS — analisis, transfer, evaluasi model
+   ========================================================= */
+.hots-case-intro,
+.hots-case,
+.wrong-model-card{
+  padding:14px 16px;
+  border-radius:15px;
+  background:#f4f7ff;
+  border:1px solid #dfe6f4;
+}
+.hots-case-intro h3,
+.hots-case h3,
+.wrong-model-card h3{margin:0 0 5px}
+.hots-case-intro p,
+.hots-case p{margin:0;color:var(--muted);line-height:1.45}
+
+.pathway-challenge{display:grid;gap:8px;margin-top:10px}
+.pathway-task{
+  display:grid;
+  grid-template-columns:190px 1fr;
+  gap:9px;
+  align-items:start;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+}
+.pathway-food{
+  padding:8px 9px;
+  border-radius:10px;
+  background:#eef8f5;
+  line-height:1.35;
+}
+.pathway-options{display:grid;gap:5px}
+.pathway-options button,
+.evidence-options button{
+  min-height:36px;
+  padding:7px 9px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fff;
+  text-align:left;
+  font-weight:760;
+  cursor:pointer;
+}
+.pathway-options button.is-selected,
+.evidence-options button.is-selected{
+  border-color:#5268e8;
+  background:#eef2ff;
+}
+.transfer-question,
+.evidence-step,
+.model-critique-step{
+  margin-top:10px;
+  padding:11px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+}
+.transfer-question>p,
+.evidence-step>p,
+.model-critique-step>p{margin:0 0 7px}
+.compact-reason{grid-template-columns:repeat(3,1fr)}
+.evidence-options{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:6px;
+}
+.locked-step{
+  opacity:.48;
+  pointer-events:none;
+  filter:saturate(.5);
+}
+.wrong-model-card span{
+  display:block;
+  color:#a35400;
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.07em;
+}
+.wrong-model-card{
+  background:#fff6df;
+  border-color:#efd99b;
+}
+.wrong-model-card h3{
+  margin-top:5px;
+  color:#5b4510;
+}
+
+@media(max-width:640px){
+  .pathway-task{grid-template-columns:1fr;gap:5px;padding:7px}
+  .pathway-food{font-size:.7rem;padding:6px}
+  .pathway-options button,
+  .evidence-options button{min-height:33px;font-size:.66rem;padding:6px}
+  .compact-reason{grid-template-columns:1fr}
+  .evidence-options{grid-template-columns:1fr 1fr}
+  .transfer-question,.evidence-step,.model-critique-step{padding:8px}
+  .hots-case-intro,.hots-case,.wrong-model-card{padding:9px}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .pathway-challenge{gap:3px;margin-top:4px}
+  .pathway-task{grid-template-columns:125px 1fr;gap:4px;padding:4px}
+  .pathway-food{padding:4px;font-size:.5rem}
+  .pathway-options{grid-template-columns:repeat(3,1fr);gap:3px}
+  .pathway-options button,
+  .evidence-options button{min-height:26px;padding:3px 4px;font-size:.48rem}
+  .transfer-question,.evidence-step,.model-critique-step{margin-top:4px;padding:5px}
+  .transfer-question>p,.evidence-step>p,.model-critique-step>p{margin-bottom:3px;font-size:.5rem}
+  .compact-reason{grid-template-columns:repeat(3,1fr)}
+  .evidence-options{grid-template-columns:repeat(4,1fr)}
+  .hots-case-intro,.hots-case,.wrong-model-card{padding:5px}
+  .hots-case-intro h3,.hots-case h3,.wrong-model-card h3{font-size:.62rem;margin-bottom:2px}
+  .hots-case-intro p,.hots-case p{font-size:.48rem}
+}
