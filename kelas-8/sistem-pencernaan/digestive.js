@@ -804,6 +804,182 @@
     }
   });
 
+  // ---------------------------------------------------------
+  // Prasyarat: mini game klasifikasi 7 zat gizi
+  // ---------------------------------------------------------
+  const nutrientGameCards=[
+    {id:"nasi",emoji:"🍚",label:"Nasi",nutrient:"karbohidrat",feedback:"Nasi dipakai sebagai contoh sumber karbohidrat."},
+    {id:"telur",emoji:"🥚",label:"Telur",nutrient:"protein",feedback:"Telur dipakai sebagai contoh sumber protein."},
+    {id:"minyak",emoji:"🫒",label:"Minyak",nutrient:"lemak",feedback:"Minyak dipakai sebagai contoh sumber lemak."},
+    {id:"jeruk",emoji:"🍊",label:"Jeruk",nutrient:"vitamin",feedback:"Jeruk dipakai sebagai contoh makanan kaya vitamin."},
+    {id:"garam",emoji:"🧂",label:"Garam beryodium",nutrient:"mineral",feedback:"Yodium pada garam merupakan mineral."},
+    {id:"sayur",emoji:"🥬",label:"Sayur berserat",nutrient:"serat",feedback:"Sayur dipakai sebagai contoh sumber serat."},
+    {id:"airputih",emoji:"💧",label:"Air putih",nutrient:"air",feedback:"Air putih mewakili kebutuhan air tubuh."}
+  ];
+
+  const nutrientCardBank=document.getElementById("nutrientCardBank");
+  const nutrientDropGrid=document.getElementById("nutrientDropGrid");
+  const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
+  const nutrientGameScore=document.getElementById("nutrientGameScore");
+  let selectedNutrientCard=null;
+  let nutrientGameOrder=[...nutrientGameCards];
+
+  function shuffleArray(list){
+    const a=[...list];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+
+  function makeNutrientCard(card){
+    const el=document.createElement("button");
+    el.type="button";
+    el.className="food-nutrient-card";
+    el.draggable=true;
+    el.dataset.cardId=card.id;
+    el.dataset.correctNutrient=card.nutrient;
+    el.innerHTML='<span class="food-card-emoji">'+card.emoji+'</span><strong>'+card.label+'</strong>';
+    el.setAttribute("aria-label",card.label);
+    return el;
+  }
+
+  function clearNutrientGameMarks(){
+    document.querySelectorAll(".food-nutrient-card").forEach(c=>c.classList.remove("is-selected","is-correct","is-wrong"));
+    document.querySelectorAll(".nutrient-drop-zone").forEach(z=>z.classList.remove("is-drop-target","has-correct","has-wrong"));
+  }
+
+  function renderNutrientBank(order=nutrientGameOrder){
+    nutrientCardBank.innerHTML="";
+    order.forEach(card=>nutrientCardBank.appendChild(makeNutrientCard(card)));
+    bindNutrientCards();
+  }
+
+  function findCardData(id){
+    return nutrientGameCards.find(c=>c.id===id);
+  }
+
+  function placeNutrientCard(cardEl,zone){
+    if(!cardEl||!zone)return;
+    const slot=zone.querySelector(".nutrient-zone-slot");
+    const existing=slot.querySelector(".food-nutrient-card");
+    if(existing&&existing!==cardEl){
+      nutrientCardBank.appendChild(existing);
+    }
+    slot.appendChild(cardEl);
+    selectedNutrientCard=null;
+    clearNutrientGameMarks();
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Lanjutkan sampai semua kartu ditempatkan.";
+  }
+
+  function bindNutrientCards(){
+    document.querySelectorAll(".food-nutrient-card").forEach(card=>{
+      card.addEventListener("click",e=>{
+        e.stopPropagation();
+        document.querySelectorAll(".food-nutrient-card").forEach(c=>c.classList.remove("is-selected"));
+        selectedNutrientCard=card;
+        card.classList.add("is-selected");
+        nutrientGameFeedback.className="digest-feedback neutral";
+        nutrientGameFeedback.textContent="Kartu "+findCardData(card.dataset.cardId).label+" dipilih. Sekarang sentuh kelompok zat gizi tujuannya.";
+      });
+      card.addEventListener("dragstart",e=>{
+        e.dataTransfer.setData("text/plain",card.dataset.cardId);
+        e.dataTransfer.effectAllowed="move";
+        card.classList.add("is-dragging");
+      });
+      card.addEventListener("dragend",()=>{
+        card.classList.remove("is-dragging");
+        document.querySelectorAll(".nutrient-drop-zone").forEach(z=>z.classList.remove("is-drop-target"));
+      });
+    });
+  }
+
+  document.querySelectorAll(".nutrient-drop-zone").forEach(zone=>{
+    zone.addEventListener("click",e=>{
+      if(e.target.closest(".food-nutrient-card"))return;
+      if(selectedNutrientCard)placeNutrientCard(selectedNutrientCard,zone);
+    });
+    zone.addEventListener("dragover",e=>{
+      e.preventDefault();
+      zone.classList.add("is-drop-target");
+    });
+    zone.addEventListener("dragleave",()=>zone.classList.remove("is-drop-target"));
+    zone.addEventListener("drop",e=>{
+      e.preventDefault();
+      zone.classList.remove("is-drop-target");
+      const id=e.dataTransfer.getData("text/plain");
+      const card=document.querySelector('.food-nutrient-card[data-card-id="'+id+'"]');
+      placeNutrientCard(card,zone);
+    });
+  });
+
+  nutrientCardBank.addEventListener("dragover",e=>e.preventDefault());
+  nutrientCardBank.addEventListener("drop",e=>{
+    e.preventDefault();
+    const id=e.dataTransfer.getData("text/plain");
+    const card=document.querySelector('.food-nutrient-card[data-card-id="'+id+'"]');
+    if(card)nutrientCardBank.appendChild(card);
+    clearNutrientGameMarks();
+  });
+
+  document.getElementById("checkNutrientGame").addEventListener("click",()=>{
+    const placed=[...document.querySelectorAll(".nutrient-drop-zone .food-nutrient-card")];
+    if(placed.length<nutrientGameCards.length){
+      nutrientGameFeedback.className="digest-feedback warn";
+      nutrientGameFeedback.textContent="Masih ada "+(nutrientGameCards.length-placed.length)+" kartu yang belum ditempatkan.";
+      return;
+    }
+
+    let correct=0;
+    const wrong=[];
+    document.querySelectorAll(".nutrient-drop-zone").forEach(zone=>{
+      const card=zone.querySelector(".food-nutrient-card");
+      if(!card)return;
+      const ok=card.dataset.correctNutrient===zone.dataset.nutrientZone;
+      card.classList.toggle("is-correct",ok);
+      card.classList.toggle("is-wrong",!ok);
+      zone.classList.toggle("has-correct",ok);
+      zone.classList.toggle("has-wrong",!ok);
+      if(ok)correct++;
+      else wrong.push(findCardData(card.dataset.cardId));
+    });
+
+    nutrientGameScore.textContent=correct+" / 7 tepat";
+    if(correct===7){
+      nutrientGameFeedback.className="digest-feedback good";
+      nutrientGameFeedback.textContent="Semua tepat. Kamu sudah mengenali tujuh kelompok zat gizi yang akan digunakan sebagai bekal memahami sistem pencernaan.";
+    }else{
+      nutrientGameFeedback.className="digest-feedback warn";
+      nutrientGameFeedback.innerHTML="<b>"+correct+" dari 7 tepat.</b> Tinjau lagi "+wrong.map(c=>c.label).join(", ")+".";
+    }
+  });
+
+  document.getElementById("shuffleNutrientGame").addEventListener("click",()=>{
+    document.querySelectorAll(".food-nutrient-card").forEach(c=>nutrientCardBank.appendChild(c));
+    nutrientGameOrder=shuffleArray(nutrientGameCards);
+    renderNutrientBank(nutrientGameOrder);
+    clearNutrientGameMarks();
+    selectedNutrientCard=null;
+    nutrientGameScore.textContent="0 / 7 tepat";
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Kartu sudah diacak. Tempatkan kembali ke kelompok yang sesuai.";
+  });
+
+  document.getElementById("resetNutrientGame").addEventListener("click",()=>{
+    nutrientGameOrder=[...nutrientGameCards];
+    renderNutrientBank(nutrientGameOrder);
+    document.querySelectorAll(".nutrient-zone-slot").forEach(s=>s.innerHTML="");
+    clearNutrientGameMarks();
+    selectedNutrientCard=null;
+    nutrientGameScore.textContent="0 / 7 tepat";
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Permainan diulang. Tempatkan semua kartu terlebih dahulu.";
+  });
+
+  renderNutrientBank();
+
   document.querySelectorAll(".mini-question").forEach((q,idx)=>{
     q.querySelector(".mini-options").addEventListener("click",e=>{
       const b=e.target.closest("button");if(!b)return;
