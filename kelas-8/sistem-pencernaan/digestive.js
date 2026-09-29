@@ -82,7 +82,7 @@
       process:"Mengunyah + mencampur makanan dengan saliva",
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
-      chemical:"Amilase saliva",
+      chemical:"Saliva (air liur)",
       result:"Bolus; pencernaan pati mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
       why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
@@ -112,7 +112,7 @@
       process:"Mengaduk + mencerna protein",
       type:"Mekanik + kimiawi",
       mechanical:"Otot dinding lambung",
-      chemical:"HCl, pepsin",
+      chemical:"Cairan lambung",
       result:"Kimus; protein mulai dipecah",
       term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung.",
       why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."
@@ -122,7 +122,7 @@
       process:"Pencernaan lanjutan + penyerapan zat gizi",
       type:"Mekanik + kimiawi + penyerapan",
       mechanical:"Otot dinding usus",
-      chemical:"Empedu, enzim pankreas, enzim usus",
+      chemical:"Empedu, cairan pankreas, cairan usus",
       result:"Zat gizi sederhana diserap",
       term:"Vili = tonjolan kecil yang memperluas permukaan penyerapan.",
       why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."
@@ -458,29 +458,75 @@
     {
       icon:"🍚",
       name:"Karbohidrat",
-      enzymes:"Amilase saliva → amilase pankreas → maltase/sukrase/laktase",
-      activator:"Tidak ada pengaktif khusus; enzim bekerja pada kondisi pH yang sesuai.",
-      result:"Monosakarida, terutama glukosa",
-      place:"Mulut dan usus halus",
-      note:"Karbohidrat kompleks dipecah bertahap hingga menjadi gula sederhana yang dapat diserap."
+      final:"Monosakarida: terutama glukosa, juga fruktosa dan galaktosa",
+      steps:[
+        {
+          place:"Mulut",
+          enzyme:"Amilase saliva",
+          producer:"Kelenjar ludah",
+          activator:"Tidak ada pengaktif khusus",
+          note:"Mulai memecah pati menjadi molekul yang lebih sederhana."
+        },
+        {
+          place:"Usus halus",
+          enzyme:"Amilase pankreas",
+          producer:"Pankreas",
+          activator:"Tidak ada pengaktif khusus; bekerja baik pada suasana usus yang sesuai",
+          note:"Melanjutkan pemecahan pati."
+        },
+        {
+          place:"Permukaan usus halus",
+          enzyme:"Maltase, sukrase, laktase",
+          producer:"Dinding usus halus",
+          activator:"Tidak ada pengaktif khusus",
+          note:"Mengubah disakarida menjadi monosakarida yang dapat diserap."
+        }
+      ],
+      helper:"—"
     },
     {
       icon:"🥚",
       name:"Protein",
-      enzymes:"Pepsin → tripsin/kimotripsin → peptidase",
-      activator:"HCl mengaktifkan pepsinogen menjadi pepsin; enteropeptidase mengaktifkan tripsinogen menjadi tripsin.",
-      result:"Asam amino",
-      place:"Lambung dan usus halus",
-      note:"Protein dipecah bertahap dari rantai panjang menjadi peptida, lalu menjadi asam amino."
+      final:"Asam amino",
+      steps:[
+        {
+          place:"Lambung",
+          enzyme:"Pepsin",
+          producer:"Kelenjar lambung, mula-mula sebagai pepsinogen",
+          activator:"HCl mengaktifkan pepsinogen menjadi pepsin",
+          note:"Memecah protein menjadi rantai yang lebih pendek."
+        },
+        {
+          place:"Usus halus",
+          enzyme:"Tripsin",
+          producer:"Pankreas, mula-mula sebagai tripsinogen",
+          activator:"Enteropeptidase dari usus halus mengaktifkan tripsinogen menjadi tripsin",
+          note:"Melanjutkan pemecahan protein/peptida."
+        },
+        {
+          place:"Permukaan usus halus",
+          enzyme:"Peptidase",
+          producer:"Dinding usus halus",
+          activator:"Tidak ada pengaktif khusus",
+          note:"Menyelesaikan pemecahan peptida menjadi asam amino."
+        }
+      ],
+      helper:"—"
     },
     {
       icon:"🥑",
       name:"Lemak",
-      enzymes:"Lipase, terutama lipase pankreas",
-      activator:"Tidak ada pengaktif khusus. Empedu membantu mengemulsikan lemak, tetapi empedu bukan enzim dan bukan pengaktif lipase.",
-      result:"Asam lemak + monogliserida/gliserol",
-      place:"Terutama usus halus",
-      note:"Emulsifikasi memperkecil butiran lemak sehingga lipase lebih mudah bekerja."
+      final:"Asam lemak + monogliserida/gliserol",
+      steps:[
+        {
+          place:"Usus halus",
+          enzyme:"Lipase pankreas",
+          producer:"Pankreas",
+          activator:"Tidak ada pengaktif khusus",
+          note:"Memecah trigliserida menjadi molekul yang lebih sederhana."
+        }
+      ],
+      helper:"Empedu membantu mengemulsikan lemak agar lipase lebih mudah bekerja. Empedu dibuat oleh hati dan disimpan di kantung empedu. Empedu bukan enzim dan bukan pengaktif lipase."
     }
   ];
 
@@ -490,12 +536,37 @@
     document.querySelectorAll(".nutrient-tab").forEach((b,i)=>b.classList.toggle("is-active",i===index));
     document.getElementById("nutrientIcon").textContent=n.icon;
     document.getElementById("nutrientName").textContent=n.name;
-    document.getElementById("nutrientSource").textContent=n.name;
-    document.getElementById("nutrientEnzymes").textContent=n.enzymes;
-    document.getElementById("nutrientActivator").textContent=n.activator;
-    document.getElementById("nutrientResult").textContent=n.result;
-    document.getElementById("nutrientPlace").textContent=n.place;
-    document.getElementById("nutrientNote").textContent=n.note;
+    document.getElementById("nutrientFinal").textContent=n.final;
+
+    const pathway=document.getElementById("enzymePathway");
+    pathway.innerHTML=n.steps.map((step,i)=>`
+      <article class="enzyme-step">
+        <div class="enzyme-step-number">${i+1}</div>
+        <div class="enzyme-step-place">${step.place}</div>
+        <div class="enzyme-step-grid">
+          <div>
+            <span>ENZIM</span>
+            <strong>${step.enzyme}</strong>
+          </div>
+          <div>
+            <span>PENGHASIL / KELENJAR</span>
+            <strong>${step.producer}</strong>
+          </div>
+          <div>
+            <span>PENGAKTIF / KONDISI</span>
+            <strong>${step.activator}</strong>
+          </div>
+        </div>
+        <p>${step.note}</p>
+      </article>
+      ${i<n.steps.length-1?'<div class="enzyme-step-arrow">↓</div>':''}
+    `).join("");
+
+    const helper=document.getElementById("nutrientHelper");
+    const helperText=document.getElementById("nutrientHelperText");
+    const hasHelper=n.helper&&n.helper!=="—";
+    helper.hidden=!hasHelper;
+    helperText.textContent=hasHelper?n.helper:"";
   }
 
   const nutrientTabs=document.getElementById("nutrientTabs");
