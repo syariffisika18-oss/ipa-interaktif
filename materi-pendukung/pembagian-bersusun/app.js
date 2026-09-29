@@ -328,6 +328,10 @@ function renderProcess(){
   renderProcessCompare(s);
   renderLongDivision(s);
 
+  const processPrev=document.getElementById("processPrev");
+  processPrev.disabled=processIndex===0;
+  processPrev.setAttribute("aria-disabled",processIndex===0?"true":"false");
+
   document.getElementById("processNext").textContent=
     processIndex===processSteps.length-1?"Ulangi dari awal":"Langkah berikutnya →";
 
@@ -339,6 +343,14 @@ function renderProcess(){
     strip.appendChild(d);
   });
 }
+
+document.getElementById("processPrev").onclick=()=>{
+  if(processIndex===0) return;
+  processIndex--;
+  state.processIndex=processIndex;
+  save();
+  renderProcess();
+};
 
 document.getElementById("processNext").onclick=()=>{
   processIndex=processIndex===processSteps.length-1?0:processIndex+1;
