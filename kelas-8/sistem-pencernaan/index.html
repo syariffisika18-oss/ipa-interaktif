@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-7">
+  <link rel="stylesheet" href="digestive.css?v=20260929-8">
 </head>
 <body>
   <header class="app-header">
@@ -188,50 +188,87 @@
         <span class="principle">Model-Based Learning</span>
       </div>
 
-      <div class="model-intro">
-        <p class="stage-kicker">Bangun model</p>
-        <h3>Organ → proses → zat yang berperan → hasil</h3>
-        <p>Gunakan model ini untuk menjelaskan apa yang terjadi, bukan sekadar menghafal nama organ.</p>
+      <div class="explain-page-nav" role="tablist" aria-label="Halaman Explain">
+        <button type="button" class="explain-page-tab is-active" data-explain-page="0"><span>1</span>Apa itu pencernaan?</button>
+        <button type="button" class="explain-page-tab" data-explain-page="1"><span>2</span>Model organ</button>
       </div>
 
-      <div class="model-tabs" id="modelTabs"></div>
-      <div class="explain-anatomy-layout">
+      <section class="explain-page is-active" data-explain-content="0">
+        <div class="digestion-concept-card">
+          <p class="stage-kicker">Konsep utama</p>
+          <h3>Apa itu pencernaan?</h3>
+          <p class="digestion-definition"><strong>Pencernaan</strong> adalah proses memecah makanan menjadi zat yang lebih sederhana agar dapat diserap dan digunakan oleh tubuh.</p>
 
-        <div class="digestive-anatomy-card">
-          <div class="digestive-anatomy-figure" id="explainAnatomy">
-            <img src="assets/digestive-anatomy.webp" alt="Anatomi sistem pencernaan manusia">
-            <svg class="food-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M39 18 C41 20 43 22 44 25 C47 31 49 38 51 47 C53 53 58 54 59 58 C58 63 54 68 52 73 C56 76 61 75 64 73 C64 79 60 84 57 89 C57 92 57 95 57 97"/>
-            </svg>
-            <button class="anatomy-hotspot hotspot-0" type="button" data-explain-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explain-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explain-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explain-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explain-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explain-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explain-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explain-organ="7" aria-label="Pilih Anus"><span>8</span></button>
-            <span class="food-ball" id="explainFoodBall" data-index="0" aria-hidden="true"></span>
+          <div class="digestion-flow" aria-label="Alur sederhana proses pencernaan">
+            <div><span>🍚</span><b>Makanan</b></div>
+            <i>→</i>
+            <div><span>⚙️</span><b>Dipecah</b></div>
+            <i>→</i>
+            <div><span>🔹</span><b>Zat lebih sederhana</b></div>
+            <i>→</i>
+            <div><span>🩸</span><b>Diserap tubuh</b></div>
           </div>
-          <div class="anatomy-caption">
-            <span>● Bola makanan bergerak mengikuti organ yang dipilih.</span>
+
+          <div class="simple-digestion-examples">
+            <article><span>Karbohidrat</span><b>→ Glukosa</b></article>
+            <article><span>Protein</span><b>→ Asam amino</b></article>
+            <article><span>Lemak</span><b>→ Asam lemak + gliserol</b></article>
           </div>
+
+          <div class="digestion-note">
+            <b>Intinya:</b> makanan yang kita makan perlu diubah menjadi bentuk yang cukup sederhana agar tubuh dapat memanfaatkannya.
+          </div>
+
+          <button type="button" class="primary-inline explain-concept-next" id="explainConceptNext">Lihat proses pada setiap organ →</button>
         </div>
-        <article class="model-detail">
-          <div class="model-data">
-            <p class="stage-kicker" id="modelNumber">Organ 1</p>
-            <h3 id="modelName">Mulut</h3>
-            <div class="model-four">
-              <div><span>PROSES</span><strong id="modelProcess"></strong></div>
-              <div><span>JENIS</span><strong id="modelType"></strong></div>
-              <div><span>ZAT / ENZIM</span><strong id="modelAgent"></strong></div>
-              <div><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
-            </div>
-            <div class="model-term"><span>ISTILAH PENTING</span><strong id="modelTerm"></strong></div>
-            <div class="model-why"><b>Mengapa penting?</b><p id="modelWhy"></p></div>
-            <div class="model-route-text" id="modelRouteText"></div>
-          </div>
-        </article>
-      </div>
+      </section>
 
-      <div class="accessory-grid">
-        <article><b>Hati & kantung empedu</b><span>Empedu membantu mengemulsikan lemak. Empedu bukan enzim.</span></article>
-        <article><b>Pankreas</b><span>Mengirim enzim pencernaan ke usus halus.</span></article>
-        <article><b>Vili usus</b><span>Memperluas permukaan sehingga penyerapan zat gizi lebih efektif.</span></article>
-      </div>
+      <section class="explain-page" data-explain-content="1">
+        <div class="model-intro">
+          <p class="stage-kicker">Bangun model</p>
+          <h3>Organ → proses → zat yang berperan → hasil</h3>
+          <p>Gunakan model ini untuk menjelaskan apa yang terjadi, bukan sekadar menghafal nama organ.</p>
+        </div>
+
+        <div class="model-tabs" id="modelTabs"></div>
+        <div class="explain-anatomy-layout">
+
+          <div class="digestive-anatomy-card">
+            <div class="digestive-anatomy-figure" id="explainAnatomy">
+              <img src="assets/digestive-anatomy.webp" alt="Anatomi sistem pencernaan manusia">
+              <svg class="food-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M39 18 C41 20 43 22 44 25 C47 31 49 38 51 47 C53 53 58 54 59 58 C58 63 54 68 52 73 C56 76 61 75 64 73 C64 79 60 84 57 89 C57 92 57 95 57 97"/>
+              </svg>
+              <button class="anatomy-hotspot hotspot-0" type="button" data-explain-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explain-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explain-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explain-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explain-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explain-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explain-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explain-organ="7" aria-label="Pilih Anus"><span>8</span></button>
+              <span class="food-ball" id="explainFoodBall" data-index="0" aria-hidden="true"></span>
+            </div>
+            <div class="anatomy-caption">
+              <span>● Bola makanan bergerak mengikuti organ yang dipilih.</span>
+            </div>
+          </div>
+          <article class="model-detail">
+            <div class="model-data">
+              <p class="stage-kicker" id="modelNumber">Organ 1</p>
+              <h3 id="modelName">Mulut</h3>
+              <div class="model-four">
+                <div><span>PROSES</span><strong id="modelProcess"></strong></div>
+                <div><span>JENIS</span><strong id="modelType"></strong></div>
+                <div><span>ZAT / ENZIM</span><strong id="modelAgent"></strong></div>
+                <div><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
+              </div>
+              <div class="model-term"><span>ISTILAH PENTING</span><strong id="modelTerm"></strong></div>
+              <div class="model-why"><b>Mengapa penting?</b><p id="modelWhy"></p></div>
+              <div class="model-route-text" id="modelRouteText"></div>
+            </div>
+          </article>
+        </div>
+
+        <div class="accessory-grid">
+          <article><b>Hati & kantung empedu</b><span>Empedu membantu mengemulsikan lemak. Empedu bukan enzim.</span></article>
+          <article><b>Pankreas</b><span>Mengirim enzim pencernaan ke usus halus.</span></article>
+          <article><b>Vili usus</b><span>Memperluas permukaan sehingga penyerapan zat gizi lebih efektif.</span></article>
+        </div>
+      </section>
     </section>
 
     <section class="stage-panel elaborate-panel" data-panel="4">
@@ -354,6 +391,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-16"></script>
+  <script src="digestive.js?v=20260929-17"></script>
 </body>
 </html>
