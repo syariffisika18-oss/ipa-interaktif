@@ -1037,3 +1037,62 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
 #masteryText{
   line-height:1.55;
 }
+
+
+/* =========================================================
+   ALIGNMENT FIX — pembagian bersusun latihan/evaluasi
+   Bagian awal 2 digit harus terbaca vertikal dengan benar.
+   ========================================================= */
+.practice-quotient{
+  padding-left:1ch!important;
+}
+
+/* "first2": tepat di bawah dua digit pertama dividend.
+   Untuk dividend 3 digit, sisakan 1 kolom di kanan. */
+.practice-work-row.first2{
+  width:2ch!important;
+  min-width:2ch!important;
+  margin-left:0!important;
+  margin-right:1ch!important;
+  text-align:right!important;
+}
+.practice-work-row.practice-line.first2{
+  width:2ch!important;
+  min-width:2ch!important;
+  margin-left:0!important;
+  margin-right:1ch!important;
+}
+
+/* "right": pekerjaan setelah digit berikutnya diturunkan,
+   sejajar dengan kolom paling kanan dividend. */
+.practice-work-row.right{
+  width:3ch!important;
+  min-width:3ch!important;
+  text-align:right!important;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+.practice-work-row.practice-line.right{
+  margin-left:auto!important;
+  margin-right:0!important;
+}
+
+/* Pada layar sempit tetap pertahankan struktur kolom, jangan diubah ke centering. */
+@media(max-width:640px){
+  .practice-quotient{padding-left:1ch!important}
+  .practice-work-row.first2,
+  .practice-work-row.practice-line.first2{
+    width:2ch!important;
+    min-width:2ch!important;
+    margin-right:1ch!important;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .practice-quotient{padding-left:1ch!important}
+  .practice-work-row.first2,
+  .practice-work-row.practice-line.first2{
+    width:2ch!important;
+    min-width:2ch!important;
+    margin-right:1ch!important;
+  }
+}
