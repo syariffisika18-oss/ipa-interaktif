@@ -562,20 +562,26 @@ function renderPracticeDivision(q,step){
     ? '<span class="ld-red">'+q.b+'</span>'
     : q.b;
 
+  const previousPracticeActiveRow=previousPracticeStep
+    ? previousPracticeStep.rows.find(r=>r.active && !r.line)
+    : null;
+
   const rows=step.rows.map(row=>{
     if(row.line){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
 
     let rowHtml=row.html;
+    let rowPos=row.pos||"right";
 
-    // Coba sendiri: hasil KALI dan KURANGI tetap disamarkan pada langkah aktif,
-    // bahkan setelah jawaban benar. Nilai sebenarnya baru tampak sebagai konteks
-    // pada langkah berikutnya.
+    // Sebelum TURUNKAN/DESIMAL/LANJUTKAN dijalankan, pertahankan bukan hanya
+    // nilai sebelumnya tetapi juga kolom/posisi sebelumnya.
     if(row.active && (isMultiplyStep || isSubtractStep || isActionStep)){
       if(isActionStep && !revealed && previousPracticeAnswer!==null){
-        // Pertahankan sisa dari langkah sebelumnya sampai tombol tindakan ditekan.
         rowHtml='<span class="ld-red">'+previousPracticeAnswer+'</span>';
+        if(previousPracticeActiveRow){
+          rowPos=previousPracticeActiveRow.pos||rowPos;
+        }
       }else{
         rowHtml=revealed
           ? '<span class="ld-red">'+row.html+'</span>'
@@ -583,7 +589,7 @@ function renderPracticeDivision(q,step){
       }
     }
 
-    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
+    return '<div class="practice-work-row '+rowPos+(row.active?" active":"")+'">'+rowHtml+'</div>';
   }).join("");
 
   box.innerHTML=
@@ -937,22 +943,30 @@ function renderEvalDivision(q,step){
 
   const divisorHtml=isMultiply?'<span class="ld-red">'+q.b+'</span>':q.b;
 
+  const previousEvalActiveRow=previousEvalStep
+    ? previousEvalStep.rows.find(r=>r.active && !r.line)
+    : null;
+
   const rows=step.rows.map(row=>{
     if(row.line){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
     let rowHtml=row.html;
+    let rowPos=row.pos||"right";
+
     if(row.active&&(isMultiply||isSubtract||isAction)){
       if(isAction && !revealed && previousEvalAnswer!==null){
-        // Pertahankan sisa sebelumnya sampai tindakan dilakukan.
         rowHtml='<span class="ld-red">'+previousEvalAnswer+'</span>';
+        if(previousEvalActiveRow){
+          rowPos=previousEvalActiveRow.pos||rowPos;
+        }
       }else{
         rowHtml=revealed
           ? '<span class="ld-red">'+row.html+'</span>'
           : '<span class="ld-red">...</span>';
       }
     }
-    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
+    return '<div class="practice-work-row '+rowPos+(row.active?" active":"")+'">'+rowHtml+'</div>';
   }).join("");
 
   box.innerHTML=
