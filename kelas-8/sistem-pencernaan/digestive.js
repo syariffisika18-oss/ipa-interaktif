@@ -404,6 +404,12 @@
   const explainConceptNext=document.getElementById("explainConceptNext");
   if(explainConceptNext)explainConceptNext.addEventListener("click",()=>showExplainPage(1));
 
+  const explainModelNext=document.getElementById("explainModelNext");
+  if(explainModelNext)explainModelNext.addEventListener("click",()=>showExplainPage(2));
+
+  const explainExampleBack=document.getElementById("explainExampleBack");
+  if(explainExampleBack)explainExampleBack.addEventListener("click",()=>showExplainPage(1));
+
   const modelTabs=document.getElementById("modelTabs");
   modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'><span>'+(i+1)+'</span>'+m.name+'</button>').join("");
 
