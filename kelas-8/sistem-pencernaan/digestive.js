@@ -822,7 +822,7 @@
   const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
   const nutrientGameScore=document.getElementById("nutrientGameScore");
   let selectedNutrientCard=null;
-  let nutrientGameOrder=[...nutrientGameCards];
+  let nutrientGameOrder=shuffleArray(nutrientGameCards);
 
   function shuffleArray(list){
     const a=[...list];
