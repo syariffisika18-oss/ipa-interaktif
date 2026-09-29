@@ -232,3 +232,218 @@
     line-height:1.2;
   }
 }
+
+
+/* =========================================================
+   ANATOMI INTERAKTIF — Explore + Explain
+   ========================================================= */
+.journey-layout{
+  display:grid;
+  grid-template-columns:170px minmax(250px,330px) minmax(0,1fr);
+  gap:12px;
+  align-items:stretch;
+}
+.digestive-anatomy-card{
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  overflow:hidden;
+  align-self:stretch;
+}
+.digestive-anatomy-figure{
+  position:relative;
+  width:min(100%,330px);
+  aspect-ratio:493/661;
+  margin:0 auto;
+  overflow:hidden;
+  background:#fff;
+}
+.digestive-anatomy-figure>img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  pointer-events:none;
+  user-select:none;
+}
+.food-route-svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:visible;
+}
+.food-route-svg path{
+  fill:none;
+  stroke:#f2b934;
+  stroke-width:1.1;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:2.2 2.2;
+  opacity:.58;
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.12));
+}
+.food-ball{
+  position:absolute;
+  left:39%;
+  top:18%;
+  width:18px;
+  height:18px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,#fff8a8 0 14%,#ffd84f 30%,#f39b17 72%,#c9680c 100%);
+  border:2px solid #fff;
+  box-shadow:0 2px 8px rgba(174,91,0,.42),0 0 0 2px rgba(243,155,23,.28);
+  z-index:5;
+  transition:left .28s ease,top .28s ease,transform .18s ease;
+  pointer-events:none;
+}
+.food-ball.no-transition{transition:none!important}
+.food-ball.arrived{animation:foodBallPulse .5s ease}
+@keyframes foodBallPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  45%{transform:translate(-50%,-50%) scale(1.38)}
+}
+.anatomy-hotspot{
+  position:absolute;
+  z-index:6;
+  width:25px;
+  height:25px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:2px solid rgba(255,255,255,.96);
+  border-radius:50%;
+  background:rgba(15,118,110,.78);
+  color:#fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.16);
+  font-size:.58rem;
+  font-weight:900;
+  cursor:pointer;
+  transform:translate(-50%,-50%);
+  transition:.18s;
+}
+.anatomy-hotspot:hover,.anatomy-hotspot:focus-visible{
+  transform:translate(-50%,-50%) scale(1.15);
+  outline:2px solid #5268e8;
+}
+.anatomy-hotspot.is-active{
+  background:#5268e8;
+  box-shadow:0 0 0 4px rgba(82,104,232,.18);
+}
+.anatomy-hotspot.is-passed{background:#15956c}
+.hotspot-0{left:32%;top:17%}.hotspot-1{left:43%;top:24%}.hotspot-2{left:51%;top:39%}.hotspot-3{left:69%;top:58%}
+.hotspot-4{left:43%;top:73%}.hotspot-5{left:74%;top:72%}.hotspot-6{left:57%;top:89%}.hotspot-7{left:57%;top:96%}
+.anatomy-caption{
+  padding:8px 10px;
+  border-top:1px solid var(--line);
+  background:#eef8f5;
+  color:#41645f;
+  font-size:.68rem;
+  text-align:center;
+  font-weight:750;
+}
+.organ-observation{
+  display:block;
+  min-height:0;
+  padding:15px;
+}
+.organ-copy{min-width:0}
+.organ-copy h3{margin:3px 0 7px;font-size:1.35rem}
+
+.explain-anatomy-layout{
+  display:grid;
+  grid-template-columns:minmax(260px,360px) minmax(0,1fr);
+  gap:12px;
+  align-items:stretch;
+}
+.explain-anatomy-layout .digestive-anatomy-figure{width:min(100%,360px)}
+.explain-anatomy-layout .model-detail{
+  display:block;
+  padding:16px;
+}
+.model-tabs button{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+}
+.model-tabs button span{
+  width:20px;height:20px;display:grid;place-items:center;border-radius:7px;
+  background:#edf4f2;color:var(--primary);font-size:.6rem;font-weight:900;
+}
+.model-tabs button.is-active span{background:rgba(255,255,255,.2);color:#fff}
+.model-term{
+  margin-top:8px;
+  padding:9px 11px;
+  border-radius:10px;
+  background:#fff6d9;
+  border:1px solid #f2df9c;
+}
+.model-term span{
+  display:block;
+  color:#7b6100;
+  font-size:.6rem;
+  font-weight:900;
+  letter-spacing:.07em;
+}
+.model-term strong{
+  display:block;
+  margin-top:3px;
+  font-size:.8rem;
+  color:#5f4e12;
+}
+.model-route-text{
+  margin-top:8px;
+  padding:8px 10px;
+  border-radius:10px;
+  background:#eef8f5;
+  color:#4b6661;
+  font-size:.72rem;
+  line-height:1.45;
+}
+.model-route-text strong{
+  display:inline-block;
+  padding:1px 5px;
+  border-radius:6px;
+  background:var(--primary);
+  color:#fff;
+}
+
+@media(max-width:900px){
+  .journey-layout{
+    grid-template-columns:145px minmax(220px,290px) minmax(0,1fr);
+    gap:8px;
+  }
+}
+@media(max-width:640px){
+  .journey-layout{grid-template-columns:1fr}
+  .organ-route{order:1}
+  .digestive-anatomy-card{order:2}
+  .organ-observation{order:3}
+  .digestive-anatomy-figure{width:min(100%,310px)}
+  .anatomy-hotspot{width:23px;height:23px;font-size:.54rem}
+  .food-ball{width:17px;height:17px}
+  .organ-observation{padding:9px}
+  .explain-anatomy-layout{grid-template-columns:1fr}
+  .explain-anatomy-layout .digestive-anatomy-figure{width:min(100%,310px)}
+  .explain-anatomy-layout .model-detail{padding:9px}
+  .model-route-text{font-size:.64rem}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .journey-layout{
+    grid-template-columns:125px 185px minmax(0,1fr);
+    gap:5px;
+  }
+  .digestive-anatomy-figure{width:185px}
+  .anatomy-hotspot{width:17px;height:17px;border-width:1px;font-size:.42rem}
+  .food-ball{width:13px;height:13px;border-width:1px}
+  .anatomy-caption{padding:4px 5px;font-size:.48rem}
+  .organ-observation{padding:6px}
+  .organ-copy h3{font-size:.75rem}
+  .explain-anatomy-layout{grid-template-columns:190px minmax(0,1fr);gap:5px}
+  .explain-anatomy-layout .digestive-anatomy-figure{width:190px}
+  .explain-anatomy-layout .model-detail{padding:6px}
+  .model-term,.model-route-text{margin-top:4px;padding:4px 6px;font-size:.52rem}
+  .model-term strong{font-size:.55rem}
+}
