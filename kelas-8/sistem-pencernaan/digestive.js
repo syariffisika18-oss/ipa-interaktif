@@ -147,8 +147,26 @@
   let markerPositions=clonePositions(defaultMarkerPositions);
   let routeWaypoints=clonePositions(defaultRouteWaypoints);
 
-  // Posisi visual dikunci permanen dari repository.
-  // Tidak lagi membaca koordinat kalibrasi dari localStorage.
+  // Gunakan hasil kalibrasi terakhir yang tersimpan di browser, bila tersedia.
+  // Drag & drop tetap dikunci; ini hanya memulihkan koordinat yang sudah pernah disetujui.
+  try{
+    const saved=JSON.parse(localStorage.getItem(calibrationKey)||"null");
+    const legacy=JSON.parse(localStorage.getItem(legacyCalibrationKey)||"null");
+    const source=saved||legacy;
+
+    if(source&&Array.isArray(source.markers)&&source.markers.length===8){
+      markerPositions=source.markers.map(p=>({x:Number(p.x),y:Number(p.y)}));
+    }
+
+    if(saved&&Array.isArray(saved.waypoints)&&saved.waypoints.length===defaultRouteWaypoints.length){
+      routeWaypoints=saved.waypoints.map(p=>({x:Number(p.x),y:Number(p.y)}));
+    }else if(source&&Array.isArray(source.balls)&&source.balls.length===8){
+      source.balls.forEach((p,i)=>{
+        const wi=organWaypointIndices[i];
+        routeWaypoints[wi]={x:Number(p.x),y:Number(p.y)};
+      });
+    }
+  }catch(_){}
   const ballTimers=new WeakMap();
   let visualDragSuppressUntil=0;
 
@@ -159,6 +177,11 @@
   function saveCalibration(){
     // Dikunci: tidak menyimpan perubahan posisi ke browser.
   }
+
+  window.getDigestiveVisualCalibration=()=>JSON.stringify({
+    markers:markerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
+    waypoints:routeWaypoints.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
+  },null,2);
 
   function hotspotIndex(el){
     if(el.dataset.exploreOrgan!==undefined)return Number(el.dataset.exploreOrgan);
