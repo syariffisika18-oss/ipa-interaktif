@@ -126,7 +126,7 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Tentukan bagian pertama yang dibagi",
-    text:"35 tidak dapat masuk ke 2 atau 24. Karena itu gunakan 240 sebagai bagian pertama yang dibagi.",
+    text:"Mulai dari kiri. 2 lebih kecil dari 35, lalu 24 juga masih lebih kecil dari 35. Karena itu, gunakan 240 sebagai bagian pertama yang dibagi.",
     rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
     quotientHTML:"?",
     dividendHTML:"240",
@@ -313,6 +313,10 @@ function renderLongDivision(step){
 
 function renderProcess(){
   const s=processSteps[processIndex];
+  const cyclePhase = s.phase==="DESIMAL" || s.phase==="LANJUTKAN" ? "TURUNKAN" : s.phase;
+  document.querySelectorAll(".algorithm-cycle [data-cycle]").forEach(el=>{
+    el.classList.toggle("active",el.dataset.cycle===cyclePhase);
+  });
   document.getElementById("processIndex").textContent=processIndex+1;
   document.getElementById("processTotal").textContent=processSteps.length;
   document.getElementById("processPhase").textContent=s.phase;
