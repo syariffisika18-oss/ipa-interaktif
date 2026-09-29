@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-3">
+  <link rel="stylesheet" href="digestive.css?v=20260929-4">
 </head>
 <body>
   <header class="app-header">
@@ -142,8 +142,19 @@
 
       <div class="journey-layout">
         <nav class="organ-route" id="organRoute" aria-label="Urutan organ pencernaan"></nav>
+
+        <div class="digestive-anatomy-card">
+          <div class="digestive-anatomy-figure" id="exploreAnatomy">
+            <img src="assets/digestive-anatomy.webp" alt="Anatomi sistem pencernaan manusia">
+            <svg class="food-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M39 18 C41 20 43 22 44 25 C47 31 49 38 51 47 C53 53 58 54 59 58 C58 63 54 68 52 73 C56 76 61 75 64 73 C64 79 60 84 57 89 C57 92 57 95 57 97"/>
+            </svg>
+            <button class="anatomy-hotspot hotspot-0" type="button" data-explore-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explore-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explore-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explore-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explore-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explore-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explore-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explore-organ="7" aria-label="Pilih Anus"><span>8</span></button>
+            <span class="food-ball" id="exploreFoodBall" data-index="0" aria-hidden="true"></span>
+          </div>
+          <div class="anatomy-caption">● Bola makanan bergerak mengikuti organ yang dipilih.</div>
+        </div>
         <article class="organ-observation">
-          <div class="organ-symbol" id="organSymbol">👄</div>
           <div class="organ-copy">
             <p class="stage-kicker" id="organNumber">Organ 1</p>
             <h3 id="organName">Mulut</h3>
@@ -183,19 +194,35 @@
       </div>
 
       <div class="model-tabs" id="modelTabs"></div>
-      <article class="model-detail">
-        <div class="model-visual" id="modelVisual">👄</div>
-        <div class="model-data">
-          <h3 id="modelName">Mulut</h3>
-          <div class="model-four">
-            <div><span>PROSES</span><strong id="modelProcess"></strong></div>
-            <div><span>JENIS</span><strong id="modelType"></strong></div>
-            <div><span>ZAT / ENZIM</span><strong id="modelAgent"></strong></div>
-            <div><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
+      <div class="explain-anatomy-layout">
+
+        <div class="digestive-anatomy-card">
+          <div class="digestive-anatomy-figure" id="explainAnatomy">
+            <img src="assets/digestive-anatomy.webp" alt="Anatomi sistem pencernaan manusia">
+            <svg class="food-route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M39 18 C41 20 43 22 44 25 C47 31 49 38 51 47 C53 53 58 54 59 58 C58 63 54 68 52 73 C56 76 61 75 64 73 C64 79 60 84 57 89 C57 92 57 95 57 97"/>
+            </svg>
+            <button class="anatomy-hotspot hotspot-0" type="button" data-explain-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explain-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explain-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explain-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explain-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explain-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explain-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explain-organ="7" aria-label="Pilih Anus"><span>8</span></button>
+            <span class="food-ball" id="explainFoodBall" data-index="0" aria-hidden="true"></span>
           </div>
-          <div class="model-why"><b>Mengapa penting?</b><p id="modelWhy"></p></div>
+          <div class="anatomy-caption">● Bola makanan bergerak mengikuti organ yang dipilih.</div>
         </div>
-      </article>
+        <article class="model-detail">
+          <div class="model-data">
+            <p class="stage-kicker" id="modelNumber">Organ 1</p>
+            <h3 id="modelName">Mulut</h3>
+            <div class="model-four">
+              <div><span>PROSES</span><strong id="modelProcess"></strong></div>
+              <div><span>JENIS</span><strong id="modelType"></strong></div>
+              <div><span>ZAT / ENZIM</span><strong id="modelAgent"></strong></div>
+              <div><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
+            </div>
+            <div class="model-term"><span>ISTILAH PENTING</span><strong id="modelTerm"></strong></div>
+            <div class="model-why"><b>Mengapa penting?</b><p id="modelWhy"></p></div>
+            <div class="model-route-text" id="modelRouteText"></div>
+          </div>
+        </article>
+      </div>
 
       <div class="accessory-grid">
         <article><b>Hati & kantung empedu</b><span>Empedu membantu mengemulsikan lemak. Empedu bukan enzim.</span></article>
@@ -324,6 +351,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-2"></script>
+  <script src="digestive.js?v=20260929-3"></script>
 </body>
 </html>
