@@ -893,3 +893,16 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   .digestion-example-card small,.digestion-example-card b{font-size:.5rem}
   .explain-model-next,.explain-example-back{min-height:28px;margin-top:5px;font-size:.52rem}
 }
+
+
+/* Explain model — pisahkan pemeran mekanik dan kimiawi */
+.model-result-card{
+  grid-column:1 / -1;
+}
+.model-four>div strong:empty::after{
+  content:"—";
+  color:var(--muted);
+}
+@media(max-width:640px){
+  .model-result-card{grid-column:auto}
+}
