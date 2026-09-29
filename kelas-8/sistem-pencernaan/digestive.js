@@ -5,7 +5,7 @@
       icon:"👄",
       observe:"Makanan masuk ke mulut, lalu dikunyah dan bercampur dengan air liur.",
       process:"Gigi menghancurkan makanan menjadi bagian yang lebih kecil dan lebih lembut.",
-      result:"Makanan menjadi gumpalan lunak yang mudah ditelan.",
+      result:"Makanan menjadi gumpalan lunak yang disebut bolus dan mudah ditelan.",
       terms:[["Bolus","gumpalan makanan yang sudah dikunyah dan bercampur dengan air liur."]],
       prompt:"Mengapa makanan perlu dikunyah sebelum ditelan?"
     },
