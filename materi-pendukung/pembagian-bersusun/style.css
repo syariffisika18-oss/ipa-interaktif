@@ -1009,3 +1009,15 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
   color:#c83b32!important;
   font-weight:950!important;
 }
+
+
+/* Evaluasi memakai struktur visual Coba sendiri */
+.eval-process-shell .practice-step-panel{
+  position:relative;
+}
+.eval-process-shell .feedback.warn{
+  background:#fff7d9;
+}
+.eval-process-shell .feedback.good{
+  background:#e7f7ef;
+}
