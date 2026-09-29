@@ -1096,3 +1096,250 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
     margin-right:1ch!important;
   }
 }
+
+
+/* =========================================================
+   MOBILE AUDIT 20260929 — portrait + landscape
+   Target portrait 360–430px, landscape 780–950 × 360–500px
+   ========================================================= */
+html,body{max-width:100%;overflow-x:hidden}
+.app-main{touch-action:pan-y}
+button,input,select,textarea{font:inherit}
+.stage-panel{scroll-margin-top:62px}
+.bottom-nav{
+  padding-bottom:max(5px,env(safe-area-inset-bottom));
+}
+.topbar,.stage-nav{
+  will-change:transform;
+}
+
+/* Chrome mobile dapat menghilang saat scroll turun dan kembali saat scroll naik. */
+@media(max-width:950px){
+  .topbar,.stage-nav{transition:transform .2s ease,top .2s ease,opacity .2s ease}
+  body.mobile-chrome-hidden .topbar{
+    transform:translateY(-110%);
+    opacity:0;
+    pointer-events:none;
+  }
+  body.mobile-chrome-hidden .stage-nav{
+    transform:translateY(calc(-100% - 8px));
+    top:0!important;
+    opacity:0;
+    pointer-events:none;
+  }
+}
+
+@media(max-width:640px){
+  .shell{width:calc(100% - 10px)}
+  .topbar-row{min-height:46px;gap:6px}
+  .back-link{font-size:.75rem}
+  .reset-btn{min-height:31px;padding:0 8px;font-size:.67rem;border-radius:9px}
+  .app-main{padding:4px 0 58px}
+  .stage-nav{
+    top:46px;
+    margin:2px 0 4px;
+    padding:3px;
+    grid-template-columns:repeat(6,minmax(88px,1fr));
+    gap:3px;
+    border-radius:11px;
+    scrollbar-width:none;
+  }
+  .stage-nav::-webkit-scrollbar{display:none}
+  .stage-tab{min-height:34px;font-size:.61rem;border-radius:8px}
+  .stage-tab b{width:19px;height:19px;margin-right:3px;font-size:.58rem}
+  .stage-panel{padding:7px;border-radius:13px}
+  .card{padding:8px}
+  .card h3{font-size:.84rem;margin-bottom:5px}
+  .card p,.compact-list{font-size:.7rem;line-height:1.35}
+  .two-col{gap:6px}
+  .choices,.eval-choices{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+  }
+  .choices button,.eval-choices button{
+    min-height:36px;
+    padding:4px 7px;
+    font-size:.68rem;
+  }
+  .feedback{padding:6px 7px;font-size:.65rem;line-height:1.3;margin-top:4px}
+
+  .division-layout{gap:7px}
+  .long-division-demo{height:142px;font-size:1.9rem}
+  .meaning-card{gap:4px}
+  .meaning-card>div{padding:5px;font-size:.68rem}
+
+  .focus-problem{padding:7px;gap:5px}
+  .problem-main strong{font-size:1.35rem}
+  .problem-main p{font-size:.68rem;line-height:1.3}
+  .multiple-panel{padding:6px;margin-top:4px;border-radius:10px}
+  .multiple-head{gap:5px}
+  .multiple-head strong{font-size:.72rem}
+  .multiple-head span{font-size:.57rem}
+  .multiple-grid{gap:3px;margin-top:5px}
+  .multiple-item{min-height:38px;padding:4px 2px;font-size:.62rem;line-height:1.1}
+  .multiple-legend{margin-top:4px;font-size:.54rem}
+
+  .process-example-head{padding:5px 7px;margin-bottom:4px}
+  .process-example-head strong{font-size:.88rem}
+  .process-example-head p{font-size:.58rem;line-height:1.25}
+  .division-process-grid{gap:5px}
+  .long-process-visual{min-height:175px;padding:5px}
+  .process-card{padding:7px}
+  .process-count{right:7px;top:6px;font-size:.58rem}
+  .process-card h3{font-size:.82rem;margin:4px 0}
+  .process-card p{font-size:.66rem;line-height:1.3;margin:4px 0}
+  .process-rule{font-size:.59rem;padding:4px 6px;margin:4px 0}
+  .process-actions{margin-top:4px;gap:4px}
+  .process-actions button{min-height:32px;font-size:.62rem}
+  .process-strip{margin-top:4px;gap:3px}
+  .process-dot{height:5px}
+
+  .practice-process-shell{padding:6px}
+  .practice-top{font-size:.65rem}
+  .practice-process-head{
+    margin-top:4px;
+    padding:5px 7px;
+    border-radius:9px;
+  }
+  .practice-process-head span{font-size:.53rem}
+  .practice-process-head strong{font-size:.8rem}
+  .practice-process-grid{gap:4px;margin-top:4px}
+  .practice-visual-panel{
+    min-height:165px;
+    padding:5px;
+    border-radius:11px;
+  }
+  .practice-step-panel{
+    min-height:0;
+    padding:7px;
+    border-radius:11px;
+  }
+  .practice-step-meta{gap:5px}
+  .practice-step-count{padding:3px 5px;font-size:.58rem}
+  .process-phase{font-size:.52rem;margin-bottom:2px}
+  .practice-step-panel h3{font-size:.82rem;margin:4px 0 2px}
+  .practice-step-panel>p{font-size:.64rem;line-height:1.25;margin-bottom:4px}
+  .practice-answer-row{gap:4px}
+  .practice-answer-row input{min-height:34px;padding:4px 7px;font-size:.72rem}
+  .practice-step-actions{gap:4px;margin-top:4px}
+  .practice-step-actions button,
+  .practice-action-btn,
+  .practice-answer-row button{
+    min-height:34px;
+    padding:3px 6px;
+    font-size:.62rem;
+  }
+  .practice-multiples{padding:5px;margin:3px 0 4px}
+  .practice-multiples .multiple-grid{grid-template-columns:repeat(5,1fr)!important}
+  .practice-multiples .multiple-item{min-height:36px;padding:3px 1px;font-size:.59rem}
+  .practice-division{--pd-font:1.42rem;--pd-body:6.6ch;column-gap:7px}
+  .practice-body{
+    min-height:92px;
+    padding:6px 0 7px 7px;
+    border-top-width:3px;
+    border-left-width:3px;
+  }
+  .practice-divisor{padding-top:7px}
+  .next-practice{min-height:34px;margin-top:4px;font-size:.65rem}
+
+  .bottom-nav{
+    bottom:max(2px,env(safe-area-inset-bottom));
+    margin-top:4px;
+    padding:3px;
+    gap:4px;
+    border-radius:11px;
+    grid-template-columns:.95fr 1fr 1.15fr;
+  }
+  .bottom-nav button{min-height:36px;font-size:.67rem;border-radius:8px}
+}
+
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .shell{width:calc(100% - 10px)}
+  .topbar-row{min-height:38px}
+  .back-link{font-size:.64rem}
+  .reset-btn{min-height:28px;padding:0 7px;font-size:.59rem}
+  .app-main{padding:2px 0 42px}
+  .stage-nav{
+    top:38px;
+    margin:1px 0 3px;
+    padding:2px;
+    gap:2px;
+    border-radius:9px;
+  }
+  .stage-tab{min-height:30px;font-size:.58rem;border-radius:7px}
+  .stage-tab b{width:17px;height:17px;font-size:.52rem}
+  .stage-panel{padding:5px;border-radius:10px}
+
+  .card{padding:6px}
+  .card h3{font-size:.7rem;margin-bottom:3px}
+  .card p,.compact-list{font-size:.58rem;line-height:1.2}
+  .choices button,.eval-choices button{min-height:32px;font-size:.6rem}
+
+  .focus-problem{padding:5px;gap:4px}
+  .problem-main strong{font-size:1.15rem}
+  .problem-main p{font-size:.57rem}
+  .multiple-panel{padding:5px;margin-top:3px}
+  .multiple-grid{grid-template-columns:repeat(10,1fr)!important;gap:3px;margin-top:4px}
+  .multiple-item{min-height:32px;padding:3px 1px;font-size:.6rem}
+  .multiple-head strong{font-size:.63rem}
+  .multiple-head span,.multiple-legend{font-size:.52rem}
+
+  .process-example-head{padding:3px 6px;margin-bottom:3px}
+  .process-example-head strong{font-size:.76rem}
+  .process-example-head p{font-size:.5rem}
+  .division-process-grid{grid-template-columns:.82fr 1.18fr;gap:4px}
+  .long-process-visual{min-height:205px;padding:4px}
+  .process-card{padding:6px}
+  .process-card h3{font-size:.69rem;margin:3px 0}
+  .process-card p{font-size:.57rem;line-height:1.2;margin:3px 0}
+  .process-rule{font-size:.52rem;padding:3px 5px;margin:3px 0}
+  .process-actions button{min-height:30px;font-size:.56rem}
+
+  .practice-process-shell{padding:5px}
+  .practice-top{font-size:.57rem}
+  .practice-process-head{padding:3px 6px;margin-top:2px}
+  .practice-process-head span{font-size:.48rem}
+  .practice-process-head strong{font-size:.68rem}
+  .practice-process-grid{grid-template-columns:.78fr 1.22fr;gap:4px;margin-top:3px}
+  .practice-visual-panel,
+  .practice-step-panel{min-height:205px}
+  .practice-visual-panel{padding:4px}
+  .practice-step-panel{padding:5px}
+  .practice-step-count{font-size:.52rem;padding:2px 5px}
+  .practice-step-panel h3{font-size:.69rem;margin:3px 0 2px}
+  .practice-step-panel>p{font-size:.55rem;line-height:1.18;margin-bottom:3px}
+  .practice-answer-row input{min-height:31px;font-size:.62rem}
+  .practice-step-actions{gap:3px;margin-top:3px}
+  .practice-step-actions button,
+  .practice-action-btn,
+  .practice-answer-row button{
+    min-height:31px;
+    font-size:.57rem;
+    padding:2px 5px;
+  }
+  .practice-multiples{padding:4px;margin:2px 0 3px}
+  .practice-multiples .multiple-grid{grid-template-columns:repeat(10,1fr)!important}
+  .practice-multiples .multiple-item{min-height:31px;padding:2px 1px;font-size:.58rem}
+  .practice-division{--pd-font:1.25rem;--pd-body:6.4ch;column-gap:5px}
+  .practice-body{
+    min-height:86px;
+    padding:5px 0 6px 6px;
+    border-top-width:3px;
+    border-left-width:3px;
+  }
+  .practice-divisor{padding-top:6px}
+  .feedback{padding:4px 6px;font-size:.59rem;line-height:1.2;margin-top:3px}
+  .eval-help-btn{min-height:30px;font-size:.57rem;margin-top:4px}
+
+  .bottom-nav{
+    bottom:max(1px,env(safe-area-inset-bottom));
+    margin-top:3px;
+    padding:2px;
+    gap:3px;
+  }
+  .bottom-nav button{min-height:31px;font-size:.58rem}
+}
+
+/* Hindari kartu terakhir tertutup bottom navigation saat keyboard/viewport sempit. */
+.stage-panel.active{padding-bottom:max(7px,env(safe-area-inset-bottom))}
