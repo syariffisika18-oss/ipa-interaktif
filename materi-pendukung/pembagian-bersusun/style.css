@@ -771,3 +771,234 @@ button,input{font:inherit}.shell{width:min(980px,calc(100% - 24px));margin-inlin
     font-size:.56rem;
   }
 }
+
+
+/* =========================================================
+   COBA SENDIRI — format proses langkah demi langkah
+   ========================================================= */
+.practice-process-shell{padding:14px}
+.practice-process-head{
+  margin-top:9px;
+  padding:9px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#f8fbfa;
+}
+.practice-process-head span{
+  color:var(--primary);
+  font-size:.62rem;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+.practice-process-head strong{font-size:1.05rem}
+.practice-process-grid{
+  margin-top:9px;
+  display:grid;
+  grid-template-columns:.9fr 1.1fr;
+  gap:10px;
+}
+.practice-visual-panel,
+.practice-step-panel{
+  min-height:350px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:#fff;
+}
+.practice-visual-panel{
+  display:grid;
+  place-items:center;
+  padding:16px;
+  background:linear-gradient(135deg,#f3f7ff,#f8fbfa);
+}
+.practice-step-panel{padding:14px}
+.practice-step-meta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+.practice-step-count{
+  padding:4px 7px;
+  border-radius:999px;
+  background:#eef2ff;
+  color:#3349a4;
+  font-size:.68rem;
+  font-weight:850;
+}
+.practice-step-panel h3{margin:8px 0 5px}
+.practice-step-panel>p{
+  margin:0 0 8px;
+  color:var(--muted);
+  line-height:1.4;
+  font-size:.82rem;
+}
+.practice-step-actions{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+}
+.practice-step-actions button,
+.practice-action-btn,
+.practice-answer-row button{
+  min-height:38px;
+  padding:0 10px;
+  border:0;
+  border-radius:9px;
+  background:var(--blue);
+  color:#fff;
+  font-weight:850;
+  cursor:pointer;
+}
+.practice-step-actions .secondary{
+  border:1px solid var(--line);
+  background:#fff!important;
+  color:var(--text)!important;
+}
+.practice-step-actions button:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+}
+.practice-answer-label{
+  display:grid;
+  gap:5px;
+  font-size:.74rem;
+  font-weight:850;
+}
+.practice-answer-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:6px;
+}
+.practice-answer-row input{
+  min-height:38px;
+  padding:6px 9px;
+  border:1px solid var(--line);
+  border-radius:9px;
+}
+.practice-multiples{
+  margin-top:5px;
+  margin-bottom:7px;
+}
+.practice-result-chip{
+  padding:9px 11px;
+  border-radius:10px;
+  background:#e6f7ef;
+  color:#185a44;
+}
+.next-practice{
+  width:100%;
+  margin-top:8px;
+  min-height:40px;
+}
+
+/* Pembagian bersusun khusus latihan */
+.practice-division{
+  --pd-font:2rem;
+  --pd-body:7.2ch;
+  display:grid;
+  grid-template-columns:auto var(--pd-body);
+  grid-template-rows:auto auto;
+  column-gap:10px;
+  width:max-content;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-weight:850;
+  line-height:1.06;
+}
+.practice-quotient{
+  grid-column:2;
+  grid-row:1;
+  min-height:1.2em;
+  padding:0 0 6px .18ch;
+  font-size:var(--pd-font);
+  text-align:left;
+}
+.practice-divisor{
+  grid-column:1;
+  grid-row:2;
+  padding-top:12px;
+  font-size:var(--pd-font);
+}
+.practice-body{
+  grid-column:2;
+  grid-row:2;
+  width:var(--pd-body);
+  min-height:150px;
+  padding:10px 0 12px 10px;
+  border-top:4px solid #334155;
+  border-left:4px solid #334155;
+  border-radius:14px 0 0 0;
+}
+.practice-dividend{
+  font-size:var(--pd-font);
+  white-space:nowrap;
+}
+.practice-work{
+  width:3ch;
+  margin-top:3px;
+  font-size:var(--pd-font);
+  text-align:right;
+}
+.practice-work-row{
+  width:3ch;
+  min-height:1.05em;
+  white-space:nowrap;
+}
+.practice-work-row.left{text-align:left}
+.practice-work-row.right{text-align:right}
+.practice-work-row.active{
+  color:#c83b32;
+  font-weight:950;
+}
+.practice-line{
+  min-height:4px;
+  width:var(--pw,3ch);
+  border-top:2px solid #334155;
+}
+.practice-line.left{margin-left:0}
+.practice-line.right{margin-left:auto}
+.practice-quotient .ld-red{color:#c83b32}
+
+@media(max-width:640px){
+  .practice-process-shell{padding:8px}
+  .practice-process-head{padding:6px 8px;margin-top:5px}
+  .practice-process-grid{grid-template-columns:1fr;gap:6px;margin-top:6px}
+  .practice-visual-panel,
+  .practice-step-panel{min-height:0}
+  .practice-visual-panel{padding:8px;min-height:220px}
+  .practice-step-panel{padding:8px}
+  .practice-step-panel h3{font-size:.9rem;margin:5px 0 3px}
+  .practice-step-panel>p{font-size:.7rem;margin-bottom:5px}
+  .practice-step-actions button,
+  .practice-action-btn,
+  .practice-answer-row button{min-height:34px;font-size:.66rem}
+  .practice-division{--pd-font:1.5rem;--pd-body:6.8ch}
+  .practice-body{min-height:115px;padding:8px 0 9px 8px;border-top-width:3px;border-left-width:3px}
+  .practice-divisor{padding-top:9px}
+  .practice-multiples .multiple-grid{grid-template-columns:repeat(5,1fr)}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .practice-process-shell{padding:6px}
+  .practice-process-head{padding:4px 7px;margin-top:3px}
+  .practice-process-head strong{font-size:.72rem}
+  .practice-process-grid{grid-template-columns:.8fr 1.2fr;gap:5px;margin-top:4px}
+  .practice-visual-panel{min-height:255px;padding:5px}
+  .practice-step-panel{min-height:255px;padding:6px}
+  .practice-step-panel h3{font-size:.72rem;margin:4px 0 2px}
+  .practice-step-panel>p{font-size:.56rem;line-height:1.25;margin-bottom:4px}
+  .practice-step-actions{gap:4px;margin-top:4px}
+  .practice-step-actions button,
+  .practice-action-btn,
+  .practice-answer-row button{min-height:29px;font-size:.55rem}
+  .practice-answer-row input{min-height:29px;font-size:.58rem}
+  .practice-multiples{padding:5px;margin:3px 0}
+  .practice-multiples .multiple-grid{grid-template-columns:repeat(10,1fr)!important}
+  .practice-multiples .multiple-item{min-height:36px;padding:3px 1px;font-size:.5rem}
+  .practice-division{--pd-font:1.35rem;--pd-body:6.6ch}
+  .practice-body{min-height:110px;padding:7px 0 8px 7px;border-top-width:3px;border-left-width:3px}
+  .practice-divisor{padding-top:8px}
+}
