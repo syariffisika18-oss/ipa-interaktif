@@ -1,13 +1,80 @@
 (()=>{
   const journey=[
-    {name:"Mulut",icon:"👄",observe:"Makanan dipotong dan dikunyah, lalu bercampur dengan air liur.",process:"Pencernaan mekanik oleh gigi dan pencernaan kimiawi karbohidrat mulai berlangsung.",result:"Makanan menjadi bolus yang lebih halus dan mudah ditelan.",terms:[["Bolus","gumpalan makanan yang sudah dikunyah dan bercampur dengan air liur sehingga mudah ditelan."]],prompt:"Apa keuntungan makanan dihancurkan menjadi bagian lebih kecil?"},
-    {name:"Faring",icon:"↘️",observe:"Bolus melewati persimpangan saluran makanan dan saluran napas.",process:"Proses menelan mengarahkan bolus menuju kerongkongan. Epiglotis membantu menutup jalan napas saat menelan.",result:"Bolus masuk ke kerongkongan.",terms:[["Faring","bagian tenggorokan yang menjadi jalur bersama sebelum makanan menuju kerongkongan."],["Epiglotis","lipatan seperti katup yang membantu menutup jalan napas ketika menelan."]],prompt:"Mengapa kita tidak dianjurkan berbicara sambil menelan?"},
-    {name:"Kerongkongan",icon:"〰️",observe:"Dinding kerongkongan berkontraksi bergelombang.",process:"Gerak peristaltik mendorong bolus menuju lambung.",result:"Makanan berpindah tanpa harus mengandalkan gravitasi.",terms:[["Peristaltik","gerakan kontraksi otot berbentuk gelombang yang mendorong makanan sepanjang saluran pencernaan."]],prompt:"Apakah kerongkongan terutama mencerna makanan atau memindahkannya?"},
-    {name:"Lambung",icon:"🥣",observe:"Makanan diaduk dan bercampur dengan cairan lambung.",process:"Otot lambung melakukan pencernaan mekanik. Pepsin membantu mencerna protein dalam suasana asam.",result:"Makanan berubah menjadi campuran semi-cair yang disebut kimus.",terms:[["Pepsin","enzim di lambung yang membantu memecah protein menjadi bagian yang lebih kecil."],["Kimus","campuran makanan semi-cair setelah diaduk dan bercampur dengan cairan lambung."]],prompt:"Mengapa lambung memiliki dinding otot yang kuat?"},
-    {name:"Usus halus",icon:"🧬",observe:"Kimus bercampur dengan empedu dan enzim dari pankreas serta dinding usus.",process:"Sebagian besar pencernaan kimiawi diselesaikan. Zat gizi hasil pencernaan diserap melalui permukaan usus.",result:"Glukosa, asam amino, asam lemak, gliserol, vitamin, mineral, dan air dapat diserap.",terms:[["Empedu","cairan dari hati yang membantu memecah lemak menjadi butiran kecil agar lebih mudah dicerna."],["Vili","tonjolan sangat kecil pada dinding usus halus yang memperluas permukaan penyerapan zat gizi."],["Enzim","protein yang membantu mempercepat reaksi kimia, termasuk pemecahan zat makanan."]],prompt:"Apa hubungan banyaknya lipatan dan vili dengan kemampuan menyerap zat gizi?"},
-    {name:"Usus besar",icon:"🔄",observe:"Sisa makanan yang tidak tercerna bergerak lebih lambat.",process:"Air dan sebagian elektrolit diserap. Bakteri usus juga berperan pada sisa makanan.",result:"Sisa menjadi lebih padat dan membentuk feses.",terms:[["Elektrolit","mineral bermuatan, misalnya natrium dan kalium, yang membantu keseimbangan cairan tubuh."],["Feses","sisa pencernaan yang tidak digunakan tubuh dan akan dikeluarkan."]],prompt:"Apa yang mungkin terjadi jika terlalu banyak air diserap dari sisa makanan?"},
-    {name:"Rektum",icon:"📦",observe:"Feses mencapai bagian akhir usus besar.",process:"Feses disimpan sementara sebelum dikeluarkan.",result:"Tubuh menerima sinyal untuk buang air besar.",terms:[["Rektum","bagian akhir usus besar yang menjadi tempat penyimpanan sementara feses."]],prompt:"Apakah rektum merupakan tempat utama pencernaan zat makanan?"},
-    {name:"Anus",icon:"🚪",observe:"Feses meninggalkan saluran pencernaan.",process:"Otot sfingter membantu mengatur pengeluaran feses.",result:"Sisa yang tidak digunakan tubuh dikeluarkan.",terms:[["Sfingter","otot berbentuk cincin yang dapat membuka dan menutup saluran anus."]],prompt:"Ini merupakan proses pencernaan atau pengeluaran sisa? Jelaskan."}
+    {
+      name:"Mulut",
+      icon:"👄",
+      observe:"Makanan masuk ke mulut, lalu dikunyah dan bercampur dengan air liur.",
+      process:"Gigi menghancurkan makanan menjadi bagian yang lebih kecil dan lebih lembut.",
+      result:"Makanan menjadi gumpalan lunak yang mudah ditelan.",
+      terms:[["Bolus","gumpalan makanan yang sudah dikunyah dan bercampur dengan air liur."]],
+      prompt:"Mengapa makanan perlu dikunyah sebelum ditelan?"
+    },
+    {
+      name:"Faring",
+      icon:"↘️",
+      observe:"Saat ditelan, makanan melewati bagian belakang mulut menuju tenggorokan.",
+      process:"Makanan diarahkan menuju kerongkongan dan tidak masuk ke jalan napas.",
+      result:"Makanan masuk ke kerongkongan.",
+      terms:[
+        ["Faring","bagian tenggorokan yang dilewati makanan setelah keluar dari mulut."],
+        ["Epiglotis","lipatan kecil yang membantu menutup jalan napas saat kita menelan."]
+      ],
+      prompt:"Mengapa kita sebaiknya tidak berbicara saat sedang menelan?"
+    },
+    {
+      name:"Kerongkongan",
+      icon:"〰️",
+      observe:"Makanan bergerak turun melalui kerongkongan.",
+      process:"Dinding kerongkongan mendorong makanan sedikit demi sedikit menuju lambung.",
+      result:"Makanan sampai ke lambung.",
+      terms:[["Peristaltik","gerakan seperti gelombang yang mendorong makanan di dalam saluran pencernaan."]],
+      prompt:"Menurutmu, apakah makanan hanya jatuh ke lambung karena gravitasi?"
+    },
+    {
+      name:"Lambung",
+      icon:"🥣",
+      observe:"Makanan masuk ke lambung, lalu diaduk dan bercampur dengan cairan lambung.",
+      process:"Makanan dibuat semakin halus dan lebih cair.",
+      result:"Makanan berubah menjadi bubur makanan yang disebut kimus.",
+      terms:[["Kimus","campuran makanan berbentuk semi-cair setelah berada di lambung."]],
+      prompt:"Apa perubahan yang kamu lihat pada makanan setelah berada di lambung?"
+    },
+    {
+      name:"Usus halus",
+      icon:"🧬",
+      observe:"Makanan bergerak melalui usus halus yang panjang dan berkelok-kelok.",
+      process:"Bagian makanan yang berguna bagi tubuh mulai banyak diserap.",
+      result:"Zat gizi masuk ke tubuh, sedangkan sisanya bergerak menuju usus besar.",
+      terms:[["Vili","tonjolan sangat kecil pada dinding usus halus yang membantu penyerapan zat gizi."]],
+      prompt:"Mengapa menurutmu usus halus memiliki banyak lipatan dan permukaan yang luas?"
+    },
+    {
+      name:"Usus besar",
+      icon:"🔄",
+      observe:"Sisa makanan masuk ke usus besar dan bergerak lebih lambat.",
+      process:"Sebagian air dari sisa makanan diambil kembali oleh tubuh.",
+      result:"Sisa makanan menjadi lebih padat dan membentuk feses.",
+      terms:[["Feses","sisa pencernaan yang akan dikeluarkan dari tubuh."]],
+      prompt:"Apa yang terjadi pada sisa makanan jika semakin banyak air yang diambil?"
+    },
+    {
+      name:"Rektum",
+      icon:"📦",
+      observe:"Feses sampai di bagian akhir usus besar.",
+      process:"Feses disimpan sementara sebelum dikeluarkan.",
+      result:"Tubuh memberi tanda bahwa kita perlu buang air besar.",
+      terms:[["Rektum","bagian akhir usus besar yang menyimpan feses sementara."]],
+      prompt:"Mengapa feses tidak langsung keluar begitu sampai di bagian akhir usus?"
+    },
+    {
+      name:"Anus",
+      icon:"🚪",
+      observe:"Feses bergerak menuju bagian paling akhir saluran pencernaan.",
+      process:"Feses dikeluarkan dari tubuh.",
+      result:"Perjalanan sisa makanan berakhir di sini.",
+      terms:[["Anus","bagian akhir saluran pencernaan tempat feses keluar dari tubuh."]],
+      prompt:"Apa yang sudah berubah dari makanan sejak masuk melalui mulut hingga keluar dari tubuh?"
+    }
   ];
 
   const model=[
