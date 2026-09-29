@@ -1407,3 +1407,38 @@ button,input,select,textarea{font:inherit}
   body[data-step="4"] .tip,
   body[data-step="4"] .hint{padding:7px 9px!important;margin-top:6px!important;font-size:.86rem!important;line-height:1.25!important}
 }
+
+/* AUDIT BELAJAR MANDIRI — pola inti selalu terlihat pada Ikuti proses */
+.algorithm-cycle{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:5px;
+  margin:0 0 7px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#f7faf9;
+}
+.algorithm-cycle span{
+  min-height:34px;
+  display:grid;
+  place-items:center;
+  padding:5px 7px;
+  border-radius:8px;
+  color:var(--muted);
+  font-size:.72rem;
+  font-weight:850;
+  text-align:center;
+}
+.algorithm-cycle span.active{
+  background:var(--primary);
+  color:#fff;
+}
+@media(max-width:640px){
+  .algorithm-cycle{gap:3px;margin-bottom:5px;padding:3px}
+  .algorithm-cycle span{min-height:30px;padding:3px;font-size:.6rem;line-height:1.1}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .algorithm-cycle{margin-bottom:3px;padding:2px}
+  .algorithm-cycle span{min-height:26px;font-size:.53rem}
+}
