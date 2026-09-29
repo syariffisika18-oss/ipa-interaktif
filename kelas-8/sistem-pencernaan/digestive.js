@@ -71,7 +71,7 @@
       observe:"Feses bergerak menuju bagian paling akhir saluran pencernaan.",
       process:"Feses melewati anus dan keluar dari tubuh.",
       result:"Sisa pencernaan keluar dari tubuh.",
-      terms:[["Anus","bagian akhir saluran pencernaan tempat feses keluar dari tubuh."]],
+      terms:[],
       prompt:"Apa yang sudah berubah dari makanan sejak masuk melalui mulut hingga keluar dari tubuh?"
     }
   ];
