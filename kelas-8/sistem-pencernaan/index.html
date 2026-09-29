@@ -400,27 +400,27 @@
           <article class="pathway-task" data-pathway-row="0">
             <div class="pathway-food">🍚 <b>Karbohidrat dari nasi</b></div>
             <div class="pathway-options">
-              <button type="button" data-pathway-opt="0">Pati → amilase → gula sederhana → diserap di usus halus</button>
-              <button type="button" data-pathway-opt="1">Pati → pepsin → asam amino → diserap di lambung</button>
-              <button type="button" data-pathway-opt="2">Pati → empedu → asam lemak → diserap di usus besar</button>
+              <button type="button" data-pathway-opt="0">Pati → amilase bekerja di mulut dan usus halus → maltosa terbentuk → maltosa langsung diserap tanpa pemecahan lanjutan</button>
+              <button type="button" data-pathway-opt="1">Pati → amilase bekerja di mulut dan usus halus → terbentuk molekul lebih sederhana → enzim permukaan usus menghasilkan monosakarida → diserap di usus halus</button>
+              <button type="button" data-pathway-opt="2">Pati → amilase saliva menyelesaikan seluruh pencernaan di mulut → glukosa terbentuk → sebagian besar glukosa diserap di lambung</button>
             </div>
           </article>
 
           <article class="pathway-task" data-pathway-row="1">
             <div class="pathway-food">🥚 <b>Protein dari telur</b></div>
             <div class="pathway-options">
-              <button type="button" data-pathway-opt="0">Protein → amilase → glukosa → diserap di mulut</button>
-              <button type="button" data-pathway-opt="1">Protein → pepsin/tripsin/peptidase → asam amino → diserap di usus halus</button>
-              <button type="button" data-pathway-opt="2">Protein → empedu → asam lemak → diserap di usus besar</button>
+              <button type="button" data-pathway-opt="0">Protein → pepsin di lambung → seluruh protein langsung menjadi asam amino → sebagian besar asam amino diserap di lambung</button>
+              <button type="button" data-pathway-opt="1">Protein → tripsin di usus halus → peptida terbentuk → peptida langsung diserap tanpa perlu kerja peptidase</button>
+              <button type="button" data-pathway-opt="2">Protein → pepsin di lambung, lalu tripsin dan peptidase di usus halus → asam amino terbentuk → diserap di usus halus</button>
             </div>
           </article>
 
           <article class="pathway-task" data-pathway-row="2">
             <div class="pathway-food">🥑 <b>Lemak dari makanan berminyak</b></div>
             <div class="pathway-options">
-              <button type="button" data-pathway-opt="0">Lemak → empedu membantu emulsifikasi + lipase → asam lemak/monogliserida → diserap di usus halus</button>
-              <button type="button" data-pathway-opt="1">Lemak → pepsin → asam amino → diserap di lambung</button>
-              <button type="button" data-pathway-opt="2">Lemak → amilase → glukosa → diserap di usus besar</button>
+              <button type="button" data-pathway-opt="0">Lemak → empedu membantu emulsifikasi → lipase mencerna lemak menjadi asam lemak dan monogliserida → hasil diserap di usus halus</button>
+              <button type="button" data-pathway-opt="1">Lemak → empedu memecah lemak secara kimiawi menjadi asam lemak → lipase hanya membantu pencampuran → hasil diserap di usus halus</button>
+              <button type="button" data-pathway-opt="2">Lemak → lipase bekerja sama efektif meskipun tanpa emulsifikasi → asam lemak dan monogliserida terbentuk → hasil diserap di usus halus</button>
             </div>
           </article>
         </div>
@@ -430,9 +430,9 @@
         <div class="transfer-question">
           <p><b>Transfer konsep:</b> Jika permukaan penyerapan usus halus berkurang drastis, hasil pencernaan dari menu Rani yang paling mungkin terganggu penyerapannya adalah...</p>
           <div id="absorptionOptions" class="reason-options compact-reason">
-            <button type="button" data-absorb="all">Glukosa, asam amino, dan hasil pencernaan lemak</button>
-            <button type="button" data-absorb="protein">Hanya asam amino</button>
-            <button type="button" data-absorb="water">Hanya air</button>
+            <button type="button" data-absorb="carbprotein">Glukosa dan asam amino saja, karena hasil pencernaan lemak tidak memerlukan permukaan usus halus</button>
+            <button type="button" data-absorb="all">Glukosa, asam amino, dan hasil pencernaan lemak karena ketiganya terutama diserap melalui permukaan usus halus</button>
+            <button type="button" data-absorb="fat">Hasil pencernaan lemak saja, karena glukosa dan asam amino sudah diserap sebelum mencapai usus halus</button>
           </div>
           <div id="absorptionFeedback" class="digest-feedback neutral">Gunakan hubungan antara hasil pencernaan dan lokasi penyerapan.</div>
         </div>
@@ -492,9 +492,9 @@
         <div class="model-critique-step locked-step" id="modelCorrectionStep">
           <p><b>Langkah 2 — Pilih perbaikan model yang tepat.</b></p>
           <div id="modelCorrectionOptions" class="reason-options">
-            <button type="button" data-correction="0">Empedu adalah enzim yang langsung menghasilkan asam lemak.</button>
-            <button type="button" data-correction="1">Empedu membantu mengemulsikan lemak; lipase yang mencerna lemak secara kimiawi.</button>
-            <button type="button" data-correction="2">Empedu mencerna protein agar pepsin dapat bekerja.</button>
+            <button type="button" data-correction="0">Empedu mengemulsikan sekaligus memecah lemak secara kimiawi; lipase hanya membantu pencampuran lemak di usus halus.</button>
+            <button type="button" data-correction="1">Empedu mengemulsikan lemak menjadi tetesan lebih kecil; lipase kemudian mencerna lemak secara kimiawi menjadi hasil yang lebih sederhana.</button>
+            <button type="button" data-correction="2">Empedu dan lipase sama-sama enzim pencernaan lemak; keduanya bekerja secara kimiawi dengan fungsi yang hampir sama.</button>
           </div>
           <div id="modelCorrectionFeedback" class="digest-feedback neutral">Perbaiki hubungan antara empedu dan enzim.</div>
         </div>
@@ -502,9 +502,9 @@
         <div class="model-critique-step locked-step" id="bilePredictionStep">
           <p><b>Langkah 3 — Jika aliran empedu ke usus halus terganggu, prediksi yang paling logis adalah...</b></p>
           <div id="bileOptions" class="reason-options">
-            <button data-bile="protein">Pencernaan protein oleh pepsin di lambung berhenti</button>
-            <button data-bile="fat">Emulsifikasi lemak berkurang sehingga kerja lipase pada lemak menjadi kurang efektif</button>
-            <button data-bile="water">Penyerapan air di usus besar berhenti</button>
+            <button data-bile="surface">Lipase tetap bekerja sama efektif karena ukuran tetesan lemak tidak memengaruhi luas permukaan kontak dengan enzim</button>
+            <button data-bile="fat">Emulsifikasi lemak berkurang sehingga luas permukaan kontak menurun dan kerja lipase pada lemak menjadi kurang efektif</button>
+            <button data-bile="absorb">Pencernaan lemak tetap normal, tetapi penyerapan hasilnya terganggu karena empedu hanya berperan pada tahap penyerapan</button>
           </div>
           <div id="bileFeedback" class="digest-feedback neutral">Gunakan model yang sudah diperbaiki untuk membuat prediksi.</div>
         </div>
@@ -580,6 +580,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-34"></script>
+  <script src="digestive.js?v=20260929-35"></script>
 </body>
 </html>
