@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-15">
+  <link rel="stylesheet" href="digestive.css?v=20260929-16">
 </head>
 <body>
   <header class="app-header">
@@ -80,23 +80,77 @@
         </section>
       </div>
 
-      <article class="learning-card prereq-card">
-        <h3>🧩 Cek prasyarat singkat</h3>
-        <div class="prereq-grid">
-          <div class="mini-question" data-prereq="0">
-            <p><b>1.</b> Zat makanan yang terutama menjadi sumber energi adalah...</p>
-            <div class="mini-options">
-              <button data-value="protein">Protein</button><button data-value="karbohidrat">Karbohidrat</button><button data-value="vitamin">Vitamin</button>
-            </div>
-            <small class="mini-feedback">Pilih satu jawaban.</small>
+      <article class="learning-card prereq-card nutrient-prereq-card">
+        <div class="nutrient-game-head">
+          <div>
+            <p class="stage-kicker">Prasyarat • Mini game</p>
+            <h3>🍽️ Kenali 7 zat gizi pada makanan</h3>
+            <p>Tempatkan setiap kartu makanan ke kelompok zat gizi yang paling sesuai.</p>
           </div>
-          <div class="mini-question" data-prereq="1">
-            <p><b>2.</b> Agar dapat digunakan sel tubuh, makanan perlu...</p>
-            <div class="mini-options">
-              <button data-value="dipecah">Dipecah menjadi bentuk lebih sederhana</button><button data-value="tetap">Tetap utuh</button>
-            </div>
-            <small class="mini-feedback">Pilih satu jawaban.</small>
-          </div>
+          <div class="nutrient-game-score" id="nutrientGameScore">0 / 7 tepat</div>
+        </div>
+
+        <div class="nutrient-game-instruction">
+          <b>Desktop:</b> seret kartu ke kotak tujuan. 
+          <b>HP:</b> sentuh kartu, lalu sentuh kotak tujuan.
+          <span>Satu makanan dapat mengandung beberapa zat gizi; pada permainan ini pilih zat gizi yang paling ditonjolkan.</span>
+        </div>
+
+        <div class="nutrient-card-bank" id="nutrientCardBank" aria-label="Kartu makanan"></div>
+
+        <div class="nutrient-drop-grid" id="nutrientDropGrid" aria-label="Kelompok zat gizi">
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="karbohidrat">
+            <span class="nutrient-zone-icon">⚡</span>
+            <strong>Karbohidrat</strong>
+            <small>Sumber energi utama</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="protein">
+            <span class="nutrient-zone-icon">💪</span>
+            <strong>Protein</strong>
+            <small>Pembangun dan perbaikan jaringan</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="lemak">
+            <span class="nutrient-zone-icon">🟡</span>
+            <strong>Lemak</strong>
+            <small>Cadangan energi</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="vitamin">
+            <span class="nutrient-zone-icon">🍊</span>
+            <strong>Vitamin</strong>
+            <small>Membantu berbagai fungsi tubuh</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="mineral">
+            <span class="nutrient-zone-icon">🧂</span>
+            <strong>Mineral</strong>
+            <small>Dibutuhkan tubuh dalam jumlah tertentu</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="serat">
+            <span class="nutrient-zone-icon">🌿</span>
+            <strong>Serat</strong>
+            <small>Membantu kerja saluran pencernaan</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+          <button type="button" class="nutrient-drop-zone" data-nutrient-zone="air">
+            <span class="nutrient-zone-icon">💧</span>
+            <strong>Air</strong>
+            <small>Pelarut dan membantu transport zat</small>
+            <div class="nutrient-zone-slot"></div>
+          </button>
+        </div>
+
+        <div class="nutrient-game-actions">
+          <button type="button" class="primary-inline" id="checkNutrientGame">Periksa jawaban</button>
+          <button type="button" class="secondary-inline" id="shuffleNutrientGame">Acak kartu</button>
+          <button type="button" class="secondary-inline" id="resetNutrientGame">Ulangi</button>
+        </div>
+
+        <div id="nutrientGameFeedback" class="digest-feedback neutral">
+          Tempatkan semua kartu terlebih dahulu, lalu periksa jawabanmu.
         </div>
       </article>
     </section>
@@ -508,6 +562,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-26"></script>
+  <script src="digestive.js?v=20260929-27"></script>
 </body>
 </html>
