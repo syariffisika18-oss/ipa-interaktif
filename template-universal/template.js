@@ -51,37 +51,44 @@
   saveState();
 
   function hydrateConfig() {
-    document.getElementById("appTitle").textContent = config.appTitle || "IPA Interaktif";
-    document.getElementById("materialTitle").textContent = config.materialTitle || "Template Materi IPA";
-    document.getElementById("materialMeta").textContent = config.materialMeta || "Kelas VII / VIII / IX";
+    const appTitle = document.getElementById("appTitle");
+    const materialTitle = document.getElementById("materialTitle");
+    const materialMeta = document.getElementById("materialMeta");
+    if (appTitle) appTitle.textContent = config.appTitle || "IPA Interaktif";
+    if (materialTitle) materialTitle.textContent = config.materialTitle || "Template Materi IPA";
+    if (materialMeta) materialMeta.textContent = config.materialMeta || "Kelas VII / VIII / IX";
 
     const objective = document.querySelector('[data-slot="objective"]');
     if (objective && config.objective) objective.textContent = config.objective;
 
     const grid = document.getElementById("strategyGrid");
-    (config.strategies || []).forEach((strategy, index) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "strategy-chip" + (index === 0 ? " is-selected" : "");
-      button.textContent = strategy;
-      grid.appendChild(button);
-    });
+    if (grid) {
+      (config.strategies || []).forEach((strategy, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "strategy-chip" + (index === 0 ? " is-selected" : "");
+        button.textContent = strategy;
+        grid.appendChild(button);
+      });
+    }
 
     const difficultyGrid = document.getElementById("difficultyGrid");
-    (config.difficultyCategories || []).forEach(category => {
-      const label = document.createElement("label");
-      label.className = "difficulty-option";
+    if (difficultyGrid) {
+      (config.difficultyCategories || []).forEach(category => {
+        const label = document.createElement("label");
+        label.className = "difficulty-option";
 
-      const input = document.createElement("input");
-      input.type = "checkbox";
-      input.dataset.difficulty = category;
+        const input = document.createElement("input");
+        input.type = "checkbox";
+        input.dataset.difficulty = category;
 
-      const span = document.createElement("span");
-      span.textContent = category;
+        const span = document.createElement("span");
+        span.textContent = category;
 
-      label.append(input, span);
-      difficultyGrid.appendChild(label);
-    });
+        label.append(input, span);
+        difficultyGrid.appendChild(label);
+      });
+    }
   }
 
   function bindModeButtons() {
