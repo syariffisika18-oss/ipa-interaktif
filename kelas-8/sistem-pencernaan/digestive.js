@@ -16,7 +16,6 @@
       process:"Makanan diarahkan menuju kerongkongan dan tidak masuk ke jalan napas.",
       result:"Makanan masuk ke kerongkongan.",
       terms:[
-        ["Faring","bagian tenggorokan yang dilewati makanan setelah keluar dari mulut."],
         ["Epiglotis","lipatan kecil yang membantu menutup jalan napas saat kita menelan."]
       ],
       prompt:"Mengapa kita sebaiknya tidak berbicara saat sedang menelan?"
@@ -305,7 +304,7 @@
     refreshAllBallPositions();
   }
 
-  const exploreOrder=[0,2,3,4,5,6,7];
+  const exploreOrder=[0,1,2,3,4,5,6,7];
   const route=document.getElementById("organRoute");
   route.innerHTML=exploreOrder.map((organIndex,displayIndex)=>{
     const o=journey[organIndex];
@@ -356,8 +355,7 @@
   document.getElementById("exploreAnatomy").addEventListener("click",e=>{
     if(Date.now()<visualDragSuppressUntil)return;
     const b=e.target.closest("[data-explore-organ]");if(!b)return;
-    const organIndex=Number(b.dataset.exploreOrgan);
-    selectJourney(organIndex===1?2:organIndex);
+    selectJourney(Number(b.dataset.exploreOrgan));
   });
   document.getElementById("journeyPrev").onclick=()=>{
     const pos=exploreOrder.indexOf(journeyIndex);
