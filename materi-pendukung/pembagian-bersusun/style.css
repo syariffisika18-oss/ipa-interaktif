@@ -1442,3 +1442,18 @@ button,input,select,textarea{font:inherit}
   .algorithm-cycle{margin-bottom:3px;padding:2px}
   .algorithm-cycle span{min-height:26px;font-size:.53rem}
 }
+
+/* Visual angka untuk siswa dengan literasi/numerasi rendah */
+.num-chip{
+  display:inline-block;
+  padding:1px 5px;
+  border-radius:6px;
+  background:#eef2ff;
+  color:#243b7a;
+  font-weight:900;
+  white-space:nowrap;
+}
+.num-chip.red{
+  background:#fff0ee;
+  color:#c83b32;
+}
