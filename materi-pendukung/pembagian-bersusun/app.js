@@ -487,15 +487,59 @@ const practices=[
 let practiceIndex=Math.min(state.practiceIndex||0,practices.length-1);
 let practiceStepIndex=0;
 let practiceCompleted=new Set(state.practiceCompleted||[]);
+let practiceSolvedSteps=new Set(state.practiceSolvedSteps||[]);
 let practiceStepSolved=false;
+
+function practiceStepKey(){
+  return practiceIndex+":"+practiceStepIndex;
+}
+function isPracticeStepSolved(){
+  const step=practices[practiceIndex].steps[practiceStepIndex];
+  return step.type==="done" || practiceSolvedSteps.has(practiceStepKey());
+}
+function markPracticeStepSolved(){
+  practiceSolvedSteps.add(practiceStepKey());
+  state.practiceSolvedSteps=[...practiceSolvedSteps];
+  save();
+}
+function highlightLastDigit(value){
+  const s=String(value);
+  const m=s.match(/^(.*)(\d)([^\d]*)$/);
+  return m ? m[1]+'<span class="ld-red">'+m[2]+'</span>'+m[3] : '<span class="ld-red">'+s+'</span>';
+}
 
 function renderPracticeDivision(q,step){
   const box=document.getElementById("practiceDivision");
+  const solved=isPracticeStepSolved();
   const isMultiplyStep=step.phase==="KALI" && step.type==="number";
+  const isSubtractStep=step.phase==="KURANGI" && step.type==="number";
+  const isDivideStep=step.type==="divide";
+  const isActionStep=step.type==="action";
 
-  const quotientHtml=isMultiplyStep
-    ? '<span class="ld-red">'+step.q+'</span>'
-    : step.q;
+  let quotientHtml=step.q;
+
+  // Pada langkah BAGI, digit hasil baru tidak ditampilkan sebelum pilihan benar.
+  if(isDivideStep){
+    if(!solved){
+      if(String(step.q).includes("ld-red")){
+        quotientHtml=String(step.q).replace(/(<span class="ld-red">)[\s\S]*?(<\/span>)/,'$1?$2');
+      }else{
+        quotientHtml='<span class="ld-red">?</span>';
+      }
+    }else if(step.q==="?"){
+      quotientHtml='<span class="ld-red">'+step.expected+'</span>';
+    }
+  }
+
+  // Pada langkah KALI, hanya digit hasil yang sedang dipakai yang diberi fokus merah.
+  if(isMultiplyStep){
+    quotientHtml=highlightLastDigit(String(step.q).replace(/<[^>]*>/g,""));
+  }
+
+  // Pada langkah DESIMAL, koma baru muncul setelah siswa menekan tindakannya.
+  if(isActionStep && step.phase==="DESIMAL" && !solved){
+    quotientHtml=String(step.q).replace(/<span class="ld-red">,?<\/span>/,"");
+  }
 
   const divisorHtml=isMultiplyStep
     ? '<span class="ld-red">'+q.b+'</span>'
@@ -506,17 +550,16 @@ function renderPracticeDivision(q,step){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
 
-    let html=row.html;
+    let rowHtml=row.html;
 
-    // Pada langkah KALI, hasil perkalian belum langsung diberikan.
-    // Ditampilkan sebagai elipsis merah sampai siswa menjawab benar.
-    if(isMultiplyStep && row.active && !practiceStepSolved){
-      html='<span class="ld-red">...</span>';
-    }else if(isMultiplyStep && row.active && practiceStepSolved){
-      html='<span class="ld-red">'+row.html+'</span>';
+    // Jangan bocorkan hasil langkah yang sedang dikerjakan.
+    if(row.active && !solved && (isMultiplyStep || isSubtractStep || isActionStep)){
+      rowHtml='<span class="ld-red">...</span>';
+    }else if(row.active && solved && (isMultiplyStep || isSubtractStep || isActionStep)){
+      rowHtml='<span class="ld-red">'+row.html+'</span>';
     }
 
-    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+html+'</div>';
+    return '<div class="practice-work-row '+(row.pos||"right")+(row.active?" active":"")+'">'+rowHtml+'</div>';
   }).join("");
 
   box.innerHTML=
@@ -538,7 +581,11 @@ function renderPracticeResponse(q,step){
   multiplePanel.hidden=true;
   feedback.className="feedback neutral";
   feedback.textContent="Kerjakan langkah ini sendiri.";
-  practiceStepSolved=step.type==="done";
+  practiceStepSolved=isPracticeStepSolved();
+  if(practiceStepSolved && step.type!=="done"){
+    feedback.className="feedback good";
+    feedback.textContent="Langkah ini sudah benar. Kamu dapat melanjutkan atau meninjaunya kembali.";
+  }
 
   if(step.type==="divide"){
     multiplePanel.hidden=false;
@@ -554,6 +601,8 @@ function renderPracticeResponse(q,step){
           fb.className="feedback good";
           fb.innerHTML="<b>Tepat.</b> "+q.b+" × "+multiplier+" = "+value+" adalah kelipatan terbesar yang tidak melebihi "+step.target+".";
           practiceStepSolved=true;
+          markPracticeStepSolved();
+          renderPracticeDivision(q,step);
           document.getElementById("practiceStepNext").disabled=false;
         }else if(value>step.target){
           fb.className="feedback warn";
@@ -585,6 +634,7 @@ function renderPracticeResponse(q,step){
         feedback.className="feedback good";
         feedback.textContent="Benar. Lanjutkan ke langkah berikutnya.";
         practiceStepSolved=true;
+        markPracticeStepSolved();
         renderPracticeDivision(q,step);
         document.getElementById("practiceStepNext").disabled=false;
       }else{
@@ -598,6 +648,8 @@ function renderPracticeResponse(q,step){
       feedback.className="feedback good";
       feedback.textContent="Benar. Perhatikan perubahan pada bentuk pembagian bersusun.";
       practiceStepSolved=true;
+      markPracticeStepSolved();
+      renderPracticeDivision(q,step);
       document.getElementById("practiceStepNext").disabled=false;
     };
   }else if(step.type==="done"){
@@ -620,6 +672,7 @@ function renderPractice(){
   document.getElementById("practiceStepTitle").textContent=step.title;
   document.getElementById("practiceInstruction").textContent=step.instruction;
 
+  practiceStepSolved=isPracticeStepSolved();
   renderPracticeDivision(q,step);
   renderPracticeResponse(q,step);
 
