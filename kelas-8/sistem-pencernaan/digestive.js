@@ -363,8 +363,58 @@
     refreshAllBallPositions();
   }
 
-  // Saat viewport berubah (portrait ↔ landscape), koordinat tetap sama.
-  // Re-apply hanya posisi label dan jalur SVG dalam persen; ukuran visual boleh berubah.
+  // Replikasi kanvas desktop secara utuh pada semua viewport.
+  // Gambar, label, bola, dan jalur waypoint tidak di-resize secara terpisah:
+  // seluruh kanvas desktop diskalakan sebagai satu unit.
+  const anatomyCanvasBase={
+    exploreAnatomy:{width:330,height:330*661/493},
+    explainAnatomy:{width:360,height:360*661/493}
+  };
+
+  function ensureDesktopAnatomyViewport(figure){
+    if(!figure)return null;
+    let viewport=figure.parentElement;
+    if(!viewport?.classList.contains("digestive-anatomy-viewport")){
+      viewport=document.createElement("div");
+      viewport.className="digestive-anatomy-viewport";
+      figure.parentNode.insertBefore(viewport,figure);
+      viewport.appendChild(figure);
+    }
+    const base=anatomyCanvasBase[figure.id]||anatomyCanvasBase.exploreAnatomy;
+    figure.style.setProperty("--anatomy-base-width",base.width+"px");
+    figure.style.setProperty("--anatomy-base-height",base.height+"px");
+    return viewport;
+  }
+
+  function syncOneDesktopAnatomyCanvas(figure){
+    const viewport=ensureDesktopAnatomyViewport(figure);
+    if(!viewport)return;
+    const base=anatomyCanvasBase[figure.id]||anatomyCanvasBase.exploreAnatomy;
+    const available=viewport.clientWidth;
+    if(!available)return;
+    const scale=Math.min(1,available/base.width);
+    figure.style.setProperty("--anatomy-scale",String(scale));
+    viewport.style.height=(base.height*scale)+"px";
+  }
+
+  function syncAllDesktopAnatomyCanvases(){
+    document.querySelectorAll(".digestive-anatomy-figure").forEach(syncOneDesktopAnatomyCanvas);
+  }
+
+  const anatomyResizeObserver="ResizeObserver" in window
+    ?new ResizeObserver(entries=>{
+        entries.forEach(entry=>{
+          const figure=entry.target.querySelector?.(".digestive-anatomy-figure");
+          if(figure)syncOneDesktopAnatomyCanvas(figure);
+        });
+      })
+    :null;
+
+  document.querySelectorAll(".digestive-anatomy-figure").forEach(figure=>{
+    const viewport=ensureDesktopAnatomyViewport(figure);
+    if(viewport&&anatomyResizeObserver)anatomyResizeObserver.observe(viewport);
+  });
+
   let visualViewportSyncFrame=0;
   const syncLockedVisualCoordinates=()=>{
     cancelAnimationFrame(visualViewportSyncFrame);
@@ -373,10 +423,12 @@
       routeWaypoints=clonePositions(lockedDesktopRouteWaypoints);
       applyMarkerPositions();
       updateRoutePaths();
+      syncAllDesktopAnatomyCanvases();
     });
   };
   window.addEventListener("resize",syncLockedVisualCoordinates,{passive:true});
   window.addEventListener("orientationchange",syncLockedVisualCoordinates,{passive:true});
+  syncAllDesktopAnatomyCanvases();
 
   const exploreOrder=[0,1,2,3,4,5,6,7];
   const route=document.getElementById("organRoute");
@@ -600,6 +652,7 @@
     explainPages.forEach((p,i)=>p.classList.toggle("is-active",i===explainPageIndex));
     if(explainPageIndex===1){
       requestAnimationFrame(()=>{
+        syncAllDesktopAnatomyCanvases();
         applyVisualCalibration();
         renderModel(modelIndex,false);
       });
@@ -653,6 +706,7 @@
   });
 
   applyVisualCalibration();
+  syncAllDesktopAnatomyCanvases();
   renderJourney(false);
   renderModel(0,false);
   showExplainPage(0);
