@@ -2911,3 +2911,63 @@ html,body{max-width:100%;overflow-x:clip}
   pointer-events:none!important;
   touch-action:auto!important;
 }
+
+
+/* =========================================================
+   EXPLAIN MOBILE ORDER — gambar di atas penjelasan
+   Desktop tetap berdampingan. HP portrait & landscape:
+   1) model anatomi, 2) penjelasan organ.
+   ========================================================= */
+@media(max-width:640px){
+  .explain-anatomy-layout{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-items:start!important;
+    gap:12px!important;
+  }
+
+  .explain-anatomy-layout > .digestive-anatomy-card{
+    order:1!important;
+    width:100%!important;
+    min-width:0!important;
+    justify-self:stretch!important;
+  }
+
+  .explain-anatomy-layout > .model-detail{
+    order:2!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .explain-anatomy-layout .digestive-anatomy-figure{
+    width:min(100%,330px)!important;
+    margin-inline:auto!important;
+  }
+}
+
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .explain-anatomy-layout{
+    display:grid!important;
+    grid-template-columns:1fr!important;
+    align-items:start!important;
+    gap:10px!important;
+  }
+
+  .explain-anatomy-layout > .digestive-anatomy-card{
+    order:1!important;
+    width:100%!important;
+    min-width:0!important;
+    justify-self:stretch!important;
+  }
+
+  .explain-anatomy-layout > .model-detail{
+    order:2!important;
+    width:100%!important;
+    min-width:0!important;
+  }
+
+  .explain-anatomy-layout .digestive-anatomy-figure{
+    width:min(100%,280px)!important;
+    margin-inline:auto!important;
+  }
+}
