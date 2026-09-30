@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260930-desktop-layout2">
+  <link rel="stylesheet" href="digestive.css?v=20260930-calibrate-waypoints1">
 </head>
 <body>
   <header class="app-header">
@@ -219,8 +219,28 @@
             <button class="anatomy-hotspot hotspot-0" type="button" data-explore-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explore-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explore-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explore-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explore-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explore-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explore-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explore-organ="7" aria-label="Pilih Anus"><span>8</span></button>
             <span class="food-ball" id="exploreFoodBall" data-index="0" aria-hidden="true"></span>
           </div>
+
           <div class="anatomy-caption">
             <span>● Bola makanan bergerak mengikuti organ yang dipilih.</span>
+            <button class="visual-editor-toggle" type="button" data-visual-editor="explore">Atur posisi visual</button>
+          </div>
+          <div class="visual-editor-panel" data-visual-panel="explore" hidden>
+            <p><b>Kalibrasi Explore:</b> seret label organ 1–8 dan waypoint jalur. Titik oranye adalah anchor organ, titik kuning adalah waypoint perantara.</p>
+            <div class="visual-waypoint-plan" aria-label="Jumlah waypoint per ruas">
+              <span>Mulut→Faring <b>2</b></span>
+              <span>Faring→Kerongkongan <b>4</b></span>
+              <span>Kerongkongan→Lambung <b>6</b></span>
+              <span>Lambung→Usus halus <b>10</b></span>
+              <span>Usus halus→Usus besar <b>6</b></span>
+              <span>Usus besar→Rektum <b>9</b></span>
+              <span>Rektum→Anus <b>2</b></span>
+            </div>
+            <div class="visual-editor-actions">
+              <button type="button" data-copy-visual="explore">Salin koordinat untuk dikunci</button>
+              <button type="button" data-reset-visual="explore">Reset posisi</button>
+            </div>
+            <textarea class="visual-coordinate-output" data-visual-output="explore" rows="7" readonly hidden></textarea>
+            <small data-visual-status="explore">Posisi edit tersimpan otomatis di browser ini.</small>
           </div>
         </div>
         <article class="organ-observation">
@@ -304,9 +324,29 @@
               <button class="anatomy-hotspot hotspot-0" type="button" data-explain-organ="0" aria-label="Pilih Mulut"><span>1</span></button><button class="anatomy-hotspot hotspot-1" type="button" data-explain-organ="1" aria-label="Pilih Faring"><span>2</span></button><button class="anatomy-hotspot hotspot-2" type="button" data-explain-organ="2" aria-label="Pilih Kerongkongan"><span>3</span></button><button class="anatomy-hotspot hotspot-3" type="button" data-explain-organ="3" aria-label="Pilih Lambung"><span>4</span></button><button class="anatomy-hotspot hotspot-4" type="button" data-explain-organ="4" aria-label="Pilih Usus halus"><span>5</span></button><button class="anatomy-hotspot hotspot-5" type="button" data-explain-organ="5" aria-label="Pilih Usus besar"><span>6</span></button><button class="anatomy-hotspot hotspot-6" type="button" data-explain-organ="6" aria-label="Pilih Rektum"><span>7</span></button><button class="anatomy-hotspot hotspot-7" type="button" data-explain-organ="7" aria-label="Pilih Anus"><span>8</span></button>
               <span class="food-ball" id="explainFoodBall" data-index="0" aria-hidden="true"></span>
             </div>
-            <div class="anatomy-caption">
-              <span>● Bola makanan bergerak mengikuti organ yang dipilih.</span>
+  
+          <div class="anatomy-caption">
+            <span>● Bola makanan bergerak mengikuti organ yang dipilih.</span>
+            <button class="visual-editor-toggle" type="button" data-visual-editor="explain">Atur posisi visual</button>
+          </div>
+          <div class="visual-editor-panel" data-visual-panel="explain" hidden>
+            <p><b>Kalibrasi Explain:</b> seret label organ 1–8 dan waypoint jalur. Titik oranye adalah anchor organ, titik kuning adalah waypoint perantara.</p>
+            <div class="visual-waypoint-plan" aria-label="Jumlah waypoint per ruas">
+              <span>Mulut→Faring <b>2</b></span>
+              <span>Faring→Kerongkongan <b>4</b></span>
+              <span>Kerongkongan→Lambung <b>6</b></span>
+              <span>Lambung→Usus halus <b>10</b></span>
+              <span>Usus halus→Usus besar <b>6</b></span>
+              <span>Usus besar→Rektum <b>9</b></span>
+              <span>Rektum→Anus <b>2</b></span>
             </div>
+            <div class="visual-editor-actions">
+              <button type="button" data-copy-visual="explain">Salin koordinat untuk dikunci</button>
+              <button type="button" data-reset-visual="explain">Reset posisi</button>
+            </div>
+            <textarea class="visual-coordinate-output" data-visual-output="explain" rows="7" readonly hidden></textarea>
+            <small data-visual-status="explain">Posisi edit tersimpan otomatis di browser ini.</small>
+          </div>
           </div>
           <article class="model-detail">
             <div class="model-data">
@@ -604,6 +644,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260930-desktop-restore1"></script>
+  <script src="digestive.js?v=20260930-calibrate-waypoints1"></script>
 </body>
 </html>
