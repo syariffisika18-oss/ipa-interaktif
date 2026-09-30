@@ -122,10 +122,10 @@
       process:"Pencernaan lanjutan + penyerapan zat gizi",
       type:"Mekanik + kimiawi + penyerapan",
       mechanical:"Otot dinding usus",
-      chemical:"Empedu, cairan pankreas, cairan usus",
-      result:"Zat gizi sederhana diserap",
-      term:"Vili = tonjolan kecil yang memperluas permukaan penyerapan.",
-      why:"Permukaan luas dan vili menjadikan usus halus tempat utama penyerapan zat gizi."
+      chemical:"Empedu (bukan enzim), cairan pankreas, cairan usus",
+      result:"Zat gizi sederhana diserap melalui permukaan usus halus",
+      term:"Vili = tonjolan kecil pada dinding usus halus yang memperluas permukaan penyerapan.",
+      why:"Permukaan luas dan banyak vili menjadikan usus halus tempat utama penyerapan zat gizi."
     },
     {
       name:"Usus besar",
@@ -740,7 +740,7 @@
           product:"Asam lemak + monogliserida"
         }
       ],
-      helper:"Empedu membantu mengemulsikan lemak agar lipase lebih mudah bekerja. Empedu dibuat oleh hati dan disimpan di kantung empedu. Empedu bukan enzim."
+      helper:"Empedu bukan enzim. Empedu dibuat oleh hati, disimpan di kantung empedu, lalu membantu mengemulsikan lemak agar lipase pankreas lebih mudah bekerja."
     }
   ];
 
