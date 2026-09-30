@@ -2884,3 +2884,30 @@ html,body{max-width:100%;overflow-x:clip}
     pointer-events:none;
   }
 }
+
+
+/* =========================================================
+   FINAL VISUAL COORDINATE LOCK — 2026-09-30
+   Koordinat sudah dipermanenkan di digestive.js.
+   Tidak ada editor posisi pada desktop maupun HP.
+   ========================================================= */
+.visual-editor-toggle,
+.visual-editor-panel,
+.route-waypoint{
+  display:none!important;
+}
+.digestive-anatomy-figure.is-editing{
+  outline:none!important;
+}
+.digestive-anatomy-figure.is-editing .route-waypoint{
+  display:none!important;
+}
+.digestive-anatomy-figure .anatomy-hotspot{
+  pointer-events:auto!important;
+  touch-action:auto!important;
+  cursor:pointer!important;
+}
+.digestive-anatomy-figure .food-ball{
+  pointer-events:none!important;
+  touch-action:auto!important;
+}
