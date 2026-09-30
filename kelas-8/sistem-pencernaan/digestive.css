@@ -2602,3 +2602,168 @@ html,body{max-width:100%;overflow-x:clip}
   .stage-panel{padding-block:5px}
   .bottom-nav{margin-block:3px}
 }
+
+
+/* =========================================================
+   FINAL MOBILE ANATOMY FIX 2026-09-30
+   - stage nav tidak menimpa heading
+   - bottom nav tidak menimpa gambar/konten
+   - koordinat label/waypoint tetap mengikuti figure 493:661
+   ========================================================= */
+
+/* Semua overlay anatomi selalu memakai kotak referensi yang sama */
+.digestive-anatomy-figure{
+  position:relative!important;
+  aspect-ratio:493 / 661!important;
+  overflow:hidden!important;
+}
+.digestive-anatomy-figure>img{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+  object-fit:contain!important;
+}
+.digestive-anatomy-figure .food-route-svg{
+  position:absolute!important;
+  inset:0!important;
+  width:100%!important;
+  height:100%!important;
+}
+.digestive-anatomy-figure .anatomy-hotspot,
+.digestive-anatomy-figure .food-ball{
+  position:absolute!important;
+}
+
+/* HP portrait: jangan biarkan sticky chrome menutupi materi */
+@media(max-width:640px){
+  .stage-nav{
+    position:relative!important;
+    top:auto!important;
+    transform:none!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+  body.phone-stage-nav-hidden .stage-nav,
+  body.phone-topbar-hidden .stage-nav{
+    position:relative!important;
+    top:auto!important;
+    transform:none!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+
+  .bottom-nav{
+    position:static!important;
+    bottom:auto!important;
+    margin-top:10px!important;
+  }
+
+  .stage-panel{
+    padding-bottom:12px!important;
+    overflow:visible!important;
+  }
+
+  .inquiry-head{
+    position:relative;
+    z-index:1;
+    margin-top:2px;
+  }
+
+  .journey-layout{
+    grid-template-columns:1fr!important;
+    gap:9px!important;
+    align-items:start!important;
+  }
+  .organ-route{order:1}
+  .digestive-anatomy-card{order:2}
+  .organ-observation{order:3}
+
+  .digestive-anatomy-figure{
+    width:min(100%,300px)!important;
+    margin-inline:auto!important;
+  }
+
+  .anatomy-hotspot{
+    width:24px!important;
+    height:24px!important;
+    font-size:.56rem!important;
+  }
+  .food-ball{
+    width:16px!important;
+    height:16px!important;
+  }
+
+  .organ-observation{
+    display:block!important;
+    width:100%!important;
+  }
+}
+
+/* HP landscape: satu baris seperti desktop, tetapi tanpa overlay sticky */
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .stage-nav{
+    position:relative!important;
+    top:auto!important;
+    transform:none!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+    margin-bottom:5px!important;
+  }
+  body.phone-stage-nav-hidden .stage-nav,
+  body.phone-topbar-hidden .stage-nav{
+    position:relative!important;
+    top:auto!important;
+    transform:none!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+
+  .bottom-nav{
+    position:static!important;
+    bottom:auto!important;
+    margin:7px 0 4px!important;
+  }
+
+  .stage-panel{
+    padding-bottom:8px!important;
+    overflow:visible!important;
+  }
+
+  .journey-layout{
+    grid-template-columns:132px 180px minmax(0,1fr)!important;
+    gap:7px!important;
+    align-items:start!important;
+  }
+
+  .digestive-anatomy-figure{
+    width:180px!important;
+    margin-inline:auto!important;
+  }
+
+  .anatomy-hotspot{
+    width:20px!important;
+    height:20px!important;
+    font-size:.46rem!important;
+  }
+  .food-ball{
+    width:14px!important;
+    height:14px!important;
+  }
+
+  .organ-observation{
+    display:block!important;
+    min-width:0!important;
+    padding:7px!important;
+  }
+
+  .inquiry-columns{
+    grid-template-columns:1fr 1fr!important;
+    gap:6px!important;
+  }
+
+  .anatomy-caption{
+    font-size:.52rem!important;
+    line-height:1.2!important;
+  }
+}
