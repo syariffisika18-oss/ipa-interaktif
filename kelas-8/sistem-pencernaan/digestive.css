@@ -2855,3 +2855,32 @@ html,body{max-width:100%;overflow-x:clip}
   .route-waypoint{width:12px!important;height:12px!important}
   .route-waypoint.is-organ-anchor{width:15px!important;height:15px!important}
 }
+
+
+/* =========================================================
+   MOBILE VISUAL CALIBRATION LOCK
+   Kalibrasi hanya dilakukan di desktop. HP harus menjadi
+   renderer dari koordinat final yang sama, bukan sumber edit baru.
+   ========================================================= */
+@media(max-width:950px){
+  .visual-editor-toggle,
+  .visual-editor-panel,
+  .route-waypoint{
+    display:none!important;
+  }
+  .digestive-anatomy-figure.is-editing{
+    outline:none!important;
+  }
+  .digestive-anatomy-figure.is-editing .route-waypoint{
+    display:none!important;
+  }
+  .digestive-anatomy-figure .anatomy-hotspot,
+  .digestive-anatomy-figure .food-ball{
+    pointer-events:auto;
+    touch-action:auto!important;
+    cursor:pointer;
+  }
+  .digestive-anatomy-figure .food-ball{
+    pointer-events:none;
+  }
+}
