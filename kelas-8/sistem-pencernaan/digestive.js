@@ -252,16 +252,6 @@
   let visualDragSuppressUntil=0;
 
   function clampPercent(n){return Math.max(1,Math.min(99,n))}
-  function saveCalibration(){
-    try{
-      localStorage.setItem(calibrationKey,JSON.stringify({
-        version:1,
-        segmentCounts:[...routeSegmentCounts],
-        markers:markerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
-        waypoints:routeWaypoints.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
-      }));
-    }catch(_){}
-  }
 
   function segmentForWaypoint(index){
     if(index===0)return null;
@@ -278,7 +268,7 @@
 
   function visualPayload(){
     return JSON.stringify({
-      mode:"manual-calibration",
+      mode:"repository-final-lock",
       segment_counts:routeSegments.map(s=>({
         ruas:s.id,nama:s.name,jumlah:s.count,
         indeks_awal:s.start,indeks_akhir:s.end
