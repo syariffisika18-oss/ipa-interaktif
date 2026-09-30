@@ -2787,3 +2787,71 @@ html,body{max-width:100%;overflow-x:clip}
     padding-bottom:17px!important;
   }
 }
+
+
+/* =========================================================
+   TEMPORARY VISUAL CALIBRATION
+   Akan dikunci kembali setelah koordinat final disetujui.
+   ========================================================= */
+.visual-editor-toggle{
+  display:inline-flex!important;
+  align-items:center;
+  justify-content:center;
+}
+.visual-editor-panel:not([hidden]){
+  display:block!important;
+}
+.digestive-anatomy-figure.is-editing{
+  outline:3px dashed #e0b532!important;
+  outline-offset:-4px;
+}
+.digestive-anatomy-figure.is-editing .route-waypoint{
+  display:block!important;
+}
+.digestive-anatomy-figure.is-editing .anatomy-hotspot,
+.digestive-anatomy-figure.is-editing .food-ball,
+.digestive-anatomy-figure.is-editing .route-waypoint{
+  pointer-events:auto!important;
+  touch-action:none!important;
+  cursor:grab;
+}
+.visual-waypoint-plan{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:4px;
+  margin:6px 0;
+}
+.visual-waypoint-plan span{
+  padding:5px 7px;
+  border:1px solid #e4d79f;
+  border-radius:7px;
+  background:#fffef8;
+  color:#5f593d;
+  font-size:.6rem;
+  line-height:1.25;
+}
+.visual-waypoint-plan b{color:#8a6500}
+.route-waypoint{
+  display:none!important;
+}
+.digestive-anatomy-figure.is-editing .route-waypoint{
+  display:block!important;
+}
+.route-waypoint[data-segment="1"]{background:#efb72e}
+.route-waypoint[data-segment="2"]{background:#e69a2f}
+.route-waypoint[data-segment="3"]{background:#df7f31}
+.route-waypoint[data-segment="4"]{background:#c9962f}
+.route-waypoint[data-segment="5"]{background:#91a43a}
+.route-waypoint[data-segment="6"]{background:#4b9b72}
+.route-waypoint[data-segment="7"]{background:#4986a7}
+.route-waypoint.is-organ-anchor{
+  background:#e85d3f!important;
+  width:15px;
+  height:15px;
+}
+@media(max-width:640px){
+  .visual-waypoint-plan{grid-template-columns:1fr}
+  .visual-editor-toggle{min-height:34px!important;font-size:.58rem!important}
+  .route-waypoint{width:12px!important;height:12px!important}
+  .route-waypoint.is-organ-anchor{width:15px!important;height:15px!important}
+}
