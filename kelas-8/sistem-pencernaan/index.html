@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif Sistem Pencernaan Manusia kelas VIII">
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="digestive.css?v=20260929-21">
+  <link rel="stylesheet" href="digestive.css?v=20260930-1">
 </head>
 <body>
   <header class="app-header">
@@ -425,16 +425,24 @@
           </article>
         </div>
 
-        <div id="pathwayFeedback" class="digest-feedback neutral">Bangun ketiga jalur terlebih dahulu.</div>
+        <div class="elab-lock-row">
+          <span id="pathwayAttemptLabel">Belum dikunci • maksimal 2 percobaan</span>
+          <button type="button" class="primary-inline" id="checkPathwayChallenge">Kunci analisis jalur</button>
+        </div>
+        <div id="pathwayFeedback" class="digest-feedback neutral">Pilih satu jalur pada setiap nutrisi, lalu kunci jawabanmu.</div>
 
-        <div class="transfer-question">
+        <div class="transfer-question locked-step" id="absorptionTransferStep">
           <p><b>Transfer konsep:</b> Jika permukaan penyerapan usus halus berkurang drastis, hasil pencernaan dari menu Rani yang paling mungkin terganggu penyerapannya adalah...</p>
           <div id="absorptionOptions" class="reason-options compact-reason">
             <button type="button" data-absorb="carbprotein">Glukosa dan asam amino saja, karena hasil pencernaan lemak tidak memerlukan permukaan usus halus</button>
             <button type="button" data-absorb="all">Glukosa, asam amino, dan hasil pencernaan lemak karena ketiganya terutama diserap melalui permukaan usus halus</button>
             <button type="button" data-absorb="fat">Hasil pencernaan lemak saja, karena glukosa dan asam amino sudah diserap sebelum mencapai usus halus</button>
           </div>
-          <div id="absorptionFeedback" class="digest-feedback neutral">Gunakan hubungan antara hasil pencernaan dan lokasi penyerapan.</div>
+          <div class="elab-lock-row">
+            <span id="absorptionAttemptLabel">Menunggu analisis jalur selesai</span>
+            <button type="button" class="primary-inline" id="checkAbsorption" disabled>Kunci jawaban transfer</button>
+          </div>
+          <div id="absorptionFeedback" class="digest-feedback neutral">Selesaikan analisis jalur terlebih dahulu.</div>
         </div>
       </section>
 
@@ -445,9 +453,13 @@
           <div class="hots-case-suite-head">
             <div>
               <h3>Lima kasus, lima pola penalaran</h3>
-              <p>Gunakan bukti pada kasus untuk membangun penjelasan. Langkah berikutnya terbuka setelah alasan sebelumnya tepat.</p>
+              <p>Pilih jawaban terlebih dahulu, lalu kunci. Setiap langkah maksimal dua kali: satu jawaban awal dan satu kesempatan revisi. Jawaban benar tidak ditampilkan setelah percobaan pertama.</p>
             </div>
-            <span id="hotsCaseProgress" class="hots-case-progress">0 / 5 kasus tuntas</span>
+            <div class="hots-case-metrics" aria-label="Ringkasan hasil analisis kasus">
+              <span id="hotsCaseProgress" class="hots-case-progress">0 / 5 kasus selesai</span>
+              <span id="hotsFirstScore" class="hots-score-pill">Awal 0 / 15 tepat</span>
+              <span id="hotsFinalScore" class="hots-score-pill">Akhir 0 / 15 tepat</span>
+            </div>
           </div>
 
           <div id="hotsCaseTabs" class="hots-case-tabs" role="tablist" aria-label="Pilih kasus analisis">
@@ -486,7 +498,11 @@
             <button type="button" data-model-error="fat">Empedu berhubungan dengan lemak</button>
             <button type="button" data-model-error="intestine">Empedu bekerja di usus halus</button>
           </div>
-          <div id="modelErrorFeedback" class="digest-feedback neutral">Identifikasi kesalahan konsep terlebih dahulu.</div>
+          <div class="elab-lock-row">
+            <span id="modelErrorAttemptLabel">Belum dikunci • maksimal 2 percobaan</span>
+            <button type="button" class="primary-inline" id="checkModelError">Kunci identifikasi</button>
+          </div>
+          <div id="modelErrorFeedback" class="digest-feedback neutral">Pilih bagian yang menurutmu salah, lalu kunci jawaban.</div>
         </div>
 
         <div class="model-critique-step locked-step" id="modelCorrectionStep">
@@ -496,7 +512,11 @@
             <button type="button" data-correction="1">Empedu mengemulsikan lemak menjadi tetesan lebih kecil; lipase kemudian mencerna lemak secara kimiawi menjadi hasil yang lebih sederhana.</button>
             <button type="button" data-correction="2">Empedu dan lipase sama-sama enzim pencernaan lemak; keduanya bekerja secara kimiawi dengan fungsi yang hampir sama.</button>
           </div>
-          <div id="modelCorrectionFeedback" class="digest-feedback neutral">Perbaiki hubungan antara empedu dan enzim.</div>
+          <div class="elab-lock-row">
+            <span id="modelCorrectionAttemptLabel">Menunggu langkah 1 selesai</span>
+            <button type="button" class="primary-inline" id="checkModelCorrection" disabled>Kunci perbaikan model</button>
+          </div>
+          <div id="modelCorrectionFeedback" class="digest-feedback neutral">Selesaikan identifikasi kesalahan terlebih dahulu.</div>
         </div>
 
         <div class="model-critique-step locked-step" id="bilePredictionStep">
@@ -506,7 +526,11 @@
             <button data-bile="fat">Emulsifikasi lemak berkurang sehingga luas permukaan kontak menurun dan kerja lipase pada lemak menjadi kurang efektif</button>
             <button data-bile="absorb">Pencernaan lemak tetap normal, tetapi penyerapan hasilnya terganggu karena empedu hanya berperan pada tahap penyerapan</button>
           </div>
-          <div id="bileFeedback" class="digest-feedback neutral">Gunakan model yang sudah diperbaiki untuk membuat prediksi.</div>
+          <div class="elab-lock-row">
+            <span id="bileAttemptLabel">Menunggu langkah 2 selesai</span>
+            <button type="button" class="primary-inline" id="checkBilePrediction" disabled>Kunci prediksi</button>
+          </div>
+          <div id="bileFeedback" class="digest-feedback neutral">Selesaikan perbaikan model terlebih dahulu.</div>
         </div>
       </section>
     </section>
@@ -580,6 +604,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
   <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260929-36"></script>
+  <script src="digestive.js?v=20260930-1"></script>
 </body>
 </html>
