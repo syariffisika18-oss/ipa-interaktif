@@ -1810,7 +1810,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
 
 
 /* =========================================================
-   ELABORATE HOTS CASE SUITE — 3 kasus bertingkat
+   ELABORATE HOTS CASE SUITE — 5 kasus bertingkat
    ========================================================= */
 .hots-case-suite{
   display:grid;
@@ -2145,4 +2145,460 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
     padding:2px 5px;
     font-size:.42rem;
   }
+}
+
+
+/* =========================================================
+   MOBILE AUDIT 2026-09-30
+   Sasaran: HP portrait 320–640 px dan landscape <=950x500.
+   Prioritas: terbaca, tidak overflow horizontal, target sentuh layak.
+   ========================================================= */
+
+/* Guard rail umum */
+html,body{max-width:100%;overflow-x:clip}
+.stage-panel,
+.stage-panel>*,
+.learning-card,
+.identity-card,
+.phenomenon-card,
+.prediction-card,
+.digestive-anatomy-card,
+.organ-observation,
+.model-detail,
+.elab-page,
+.eval-shell,
+.send-feedback-card{min-width:0}
+.stage-panel button,
+.stage-panel input,
+.stage-panel textarea{
+  max-width:100%;
+  overflow-wrap:break-word;
+  word-break:normal;
+}
+.digestive-anatomy-figure img,
+.food-route-svg{max-width:100%}
+.stage-nav,
+.model-tabs,
+.organ-route{
+  max-width:100%;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-inline:contain;
+  scrollbar-width:none;
+}
+.stage-nav::-webkit-scrollbar,
+.model-tabs::-webkit-scrollbar,
+.organ-route::-webkit-scrollbar{display:none}
+.stage-nav,.model-tabs{scroll-snap-type:x proximity}
+.stage-tab,.model-tabs button{scroll-snap-align:center}
+.app-header{padding-top:env(safe-area-inset-top)}
+.bottom-nav{bottom:max(3px,env(safe-area-inset-bottom))}
+
+/* ------------------------- PHONE PORTRAIT ------------------------- */
+@media(max-width:640px){
+  /* Navigasi dan pembungkus */
+  .stage-panel{overflow-x:hidden}
+  .stage-nav{grid-template-columns:repeat(7,minmax(92px,1fr))}
+  .stage-tab{min-height:40px;font-size:.67rem}
+  .bottom-nav button{min-height:40px}
+  .digest-feedback{font-size:.72rem;line-height:1.38}
+
+  /* Orientasi */
+  .digest-list{font-size:.75rem}
+  .nutrient-game-instruction{font-size:.68rem;line-height:1.4}
+  .relation-bank-grid{grid-template-columns:1fr;gap:6px}
+  .relation-card-bank{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:5px;
+  }
+  #functionCardBank{grid-template-columns:1fr}
+  .relation-card{
+    width:100%;
+    min-width:0;
+    min-height:40px;
+    font-size:.63rem;
+    line-height:1.25;
+    padding:5px 6px;
+  }
+  .relation-column-head,
+  .nutrition-chain-row{
+    grid-template-columns:minmax(0,1.05fr) minmax(70px,.82fr) minmax(0,1.55fr);
+    gap:4px;
+  }
+  .relation-column-head{font-size:.56rem}
+  .nutrition-chain-row{padding:4px}
+  .relation-slot{
+    min-height:52px;
+    padding:4px;
+    font-size:.58rem;
+    line-height:1.22;
+  }
+  .relation-slot .relation-card{
+    min-height:42px;
+    font-size:.58rem;
+  }
+  .nutrient-game-actions button{min-height:40px}
+
+  /* Engage */
+  .prediction-options button{
+    min-height:42px;
+    font-size:.72rem;
+  }
+
+  /* Explore */
+  .organ-route{
+    padding-bottom:2px;
+    scroll-snap-type:x proximity;
+  }
+  .organ-route button{
+    min-height:40px;
+    font-size:.72rem;
+    scroll-snap-align:start;
+  }
+  .digestive-anatomy-figure{width:min(100%,285px)}
+  .anatomy-hotspot{
+    width:28px;
+    height:28px;
+    font-size:.6rem;
+  }
+  .food-ball{width:18px;height:18px}
+  .anatomy-caption{font-size:.67rem}
+  .organ-observation{padding:10px}
+  .organ-copy h3{font-size:1.05rem}
+  .organ-copy>p,
+  .inquiry-columns p,
+  .inquiry-prompt,
+  .term-box{font-size:.7rem}
+  .inquiry-columns>div{font-size:.71rem}
+  .journey-actions button,
+  .prediction-check button{min-height:40px;font-size:.7rem}
+
+  /* Explain: tab tetap terlihat tanpa tiga baris vertikal */
+  .explain-page-nav{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:4px;
+  }
+  .explain-page-tab{
+    min-width:0;
+    min-height:44px;
+    display:grid;
+    grid-template-columns:auto minmax(0,1fr);
+    align-items:center;
+    gap:3px;
+    padding:5px;
+    font-size:.62rem;
+    line-height:1.15;
+    text-align:left;
+  }
+  .explain-page-tab span{
+    width:19px;
+    height:19px;
+    margin-right:0;
+  }
+  .digestion-definition{font-size:.8rem}
+  .digestion-flow b{font-size:.66rem}
+  .digestion-note{font-size:.7rem}
+  .explain-anatomy-layout .digestive-anatomy-figure{width:min(100%,275px)}
+  .model-tabs button{min-height:38px;font-size:.69rem}
+  .model-route-text,
+  .model-term strong{font-size:.68rem}
+  .model-four>div{font-size:.7rem}
+  .model-four span{font-size:.56rem}
+  .accessory-grid article{font-size:.72rem}
+  .accessory-grid span{font-size:.67rem}
+
+  /* Explain — hasil pencernaan */
+  .nutrient-tab{min-height:38px;font-size:.68rem}
+  .result-intro{font-size:.72rem}
+  .nutrient-model-title small,
+  .nutrient-final-result small,
+  .nutrient-helper span,
+  .enzyme-step-grid span{font-size:.58rem}
+  .nutrient-model-title h4{font-size:.9rem}
+  .nutrient-final-result strong{font-size:.76rem}
+  .enzyme-step-place{font-size:.66rem}
+  .enzyme-step-grid strong{font-size:.69rem;line-height:1.35}
+  .enzyme-step p{font-size:.66rem}
+  .nutrient-helper strong{font-size:.68rem}
+
+  /* Elaborate */
+  .elab-tab{min-height:40px!important;font-size:.65rem!important}
+  .pathway-food{font-size:.72rem}
+  .pathway-options button,
+  .evidence-options button,
+  .reason-options button{
+    min-height:40px;
+    font-size:.7rem;
+    line-height:1.3;
+  }
+  .transfer-question>p,
+  .evidence-step>p,
+  .model-critique-step>p{font-size:.71rem;line-height:1.35}
+  .hots-case-suite-head h3{font-size:.86rem}
+  .hots-case-suite-head p{font-size:.68rem;line-height:1.35}
+  .hots-case-tab{min-height:50px}
+  .hots-case-tab span{font-size:.54rem}
+  .hots-case-tab b{font-size:.64rem}
+  .hots-case-tab.is-done::after,
+  .hots-case-tab.is-mastered::after{font-size:.52rem}
+  .hots-case-panel .case-card h3{font-size:.88rem}
+  .hots-case-panel .case-card p{font-size:.7rem;line-height:1.35}
+  .hots-case-number{font-size:.57rem}
+  .hots-case-step>p{font-size:.7rem;line-height:1.4}
+  .hots-evidence-options button,
+  .hots-case-step .reason-options button{font-size:.68rem;min-height:40px}
+  .hots-case-step .digest-feedback{font-size:.68rem}
+  .elab-lock-row span,
+  .hots-step-submit-row span{font-size:.6rem}
+  .elab-lock-row button,
+  .hots-step-submit-row button{min-height:36px;font-size:.62rem}
+  .hots-score-pill{font-size:.57rem}
+
+  /* Evaluate */
+  .eval-head{align-items:flex-start}
+  .eval-question h3{font-size:1rem;line-height:1.35}
+  .eval-option-list button{
+    min-height:42px;
+    padding:7px 9px;
+    font-size:.74rem;
+    line-height:1.3;
+  }
+  .eval-actions button{min-height:40px;font-size:.72rem}
+
+  /* Reflect */
+  .reflection-grid label{font-size:.7rem}
+  .reflection-grid textarea{font-size:.72rem;line-height:1.35}
+  .difficulty-option{font-size:.69rem;min-height:38px}
+  .confidence-row button{min-height:38px;font-size:.7rem}
+  .send-feedback-button{min-height:40px;font-size:.72rem}
+}
+
+/* Portrait sempit: susun elemen yang masih terlalu padat */
+@media(max-width:430px){
+  .nutrient-game-head{
+    grid-template-columns:1fr;
+    align-items:start;
+  }
+  .nutrient-game-score{justify-self:start}
+  .relation-card-bank{grid-template-columns:1fr 1fr}
+  #functionCardBank{grid-template-columns:1fr}
+  .relation-column-head,
+  .nutrition-chain-row{
+    grid-template-columns:minmax(0,1fr) minmax(64px,.82fr) minmax(0,1.45fr);
+  }
+  .relation-slot{font-size:.56rem}
+  .inquiry-columns{grid-template-columns:1fr}
+  .prediction-check{grid-template-columns:1fr}
+  .model-four{grid-template-columns:1fr}
+  .hots-case-tabs{grid-template-columns:1fr 1fr}
+  .hots-evidence-options{grid-template-columns:1fr}
+  .reflection-grid{grid-template-columns:1fr}
+  .reflection-grid textarea{height:74px;min-height:74px}
+  .confidence-row{display:grid;grid-template-columns:1fr}
+}
+@media(max-width:360px){
+  .shell{width:min(100% - 10px,1080px)}
+  .stage-panel{padding-inline:7px}
+  .relation-card-bank{grid-template-columns:1fr}
+  .relation-column-head,
+  .nutrition-chain-row{
+    grid-template-columns:minmax(0,1fr) minmax(60px,.82fr) minmax(0,1.35fr);
+  }
+  .explain-page-tab{font-size:.58rem}
+  .hots-case-tabs{grid-template-columns:1fr}
+  .difficulty-grid{grid-template-columns:1fr}
+}
+
+/* ------------------------- PHONE LANDSCAPE ------------------------- */
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  /* Jangan mengecilkan teks sampai sulit dibaca hanya demi satu layar */
+  .shell{width:min(100% - 14px,1080px)}
+  .stage-panel{overflow-x:hidden}
+  .stage-tab{min-height:34px;font-size:.61rem}
+  .bottom-nav button{min-height:32px;font-size:.6rem}
+  .digest-feedback{font-size:.6rem;line-height:1.3}
+
+  /* Intro/header */
+  .intro-copy .eyebrow{font-size:.52rem}
+  .intro-copy h1{font-size:1.12rem}
+  .material-meta{font-size:.58rem}
+  .intro-text{font-size:.6rem;line-height:1.25}
+  .mode-label{font-size:.6rem}
+  .mode-button{min-height:30px;font-size:.59rem}
+  .mode-note{font-size:.55rem;line-height:1.2}
+
+  /* Orientasi */
+  .objective-card .digest-list{font-size:.61rem;line-height:1.3}
+  .digest-identity h3{font-size:.68rem}
+  .digest-identity .identity-grid label{font-size:.58rem}
+  .digest-identity .identity-grid input{min-height:30px;font-size:.61rem}
+  .nutrient-game-head h3{font-size:.72rem}
+  .nutrient-game-head p:last-child,
+  .nutrient-game-instruction{font-size:.58rem;line-height:1.25}
+  .nutrient-game-score{font-size:.56rem}
+  .relation-bank-title{font-size:.56rem}
+  .relation-bank-title span{font-size:.5rem}
+  .relation-card-bank{min-height:42px}
+  .relation-card{
+    min-height:30px;
+    font-size:.56rem;
+    line-height:1.2;
+  }
+  .relation-column-head{font-size:.52rem}
+  .relation-slot{
+    min-height:34px;
+    font-size:.54rem;
+    line-height:1.15;
+  }
+  .relation-slot .relation-card{
+    min-height:30px;
+    font-size:.54rem;
+  }
+  .nutrient-game-actions button{min-height:31px;font-size:.56rem}
+
+  /* Engage */
+  .phenomenon-card h3{font-size:.8rem}
+  .phenomenon-card p:last-child{font-size:.62rem;line-height:1.25}
+  .prediction-card h3{font-size:.76rem}
+  .prediction-options button{min-height:32px;font-size:.61rem}
+  .teacher-note{font-size:.58rem}
+
+  /* Explore — tiga kolom tetap, tetapi teks kembali terbaca */
+  .journey-layout{grid-template-columns:130px 190px minmax(0,1fr)}
+  .organ-route button{min-height:31px;font-size:.59rem}
+  .digestive-anatomy-figure{width:190px}
+  .anatomy-hotspot{width:22px;height:22px;font-size:.5rem}
+  .food-ball{width:15px;height:15px}
+  .anatomy-caption{font-size:.56rem}
+  .organ-copy h3{font-size:.8rem}
+  .organ-copy>p,
+  .inquiry-columns p,
+  .inquiry-prompt,
+  .term-box{font-size:.59rem;line-height:1.25}
+  .inquiry-columns>div{font-size:.6rem}
+  .journey-actions button,
+  .prediction-check button{min-height:31px;font-size:.59rem}
+  .prediction-check{font-size:.6rem}
+
+  /* Explain */
+  .explain-page-nav{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .explain-page-tab{min-height:32px;font-size:.6rem}
+  .explain-page-tab span{font-size:.54rem}
+  .digestion-concept-card h3{font-size:.82rem}
+  .digestion-definition{font-size:.64rem;line-height:1.3}
+  .digestion-flow b{font-size:.57rem}
+  .simple-digestion-examples span,
+  .simple-digestion-examples b{font-size:.58rem}
+  .digestion-note{font-size:.59rem}
+  .explain-concept-next,
+  .explain-model-next,
+  .explain-example-back{min-height:31px;font-size:.59rem}
+  .explain-anatomy-layout{grid-template-columns:195px minmax(0,1fr)}
+  .explain-anatomy-layout .digestive-anatomy-figure{width:195px}
+  .model-intro h3{font-size:.75rem}
+  .model-intro p{font-size:.59rem}
+  .model-tabs button{min-height:31px;font-size:.59rem}
+  .model-data h3{font-size:.8rem}
+  .model-four>div{font-size:.59rem}
+  .model-four span{font-size:.52rem}
+  .model-term,
+  .model-route-text{font-size:.58rem}
+  .model-term strong{font-size:.61rem}
+  .accessory-grid article{font-size:.58rem}
+  .accessory-grid span{font-size:.54rem}
+
+  /* Hasil pencernaan: tetap ringkas tetapi tidak mikroskopis */
+  .digestion-result-card h3{font-size:.8rem}
+  .result-intro{font-size:.58rem}
+  .nutrient-tab{min-height:30px;font-size:.57rem}
+  .nutrient-model-title small{font-size:.5rem}
+  .nutrient-model-title h4{font-size:.68rem}
+  .nutrient-final-result small,
+  .nutrient-helper span,
+  .enzyme-step-grid span{font-size:.5rem}
+  .nutrient-final-result strong{font-size:.6rem}
+  .enzyme-step-number{font-size:.5rem}
+  .enzyme-step-place{font-size:.54rem}
+  .enzyme-step-grid strong{font-size:.54rem;line-height:1.25}
+  .enzyme-step p{font-size:.52rem;line-height:1.25}
+  .nutrient-helper strong{font-size:.54rem;line-height:1.25}
+
+  /* Elaborate: opsi panjang jangan dipaksa tiga/empat kolom */
+  .elab-tab{min-height:31px;font-size:.59rem}
+  .elab-page h3{font-size:.76rem}
+  .pathway-task{grid-template-columns:135px minmax(0,1fr)}
+  .pathway-food{font-size:.59rem}
+  .pathway-options{grid-template-columns:1fr}
+  .pathway-options button,
+  .evidence-options button,
+  .reason-options button{
+    min-height:31px;
+    font-size:.58rem;
+    line-height:1.25;
+  }
+  .compact-reason{grid-template-columns:1fr}
+  .evidence-options{grid-template-columns:1fr 1fr}
+  .transfer-question>p,
+  .evidence-step>p,
+  .model-critique-step>p{font-size:.59rem;line-height:1.3}
+  .hots-case-suite-head h3{font-size:.7rem}
+  .hots-case-suite-head p{font-size:.57rem;line-height:1.25}
+  .hots-case-progress,
+  .hots-score-pill{font-size:.52rem}
+  .hots-case-tab{min-height:38px}
+  .hots-case-tab span{font-size:.48rem}
+  .hots-case-tab b{font-size:.56rem}
+  .hots-case-tab.is-done::after,
+  .hots-case-tab.is-mastered::after{font-size:.46rem}
+  .hots-case-panel .case-card h3{font-size:.72rem}
+  .hots-case-panel .case-card p{font-size:.58rem;line-height:1.3}
+  .hots-case-number{font-size:.49rem}
+  .hots-case-step>p{font-size:.59rem;line-height:1.3}
+  .hots-evidence-options{grid-template-columns:1fr 1fr}
+  .hots-evidence-options button,
+  .hots-case-step .reason-options button{min-height:31px;font-size:.57rem}
+  .hots-case-step .digest-feedback{font-size:.57rem}
+  .elab-lock-row span,
+  .hots-step-submit-row span{font-size:.52rem}
+  .elab-lock-row button,
+  .hots-step-submit-row button{min-height:29px;font-size:.54rem}
+
+  /* Evaluate */
+  .eval-head span{font-size:.57rem}
+  .score-pill{font-size:.6rem}
+  .eval-question h3{font-size:.78rem;line-height:1.3}
+  .eval-option-list{
+    grid-template-columns:1fr 1fr;
+    gap:5px;
+  }
+  .eval-option-list button{
+    min-height:34px;
+    font-size:.61rem;
+    line-height:1.25;
+  }
+  .eval-actions button{min-height:31px;font-size:.6rem}
+
+  /* Reflect */
+  .reflection-grid label{font-size:.59rem}
+  .reflection-grid textarea{
+    min-height:58px;
+    height:58px;
+    font-size:.59rem;
+    line-height:1.25;
+  }
+  .field-title,
+  .confidence-box p{font-size:.61rem}
+  .difficulty-option{min-height:31px;font-size:.58rem}
+  .confidence-row button{min-height:31px;font-size:.58rem}
+  .send-feedback-card strong{font-size:.62rem}
+  .send-feedback-button{min-height:31px;font-size:.59rem}
+}
+
+/* Landscape sangat pendek: kurangi dekorasi, bukan keterbacaan isi */
+@media(orientation:landscape) and (max-height:380px) and (max-width:950px){
+  .intro-text,.mode-note{display:none}
+  .progress-card{display:none}
+  .stage-nav{margin-block:2px}
+  .stage-panel{padding-block:5px}
+  .bottom-nav{margin-block:3px}
 }
