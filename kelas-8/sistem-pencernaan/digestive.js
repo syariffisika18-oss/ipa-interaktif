@@ -164,26 +164,21 @@
   let furthestJourney=0;
   let modelIndex=0;
 
+  // =========================================================
+  // KOORDINAT VISUAL FINAL — sumber tunggal untuk semua viewport
+  // Desktop, HP portrait, dan HP landscape memakai data yang sama.
+  // =========================================================
   const defaultMarkerPositions=[
-    {x:32,y:17},{x:43,y:24},{x:51,y:39},{x:69,y:58},
-    {x:43,y:73},{x:74,y:72},{x:57,y:89},{x:57,y:96}
+    {x:27.32,y:21.37},
+    {x:56.68,y:22.20},
+    {x:41.31,y:39.51},
+    {x:69.64,y:57.01},
+    {x:71.92,y:74.05},
+    {x:27.06,y:79.43},
+    {x:57.51,y:88.93},
+    {x:57.00,y:96.00}
   ];
 
-  /*
-    MODE KALIBRASI MANUAL SEMENTARA
-    Jumlah langkah waypoint per ruas sesuai permintaan:
-    1. Mulut → Faring = 2
-    2. Faring → Kerongkongan = 4
-    3. Kerongkongan → Lambung = 6
-    4. Lambung → Usus halus = 10
-    5. Usus halus → Usus besar = 6
-    6. Usus besar → Rektum = 9
-    7. Rektum → Anus = 2
-
-    Angka di atas dihitung sebagai jumlah titik setelah titik awal ruas
-    sampai titik organ tujuan. Karena titik awal Mulut disimpan terpisah,
-    total routeWaypoints = 1 + 39 = 40.
-  */
   const routeSegmentCounts=[2,4,6,10,6,9,2];
   const organWaypointIndices=[0,2,6,12,22,28,37,39];
   const routeSegments=[
@@ -196,74 +191,62 @@
     {id:7,name:"Rektum → Anus",start:37,end:39,count:2}
   ];
 
-  // Posisi awal hanya sebagai titik mulai kalibrasi; silakan digeser manual.
   const defaultRouteWaypoints=[
-    {x:39.00,y:18.00}, // 0 Mulut / titik awal
-    {x:41.65,y:20.87},
-    {x:44.00,y:24.00}, // 2 Faring
+    {x:37.49,y:20.72},
+    {x:43.22,y:19.16},
+    {x:46.70,y:22.27},
 
-    {x:45.58,y:27.72},
-    {x:47.00,y:31.50},
-    {x:48.42,y:35.28},
-    {x:50.00,y:39.00}, // 6 Kerongkongan
+    {x:46.35,y:27.20},
+    {x:48.61,y:31.09},
+    {x:49.48,y:34.85},
+    {x:50.00,y:39.00},
 
-    {x:50.42,y:42.75},
-    {x:50.83,y:46.50},
-    {x:51.49,y:50.20},
-    {x:53.00,y:53.50},
-    {x:55.80,y:56.00},
-    {x:59.00,y:58.00}, // 12 Lambung
+    {x:50.17,y:44.95},
+    {x:51.22,y:48.71},
+    {x:53.82,y:51.95},
+    {x:58.34,y:54.67},
+    {x:59.04,y:57.91},
+    {x:55.73,y:60.64},
 
-    {x:58.66,y:60.03},
-    {x:57.74,y:61.76},
-    {x:56.29,y:63.21},
-    {x:54.57,y:64.32},
-    {x:52.79,y:65.34},
-    {x:51.28,y:66.72},
-    {x:49.83,y:68.17},
-    {x:49.53,y:69.71},
-    {x:50.77,y:71.36},
-    {x:52.00,y:73.00}, // 22 Usus halus
+    {x:47.22,y:60.12},
+    {x:43.40,y:62.32},
+    {x:44.61,y:65.17},
+    {x:50.00,y:66.08},
+    {x:54.00,y:72.69},
+    {x:59.21,y:70.74},
+    {x:59.56,y:78.13},
+    {x:54.34,y:76.97},
+    {x:54.00,y:81.24},
+    {x:50.00,y:75.28},
 
-    {x:44.54,y:76.17},
-    {x:40.55,y:69.24},
-    {x:44.76,y:62.69},
-    {x:53.13,y:61.74},
-    {x:60.16,y:65.32},
-    {x:64.00,y:73.00}, // 28 Usus besar
+    {x:47.22,y:81.24},
+    {x:43.40,y:77.87},
+    {x:44.79,y:72.43},
+    {x:38.71,y:69.19},
+    {x:40.27,y:75.28},
+    {x:36.62,y:78.78},
 
-    {x:65.18,y:74.97},
-    {x:66.12,y:77.05},
-    {x:66.25,y:79.25},
-    {x:65.48,y:81.37},
-    {x:64.09,y:83.17},
-    {x:62.37,y:84.70},
-    {x:60.58,y:86.13},
-    {x:58.78,y:87.55},
-    {x:57.00,y:89.00}, // 37 Rektum
+    {x:35.23,y:74.76},
+    {x:34.54,y:68.41},
+    {x:37.14,y:64.14},
+    {x:44.96,y:67.51},
+    {x:55.73,y:67.12},
+    {x:63.55,y:62.84},
+    {x:64.60,y:74.89},
+    {x:61.64,y:83.83},
+    {x:50.00,y:84.87},
 
-    {x:57.00,y:92.50},
-    {x:57.00,y:96.00}  // 39 Anus
+    {x:49.83,y:89.15},
+    {x:49.83,y:94.85}
   ];
 
-  const calibrationKey="digestiveVisualCalibration.manual.v1";
   const clonePositions=list=>list.map(p=>({x:Number(p.x),y:Number(p.y)}));
   let markerPositions=clonePositions(defaultMarkerPositions);
   let routeWaypoints=clonePositions(defaultRouteWaypoints);
 
-  // Hanya muat hasil dari mode kalibrasi baru dengan struktur 40 titik.
-  try{
-    const saved=JSON.parse(localStorage.getItem(calibrationKey)||"null");
-    const validCounts=Array.isArray(saved?.segmentCounts)&&
-      saved.segmentCounts.length===routeSegmentCounts.length&&
-      saved.segmentCounts.every((n,i)=>Number(n)===routeSegmentCounts[i]);
-    if(validCounts&&Array.isArray(saved.markers)&&saved.markers.length===8){
-      markerPositions=saved.markers.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }
-    if(validCounts&&Array.isArray(saved.waypoints)&&saved.waypoints.length===defaultRouteWaypoints.length){
-      routeWaypoints=saved.waypoints.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }
-  }catch(_){}
+  // Tidak lagi membaca/menulis localStorage.
+  // Koordinat final di repository adalah satu-satunya sumber posisi.
+  function saveCalibration(){}
 
   const ballTimers=new WeakMap();
   let visualDragSuppressUntil=0;
