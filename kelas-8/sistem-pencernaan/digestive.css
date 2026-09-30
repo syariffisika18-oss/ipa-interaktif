@@ -2747,3 +2747,43 @@ html,body{max-width:100%;overflow-x:clip}
     line-height:1.2!important;
   }
 }
+
+
+/* =========================================================
+   DESKTOP LAYOUT RESTORE — Sistem Pencernaan
+   Jangan biarkan chrome template menimpa isi materi.
+   Anatomi/koordinat tidak diubah.
+   ========================================================= */
+@media(min-width:951px){
+  .stage-nav{
+    position:relative!important;
+    top:auto!important;
+    z-index:auto!important;
+    transform:none!important;
+    opacity:1!important;
+    pointer-events:auto!important;
+  }
+
+  .bottom-nav{
+    position:static!important;
+    bottom:auto!important;
+    z-index:auto!important;
+    margin:10px 0 14px!important;
+  }
+
+  .stage-panel{
+    overflow:visible!important;
+  }
+
+  .stage-heading{
+    position:relative;
+    z-index:1;
+  }
+
+  /* Pastikan konten Explain tidak terpotong oleh navigasi bawah */
+  .explain-panel,
+  .explore-panel,
+  .elaborate-panel{
+    padding-bottom:17px!important;
+  }
+}
