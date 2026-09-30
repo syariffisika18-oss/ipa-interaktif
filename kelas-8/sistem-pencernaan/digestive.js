@@ -661,10 +661,33 @@
     document.querySelectorAll("[data-elab-page]").forEach(p=>p.classList.toggle("is-active",p.dataset.elabPage===i));
   }));
 
-  // 1. Analisis jalur nutrisi
+  // Utilitas percobaan terbatas untuk seluruh Elaborate
+  function makeAttemptState(){
+    return {attempts:0,firstCorrect:null,finalCorrect:null,finalized:false};
+  }
+
+  function registerAttempt(state,isCorrect){
+    state.attempts+=1;
+    if(state.firstCorrect===null)state.firstCorrect=isCorrect;
+    if(isCorrect||state.attempts>=2){
+      state.finalized=true;
+      state.finalCorrect=isCorrect;
+    }
+  }
+
+  function attemptLabel(state){
+    if(state.finalized)return state.attempts===1?"Terkunci pada jawaban pertama":"Terkunci setelah 1 revisi";
+    if(state.attempts===1)return "1 percobaan digunakan • 1 revisi tersisa";
+    return "Belum dikunci • maksimal 2 percobaan";
+  }
+
+  // 1. Analisis jalur nutrisi — pilih dulu, baru kunci; maksimal dua percobaan
   const pathwayCorrect=[1,2,0];
   const pathwayAnswers={};
+  const pathwayAttempt=makeAttemptState();
+
   document.getElementById("pathwayChallenge").addEventListener("click",e=>{
+    if(pathwayAttempt.finalized)return;
     const b=e.target.closest("[data-pathway-opt]");
     if(!b)return;
     const row=b.closest("[data-pathway-row]");
@@ -672,34 +695,90 @@
     const o=Number(b.dataset.pathwayOpt);
     pathwayAnswers[r]=o;
     row.querySelectorAll("[data-pathway-opt]").forEach(x=>x.classList.toggle("is-selected",x===b));
-
-    const filled=Object.keys(pathwayAnswers).length;
     const fb=document.getElementById("pathwayFeedback");
-    if(filled<3){
+    fb.className="digest-feedback neutral";
+    fb.textContent=pathwayAttempt.attempts===1
+      ?"Revisi pilihanmu bila perlu, lalu kunci kembali. Jawaban benar belum ditampilkan."
+      :"Lengkapi satu pilihan pada setiap jalur, lalu kunci jawaban.";
+  });
+
+  function unlockAbsorptionTransfer(){
+    const step=document.getElementById("absorptionTransferStep");
+    step.classList.remove("locked-step");
+    document.getElementById("checkAbsorption").disabled=false;
+    document.getElementById("absorptionAttemptLabel").textContent="Belum dikunci • maksimal 2 percobaan";
+    document.getElementById("absorptionFeedback").textContent="Pilih satu jawaban, lalu kunci.";
+  }
+
+  document.getElementById("checkPathwayChallenge").addEventListener("click",()=>{
+    if(pathwayAttempt.finalized)return;
+    const fb=document.getElementById("pathwayFeedback");
+    if(Object.keys(pathwayAnswers).length<3){
       fb.className="digest-feedback neutral";
-      fb.textContent="Lengkapi semua jalur. Bandingkan nutrisi, enzim, hasil, dan tempat penyerapannya.";
+      fb.textContent="Lengkapi ketiga jalur sebelum mengunci jawaban.";
       return;
     }
     const good=pathwayCorrect.every((v,i)=>pathwayAnswers[i]===v);
+    registerAttempt(pathwayAttempt,good);
+    document.getElementById("pathwayAttemptLabel").textContent=attemptLabel(pathwayAttempt);
+
     if(good){
       fb.className="digest-feedback good";
-      fb.textContent="Tepat. Ketiga nutrisi mengikuti jalur berbeda, tetapi hasil pencernaannya terutama diserap di usus halus.";
+      fb.textContent="Analisis tepat. Ketiga jalur sudah konsisten dengan enzim, hasil pencernaan, dan lokasi penyerapan.";
+    }else if(!pathwayAttempt.finalized){
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum konsisten. Periksa kembali urutan enzim → hasil → lokasi penyerapan. Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
     }else{
       fb.className="digest-feedback warn";
-      fb.textContent="Belum konsisten. Periksa apakah enzim dan hasil akhir sesuai dengan jenis nutrisinya.";
+      fb.innerHTML="<b>Dua percobaan selesai.</b> Pembahasan: karbohidrat perlu pemecahan lanjutan hingga monosakarida; protein dipecah bertahap hingga asam amino; lemak dibantu emulsifikasi empedu lalu dicerna lipase. Ketiganya terutama diserap di usus halus.";
+    }
+
+    if(pathwayAttempt.finalized){
+      document.querySelectorAll("#pathwayChallenge [data-pathway-opt]").forEach(b=>b.disabled=true);
+      document.getElementById("checkPathwayChallenge").disabled=true;
+      unlockAbsorptionTransfer();
     }
   });
 
+  let absorptionChoice="";
+  const absorptionAttempt=makeAttemptState();
+
   document.getElementById("absorptionOptions").addEventListener("click",e=>{
+    if(document.getElementById("absorptionTransferStep").classList.contains("locked-step")||absorptionAttempt.finalized)return;
     const b=e.target.closest("[data-absorb]");if(!b)return;
+    absorptionChoice=b.dataset.absorb;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("absorptionFeedback");
-    if(b.dataset.absorb==="all"){
+    fb.className="digest-feedback neutral";
+    fb.textContent=absorptionAttempt.attempts===1
+      ?"Revisi pilihanmu bila perlu, lalu kunci kembali."
+      :"Pilihan sudah dibuat. Kunci jawaban untuk memeriksa alasanmu.";
+  });
+
+  document.getElementById("checkAbsorption").addEventListener("click",()=>{
+    if(absorptionAttempt.finalized||!pathwayAttempt.finalized)return;
+    const fb=document.getElementById("absorptionFeedback");
+    if(!absorptionChoice){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Pilih satu jawaban sebelum mengunci.";
+      return;
+    }
+    const good=absorptionChoice==="all";
+    registerAttempt(absorptionAttempt,good);
+    document.getElementById("absorptionAttemptLabel").textContent=attemptLabel(absorptionAttempt);
+    if(good){
       fb.className="digest-feedback good";
-      fb.textContent="Tepat. Usus halus merupakan lokasi utama penyerapan hasil pencernaan karbohidrat, protein, dan lemak.";
+      fb.textContent="Tepat. Glukosa, asam amino, dan hasil pencernaan lemak terutama diserap melalui permukaan usus halus.";
+    }else if(!absorptionAttempt.finalized){
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Hubungkan kembali ketiga hasil pencernaan dengan lokasi utama penyerapannya. Satu revisi tersisa.";
     }else{
       fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Hubungkan kembali ketiga hasil pencernaan dengan lokasi utama penyerapannya.";
+      fb.innerHTML="<b>Dua percobaan selesai.</b> Pembahasan: glukosa, asam amino, dan hasil pencernaan lemak sama-sama terutama diserap di usus halus, sehingga ketiganya dapat terdampak jika permukaan penyerapannya berkurang.";
+    }
+    if(absorptionAttempt.finalized){
+      document.querySelectorAll("#absorptionOptions button").forEach(b=>b.disabled=true);
+      document.getElementById("checkAbsorption").disabled=true;
     }
   });
 
@@ -858,16 +937,30 @@
   ];
 
   const hotsCaseStates=hotsCases.map(()=>({
-    evidence:new Set(),
-    mechanism:null,
-    mechanismCorrect:false,
-    transfer:null,
-    transferCorrect:false
+    evidence:{selected:new Set(),...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Pilih tepat dua bukti, lalu kunci jawaban."},
+    mechanism:{selected:null,...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Selesaikan analisis bukti terlebih dahulu."},
+    transfer:{selected:null,...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Bangun mekanisme terlebih dahulu."}
   }));
   let activeHotsCase=0;
 
   function hotsCaseDone(index){
-    return hotsCaseStates[index].transferCorrect;
+    const s=hotsCaseStates[index];
+    return s.evidence.finalized&&s.mechanism.finalized&&s.transfer.finalized;
+  }
+
+  function hotsCaseMastered(index){
+    const s=hotsCaseStates[index];
+    return hotsCaseDone(index)&&s.evidence.finalCorrect&&s.mechanism.finalCorrect&&s.transfer.finalCorrect;
+  }
+
+  function updateHotsSummary(){
+    const allSteps=hotsCaseStates.flatMap(s=>[s.evidence,s.mechanism,s.transfer]);
+    const firstCorrect=allSteps.filter(s=>s.firstCorrect===true).length;
+    const finalCorrect=allSteps.filter(s=>s.finalCorrect===true).length;
+    const doneCases=hotsCaseStates.filter((_,i)=>hotsCaseDone(i)).length;
+    document.getElementById("hotsCaseProgress").textContent=doneCases+" / "+hotsCases.length+" kasus selesai";
+    document.getElementById("hotsFirstScore").textContent="Awal "+firstCorrect+" / "+allSteps.length+" tepat";
+    document.getElementById("hotsFinalScore").textContent="Akhir "+finalCorrect+" / "+allSteps.length+" tepat";
   }
 
   function updateHotsCaseTabs(){
@@ -875,17 +968,30 @@
       const active=i===activeHotsCase;
       tab.classList.toggle("is-active",active);
       tab.classList.toggle("is-done",hotsCaseDone(i));
+      tab.classList.toggle("is-mastered",hotsCaseMastered(i));
       tab.setAttribute("aria-selected",active?"true":"false");
     });
-    const done=hotsCaseStates.filter(s=>s.transferCorrect).length;
-    document.getElementById("hotsCaseProgress").textContent=done+" / "+hotsCases.length+" kasus tuntas";
+    updateHotsSummary();
+  }
+
+  function stepButtonLabel(step,kind){
+    if(step.finalized)return "Jawaban terkunci";
+    if(step.attempts===1)return kind==="evidence"?"Kunci revisi bukti":kind==="mechanism"?"Kunci revisi alasan":"Kunci revisi keputusan";
+    return kind==="evidence"?"Kunci bukti":kind==="mechanism"?"Kunci alasan":"Kunci keputusan";
+  }
+
+  function stepAttemptText(step){
+    if(step.finalized)return step.attempts===1?"Selesai pada jawaban pertama":"Selesai setelah 1 revisi";
+    if(step.attempts===1)return "1 percobaan digunakan • 1 revisi tersisa";
+    return "Belum dikunci • maksimal 2 percobaan";
   }
 
   function renderHotsCase(){
     const data=hotsCases[activeHotsCase];
     const state=hotsCaseStates[activeHotsCase];
-    const evidenceGood=state.evidence.size===data.evidenceCorrect.length&&
-      data.evidenceCorrect.every(id=>state.evidence.has(id));
+    const evidenceUnlocked=true;
+    const mechanismUnlocked=state.evidence.finalized;
+    const transferUnlocked=state.mechanism.finalized;
     const panel=document.getElementById("hotsCasePanel");
 
     panel.innerHTML=
@@ -894,35 +1000,57 @@
         '<h3>'+data.title+'</h3>'+
         '<p>'+data.scenario+'</p>'+
       '</div>'+
-      '<div class="hots-case-step">'+
+
+      '<div class="hots-case-step '+(state.evidence.finalized?'is-finalized':'')+'">'+
         '<p><b>Langkah 1 — Analisis bukti.</b> '+data.evidencePrompt+'</p>'+
         '<div class="evidence-options hots-evidence-options">'+
-          data.evidence.map(opt=>'<button type="button" data-hots-evidence="'+opt.id+'" class="'+(state.evidence.has(opt.id)?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+          data.evidence.map(opt=>'<button type="button" data-hots-evidence="'+opt.id+'" '+(state.evidence.finalized?'disabled ':'')+'class="'+(state.evidence.selected.has(opt.id)?'is-selected':'')+'">'+opt.label+'</button>').join("")+
         '</div>'+
-        '<div id="hotsEvidenceFeedback" class="digest-feedback '+(state.evidence.size===2?(evidenceGood?'good':'warn'):'neutral')+'">'+
-          (state.evidence.size<2?'Pilih tepat dua bukti.':(evidenceGood?data.evidenceGood:data.evidenceWarn))+
+        '<div class="hots-step-submit-row">'+
+          '<span>'+stepAttemptText(state.evidence)+'</span>'+
+          '<button type="button" class="primary-inline" data-hots-submit="evidence" '+(state.evidence.finalized?'disabled':'')+'>'+stepButtonLabel(state.evidence,"evidence")+'</button>'+
         '</div>'+
+        '<div class="digest-feedback '+state.evidence.feedbackTone+'">'+state.evidence.feedbackText+'</div>'+
       '</div>'+
-      '<div id="hotsMechanismStep" class="hots-case-step '+(evidenceGood?'':'locked-step')+'">'+
+
+      '<div class="hots-case-step '+(!mechanismUnlocked?'locked-step ':'')+(state.mechanism.finalized?'is-finalized':'')+'">'+
         '<p><b>Langkah 2 — Bangun mekanisme.</b> '+data.mechanismPrompt+'</p>'+
         '<div class="reason-options">'+
-          data.mechanisms.map(opt=>'<button type="button" data-hots-mechanism="'+opt.id+'" class="'+(state.mechanism===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+          data.mechanisms.map(opt=>'<button type="button" data-hots-mechanism="'+opt.id+'" '+((!mechanismUnlocked||state.mechanism.finalized)?'disabled ':'')+'class="'+(state.mechanism.selected===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
         '</div>'+
-        '<div class="digest-feedback '+(state.mechanism===null?'neutral':(state.mechanismCorrect?'good':'warn'))+'">'+
-          (state.mechanism===null?(evidenceGood?'Pilih penjelasan yang paling konsisten dengan bukti.':'Selesaikan analisis bukti terlebih dahulu.'):(state.mechanismCorrect?data.mechanismGood:data.mechanismWarn))+
+        '<div class="hots-step-submit-row">'+
+          '<span>'+(!mechanismUnlocked?'Menunggu langkah 1 selesai':stepAttemptText(state.mechanism))+'</span>'+
+          '<button type="button" class="primary-inline" data-hots-submit="mechanism" '+((!mechanismUnlocked||state.mechanism.finalized)?'disabled':'')+'>'+stepButtonLabel(state.mechanism,"mechanism")+'</button>'+
         '</div>'+
+        '<div class="digest-feedback '+state.mechanism.feedbackTone+'">'+state.mechanism.feedbackText+'</div>'+
       '</div>'+
-      '<div id="hotsTransferStep" class="hots-case-step '+(state.mechanismCorrect?'':'locked-step')+'">'+
+
+      '<div class="hots-case-step '+(!transferUnlocked?'locked-step ':'')+(state.transfer.finalized?'is-finalized':'')+'">'+
         '<p><b>Langkah 3 — Evaluasi dan transfer.</b> '+data.transferPrompt+'</p>'+
         '<div class="reason-options">'+
-          data.transfers.map(opt=>'<button type="button" data-hots-transfer="'+opt.id+'" class="'+(state.transfer===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
+          data.transfers.map(opt=>'<button type="button" data-hots-transfer="'+opt.id+'" '+((!transferUnlocked||state.transfer.finalized)?'disabled ':'')+'class="'+(state.transfer.selected===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
         '</div>'+
-        '<div class="digest-feedback '+(state.transfer===null?'neutral':(state.transferCorrect?'good':'warn'))+'">'+
-          (state.transfer===null?(state.mechanismCorrect?'Gunakan mekanisme yang sudah benar untuk menilai situasi baru.':'Bangun mekanisme terlebih dahulu.'):(state.transferCorrect?data.transferGood:data.transferWarn))+
+        '<div class="hots-step-submit-row">'+
+          '<span>'+(!transferUnlocked?'Menunggu langkah 2 selesai':stepAttemptText(state.transfer))+'</span>'+
+          '<button type="button" class="primary-inline" data-hots-submit="transfer" '+((!transferUnlocked||state.transfer.finalized)?'disabled':'')+'>'+stepButtonLabel(state.transfer,"transfer")+'</button>'+
         '</div>'+
+        '<div class="digest-feedback '+state.transfer.feedbackTone+'">'+state.transfer.feedbackText+'</div>'+
       '</div>';
 
     updateHotsCaseTabs();
+  }
+
+  function evidenceIsCorrect(data,step){
+    return step.selected.size===data.evidenceCorrect.length&&
+      data.evidenceCorrect.every(id=>step.selected.has(id));
+  }
+
+  function correctEvidenceText(data){
+    return data.evidenceCorrect.map(id=>data.evidence.find(x=>x.id===id)?.label).filter(Boolean).join(" + ");
+  }
+
+  function correctOptionText(options){
+    return options.find(x=>x.correct)?.label||"";
   }
 
   document.getElementById("hotsCaseTabs").addEventListener("click",e=>{
@@ -936,96 +1064,267 @@
     const state=hotsCaseStates[activeHotsCase];
 
     const evidenceButton=e.target.closest("[data-hots-evidence]");
-    if(evidenceButton){
+    if(evidenceButton&&!state.evidence.finalized){
       const key=evidenceButton.dataset.hotsEvidence;
-      if(state.evidence.has(key)){
-        state.evidence.delete(key);
+      if(state.evidence.selected.has(key)){
+        state.evidence.selected.delete(key);
       }else{
-        if(state.evidence.size>=2){
-          const first=[...state.evidence][0];
-          state.evidence.delete(first);
+        if(state.evidence.selected.size>=2){
+          const first=[...state.evidence.selected][0];
+          state.evidence.selected.delete(first);
         }
-        state.evidence.add(key);
+        state.evidence.selected.add(key);
       }
-      state.mechanism=null;
-      state.mechanismCorrect=false;
-      state.transfer=null;
-      state.transferCorrect=false;
+      state.evidence.feedbackTone="neutral";
+      state.evidence.feedbackText=state.evidence.attempts===1
+        ?"Revisi pilihanmu bila perlu, lalu kunci kembali. Jawaban benar belum ditampilkan."
+        :"Pilih tepat dua bukti, lalu kunci jawaban.";
       renderHotsCase();
       return;
     }
 
     const mechanismButton=e.target.closest("[data-hots-mechanism]");
-    if(mechanismButton){
-      const evidenceGood=state.evidence.size===data.evidenceCorrect.length&&
-        data.evidenceCorrect.every(id=>state.evidence.has(id));
-      if(!evidenceGood)return;
-      state.mechanism=mechanismButton.dataset.hotsMechanism;
-      state.mechanismCorrect=!!data.mechanisms.find(opt=>opt.id===state.mechanism)?.correct;
-      state.transfer=null;
-      state.transferCorrect=false;
+    if(mechanismButton&&state.evidence.finalized&&!state.mechanism.finalized){
+      state.mechanism.selected=mechanismButton.dataset.hotsMechanism;
+      state.mechanism.feedbackTone="neutral";
+      state.mechanism.feedbackText=state.mechanism.attempts===1
+        ?"Revisi alasanmu bila perlu, lalu kunci kembali."
+        :"Pilihan sudah dibuat. Kunci alasan untuk memeriksanya.";
       renderHotsCase();
       return;
     }
 
     const transferButton=e.target.closest("[data-hots-transfer]");
-    if(transferButton){
-      if(!state.mechanismCorrect)return;
-      state.transfer=transferButton.dataset.hotsTransfer;
-      state.transferCorrect=!!data.transfers.find(opt=>opt.id===state.transfer)?.correct;
+    if(transferButton&&state.mechanism.finalized&&!state.transfer.finalized){
+      state.transfer.selected=transferButton.dataset.hotsTransfer;
+      state.transfer.feedbackTone="neutral";
+      state.transfer.feedbackText=state.transfer.attempts===1
+        ?"Revisi keputusanmu bila perlu, lalu kunci kembali."
+        :"Pilihan sudah dibuat. Kunci keputusan untuk memeriksanya.";
+      renderHotsCase();
+      return;
+    }
+
+    const submit=e.target.closest("[data-hots-submit]");
+    if(!submit)return;
+    const kind=submit.dataset.hotsSubmit;
+
+    if(kind==="evidence"){
+      const step=state.evidence;
+      if(step.finalized)return;
+      if(step.selected.size!==2){
+        step.feedbackTone="neutral";
+        step.feedbackText="Pilih tepat dua bukti sebelum mengunci.";
+        renderHotsCase();return;
+      }
+      const good=evidenceIsCorrect(data,step);
+      registerAttempt(step,good);
+      if(good){
+        step.feedbackTone="good";
+        step.feedbackText=data.evidenceGood+" Jawaban dikunci.";
+      }else if(!step.finalized){
+        step.feedbackTone="warn";
+        step.feedbackText=data.evidenceWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
+      }else{
+        step.feedbackTone="warn";
+        step.feedbackText="<b>Dua percobaan selesai.</b> Bukti yang paling kuat: "+correctEvidenceText(data)+". "+data.evidenceGood;
+      }
+      if(step.finalized){
+        state.mechanism.feedbackTone="neutral";
+        state.mechanism.feedbackText="Gunakan hasil analisis bukti di atas untuk memilih mekanisme, lalu kunci alasanmu.";
+      }
+      renderHotsCase();return;
+    }
+
+    if(kind==="mechanism"){
+      const step=state.mechanism;
+      if(!state.evidence.finalized||step.finalized)return;
+      if(step.selected===null){
+        step.feedbackTone="neutral";
+        step.feedbackText="Pilih satu mekanisme sebelum mengunci.";
+        renderHotsCase();return;
+      }
+      const good=!!data.mechanisms.find(opt=>opt.id===step.selected)?.correct;
+      registerAttempt(step,good);
+      if(good){
+        step.feedbackTone="good";
+        step.feedbackText=data.mechanismGood+" Jawaban dikunci.";
+      }else if(!step.finalized){
+        step.feedbackTone="warn";
+        step.feedbackText=data.mechanismWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
+      }else{
+        step.feedbackTone="warn";
+        step.feedbackText="<b>Dua percobaan selesai.</b> Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
+      }
+      if(step.finalized){
+        state.transfer.feedbackTone="neutral";
+        state.transfer.feedbackText="Gunakan mekanisme yang sudah diperiksa untuk menilai situasi baru, lalu kunci keputusanmu.";
+      }
+      renderHotsCase();return;
+    }
+
+    if(kind==="transfer"){
+      const step=state.transfer;
+      if(!state.mechanism.finalized||step.finalized)return;
+      if(step.selected===null){
+        step.feedbackTone="neutral";
+        step.feedbackText="Pilih satu keputusan sebelum mengunci.";
+        renderHotsCase();return;
+      }
+      const good=!!data.transfers.find(opt=>opt.id===step.selected)?.correct;
+      registerAttempt(step,good);
+      if(good){
+        step.feedbackTone="good";
+        step.feedbackText=data.transferGood+" Jawaban dikunci.";
+      }else if(!step.finalized){
+        step.feedbackTone="warn";
+        step.feedbackText=data.transferWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
+      }else{
+        step.feedbackTone="warn";
+        step.feedbackText="<b>Dua percobaan selesai.</b> Keputusan yang paling kuat: "+correctOptionText(data.transfers)+". "+data.transferGood;
+      }
       renderHotsCase();
     }
   });
 
   renderHotsCase();
 
-  // 3. Evaluasi dan perbaiki model empedu
+  // 3. Evaluasi dan perbaiki model empedu — maksimal dua percobaan per langkah
+  let modelErrorChoice="";
+  let modelCorrectionChoice="";
+  let bileChoice="";
+  const modelErrorAttempt=makeAttemptState();
+  const modelCorrectionAttempt=makeAttemptState();
+  const bileAttempt=makeAttemptState();
+
+  function unlockModelCorrection(){
+    const step=document.getElementById("modelCorrectionStep");
+    step.classList.remove("locked-step");
+    document.getElementById("checkModelCorrection").disabled=false;
+    document.getElementById("modelCorrectionAttemptLabel").textContent="Belum dikunci • maksimal 2 percobaan";
+    document.getElementById("modelCorrectionFeedback").className="digest-feedback neutral";
+    document.getElementById("modelCorrectionFeedback").textContent="Pilih perbaikan model, lalu kunci jawaban.";
+  }
+
+  function unlockBilePrediction(){
+    const step=document.getElementById("bilePredictionStep");
+    step.classList.remove("locked-step");
+    document.getElementById("checkBilePrediction").disabled=false;
+    document.getElementById("bileAttemptLabel").textContent="Belum dikunci • maksimal 2 percobaan";
+    document.getElementById("bileFeedback").className="digest-feedback neutral";
+    document.getElementById("bileFeedback").textContent="Gunakan model yang sudah diperiksa untuk membuat prediksi, lalu kunci.";
+  }
+
   document.getElementById("modelErrorOptions").addEventListener("click",e=>{
+    if(modelErrorAttempt.finalized)return;
     const b=e.target.closest("[data-model-error]");if(!b)return;
+    modelErrorChoice=b.dataset.modelError;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("modelErrorFeedback");
-    const next=document.getElementById("modelCorrectionStep");
-    if(b.dataset.modelError==="enzyme"){
+    fb.className="digest-feedback neutral";
+    fb.textContent=modelErrorAttempt.attempts===1?"Revisi pilihanmu bila perlu, lalu kunci kembali.":"Pilihan sudah dibuat. Kunci untuk memeriksa.";
+  });
+
+  document.getElementById("checkModelError").addEventListener("click",()=>{
+    if(modelErrorAttempt.finalized)return;
+    const fb=document.getElementById("modelErrorFeedback");
+    if(!modelErrorChoice){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Pilih satu bagian yang salah sebelum mengunci.";
+      return;
+    }
+    const good=modelErrorChoice==="enzyme";
+    registerAttempt(modelErrorAttempt,good);
+    document.getElementById("modelErrorAttemptLabel").textContent=attemptLabel(modelErrorAttempt);
+    if(good){
       fb.className="digest-feedback good";
-      fb.textContent="Tepat. Empedu bukan enzim.";
-      next.classList.remove("locked-step");
-      document.getElementById("modelCorrectionFeedback").textContent="Sekarang perbaiki model tersebut.";
+      fb.textContent="Tepat. Masalah utama model adalah menyebut empedu sebagai enzim.";
+    }else if(!modelErrorAttempt.finalized){
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Bandingkan setiap bagian pernyataan dengan fungsi empedu yang sudah dipelajari. Satu revisi tersisa.";
     }else{
       fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Hubungan empedu dengan lemak dan usus halus justru benar.";
-      next.classList.add("locked-step");
+      fb.innerHTML="<b>Dua percobaan selesai.</b> Bagian yang salah adalah pernyataan bahwa empedu merupakan enzim. Empedu membantu emulsifikasi, tetapi bukan enzim.";
+    }
+    if(modelErrorAttempt.finalized){
+      document.querySelectorAll("#modelErrorOptions button").forEach(b=>b.disabled=true);
+      document.getElementById("checkModelError").disabled=true;
+      unlockModelCorrection();
     }
   });
 
   document.getElementById("modelCorrectionOptions").addEventListener("click",e=>{
-    if(document.getElementById("modelCorrectionStep").classList.contains("locked-step"))return;
+    if(!modelErrorAttempt.finalized||modelCorrectionAttempt.finalized)return;
     const b=e.target.closest("[data-correction]");if(!b)return;
+    modelCorrectionChoice=b.dataset.correction;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("modelCorrectionFeedback");
-    const next=document.getElementById("bilePredictionStep");
-    if(b.dataset.correction==="1"){
+    fb.className="digest-feedback neutral";
+    fb.textContent=modelCorrectionAttempt.attempts===1?"Revisi pilihanmu bila perlu, lalu kunci kembali.":"Pilihan sudah dibuat. Kunci perbaikan model untuk memeriksa.";
+  });
+
+  document.getElementById("checkModelCorrection").addEventListener("click",()=>{
+    if(!modelErrorAttempt.finalized||modelCorrectionAttempt.finalized)return;
+    const fb=document.getElementById("modelCorrectionFeedback");
+    if(!modelCorrectionChoice){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Pilih satu perbaikan model sebelum mengunci.";
+      return;
+    }
+    const good=modelCorrectionChoice==="1";
+    registerAttempt(modelCorrectionAttempt,good);
+    document.getElementById("modelCorrectionAttemptLabel").textContent=attemptLabel(modelCorrectionAttempt);
+    if(good){
       fb.className="digest-feedback good";
-      fb.textContent="Tepat. Empedu membantu secara fisik melalui emulsifikasi; lipase melakukan pencernaan kimiawi lemak.";
-      next.classList.remove("locked-step");
-      document.getElementById("bileFeedback").textContent="Gunakan model yang sudah benar untuk membuat prediksi.";
+      fb.textContent="Tepat. Empedu mengemulsikan lemak, sedangkan lipase melakukan pencernaan kimiawi lemak.";
+    }else if(!modelCorrectionAttempt.finalized){
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Bedakan proses fisik emulsifikasi dari pencernaan kimiawi oleh enzim. Satu revisi tersisa.";
     }else{
       fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Pisahkan fungsi empedu dari fungsi enzim lipase.";
-      next.classList.add("locked-step");
+      fb.innerHTML="<b>Dua percobaan selesai.</b> Model yang tepat: empedu mengemulsikan lemak menjadi tetesan lebih kecil, kemudian lipase mencerna lemak secara kimiawi.";
+    }
+    if(modelCorrectionAttempt.finalized){
+      document.querySelectorAll("#modelCorrectionOptions button").forEach(b=>b.disabled=true);
+      document.getElementById("checkModelCorrection").disabled=true;
+      unlockBilePrediction();
     }
   });
 
   document.getElementById("bileOptions").addEventListener("click",e=>{
-    if(document.getElementById("bilePredictionStep").classList.contains("locked-step"))return;
+    if(!modelCorrectionAttempt.finalized||bileAttempt.finalized)return;
     const b=e.target.closest("[data-bile]");if(!b)return;
+    bileChoice=b.dataset.bile;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     const fb=document.getElementById("bileFeedback");
-    if(b.dataset.bile==="fat"){
+    fb.className="digest-feedback neutral";
+    fb.textContent=bileAttempt.attempts===1?"Revisi prediksimu bila perlu, lalu kunci kembali.":"Prediksi sudah dipilih. Kunci untuk memeriksa.";
+  });
+
+  document.getElementById("checkBilePrediction").addEventListener("click",()=>{
+    if(!modelCorrectionAttempt.finalized||bileAttempt.finalized)return;
+    const fb=document.getElementById("bileFeedback");
+    if(!bileChoice){
+      fb.className="digest-feedback neutral";
+      fb.textContent="Pilih satu prediksi sebelum mengunci.";
+      return;
+    }
+    const good=bileChoice==="fat";
+    registerAttempt(bileAttempt,good);
+    document.getElementById("bileAttemptLabel").textContent=attemptLabel(bileAttempt);
+    if(good){
       fb.className="digest-feedback good";
-      fb.textContent="Tepat. Tanpa emulsifikasi yang cukup, luas permukaan lemak untuk kerja lipase berkurang sehingga pencernaan lemak kurang efektif.";
+      fb.textContent="Tepat. Emulsifikasi yang berkurang menurunkan luas permukaan kontak lemak sehingga kerja lipase menjadi kurang efektif.";
+    }else if(!bileAttempt.finalized){
+      fb.className="digest-feedback warn";
+      fb.textContent="Belum tepat. Turunkan prediksi langsung dari fungsi empedu yang sudah diperbaiki. Satu revisi tersisa.";
     }else{
       fb.className="digest-feedback warn";
-      fb.textContent="Belum tepat. Prediksi harus mengikuti fungsi empedu yang sudah kamu perbaiki pada langkah sebelumnya.";
+      fb.innerHTML="<b>Dua percobaan selesai.</b> Prediksi yang paling konsisten: emulsifikasi berkurang, luas permukaan kontak lemak menurun, sehingga kerja lipase menjadi kurang efektif.";
+    }
+    if(bileAttempt.finalized){
+      document.querySelectorAll("#bileOptions button").forEach(b=>b.disabled=true);
+      document.getElementById("checkBilePrediction").disabled=true;
     }
   });
 
