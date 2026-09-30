@@ -164,8 +164,6 @@
   let furthestJourney=0;
   let modelIndex=0;
 
-  const calibrationKey="digestiveVisualCalibration.v2";
-  const legacyCalibrationKey="digestiveVisualCalibration.v1";
   const defaultMarkerPositions=[
     {x:32,y:17},{x:43,y:24},{x:51,y:39},{x:69,y:58},
     {x:43,y:73},{x:74,y:72},{x:57,y:89},{x:57,y:96}
@@ -215,29 +213,17 @@
   ];
 
   const clonePositions=list=>list.map(p=>({x:p.x,y:p.y}));
-  let markerPositions=clonePositions(defaultMarkerPositions);
-  let routeWaypoints=clonePositions(defaultRouteWaypoints);
 
-  // Gunakan hasil kalibrasi terakhir yang tersimpan di browser, bila tersedia.
-  // Drag & drop tetap dikunci; ini hanya memulihkan koordinat yang sudah pernah disetujui.
-  try{
-    const saved=JSON.parse(localStorage.getItem(calibrationKey)||"null");
-    const legacy=JSON.parse(localStorage.getItem(legacyCalibrationKey)||"null");
-    const source=saved||legacy;
+  // SINGLE SOURCE OF TRUTH:
+  // koordinat yang sudah dikunci di desktop disimpan di repository dan dipakai
+  // tanpa modifikasi pada desktop, HP portrait, dan HP landscape.
+  // Jangan membaca localStorage karena akan membuat tiap perangkat memakai
+  // kalibrasi yang berbeda.
+  const lockedDesktopMarkerPositions=clonePositions(defaultMarkerPositions);
+  const lockedDesktopRouteWaypoints=clonePositions(defaultRouteWaypoints);
+  let markerPositions=clonePositions(lockedDesktopMarkerPositions);
+  let routeWaypoints=clonePositions(lockedDesktopRouteWaypoints);
 
-    if(source&&Array.isArray(source.markers)&&source.markers.length===8){
-      markerPositions=source.markers.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }
-
-    if(saved&&Array.isArray(saved.waypoints)&&saved.waypoints.length===defaultRouteWaypoints.length){
-      routeWaypoints=saved.waypoints.map(p=>({x:Number(p.x),y:Number(p.y)}));
-    }else if(source&&Array.isArray(source.balls)&&source.balls.length===8){
-      source.balls.forEach((p,i)=>{
-        const wi=organWaypointIndices[i];
-        routeWaypoints[wi]={x:Number(p.x),y:Number(p.y)};
-      });
-    }
-  }catch(_){}
   const ballTimers=new WeakMap();
   let visualDragSuppressUntil=0;
 
@@ -250,8 +236,9 @@
   }
 
   window.getDigestiveVisualCalibration=()=>JSON.stringify({
-    markers:markerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
-    waypoints:routeWaypoints.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
+    source:"repository-locked-desktop",
+    markers:lockedDesktopMarkerPositions.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)})),
+    waypoints:lockedDesktopRouteWaypoints.map(p=>({x:+p.x.toFixed(2),y:+p.y.toFixed(2)}))
   },null,2);
 
   function hotspotIndex(el){
@@ -375,6 +362,21 @@
     applyMarkerPositions();
     refreshAllBallPositions();
   }
+
+  // Saat viewport berubah (portrait ↔ landscape), koordinat tetap sama.
+  // Re-apply hanya posisi label dan jalur SVG dalam persen; ukuran visual boleh berubah.
+  let visualViewportSyncFrame=0;
+  const syncLockedVisualCoordinates=()=>{
+    cancelAnimationFrame(visualViewportSyncFrame);
+    visualViewportSyncFrame=requestAnimationFrame(()=>{
+      markerPositions=clonePositions(lockedDesktopMarkerPositions);
+      routeWaypoints=clonePositions(lockedDesktopRouteWaypoints);
+      applyMarkerPositions();
+      updateRoutePaths();
+    });
+  };
+  window.addEventListener("resize",syncLockedVisualCoordinates,{passive:true});
+  window.addEventListener("orientationchange",syncLockedVisualCoordinates,{passive:true});
 
   const exploreOrder=[0,1,2,3,4,5,6,7];
   const route=document.getElementById("organRoute");
