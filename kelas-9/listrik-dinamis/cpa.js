@@ -589,6 +589,8 @@ function initPredictionCheck(){
   const compareGroup=card.querySelector('[data-prediction-compare-group]');
   const evidenceGroup=card.querySelector('[data-prediction-evidence-group]');
 
+  card.dataset.predictionChecked="false";
+
   const labels={
     'semua-padam':'Semua lampu ikut padam',
     'lain-tetap':'Lampu lain tetap dapat menyala',
@@ -642,6 +644,7 @@ function initPredictionCheck(){
     document.getElementById('resistance').value=10;
     testActive=true;
     observed=false;
+    card.dataset.predictionChecked="false";
     attempts=0;
     steps.hidden=false;
     compareBox.hidden=true;
@@ -702,6 +705,7 @@ function initPredictionCheck(){
 
     if(compareCorrect&&evidenceCorrect){
       status.textContent='Prediksi diperiksa';
+      card.dataset.predictionChecked="true";
       feedback.className='prediction-feedback correct';
       feedback.textContent=prediction()==='lain-tetap'
         ?'Prediksimu sesuai dengan hasil simulasi. Bukti utamanya: Lampu 2 dan 3 tetap menyala setelah Lampu 1 dilepas.'
@@ -718,6 +722,7 @@ function initPredictionCheck(){
       retry.hidden=false;
     }else{
       status.textContent='Prediksi diperiksa';
+      card.dataset.predictionChecked="true";
       feedback.className='prediction-feedback wrong';
       feedback.textContent=(prediction()==='lain-tetap'
         ?'Hasil simulasi sebenarnya mendukung prediksi awalmu. '
@@ -744,6 +749,7 @@ function initPredictionCheck(){
   window.addEventListener('engagepredictionchange',()=>{
     testActive=false;
     observed=false;
+    card.dataset.predictionChecked="false";
     steps.hidden=true;
     compareBox.hidden=true;
     clearChoices();
@@ -1028,7 +1034,7 @@ window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
   if(stage===2){
     const holder=document.querySelector('[data-stage-group="concrete"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
-    const predictionDone=document.getElementById('predictionStatus')?.textContent.trim()==='Prediksi diperiksa';
+    const predictionDone=document.getElementById('predictionCheckCard')?.dataset.predictionChecked==='true';
     return slides.length>0 && slides.at(-1).classList.contains("active") && predictionDone;
   }
   if(stage===3){
