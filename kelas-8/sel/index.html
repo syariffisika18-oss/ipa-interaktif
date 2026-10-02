@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f766e">
+  <meta name="description" content="Modul interaktif IPA Kelas VIII tentang sel, mikroskop, dan organel">
+  <title>Sel dan Mikroskop — IPA Interaktif Kelas VIII</title>
+  <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
+  <link rel="stylesheet" href="cell.css?v=20261002-cell1">
+</head>
+<body>
+  <header class="app-header">
+    <div class="shell header-row">
+      <a class="back-link" href="../">← Kelas VIII</a>
+      <div class="header-title">
+        <span class="version">IPA INTERAKTIF • KELAS VIII</span>
+        <strong id="appTitle">IPA Interaktif • Kelas VIII</strong>
+      </div>
+      <button class="ghost-button" id="resetProgress" type="button">Reset progres</button>
+    </div>
+  </header>
+
+  <main class="shell app-shell">
+    <section class="intro-card">
+      <div class="intro-copy">
+        <p class="eyebrow">Organisasi kehidupan</p>
+        <h1 id="materialTitle">Sel dan Mikroskop</h1>
+        <p id="materialMeta" class="material-meta">Kelas VIII • 7 tahap</p>
+        <p class="intro-text">Mulai dari ciri makhluk hidup, temukan sel sebagai unit kehidupan, gunakan pembesaran mikroskop, lalu jelajahi organel sel dan fungsinya.</p>
+      </div>
+      <div class="mode-card" aria-labelledby="modeLabel">
+        <p id="modeLabel" class="mode-label">Mode penggunaan</p>
+        <div class="segmented" role="group" aria-label="Pilih mode penggunaan">
+          <button class="mode-button is-active" type="button" data-mode="mandiri">👤 Mandiri</button>
+          <button class="mode-button" type="button" data-mode="guru">👨‍🏫 Bersama Guru</button>
+        </div>
+        <p class="mode-note" id="modeNote"></p>
+      </div>
+    </section>
+
+    <section class="progress-card" aria-label="Progres pembelajaran">
+      <div class="progress-copy"><strong>Progres</strong><span id="progressText">0 dari 7 tahap</span></div>
+      <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+    </section>
+
+    <nav class="stage-nav" aria-label="Tahapan pembelajaran">
+      <button class="stage-tab is-active" data-stage="0"><span>1</span>Orientasi</button>
+      <button class="stage-tab" data-stage="1"><span>2</span>Engage</button>
+      <button class="stage-tab" data-stage="2"><span>3</span>Explore</button>
+      <button class="stage-tab" data-stage="3"><span>4</span>Explain</button>
+      <button class="stage-tab" data-stage="4"><span>5</span>Elaborate</button>
+      <button class="stage-tab" data-stage="5"><span>6</span>Evaluate</button>
+      <button class="stage-tab" data-stage="6"><span>7</span>Reflect</button>
+    </nav>
+
+    <section class="stage-panel is-active orientation-panel" data-panel="0">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 1</p><h2>Orientasi</h2></div>
+        <span class="principle">Prasyarat • Retrieval • Jembatan konsep</span>
+      </div>
+
+      <div class="orientation-cell-grid">
+        <article class="learning-card">
+          <h3>🎯 Tujuan pembelajaran</h3>
+          <p data-slot="objective"></p>
+        </article>
+        <article class="learning-card">
+          <h3>🧠 Dari makhluk hidup menuju sel</h3>
+          <p>Ingat kembali <b>8 ciri makhluk hidup</b>. Setelah itu kita akan mencari bagian terkecil yang masih menjalankan proses kehidupan.</p>
+        </article>
+      </div>
+
+      <section class="life-quiz-card" aria-labelledby="lifeQuizTitle">
+        <div class="compact-head">
+          <div><p class="stage-kicker">Cek prasyarat</p><h3 id="lifeQuizTitle">Kenali 8 ciri makhluk hidup</h3></div>
+          <span id="lifeProgress" class="score-badge">1 / 8</span>
+        </div>
+        <p class="life-scenario" id="lifeScenario"></p>
+        <div class="option-grid" id="lifeOptions"></div>
+        <div class="lock-row">
+          <span id="lifeAttempt">Pilih satu ciri, lalu kunci.</span>
+          <button type="button" class="mini-action" id="checkLife">Kunci jawaban</button>
+        </div>
+        <div id="lifeFeedback" class="module-feedback neutral">Belum diperiksa.</div>
+        <button type="button" class="secondary-action" id="nextLife" hidden>Situasi berikutnya →</button>
+      </section>
+
+      <section class="bridge-card">
+        <p class="stage-kicker">Jembatan konsep</p>
+        <h3>Bagian terkecil manakah yang masih merupakan unit hidup?</h3>
+        <div class="bridge-options" id="bridgeOptions">
+          <button type="button" data-bridge="organ">Organ</button>
+          <button type="button" data-bridge="jaringan">Jaringan</button>
+          <button type="button" data-bridge="sel">Sel</button>
+          <button type="button" data-bridge="sistem">Sistem organ</button>
+        </div>
+        <button type="button" class="primary-inline" id="checkBridge">Periksa pilihan</button>
+        <div id="bridgeFeedback" class="module-feedback neutral">Gunakan pemahamanmu tentang ciri makhluk hidup.</div>
+      </section>
+
+      <section class="identity-card" aria-labelledby="identityTitle">
+        <div>
+          <p class="stage-kicker">Identitas sesi</p>
+          <h3 id="identityTitle">Identitas sesi</h3>
+          <p>Digunakan saat mengirim refleksi ke guru.</p>
+        </div>
+        <div class="identity-grid">
+          <label><span>Nama / nomor absen</span><input id="studentName" type="text" maxlength="80" placeholder="Contoh: Andi / 12"></label>
+          <label><span>Kelas</span><input id="studentClass" type="text" maxlength="30" placeholder="Contoh: VIII A"></label>
+        </div>
+      </section>
+    </section>
+
+    <section class="stage-panel engage-panel" data-panel="1">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 2</p><h2>Engage</h2></div>
+        <span class="principle">Fenomena • Zoom kehidupan • Prediksi</span>
+      </div>
+
+      <section class="zoom-card">
+        <div class="compact-head">
+          <div><p class="stage-kicker">Guided inquiry</p><h3>Dari daun menuju sel</h3></div>
+          <span class="principle">Amati sebelum membaca definisi</span>
+        </div>
+        <div class="zoom-tabs" id="zoomTabs">
+          <button class="is-active" type="button" data-zoom="0">1. Daun</button>
+          <button type="button" data-zoom="1">2. Jaringan</button>
+          <button type="button" data-zoom="2">3. Sel</button>
+        </div>
+        <div class="zoom-stage" id="zoomStage">
+          <div class="zoom-visual leaf-visual" data-zoom-panel="0">
+            <div class="leaf-shape"><span>🍃</span></div>
+            <p>Satu daun tampak sebagai satu bagian utuh.</p>
+          </div>
+          <div class="zoom-visual tissue-visual" data-zoom-panel="1" hidden>
+            <div class="tissue-grid" aria-label="Model jaringan tumbuhan">
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+              <span></span><span></span><span></span><span></span><span></span><span></span>
+            </div>
+            <p>Ketika diperbesar, jaringan tampak tersusun dari banyak unit.</p>
+          </div>
+          <div class="zoom-visual cell-visual" data-zoom-panel="2" hidden>
+            <div class="mini-plant-cell"><i class="mini-vacuole"></i><i class="mini-nucleus"></i><i class="mini-chloroplast c1"></i><i class="mini-chloroplast c2"></i><i class="mini-chloroplast c3"></i></div>
+            <p>Salah satu unit tersebut adalah sel.</p>
+          </div>
+        </div>
+        <div class="engage-question">
+          <h3>Apa dugaanmu?</h3>
+          <p>Jika jaringan diperbesar terus, unit apakah yang masih dapat menjalankan proses kehidupan?</p>
+          <div class="option-grid" id="engageOptions">
+            <button type="button" data-engage="molekul">Molekul</button>
+            <button type="button" data-engage="sel">Sel</button>
+            <button type="button" data-engage="organ">Organ</button>
+          </div>
+          <button type="button" class="primary-inline" id="lockEngage">Kunci prediksi</button>
+          <div id="engageFeedback" class="module-feedback neutral">Prediksi akan diuji pada tahap berikutnya.</div>
+        </div>
+      </section>
+    </section>
+
+    <section class="stage-panel explore-panel" data-panel="2">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 3</p><h2>Explore</h2></div>
+        <span class="principle">POE • Mikroskop • Numerasi</span>
+      </div>
+
+      <section class="microscope-shell">
+        <div class="compact-head">
+          <div><p class="stage-kicker">Predict → Observe → Explain</p><h3>Berapa pembesaran totalnya?</h3></div>
+          <span id="microscopeModeBadge" class="score-badge">PREDICT</span>
+        </div>
+
+        <div class="microscope-layout">
+          <div class="microscope-control-card">
+            <label>Okuler
+              <select id="ocularSelect">
+                <option value="10" selected>10×</option>
+                <option value="15">15×</option>
+              </select>
+            </label>
+            <div>
+              <span class="field-title">Objektif</span>
+              <div class="lens-buttons" id="objectiveButtons">
+                <button type="button" data-objective="4">4×</button>
+                <button class="is-active" type="button" data-objective="10">10×</button>
+                <button type="button" data-objective="40">40×</button>
+              </div>
+            </div>
+            <div class="microscope-equation">
+              <span>Okuler</span><b id="ocularValue">10×</b><i>×</i><span>Objektif</span><b id="objectiveValue">10×</b><i>=</i><strong id="totalHidden">?</strong>
+            </div>
+            <p class="micro-prompt">Prediksi pembesaran total untuk kombinasi lensa di atas.</p>
+            <div class="option-grid compact-options" id="magnificationOptions"></div>
+            <button type="button" class="primary-inline" id="lockMagnification">Kunci prediksi</button>
+            <div id="magnificationFeedback" class="module-feedback neutral">Belum diperiksa.</div>
+          </div>
+
+          <div class="microscope-view-card">
+            <div class="scope-ring">
+              <div class="scope-field" id="scopeField" aria-label="Bidang pandang mikroskop">
+                <span class="specimen s1"></span><span class="specimen s2"></span><span class="specimen s3"></span><span class="specimen s4"></span>
+              </div>
+            </div>
+            <div class="observe-readout">
+              <span>PEMBESARAN TOTAL</span>
+              <strong id="totalMagnification">Belum dibuka</strong>
+              <p id="fieldObservation">Kunci prediksi untuk membuka hasil pengamatan.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="poe-explain" id="poeExplain" hidden>
+          <b>Kesimpulan:</b>
+          <span>Pembesaran total = pembesaran lensa okuler × pembesaran lensa objektif.</span>
+          <p>Ketika pembesaran meningkat, objek tampak lebih besar, tetapi bagian bidang pandang yang terlihat menjadi lebih sempit.</p>
+        </div>
+      </section>
+    </section>
+
+    <section class="stage-panel explain-panel" data-panel="3">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 4</p><h2>Explain</h2></div>
+        <span class="principle">Konsep • Model • Struktur–fungsi</span>
+      </div>
+
+      <div class="cell-explain-tabs" id="cellExplainTabs">
+        <button type="button" class="is-active" data-cell-page="0"><span>1</span>Apa itu sel?</button>
+        <button type="button" data-cell-page="1"><span>2</span>Sel hewan</button>
+        <button type="button" data-cell-page="2"><span>3</span>Sel tumbuhan</button>
+        <button type="button" data-cell-page="3"><span>4</span>Bandingkan</button>
+      </div>
+
+      <section class="cell-explain-page is-active" data-cell-content="0">
+        <div class="definition-card">
+          <p class="stage-kicker">Konsep inti</p>
+          <h3>Sel adalah unit struktural dan fungsional terkecil makhluk hidup.</h3>
+          <p><b>Struktural</b> berarti tubuh makhluk hidup tersusun atas sel. <b>Fungsional</b> berarti berbagai proses kehidupan berlangsung di dalam sel.</p>
+        </div>
+        <div class="hierarchy-flow" aria-label="Tingkat organisasi kehidupan">
+          <div><span>🧍</span><b>Organisme</b></div><i>→</i>
+          <div><span>🫁</span><b>Sistem organ</b></div><i>→</i>
+          <div><span>🫀</span><b>Organ</b></div><i>→</i>
+          <div><span>▦</span><b>Jaringan</b></div><i>→</i>
+          <div class="is-key"><span>◉</span><b>Sel</b></div>
+        </div>
+        <div class="concept-note"><b>Catatan:</b> organisme uniseluler hanya tersusun atas satu sel, sedangkan organisme multiseluler tersusun atas banyak sel yang dapat memiliki bentuk dan fungsi berbeda.</div>
+      </section>
+
+      <section class="cell-explain-page" data-cell-content="1">
+        <div class="organelle-learning-head">
+          <div><p class="stage-kicker">Model sel hewan</p><h3>Sentuh nomor organel untuk melihat fungsinya</h3></div>
+          <span id="animalSeen" class="score-badge">0 / 8 dikenali</span>
+        </div>
+        <div class="organelle-layout">
+          <div class="cell-model-wrap">
+            <svg class="cell-svg animal-svg" viewBox="0 0 620 430" role="img" aria-label="Model sel hewan">
+              <ellipse class="cell-membrane-shape" cx="310" cy="215" rx="270" ry="170"/>
+              <ellipse class="cytoplasm-shape" cx="310" cy="215" rx="258" ry="158"/>
+              <circle class="nucleus-shape organelle-shape" data-org-shape="nucleus" cx="280" cy="210" r="72"/>
+              <circle class="nucleolus-shape organelle-shape" data-org-shape="nucleolus" cx="295" cy="200" r="22"/>
+              <path class="er-shape organelle-shape" data-org-shape="er" d="M170 125 C225 105 250 130 270 145 M155 150 C215 132 240 150 265 165 M155 175 C210 158 240 172 260 185"/>
+              <path class="golgi-shape organelle-shape" data-org-shape="golgi" d="M390 135 Q450 115 480 150 M385 150 Q450 132 485 166 M382 166 Q448 150 480 182"/>
+              <g class="organelle-shape" data-org-shape="mitochondria"><ellipse class="mito-shape" cx="425" cy="260" rx="45" ry="24"/><path class="mito-inner" d="M392 260 q15-18 30 0 t30 0"/></g>
+              <g class="organelle-shape" data-org-shape="lysosome"><circle class="lyso-shape" cx="170" cy="275" r="22"/><circle class="lyso-shape" cx="205" cy="305" r="15"/></g>
+              <g class="organelle-shape" data-org-shape="ribosome">
+                <circle class="ribo-dot" cx="195" cy="118" r="5"/><circle class="ribo-dot" cx="215" cy="130" r="5"/><circle class="ribo-dot" cx="230" cy="112" r="5"/>
+                <circle class="ribo-dot" cx="360" cy="310" r="5"/><circle class="ribo-dot" cx="380" cy="325" r="5"/><circle class="ribo-dot" cx="350" cy="335" r="5"/>
+              </g>
+            </svg>
+            <div class="organelle-hotspots animal-hotspots">
+              <button style="--x:45%;--y:49%" data-organelle="nucleus" aria-label="Nukleus">1</button>
+              <button style="--x:48%;--y:46%" data-organelle="nucleolus" aria-label="Nukleolus">2</button>
+              <button style="--x:31%;--y:34%" data-organelle="er" aria-label="Retikulum endoplasma">3</button>
+              <button style="--x:74%;--y:36%" data-organelle="golgi" aria-label="Badan Golgi">4</button>
+              <button style="--x:69%;--y:62%" data-organelle="mitochondria" aria-label="Mitokondria">5</button>
+              <button style="--x:28%;--y:66%" data-organelle="lysosome" aria-label="Lisosom">6</button>
+              <button style="--x:59%;--y:78%" data-organelle="ribosome" aria-label="Ribosom">7</button>
+              <button style="--x:90%;--y:50%" data-organelle="membrane" aria-label="Membran sel">8</button>
+            </div>
+          </div>
+          <article class="organelle-info" id="animalOrganelleInfo">
+            <span class="organelle-number">Pilih 1–8</span>
+            <h3>Kenali organel sel hewan</h3>
+            <p>Nama, fungsi utama, dan akibat jika organel terganggu akan muncul di sini.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cell-explain-page" data-cell-content="2">
+        <div class="organelle-learning-head">
+          <div><p class="stage-kicker">Model sel tumbuhan</p><h3>Sentuh nomor organel untuk melihat fungsinya</h3></div>
+          <span id="plantSeen" class="score-badge">0 / 11 dikenali</span>
+        </div>
+        <div class="organelle-layout">
+          <div class="cell-model-wrap plant-wrap">
+            <svg class="cell-svg plant-svg" viewBox="0 0 620 430" role="img" aria-label="Model sel tumbuhan">
+              <rect class="cell-wall-shape organelle-shape" data-org-shape="wall" x="55" y="45" width="510" height="340" rx="36"/>
+              <rect class="plant-membrane-shape organelle-shape" data-org-shape="membrane" x="72" y="62" width="476" height="306" rx="28"/>
+              <rect class="plant-cytoplasm-shape organelle-shape" data-org-shape="cytoplasm" x="84" y="74" width="452" height="282" rx="20"/>
+              <rect class="vacuole-shape organelle-shape" data-org-shape="vacuole" x="245" y="105" width="235" height="210" rx="48"/>
+              <circle class="nucleus-shape organelle-shape" data-org-shape="nucleus" cx="190" cy="205" r="62"/>
+              <circle class="nucleolus-shape organelle-shape" data-org-shape="nucleolus" cx="202" cy="195" r="18"/>
+              <g class="organelle-shape" data-org-shape="chloroplast">
+                <ellipse class="chloroplast-shape" cx="150" cy="105" rx="38" ry="20"/><ellipse class="chloroplast-shape" cx="475" cy="90" rx="38" ry="20"/><ellipse class="chloroplast-shape" cx="130" cy="310" rx="38" ry="20"/>
+              </g>
+              <g class="organelle-shape" data-org-shape="mitochondria"><ellipse class="mito-shape" cx="485" cy="325" rx="40" ry="21"/><path class="mito-inner" d="M455 325 q14-15 28 0 t28 0"/></g>
+              <path class="er-shape organelle-shape" data-org-shape="er" d="M95 140 C145 125 165 140 180 152 M95 160 C145 145 165 160 180 172"/>
+              <path class="golgi-shape organelle-shape" data-org-shape="golgi" d="M95 250 Q145 235 175 255 M92 265 Q145 250 175 270 M96 280 Q145 265 170 285"/>
+              <g class="organelle-shape" data-org-shape="ribosome"><circle class="ribo-dot" cx="215" cy="100" r="5"/><circle class="ribo-dot" cx="220" cy="320" r="5"/><circle class="ribo-dot" cx="510" cy="190" r="5"/></g>
+            </svg>
+            <div class="organelle-hotspots plant-hotspots">
+              <button style="--x:31%;--y:49%" data-organelle="nucleus">1</button>
+              <button style="--x:34%;--y:45%" data-organelle="nucleolus">2</button>
+              <button style="--x:20%;--y:35%" data-organelle="er">3</button>
+              <button style="--x:21%;--y:64%" data-organelle="golgi">4</button>
+              <button style="--x:78%;--y:75%" data-organelle="mitochondria">5</button>
+              <button style="--x:24%;--y:24%" data-organelle="chloroplast">6</button>
+              <button style="--x:60%;--y:48%" data-organelle="vacuole">7</button>
+              <button style="--x:92%;--y:50%" data-organelle="wall">8</button>
+              <button style="--x:87%;--y:58%" data-organelle="membrane">9</button>
+              <button style="--x:79%;--y:44%" data-organelle="cytoplasm">10</button>
+              <button style="--x:38%;--y:76%" data-organelle="ribosome">11</button>
+            </div>
+          </div>
+          <article class="organelle-info" id="plantOrganelleInfo">
+            <span class="organelle-number">Pilih 1–11</span>
+            <h3>Kenali organel sel tumbuhan</h3>
+            <p>Perhatikan organel yang dimiliki bersama dengan sel hewan dan organel khas yang mendukung fungsi tumbuhan.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="cell-explain-page" data-cell-content="3">
+        <div class="compare-intro">
+          <p class="stage-kicker">Bandingkan model</p>
+          <h3>Mana yang dimiliki sel hewan, sel tumbuhan, atau keduanya?</h3>
+          <p>Pilih satu struktur. Dua kartu di bawah akan menunjukkan keberadaannya.</p>
+        </div>
+        <div class="compare-buttons" id="compareButtons"></div>
+        <div class="compare-cells">
+          <article id="animalCompare"><span>SEL HEWAN</span><strong>—</strong><p>Pilih struktur di atas.</p></article>
+          <article id="plantCompare"><span>SEL TUMBUHAN</span><strong>—</strong><p>Pilih struktur di atas.</p></article>
+        </div>
+      </section>
+    </section>
+
+    <section class="stage-panel elaborate-panel" data-panel="4">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 5</p><h2>Elaborate</h2></div>
+        <span class="principle">Struktur → Fungsi → Konsekuensi</span>
+      </div>
+
+      <section class="cell-case-suite">
+        <div class="case-suite-head">
+          <div><p class="stage-kicker">Model-Based Learning</p><h3>Lima kasus fungsi organel</h3><p>Pilih organel, kunci, lalu pilih alasan. Setiap langkah maksimal dua percobaan.</p></div>
+          <div class="case-score"><span id="caseProgress">0 / 5 selesai</span><span id="caseFirstScore">Awal 0 / 10</span><span id="caseFinalScore">Akhir 0 / 10</span></div>
+        </div>
+        <div class="case-tabs" id="caseTabs"></div>
+        <div id="casePanel"></div>
+      </section>
+    </section>
+
+    <section class="stage-panel evaluate-panel" data-panel="5">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 6</p><h2>Evaluate</h2></div>
+        <span class="principle">Retrieval • Numerasi • Transfer</span>
+      </div>
+
+      <section class="cell-eval-card">
+        <div class="eval-topline">
+          <span id="evalProgress">Soal 1 / 10</span>
+          <strong id="evalScore">Skor 0</strong>
+        </div>
+        <div class="eval-track"><div id="evalBar"></div></div>
+        <p class="eval-domain" id="evalDomain"></p>
+        <h3 id="evalQuestion"></h3>
+        <div class="eval-options" id="evalOptions"></div>
+        <button type="button" class="primary-inline" id="lockEval">Kunci jawaban</button>
+        <div id="evalFeedback" class="module-feedback neutral">Pilih satu jawaban.</div>
+        <button type="button" class="secondary-action" id="nextEval" hidden>Soal berikutnya →</button>
+      </section>
+    </section>
+
+    <section class="stage-panel reflect-panel" data-panel="6">
+      <div class="stage-heading">
+        <div><p class="stage-kicker">Tahap 7</p><h2>Reflect</h2></div>
+        <span class="principle">Monitoring • Refleksi • Tindak lanjut</span>
+      </div>
+
+      <div class="reflection-grid">
+        <label><span>Apa konsep yang sekarang paling kamu pahami?</span><textarea rows="4" data-reflection="understood" placeholder="Contoh: saya sekarang dapat menjelaskan mengapa mitokondria penting..."></textarea></label>
+        <label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused" placeholder="Tuliskan bagian yang ingin dibahas lagi."></textarea></label>
+      </div>
+
+      <div class="difficulty-card">
+        <p class="field-title">Pada bagian mana kamu masih mengalami kesulitan?</p>
+        <div class="difficulty-grid" id="difficultyGrid"></div>
+      </div>
+
+      <div class="confidence-box">
+        <p>Seberapa yakin kamu memahami materi?</p>
+        <div class="confidence-row">
+          <button type="button" data-confidence="1">Perlu bantuan</button>
+          <button type="button" data-confidence="2">Cukup paham</button>
+          <button type="button" data-confidence="3">Sudah yakin</button>
+        </div>
+      </div>
+
+      <div class="send-feedback-card">
+        <div>
+          <strong>Kirim refleksi ke guru</strong>
+          <p id="feedbackConnectionNote">Refleksi tersimpan lokal sampai dikirim.</p>
+          <p id="sendStatus" class="send-status" aria-live="polite">Belum pernah dikirim.</p>
+        </div>
+        <button id="sendFeedback" class="send-feedback-button" type="button">Kirim Refleksi</button>
+      </div>
+    </section>
+
+    <div class="bottom-nav">
+      <button id="prevStage" type="button">← Sebelumnya</button>
+      <button id="completeStage" class="complete-button" type="button">Tandai selesai</button>
+      <button id="nextStage" class="primary-button" type="button">Berikutnya →</button>
+    </div>
+  </main>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="config.js?v=20261002-cell1"></script>
+  <script src="cell.js?v=20261002-cell1"></script>
+</body>
+</html>
