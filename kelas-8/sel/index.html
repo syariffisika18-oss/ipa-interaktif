@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif IPA Kelas VIII tentang sel, mikroskop, dan organel">
   <title>Sel dan Mikroskop — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="cell.css?v=20261002-microzoom1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
+  <link rel="stylesheet" href="cell.css?v=20261002-micropan1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
 </head>
 <body>
   <header class="app-header">
@@ -200,7 +200,7 @@
             </div>
 
             <div class="scope-ring">
-              <div class="scope-field" id="scopeField" data-level="10" aria-label="Bidang pandang mikroskop">
+              <div class="scope-field" id="scopeField" data-level="10" aria-label="Bidang pandang mikroskop" tabindex="0">
                 <div class="micrograph-canvas" id="micrographCanvas" aria-hidden="true">
                   <svg class="micrograph-svg" viewBox="0 0 520 520" role="presentation">
                     <rect width="520" height="520" fill="#f7e8ef"/>
@@ -230,6 +230,11 @@
                 </div>
                 <div class="scope-reticle" aria-hidden="true"><span></span></div>
               </div>
+            </div>
+
+            <div class="scope-pan-controls">
+              <span>Geser preparat: drag dengan mouse atau sentuh lalu geser.</span>
+              <button type="button" id="recenterScope">Pusatkan</button>
             </div>
 
             <div class="fov-scale" aria-label="Perbandingan bidang pandang">
@@ -435,6 +440,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261002-cell1"></script>
-  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-microzoom2"></script>
+  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-micropan1"></script>
 </body>
 </html>
