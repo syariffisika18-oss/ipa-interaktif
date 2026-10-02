@@ -197,9 +197,10 @@
       case 2:
         return document.querySelector(".explore-panel")?.dataset.exploreFinished==="true";
 
-      // Explain: tab terakhir = Bandingkan (data-cell-page="3").
+      // Explain: harus berada di Bandingkan DAN seluruh struktur sudah ditinjau.
       case 3:
-        return Number(document.querySelector("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3;
+        return Number(document.querySelector("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3
+          && compareSeen.size===compareItems.length;
 
       // Elaborate: harus berada pada kasus terakhir DAN kasus tersebut sudah selesai.
       case 4: {
@@ -1390,15 +1391,20 @@
     ["ribosome","Ribosom","both"],["golgi","Badan Golgi","both"],["wall","Dinding sel","plant"],
     ["chloroplast","Kloroplas","plant"],["vacuole","Vakuola besar","plant"],["lysosome","Lisosom","animal"]
   ];
+  const compareSeen=new Set();
   $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'">'+n+'</button>').join("");
   $("#compareButtons").addEventListener("click",e=>{
     const b=e.target.closest("[data-compare]"); if(!b)return;
-    $$("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    $("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    compareSeen.add(b.dataset.compare);
+    b.classList.add("is-viewed");
+    $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
     const item=compareItems.find(x=>x[0]===b.dataset.compare);
     const where=item[2], name=item[1];
     const animal=where==="both"||where==="animal", plant=where==="both"||where==="plant";
     $("#animalCompare").innerHTML='<span>SEL HEWAN</span><strong>'+(animal?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(animal?" terdapat pada model sel hewan.":" bukan ciri khas model sel hewan pada pembelajaran ini.")+'</p>';
     $("#plantCompare").innerHTML='<span>SEL TUMBUHAN</span><strong>'+(plant?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(plant?" terdapat pada model sel tumbuhan.":" bukan ciri khas model sel tumbuhan pada pembelajaran ini.")+'</p>';
+    updateBottomNavVisibility();
   });
 
   // ---------- ELABORATE ----------
