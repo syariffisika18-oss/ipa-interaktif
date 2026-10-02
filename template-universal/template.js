@@ -67,7 +67,7 @@
       (config.strategies || []).forEach((strategy, index) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "strategy-chip" + (index === 0 ? " is-selected" : "");
+        button.className = "strategy-chip";
         button.textContent = strategy;
         grid.appendChild(button);
       });
