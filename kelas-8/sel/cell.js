@@ -1059,6 +1059,7 @@
       img.src=item.src;
 
       const finish=()=>{
+        applyPhotoPan();
         img.classList.remove("is-switching");
         img.classList.remove("is-arriving");
         void img.offsetWidth;
@@ -1073,6 +1074,7 @@
     if(!animate){
       img.src=item.src;
       img.alt=item.alt;
+      applyPhotoPan();
       return;
     }
 
@@ -1113,6 +1115,75 @@
     $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
   }
 
+
+  // Drag foto preparat di dalam bidang pandang.
+  let photoPanX=0, photoPanY=0;
+  let photoDragging=false;
+  let photoStartX=0, photoStartY=0, photoOriginX=0, photoOriginY=0;
+
+  function photoPanLimits(){
+    const field=$("#scopeField");
+    if(!field) return {x:0,y:0};
+    // Foto diperbesar 1.24x, sehingga sekitar 12% ukuran bidang tersedia
+    // untuk digeser ke setiap arah tanpa membuka area kosong.
+    return {
+      x:Math.max(0,field.clientWidth*0.12),
+      y:Math.max(0,field.clientHeight*0.12)
+    };
+  }
+
+  function applyPhotoPan(){
+    const img=$("#scopeImage");
+    if(!img) return;
+    const lim=photoPanLimits();
+    photoPanX=Math.max(-lim.x,Math.min(lim.x,photoPanX));
+    photoPanY=Math.max(-lim.y,Math.min(lim.y,photoPanY));
+    img.style.setProperty("--pan-x",photoPanX+"px");
+    img.style.setProperty("--pan-y",photoPanY+"px");
+  }
+
+  function recenterPhotoScope(){
+    photoPanX=0;
+    photoPanY=0;
+    applyPhotoPan();
+  }
+
+  $("#scopeField")?.addEventListener("pointerdown",e=>{
+    if(e.pointerType==="mouse" && e.button!==0) return;
+    photoDragging=true;
+    photoStartX=e.clientX;
+    photoStartY=e.clientY;
+    photoOriginX=photoPanX;
+    photoOriginY=photoPanY;
+    $("#scopeField").classList.add("is-dragging");
+    $("#scopeField").setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  });
+
+  $("#scopeField")?.addEventListener("pointermove",e=>{
+    if(!photoDragging) return;
+    photoPanX=photoOriginX+(e.clientX-photoStartX);
+    photoPanY=photoOriginY+(e.clientY-photoStartY);
+    applyPhotoPan();
+    e.preventDefault();
+  });
+
+  function stopPhotoDrag(e){
+    if(!photoDragging) return;
+    photoDragging=false;
+    $("#scopeField")?.classList.remove("is-dragging");
+    try{$("#scopeField")?.releasePointerCapture?.(e.pointerId)}catch(_){}
+  }
+
+  $("#scopeField")?.addEventListener("pointerup",stopPhotoDrag);
+  $("#scopeField")?.addEventListener("pointercancel",stopPhotoDrag);
+  $("#scopeField")?.addEventListener("lostpointercapture",()=>{
+    photoDragging=false;
+    $("#scopeField")?.classList.remove("is-dragging");
+  });
+  $("#recenterPhotoScope")?.addEventListener("click",recenterPhotoScope);
+  window.addEventListener("resize",applyPhotoPan);
+
   $("#objectiveButtons")?.addEventListener("click",e=>{
     const b=e.target.closest("[data-objective]");
     if(!b) return;
@@ -1122,6 +1193,7 @@
 
     objective=next;
     magChoice="";
+    recenterPhotoScope();
     updateLensPreview(true);
   });
 
