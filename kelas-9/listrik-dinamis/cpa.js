@@ -531,6 +531,7 @@ function showStage(group,index,doScroll=true){
     const targetEl=holder.closest('.stage-card')?.querySelector('.stage-topline')||holder.closest('.stage-card')||holder;
     window.scrollToLearningContent?.(targetEl);
   }
+  window.refreshLearningFooter?.();
 }
 
 function openSection(target){
@@ -1021,6 +1022,27 @@ function initElaborate(){
   }
 }
 
+window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
+  if(stage===2){
+    const holder=document.querySelector('[data-stage-group="concrete"]');
+    const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
+    const predictionDone=document.getElementById('predictionStatus')?.textContent.trim()==='Prediksi diperiksa';
+    return slides.length>0 && stageIndex.concrete===slides.length-1 && predictionDone;
+  }
+  if(stage===3){
+    const holder=document.querySelector('[data-stage-group="explain"]');
+    const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
+    return slides.length>0 && stageIndex.explain===slides.length-1;
+  }
+  if(stage===4){
+    return typeof window.isListrikElaborateComplete==='function' && window.isListrikElaborateComplete();
+  }
+  if(stage===5){
+    return quizOrder.length>0 && quizSlide===quizOrder.length-1 && answered.every(Boolean);
+  }
+  return false;
+};
+
 window.resetListrikDinamisInteractiveState=()=>{
   // Explore/simulation
   state.type='series';
@@ -1062,6 +1084,11 @@ window.resetListrikDinamisInteractiveState=()=>{
   }catch(_){}
 };
 
+const scheduleLearningFooter=()=>setTimeout(()=>window.refreshLearningFooter?.(),0);
+document.addEventListener('click',scheduleLearningFooter,true);
+document.addEventListener('input',scheduleLearningFooter,true);
+document.addEventListener('change',scheduleLearningFooter,true);
+
 initPredictionCheck();
 initElaborate();
 renderQuiz();
@@ -1069,3 +1096,4 @@ refreshAll();
 showStage('concrete',0,false);
 showStage('explain',0,false);
 showStage('elaborate',0,false);
+window.refreshLearningFooter?.();
