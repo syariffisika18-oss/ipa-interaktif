@@ -3070,3 +3070,6 @@ body[data-learning-mode="mandiri"] .elab-reveal{
     padding-top:4px!important;
   }
 }
+
+/* CONTEXTUAL LEARNING FOOTER */
+.u-bottom-nav.is-context-hidden{display:none!important}
