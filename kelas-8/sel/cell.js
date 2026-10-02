@@ -984,7 +984,7 @@
 
     engageLocked=true;
     $("#lockEngage").disabled=true;
-    $("#engageOptions button").forEach(b=>b.disabled=true);
+    $$("#engageOptions button").forEach(b=>b.disabled=true);
 
     $("#engageFeedback").className="module-feedback neutral";
     $("#engageFeedback").innerHTML="<b>Prediksi dikunci.</b> Jawaban belum dibuka. Tekan <b>Perbesar salah satu unit</b> untuk menguji dugaanmu.";
@@ -1261,7 +1261,7 @@
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
   $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
-  $(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
+  $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
 
   // ---------- Hotspot manual calibration ----------
   const hotspotCalibration={
@@ -1274,7 +1274,7 @@
   }
 
   function hotspotButtons(kind){
-    return $("."+kind+"-hotspots [data-organelle]");
+    return $$("."+kind+"-hotspots [data-organelle]");
   }
 
   function readHotspotPosition(btn){
@@ -1354,7 +1354,16 @@
     state.button().classList.toggle("is-active",active);
     state.button().textContent=active?"Selesai mengatur":"Atur posisi hotspot";
     if(active){
-      state.readout().textContent="Seret hotspot. Posisi disimpan otomatis dalam persen.";
+      state.readout().textContent="MODE AKTIF — seret nomor hotspot langsung pada gambar.";
+      hotspotButtons(kind).forEach(btn=>{
+        btn.setAttribute("aria-grabbed","false");
+        btn.title="Seret untuk mengatur posisi "+(organelles[btn.dataset.organelle]?.name||btn.dataset.organelle);
+      });
+    }else{
+      hotspotButtons(kind).forEach(btn=>{
+        btn.removeAttribute("aria-grabbed");
+        btn.removeAttribute("title");
+      });
     }
   }
 
@@ -1419,6 +1428,7 @@
     const rect=overlay.getBoundingClientRect();
     hotspotDrag={btn,kind,overlay,rect,pointerId:e.pointerId};
     btn.classList.add("is-dragging");
+    btn.setAttribute("aria-grabbed","true");
     btn.setPointerCapture?.(e.pointerId);
     e.preventDefault();
     e.stopPropagation();
