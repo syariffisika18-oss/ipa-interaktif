@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif IPA Kelas VIII tentang sel, mikroskop, dan organel">
   <title>Sel dan Mikroskop — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="cell.css?v=20261002-micropan1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
+  <link rel="stylesheet" href="cell.css?v=20261002-microphoto1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
 </head>
 <body>
   <header class="app-header">
@@ -170,24 +170,23 @@
 
         <div class="microscope-layout">
           <div class="microscope-control-card">
-            <label>Okuler
-              <select id="ocularSelect">
-                <option value="10" selected>10×</option>
-                <option value="15">15×</option>
-              </select>
-            </label>
+            <div class="fixed-ocular">
+              <span>Okuler</span>
+              <strong>10×</strong>
+              <small>Tetap pada seluruh simulasi</small>
+            </div>
             <div>
               <span class="field-title">Perbesaran objektif</span>
               <div class="lens-buttons" id="objectiveButtons">
-                <button type="button" data-objective="4">4×</button>
-                <button class="is-active" type="button" data-objective="10">10×</button>
+                <button class="is-active" type="button" data-objective="4">4×</button>
+                <button type="button" data-objective="10">10×</button>
                 <button type="button" data-objective="40">40×</button>
               </div>
             </div>
             <div class="microscope-equation">
-              <span>Okuler</span><b id="ocularValue">10×</b><i>×</i><span>Objektif</span><b id="objectiveValue">10×</b><i>=</i><strong id="totalHidden">?</strong>
+              <span>Okuler</span><b id="ocularValue">10×</b><i>×</i><span>Objektif</span><b id="objectiveValue">4×</b><i>=</i><strong id="totalHidden">?</strong>
             </div>
-            <p class="micro-prompt">Prediksi pembesaran total. Setelah dikunci, ubah objektif untuk mengamati perubahan bidang pandang pada preparat yang sama.</p>
+            <p class="micro-prompt">Prediksi pembesaran total. Okuler tetap 10×; pilih objektif 4×, 10×, atau 40× untuk membandingkan hasil pengamatan.</p>
             <div class="option-grid compact-options" id="magnificationOptions"></div>
             <button type="button" class="primary-inline" id="lockMagnification">Kunci prediksi</button>
             <div id="magnificationFeedback" class="module-feedback neutral">Belum diperiksa.</div>
@@ -196,46 +195,24 @@
           <div class="microscope-view-card">
             <div class="scope-head">
               <span>Bidang pandang preparat yang sama</span>
-              <strong id="objectiveReadout">Objektif 10×</strong>
+              <strong id="objectiveReadout">Objektif 4×</strong>
             </div>
 
             <div class="scope-ring">
-              <div class="scope-field" id="scopeField" data-level="10" aria-label="Bidang pandang mikroskop" tabindex="0">
-                <div class="micrograph-canvas" id="micrographCanvas" aria-hidden="true">
-                  <svg class="micrograph-svg" viewBox="0 0 520 520" role="presentation">
-                    <rect width="520" height="520" fill="#f7e8ef"/>
-                    <path d="M0 95 C70 45 125 55 178 105 S292 158 356 103 S455 51 520 84 L520 0 L0 0Z" fill="#d7b7cc" opacity=".55"/>
-                    <path d="M0 430 C82 375 122 392 182 438 S298 482 372 429 S458 384 520 410 L520 520 L0 520Z" fill="#d6b4c8" opacity=".5"/>
-
-                    <g fill="#f4cad8" stroke="#9a5d87" stroke-width="5">
-                      <path d="M44 60 C65 38 103 40 120 67 C137 94 129 144 125 195 C122 254 137 332 111 381 C88 424 52 422 34 389 C17 358 29 294 31 236 C33 167 20 85 44 60Z"/>
-                      <path d="M151 42 C177 24 211 37 224 68 C237 98 224 153 226 211 C229 276 246 346 224 391 C205 430 168 432 148 398 C127 362 143 292 143 231 C144 164 125 61 151 42Z"/>
-                      <path d="M260 45 C283 27 318 34 334 62 C350 91 340 154 340 215 C340 279 355 343 333 390 C314 431 276 433 255 397 C234 360 250 293 250 231 C249 169 236 64 260 45Z"/>
-                      <path d="M370 58 C395 33 431 40 446 70 C463 102 449 164 451 222 C453 278 471 340 449 384 C429 424 393 427 371 392 C348 355 363 290 362 233 C361 171 347 82 370 58Z"/>
-                    </g>
-
-                    <g fill="#6f3a75" opacity=".95">
-                      <ellipse cx="72" cy="105" rx="16" ry="23"/><ellipse cx="86" cy="160" rx="15" ry="22"/><ellipse cx="78" cy="223" rx="16" ry="24"/><ellipse cx="82" cy="287" rx="15" ry="23"/><ellipse cx="72" cy="348" rx="16" ry="24"/>
-                      <ellipse cx="183" cy="92" rx="16" ry="23"/><ellipse cx="191" cy="151" rx="15" ry="22"/><ellipse cx="188" cy="213" rx="16" ry="24"/><ellipse cx="193" cy="278" rx="15" ry="23"/><ellipse cx="184" cy="343" rx="16" ry="24"/>
-                      <ellipse cx="292" cy="94" rx="16" ry="23"/><ellipse cx="300" cy="152" rx="15" ry="22"/><ellipse cx="296" cy="215" rx="16" ry="24"/><ellipse cx="301" cy="279" rx="15" ry="23"/><ellipse cx="294" cy="343" rx="16" ry="24"/>
-                      <ellipse cx="404" cy="105" rx="16" ry="23"/><ellipse cx="412" cy="164" rx="15" ry="22"/><ellipse cx="408" cy="225" rx="16" ry="24"/><ellipse cx="414" cy="287" rx="15" ry="23"/><ellipse cx="405" cy="345" rx="16" ry="24"/>
-                    </g>
-
-                    <g fill="#b36d9c" opacity=".55">
-                      <circle cx="24" cy="178" r="8"/><circle cx="118" cy="246" r="7"/><circle cx="238" cy="318" r="8"/>
-                      <circle cx="352" cy="145" r="8"/><circle cx="487" cy="269" r="7"/><circle cx="456" cy="352" r="8"/>
-                      <circle cx="268" cy="111" r="6"/><circle cx="135" cy="392" r="7"/><circle cx="332" cy="412" r="7"/>
-                    </g>
-                  </svg>
-                </div>
-                <div class="scope-reticle" aria-hidden="true"><span></span></div>
+              <div class="scope-field photo-microscope-field" id="scopeField" data-level="4" aria-label="Bidang pandang mikroskop">
+                <img
+                  id="scopeImage"
+                  class="scope-photo"
+                  src="assets/mikro-40x.webp"
+                  alt="Preparat epidermis bawang pada pembesaran total 40 kali"
+                >
+                <div class="scope-transition-mask" aria-hidden="true"></div>
               </div>
             </div>
 
-            <div class="scope-pan-controls">
-              <span>Geser preparat: drag dengan mouse atau sentuh lalu geser.</span>
-              <button type="button" id="recenterScope">Pusatkan</button>
-            </div>
+            <p class="scope-photo-note" id="scopePhotoNote">
+              Okuler 10× × objektif 4× = pembesaran total 40×.
+            </p>
 
             <div class="fov-scale" aria-label="Perbandingan bidang pandang">
               <span>Bidang pandang relatif</span>
@@ -257,7 +234,7 @@
         <div class="poe-explain" id="poeExplain" hidden>
           <b>Kesimpulan:</b>
           <span>Pembesaran total = pembesaran lensa okuler × pembesaran lensa objektif.</span>
-          <p>Objektif yang lebih besar memperbesar bagian preparat yang sama sehingga area yang terlihat menjadi lebih sempit. Okuler ikut menentukan pembesaran total, tetapi pada simulasi ini perubahan bidang pandang dikendalikan oleh objektif.</p>
+          <p>Pada modul ini okuler tetap 10×. Foto pengamatan tersedia untuk objektif 4×, 10×, dan 40× sehingga pembesaran totalnya berturut-turut 40×, 100×, dan 400×. Semakin besar objektif, bidang pandang makin sempit dan detail struktur tampak lebih besar.</p>
         </div>
       </section>
     </section>
@@ -440,6 +417,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261002-cell1"></script>
-  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-microzoom4"></script>
+  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-microphoto1"></script>
 </body>
 </html>
