@@ -740,3 +740,91 @@
   .scope-photo-controls button{min-height:26px;padding:3px 6px;font-size:.48rem}
   .scope-drag-hint{font-size:.45rem}
 }
+
+
+/* =========================================================
+   EXPLORE — eliminate exposed solid ring while panning
+   The circular field is the mask; the photo itself stays
+   rectangular and oversized behind it.
+   ========================================================= */
+.photo-microscope-field{
+  position:relative!important;
+  overflow:hidden!important;
+  border-radius:50%!important;
+  background:#1f2927!important;
+}
+
+.photo-microscope-field .scope-photo{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  width:125%!important;
+  height:125%!important;
+  max-width:none!important;
+  border-radius:0!important;
+  object-fit:cover!important;
+  object-position:center!important;
+
+  transform:
+    translate(
+      calc(-50% + var(--pan-x,0px)),
+      calc(-50% + var(--pan-y,0px))
+    )!important;
+
+  opacity:1;
+  filter:blur(0);
+  transition:
+    opacity .24s ease,
+    filter .30s ease,
+    transform .18s ease-out;
+}
+
+.photo-microscope-field.is-dragging .scope-photo{
+  transition:none!important;
+}
+
+.photo-microscope-field .scope-photo.is-switching{
+  opacity:.28!important;
+  filter:blur(10px) saturate(.72)!important;
+  transform:
+    translate(
+      calc(-50% + var(--pan-x,0px)),
+      calc(-50% + var(--pan-y,0px))
+    )
+    scale(1.035)!important;
+}
+
+.photo-microscope-field .scope-photo.is-arriving{
+  animation:microPhotoArriveMasked .34s cubic-bezier(.2,.75,.2,1)!important;
+}
+
+@keyframes microPhotoArriveMasked{
+  0%{
+    opacity:.42;
+    filter:blur(7px) saturate(.8);
+    transform:
+      translate(
+        calc(-50% + var(--pan-x,0px)),
+        calc(-50% + var(--pan-y,0px))
+      )
+      scale(.98);
+  }
+  100%{
+    opacity:1;
+    filter:blur(0) saturate(1);
+    transform:
+      translate(
+        calc(-50% + var(--pan-x,0px)),
+        calc(-50% + var(--pan-y,0px))
+      )
+      scale(1);
+  }
+}
+
+/* Mask/bezel stays above the rectangular photo. */
+.photo-microscope-field .scope-transition-mask{
+  z-index:2;
+}
+.photo-microscope-field .scope-photo{
+  z-index:1;
+}
