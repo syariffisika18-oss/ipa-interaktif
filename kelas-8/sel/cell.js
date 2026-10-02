@@ -28,6 +28,8 @@
   const progressFill = document.getElementById("progressFill");
   const progressText = document.getElementById("progressText");
   const toast = document.getElementById("toast");
+  const engageZoomSeen = new Set([0]);
+  const explainPageSeen = new Set([0]);
 
   hydrateConfig();
   bindModeButtons();
@@ -190,7 +192,8 @@
 
       // Engage: sudah sampai tingkat terakhir, yaitu Sel.
       case 1:
-        return Number(document.querySelector("#zoomTabs [data-zoom].is-active")?.dataset.zoom)===2;
+        return Number(document.querySelector("#zoomTabs [data-zoom].is-active")?.dataset.zoom)===2
+          && engageZoomSeen.size===3;
 
       // Explore: footer baru muncul setelah prediksi dikunci
       // dan hasil pengamatan/pembesaran total sudah dibuka.
@@ -198,9 +201,13 @@
         return document.querySelector(".explore-panel")?.dataset.exploreFinished==="true";
 
       // Explain: harus berada di Bandingkan DAN seluruh struktur sudah ditinjau.
-      case 3:
+      case 3: {
+        const compareButtons=[...document.querySelectorAll("#compareButtons [data-compare]")];
+        const allCompared=compareButtons.length>0 && compareButtons.every(b=>b.classList.contains("is-viewed"));
         return Number(document.querySelector("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3
-          && compareSeen.size===compareItems.length;
+          && explainPageSeen.size===4
+          && allCompared;
+      }
 
       // Elaborate: harus berada pada kasus terakhir DAN seluruh 5 kasus sudah selesai.
       case 4: {
@@ -967,7 +974,8 @@
   let engageLocked=false;
 
   function renderZoom(){
-    $$("[data-zoom-panel]").forEach(p=>{
+    engageZoomSeen.add(zoomIndex);
+    $("[data-zoom-panel]").forEach(p=>{
       p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;
     });
 
@@ -998,6 +1006,7 @@
       $("#zoomNext").hidden=true;
       $("#engageQuestion").hidden=false;
     }
+    updateBottomNavVisibility();
   }
 
   $("#zoomNext")?.addEventListener("click",()=>{
@@ -1301,10 +1310,12 @@
   updateLensPreview(false);
 
   // ---------- EXPLAIN tabs ----------
-  $$("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
+  $("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
     const i=Number(btn.dataset.cellPage);
-    $$("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
-    $$("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
+    explainPageSeen.add(i);
+    $("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
+    $("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
+    updateBottomNavVisibility();
   }));
 
   const organelles = {
