@@ -994,143 +994,165 @@
   renderZoom();
 
   // ---------- EXPLORE: POE mikroskop ----------
-  let objective=10, magChoice="", predictionLocked=false;
-  const ocular=()=>Number($("#ocularSelect")?.value||10);
+  let objective=4, magChoice="", predictionLocked=false;
+  const ocular=()=>10;
   const total=()=>ocular()*objective;
+
+  const microPhotos={
+    4:{
+      src:"assets/mikro-40x.webp",
+      total:40,
+      alt:"Preparat epidermis bawang pada pembesaran total 40 kali",
+      note:"Okuler 10× × objektif 4× = 40×. Bidang pandang paling luas; lebih banyak bagian jaringan terlihat.",
+      observation:"Objektif 4×: bidang pandang paling luas sehingga banyak bagian jaringan terlihat sekaligus."
+    },
+    10:{
+      src:"assets/mikro-100x.webp",
+      total:100,
+      alt:"Preparat epidermis bawang pada pembesaran total 100 kali",
+      note:"Okuler 10× × objektif 10× = 100×. Sel tampak lebih besar dan bidang pandang lebih sempit.",
+      observation:"Objektif 10×: sel tampak lebih besar dan area jaringan yang terlihat lebih sedikit dibanding objektif 4×."
+    },
+    40:{
+      src:"assets/mikro-400x.webp",
+      total:400,
+      alt:"Preparat epidermis bawang pada pembesaran total 400 kali",
+      note:"Okuler 10× × objektif 40× = 400×. Detail tampak lebih besar dengan bidang pandang paling sempit.",
+      observation:"Objektif 40×: detail struktur tampak jauh lebih besar, tetapi bidang pandang paling sempit."
+    }
+  };
+
+  // Preload all three photographs to reduce flashing between objectives.
+  Object.values(microPhotos).forEach(item=>{
+    const img=new Image();
+    img.src=item.src;
+  });
+
   function buildMagOptions(){
-    const t=total();
-    const candidates=[t, ocular()+objective, objective*2, ocular()*4]
-      .filter((v,i,a)=>v>0&&a.indexOf(v)===i)
-      .slice(0,4);
-    while(candidates.length<4)candidates.push(t+candidates.length*10+10);
-    $("#magnificationOptions").innerHTML=candidates.sort((a,b)=>a-b).map(v=>'<button type="button" data-mag="'+v+'">'+v+'×</button>').join("");
+    const sets={
+      4:[20,40,80,400],
+      10:[20,100,110,1000],
+      40:[50,100,400,4000]
+    };
+    const candidates=sets[objective]||[total(),100,400,1000];
+    $("#magnificationOptions").innerHTML=candidates
+      .map(v=>'<button type="button" data-mag="'+v+'">'+v+'×</button>')
+      .join("");
     magChoice="";
   }
-  function syncObjectiveVisual(){
-    $("#objectiveValue").textContent=objective+"×";
-    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";
-    if($("#scopeField")) $("#scopeField").dataset.level=String(objective);
+
+  function setScopePhoto(nextObjective, animate=true){
+    const item=microPhotos[nextObjective];
+    const img=$("#scopeImage");
+    if(!item||!img) return;
+
+    $("#scopeField").dataset.level=String(nextObjective);
+    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+nextObjective+"×";
+    if($("#scopePhotoNote")) $("#scopePhotoNote").textContent=item.note;
+
     document.querySelectorAll(".fov-steps [data-fov]").forEach(el=>{
-      el.classList.toggle("is-active",Number(el.dataset.fov)===objective);
+      el.classList.toggle("is-active",Number(el.dataset.fov)===nextObjective);
     });
+
+    const applyNewPhoto=()=>{
+      img.alt=item.alt;
+      img.src=item.src;
+
+      const finish=()=>{
+        img.classList.remove("is-switching");
+        img.classList.remove("is-arriving");
+        void img.offsetWidth;
+        img.classList.add("is-arriving");
+        setTimeout(()=>img.classList.remove("is-arriving"),380);
+      };
+
+      if(img.complete) finish();
+      else img.addEventListener("load",finish,{once:true});
+    };
+
+    if(!animate){
+      img.src=item.src;
+      img.alt=item.alt;
+      return;
+    }
+
+    img.classList.add("is-switching");
+    setTimeout(applyNewPhoto,170);
   }
 
-  function updateLensPreview(){
-    $("#ocularValue").textContent=ocular()+"×";
-    syncObjectiveVisual();
+  function syncObjectiveVisual(animate=false){
+    $("#objectiveValue").textContent=objective+"×";
+    document.querySelectorAll("#objectiveButtons button").forEach(btn=>{
+      btn.classList.toggle("is-active",Number(btn.dataset.objective)===objective);
+    });
+    setScopePhoto(objective,animate);
+  }
+
+  function updateLensPreview(animate=false){
+    $("#ocularValue").textContent="10×";
+    syncObjectiveVisual(animate);
 
     if(!predictionLocked){
       $("#totalHidden").textContent="?";
       $("#totalMagnification").textContent="Belum dibuka";
-      $("#fieldObservation").textContent="Kunci prediksi untuk membuka hasil pengamatan.";
+      $("#fieldObservation").textContent="Kunci prediksi untuk membuka hasil pembesaran total.";
       buildMagOptions();
     }else{
-      revealMicroscope();
+      revealMicroscope(false);
     }
   }
 
-  function revealMicroscope(){
-    const t=total();
-    syncObjectiveVisual();
+  function revealMicroscope(animate=false){
+    const item=microPhotos[objective];
+    syncObjectiveVisual(animate);
 
-    $("#totalHidden").textContent=t+"×";
-    $("#totalMagnification").textContent=t+"×";
-
-    $("#fieldObservation").textContent=objective>=40
-      ?"Objektif 40×: hanya bagian kecil dari preparat yang terlihat, tetapi detail struktur tampak jauh lebih besar."
-      : objective>=10
-        ?"Objektif 10×: bagian preparat yang terlihat lebih sempit daripada 4× dan struktur tampak lebih besar."
-        :"Objektif 4×: bidang pandang paling luas sehingga lebih banyak bagian preparat terlihat sekaligus.";
-
+    $("#totalHidden").textContent=item.total+"×";
+    $("#totalMagnification").textContent=item.total+"×";
+    $("#fieldObservation").textContent=item.observation;
     $("#poeExplain").hidden=false;
     $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
   }
 
-  // Drag / pan preparat di dalam bidang pandang
-  let panX=0, panY=0;
-  let dragging=false, dragStartX=0, dragStartY=0, panStartX=0, panStartY=0;
-
-  function panLimit(){
-    // Semakin besar objektif, semakin luas area preparat yang dapat digeser.
-    if(objective>=40) return 105;
-    if(objective>=10) return 70;
-    return 35;
-  }
-
-  function applyScopePan(){
-    const lim=panLimit();
-    panX=Math.max(-lim,Math.min(lim,panX));
-    panY=Math.max(-lim,Math.min(lim,panY));
-    const canvas=$("#micrographCanvas");
-    if(canvas){
-      canvas.style.setProperty("--pan-x",panX+"px");
-      canvas.style.setProperty("--pan-y",panY+"px");
-    }
-  }
-
-  function recenterScope(){
-    panX=0; panY=0;
-    applyScopePan();
-  }
-
-  $("#scopeField")?.addEventListener("pointerdown",e=>{
-    if(e.button!==undefined && e.button!==0) return;
-    dragging=true;
-    dragStartX=e.clientX;
-    dragStartY=e.clientY;
-    panStartX=panX;
-    panStartY=panY;
-    $("#scopeField").classList.add("is-dragging");
-    $("#scopeField").setPointerCapture?.(e.pointerId);
-    e.preventDefault();
-  });
-
-  $("#scopeField")?.addEventListener("pointermove",e=>{
-    if(!dragging) return;
-    panX=panStartX+(e.clientX-dragStartX);
-    panY=panStartY+(e.clientY-dragStartY);
-    applyScopePan();
-    e.preventDefault();
-  });
-
-  const stopScopeDrag=e=>{
-    if(!dragging) return;
-    dragging=false;
-    $("#scopeField")?.classList.remove("is-dragging");
-    try{$("#scopeField")?.releasePointerCapture?.(e.pointerId)}catch(_){}
-  };
-
-  $("#scopeField")?.addEventListener("pointerup",stopScopeDrag);
-  $("#scopeField")?.addEventListener("pointercancel",stopScopeDrag);
-  $("#scopeField")?.addEventListener("lostpointercapture",()=>{dragging=false;$("#scopeField")?.classList.remove("is-dragging")});
-  $("#recenterScope")?.addEventListener("click",recenterScope);
-
-  $("#ocularSelect")?.addEventListener("change",updateLensPreview);
   $("#objectiveButtons")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-objective]"); if(!b)return;
-    objective=Number(b.dataset.objective);
-    document.querySelectorAll("#objectiveButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
-    recenterScope();
-    updateLensPreview();
+    const b=e.target.closest("[data-objective]");
+    if(!b) return;
+
+    const next=Number(b.dataset.objective);
+    if(next===objective) return;
+
+    objective=next;
+    magChoice="";
+    updateLensPreview(true);
   });
+
   $("#magnificationOptions")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-mag]"); if(!b||predictionLocked)return;
-    magChoice=Number(b.dataset.mag); setSelected($("#magnificationOptions"),b);
+    const b=e.target.closest("[data-mag]");
+    if(!b||predictionLocked) return;
+    magChoice=Number(b.dataset.mag);
+    setSelected($("#magnificationOptions"),b);
   });
+
   $("#lockMagnification")?.addEventListener("click",()=>{
-    if(!magChoice){$("#magnificationFeedback").textContent="Pilih hasil pembesaran total terlebih dahulu.";return}
+    if(!magChoice){
+      $("#magnificationFeedback").textContent="Pilih hasil pembesaran total terlebih dahulu.";
+      return;
+    }
+
     const t=total(), good=magChoice===t;
     predictionLocked=true;
+
     $("#magnificationFeedback").className="module-feedback "+(good?"good":"warn");
     $("#magnificationFeedback").innerHTML=good
-      ? "<b>Prediksi tepat.</b> Sekarang amati hasilnya dan coba ganti lensa."
-      : "<b>Prediksi belum tepat.</b> Hasil pengamatan menunjukkan <b>"+ocular()+"× × "+objective+"× = "+t+"×</b>.";
+      ? "<b>Prediksi tepat.</b> "+ocular()+"× × "+objective+"× = <b>"+t+"×</b>. Sekarang bandingkan ketiga objektif."
+      : "<b>Prediksi belum tepat.</b> Pembesaran totalnya <b>"+ocular()+"× × "+objective+"× = "+t+"×</b>.";
+
     $("#lockMagnification").disabled=true;
     $$("#magnificationOptions button").forEach(b=>b.disabled=true);
-    revealMicroscope();
+    revealMicroscope(false);
   });
+
   buildMagOptions();
-  updateLensPreview();
+  updateLensPreview(false);
 
   // ---------- EXPLAIN tabs ----------
   $$("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
