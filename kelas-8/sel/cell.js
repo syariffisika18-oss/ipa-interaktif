@@ -826,12 +826,12 @@
   const lifeItems = [
   {scenario:"Kecambah bertambah tinggi dan daunnya semakin besar dari hari ke hari.", answer:"Tumbuh dan berkembang", distract:["Bergerak","Berkembang biak"]},
   {scenario:"Putri malu menutup daunnya ketika disentuh.", answer:"Peka terhadap rangsangan", distract:["Bernapas","Mengeluarkan zat sisa"]},
-  {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Beradaptasi","Memerlukan nutrisi"]},
+  {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Peka terhadap rangsangan","Memerlukan nutrisi"]},
   {scenario:"Burung mencari biji dan ulat untuk memperoleh bahan dan energi bagi tubuhnya.", answer:"Memerlukan nutrisi", distract:["Berkembang biak","Bergerak"]},
   {scenario:"Ikan berenang mendekati sumber makanan.", answer:"Bergerak", distract:["Tumbuh dan berkembang","Mengeluarkan zat sisa"]},
   {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Bernapas"]},
   {scenario:"Ginjal membantu membuang zat sisa metabolisme melalui urine.", answer:"Mengeluarkan zat sisa", distract:["Bernapas","Memerlukan nutrisi"]},
-  {scenario:"Makhluk hidup tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Berkembang biak","Peka terhadap rangsangan"]}
+  {scenario:"Tubuh makhluk hidup tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Berkembang biak","Peka terhadap rangsangan"]}
 ];
 
   let lifeIndex=0, lifeChoice="";
@@ -861,8 +861,7 @@
   if (lifeIndex === lifeItems.length - 1) {
     $("#lifeFeedback").className = "module-feedback good";
     $("#lifeFeedback").innerHTML =
-      "<b>Tepat.</b> Situasi tersebut menunjukkan ciri <b>Tersusun dari sel</b>. " +
-      "Artinya, makhluk hidup dibangun oleh sel. Dari sini kita akan mempelajari mengapa <b>sel disebut unit struktural dan fungsional terkecil kehidupan</b>.";
+      "<b>Tepat.</b> Makhluk hidup <b>tersusun dari sel</b>. Karena sel menyusun tubuh sekaligus menjalankan berbagai proses kehidupan, sel menjadi dasar untuk memahami kehidupan. <b>Selanjutnya, kita akan melihat sel lebih dekat.</b>";
   } else {
     $("#lifeFeedback").className = "module-feedback good";
     $("#lifeFeedback").innerHTML =
@@ -872,8 +871,7 @@
   if (lifeIndex === lifeItems.length - 1) {
     $("#lifeFeedback").className = "module-feedback warn";
     $("#lifeFeedback").innerHTML =
-      "<b>Belum tepat.</b> Ciri yang paling sesuai adalah <b>Tersusun dari sel</b>. " +
-      "Makhluk hidup dibangun oleh sel, sehingga sel menjadi dasar untuk memahami kehidupan.";
+      "<b>Belum tepat.</b> Ciri yang dimaksud adalah <b>tersusun dari sel</b>. Sel merupakan unit penyusun makhluk hidup dan menjadi jembatan menuju materi yang akan kita pelajari berikutnya.";
   } else {
     $("#lifeFeedback").className = "module-feedback warn";
     $("#lifeFeedback").innerHTML =
@@ -883,13 +881,13 @@
     $("#checkLife").disabled=true;
     $$("#lifeOptions button").forEach(b=>b.disabled=true);
     $("#nextLife").hidden=false;
-    $("#nextLife").textContent=lifeIndex===lifeItems.length-1?"Selesai cek prasyarat ✓":"Situasi berikutnya →";
+    $("#nextLife").textContent=lifeIndex===lifeItems.length-1?"Lanjut ke sel →":"Situasi berikutnya →";
   });
   $("#nextLife")?.addEventListener("click",()=>{
     if(lifeIndex<lifeItems.length-1){lifeIndex++;renderLife()}
     else{
       $("#nextLife").hidden=true;
-      $("#lifeAttempt").textContent="8 situasi sudah selesai.";
+      $("#lifeAttempt").textContent="8 ciri selesai. Selanjutnya: melihat sel lebih dekat.";
       $("#lifeProgress").textContent="8 / 8 ✓";
     }
   });
