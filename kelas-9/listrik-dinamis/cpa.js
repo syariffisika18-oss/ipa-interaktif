@@ -517,6 +517,7 @@ function showStage(group,index,doScroll=true){
   index=Math.max(0,Math.min(index,slides.length-1));
   stageIndex[group]=index;
   slides.forEach((s,i)=>s.classList.toggle('active',i===index));
+  slides[index]?.classList.add('is-viewed');
 
   const count=document.getElementById(group+'Count');
   if(count) count.textContent=`${index+1}/${slides.length}`;
@@ -1028,6 +1029,20 @@ function initElaborate(){
       }
     });
   }
+  window.isListrikElaborateComplete=()=>{
+    const allQuestionsDone=questions.length>0 && questions.every(q=>{
+      const rec=log[q.dataset.elabQuestion];
+      return !!rec && typeof rec.finalCorrect==="boolean";
+    });
+    const fadingDone=!check || check.disabled;
+    const holder=document.querySelector('[data-stage-group="elaborate"]');
+    const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
+    const allViewed=slides.length>0 && slides.every(slide=>slide.classList.contains("is-viewed"));
+    const lastActive=slides.length>0 && slides.at(-1).classList.contains("active");
+    return allQuestionsDone && fadingDone && allViewed && lastActive;
+  };
+  window.refreshLearningFooter?.();
+
 }
 
 window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
@@ -1035,12 +1050,14 @@ window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
     const holder=document.querySelector('[data-stage-group="concrete"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
     const predictionDone=document.getElementById('predictionCheckCard')?.dataset.predictionChecked==='true';
-    return slides.length>0 && slides.at(-1).classList.contains("active") && predictionDone;
+    const allViewed=slides.length>0 && slides.every(slide=>slide.classList.contains("is-viewed"));
+    return allViewed && slides.at(-1).classList.contains("active") && predictionDone;
   }
   if(stage===3){
     const holder=document.querySelector('[data-stage-group="explain"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
-    return slides.length>0 && slides.at(-1).classList.contains("active");
+    const allViewed=slides.length>0 && slides.every(slide=>slide.classList.contains("is-viewed"));
+    return allViewed && slides.at(-1).classList.contains("active");
   }
   if(stage===4){
     return typeof window.isListrikElaborateComplete==='function' && window.isListrikElaborateComplete();
