@@ -1261,7 +1261,205 @@
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
   $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
-  $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
+  $(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
+
+  // ---------- Hotspot manual calibration ----------
+  const hotspotCalibration={
+    animal:{active:false,wrap:()=>$(".animal-photo-wrap"),panel:()=>$("#animalCalibrationPanel"),readout:()=>$("#animalCalibrationReadout"),button:()=>$("#animalCalibrateBtn")},
+    plant:{active:false,wrap:()=>$(".plant-photo-wrap"),panel:()=>$("#plantCalibrationPanel"),readout:()=>$("#plantCalibrationReadout"),button:()=>$("#plantCalibrateBtn")}
+  };
+
+  function hotspotStorageKey(kind){
+    return "ipa-interaktif:kelas-8-sel:hotspots:"+kind;
+  }
+
+  function hotspotButtons(kind){
+    return $("."+kind+"-hotspots [data-organelle]");
+  }
+
+  function readHotspotPosition(btn){
+    const style=getComputedStyle(btn);
+    const x=parseFloat(style.getPropertyValue("--x"))||0;
+    const y=parseFloat(style.getPropertyValue("--y"))||0;
+    return {x:Number(x.toFixed(2)),y:Number(y.toFixed(2))};
+  }
+
+  function ensureHotspotDefaults(kind){
+    hotspotButtons(kind).forEach(btn=>{
+      const pos=readHotspotPosition(btn);
+      if(!btn.dataset.defaultX) btn.dataset.defaultX=String(pos.x);
+      if(!btn.dataset.defaultY) btn.dataset.defaultY=String(pos.y);
+
+      if(!btn.querySelector(".hotspot-coordinate-tag")){
+        const tag=document.createElement("span");
+        tag.className="hotspot-coordinate-tag";
+        tag.textContent=pos.x.toFixed(2)+"%, "+pos.y.toFixed(2)+"%";
+        btn.appendChild(tag);
+      }
+    });
+  }
+
+  function updateHotspotTag(btn){
+    const pos=readHotspotPosition(btn);
+    const tag=btn.querySelector(".hotspot-coordinate-tag");
+    if(tag) tag.textContent=pos.x.toFixed(2)+"%, "+pos.y.toFixed(2)+"%";
+    return pos;
+  }
+
+  function saveHotspotPositions(kind){
+    const data={};
+    hotspotButtons(kind).forEach(btn=>{
+      data[btn.dataset.organelle]=readHotspotPosition(btn);
+    });
+    try{
+      localStorage.setItem(hotspotStorageKey(kind),JSON.stringify(data));
+    }catch(_){}
+    return data;
+  }
+
+  function loadHotspotPositions(kind){
+    ensureHotspotDefaults(kind);
+    try{
+      const raw=localStorage.getItem(hotspotStorageKey(kind));
+      if(!raw) return;
+      const data=JSON.parse(raw);
+      hotspotButtons(kind).forEach(btn=>{
+        const pos=data?.[btn.dataset.organelle];
+        if(!pos) return;
+        btn.style.setProperty("--x",Number(pos.x).toFixed(2)+"%");
+        btn.style.setProperty("--y",Number(pos.y).toFixed(2)+"%");
+        updateHotspotTag(btn);
+      });
+    }catch(_){}
+  }
+
+  function resetHotspotPositions(kind){
+    hotspotButtons(kind).forEach(btn=>{
+      const x=Number(btn.dataset.defaultX||0);
+      const y=Number(btn.dataset.defaultY||0);
+      btn.style.setProperty("--x",x.toFixed(2)+"%");
+      btn.style.setProperty("--y",y.toFixed(2)+"%");
+      updateHotspotTag(btn);
+    });
+    try{localStorage.removeItem(hotspotStorageKey(kind))}catch(_){}
+    hotspotCalibration[kind].readout().textContent="Posisi dikembalikan ke koordinat bawaan.";
+  }
+
+  function setCalibrationMode(kind,active){
+    const state=hotspotCalibration[kind];
+    state.active=active;
+    state.wrap()?.classList.toggle("is-calibrating",active);
+    state.panel().hidden=!active;
+    state.button().classList.toggle("is-active",active);
+    state.button().textContent=active?"Selesai mengatur":"Atur posisi hotspot";
+    if(active){
+      state.readout().textContent="Seret hotspot. Posisi disimpan otomatis dalam persen.";
+    }
+  }
+
+  ["animal","plant"].forEach(kind=>{
+    ensureHotspotDefaults(kind);
+    loadHotspotPositions(kind);
+
+    hotspotCalibration[kind].button()?.addEventListener("click",()=>{
+      setCalibrationMode(kind,!hotspotCalibration[kind].active);
+    });
+  });
+
+  document.addEventListener("click",async e=>{
+    const copyBtn=e.target.closest("[data-copy-hotspots]");
+    if(copyBtn){
+      const kind=copyBtn.dataset.copyHotspots;
+      const data=saveHotspotPositions(kind);
+      const payload={
+        mode:"hotspot-calibration",
+        model:kind==="animal"?"sel-hewan":"sel-tumbuhan",
+        hotspots:Object.entries(data).map(([organel,pos])=>({
+          organel,
+          x:pos.x,
+          y:pos.y
+        }))
+      };
+      const txt=JSON.stringify(payload,null,2);
+      try{
+        await navigator.clipboard.writeText(txt);
+        hotspotCalibration[kind].readout().textContent="Koordinat JSON sudah disalin.";
+      }catch(_){
+        hotspotCalibration[kind].readout().textContent=txt;
+      }
+      return;
+    }
+
+    const resetBtn=e.target.closest("[data-reset-hotspots]");
+    if(resetBtn){
+      resetHotspotPositions(resetBtn.dataset.resetHotspots);
+    }
+  });
+
+  let hotspotDrag=null;
+
+  document.addEventListener("pointerdown",e=>{
+    const btn=e.target.closest(".photo-hotspots [data-organelle]");
+    if(!btn) return;
+
+    const kind=btn.closest(".animal-hotspots")?"animal":"plant";
+    if(!hotspotCalibration[kind].active) return;
+
+    const overlay=btn.closest(".photo-hotspots");
+    const rect=overlay.getBoundingClientRect();
+    hotspotDrag={btn,kind,overlay,rect,pointerId:e.pointerId};
+    btn.classList.add("is-dragging");
+    btn.setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+    e.stopPropagation();
+  },true);
+
+  document.addEventListener("pointermove",e=>{
+    if(!hotspotDrag) return;
+    const {btn,kind,rect}=hotspotDrag;
+    let x=((e.clientX-rect.left)/rect.width)*100;
+    let y=((e.clientY-rect.top)/rect.height)*100;
+    x=Math.max(0,Math.min(100,x));
+    y=Math.max(0,Math.min(100,y));
+
+    btn.style.setProperty("--x",x.toFixed(2)+"%");
+    btn.style.setProperty("--y",y.toFixed(2)+"%");
+    const pos=updateHotspotTag(btn);
+
+    const label=organelles[btn.dataset.organelle]?.name||btn.dataset.organelle;
+    hotspotCalibration[kind].readout().textContent=
+      label+" — X "+pos.x.toFixed(2)+"% · Y "+pos.y.toFixed(2)+"%";
+
+    e.preventDefault();
+  },true);
+
+  function finishHotspotDrag(e){
+    if(!hotspotDrag) return;
+    const {btn,kind,pointerId}=hotspotDrag;
+    btn.classList.remove("is-dragging");
+    try{btn.releasePointerCapture?.(pointerId)}catch(_){}
+    const pos=updateHotspotTag(btn);
+    saveHotspotPositions(kind);
+    const label=organelles[btn.dataset.organelle]?.name||btn.dataset.organelle;
+    hotspotCalibration[kind].readout().textContent=
+      label+" tersimpan — X "+pos.x.toFixed(2)+"% · Y "+pos.y.toFixed(2)+"%";
+    hotspotDrag=null;
+    e?.preventDefault?.();
+  }
+
+  document.addEventListener("pointerup",finishHotspotDrag,true);
+  document.addEventListener("pointercancel",finishHotspotDrag,true);
+
+  // Block normal organelle click while calibrating.
+  document.addEventListener("click",e=>{
+    const btn=e.target.closest(".photo-hotspots [data-organelle]");
+    if(!btn) return;
+    const kind=btn.closest(".animal-hotspots")?"animal":"plant";
+    if(hotspotCalibration[kind].active){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  },true);
 
   // ---------- Compare ----------
   const compareItems=[
