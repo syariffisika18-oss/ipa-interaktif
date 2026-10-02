@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif IPA Kelas VIII tentang sel, mikroskop, dan organel">
   <title>Sel dan Mikroskop — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="cell.css?v=20261002-microphoto1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
+  <link rel="stylesheet" href="cell.css?v=20261002-microdrag1">\n  <link rel="stylesheet" href="cell-images.css?v=20261002-photo3">
 </head>
 <body>
   <header class="app-header">
@@ -210,9 +210,13 @@
               </div>
             </div>
 
-            <p class="scope-photo-note" id="scopePhotoNote">
-              Okuler 10× × objektif 4× = pembesaran total 40×.
-            </p>
+            <div class="scope-photo-controls">
+              <p class="scope-photo-note" id="scopePhotoNote">
+                Okuler 10× × objektif 4× = pembesaran total 40×.
+              </p>
+              <button type="button" id="recenterPhotoScope">Pusatkan</button>
+            </div>
+            <p class="scope-drag-hint">Geser foto dengan mouse atau sentuh lalu geser untuk melihat bagian lain preparat.</p>
 
             <div class="fov-scale" aria-label="Perbandingan bidang pandang">
               <span>Bidang pandang relatif</span>
@@ -417,6 +421,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261002-cell1"></script>
-  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-microphoto1"></script>
+  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261002-microdrag1"></script>
 </body>
 </html>
