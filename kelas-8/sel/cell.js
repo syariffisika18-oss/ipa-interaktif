@@ -202,12 +202,13 @@
         return Number(document.querySelector("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3
           && compareSeen.size===compareItems.length;
 
-      // Elaborate: harus berada pada kasus terakhir DAN kasus tersebut sudah selesai.
+      // Elaborate: harus berada pada kasus terakhir DAN seluruh 5 kasus sudah selesai.
       case 4: {
         const caseTabs=[...document.querySelectorAll("#caseTabs [data-case]")];
         const active=caseTabs.find(b=>b.classList.contains("is-active"));
         const last=caseTabs.at(-1);
-        return !!active && active===last && active.classList.contains("is-done");
+        const allDone=caseTabs.length>0 && caseTabs.every(b=>b.classList.contains("is-done"));
+        return !!active && active===last && allDone;
       }
 
       // Evaluate: tampil hanya setelah hasil akhir evaluasi dibuka.
@@ -1540,6 +1541,7 @@
       else if(!s.reasonDone)txt="<b>Belum tepat.</b> Periksa kembali fungsi utama "+c.organ+". Satu revisi tersisa.";
       else txt="<b>Dua percobaan selesai.</b> Penjelasan yang paling kuat: "+c.reason;
       renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
+      updateBottomNavVisibility();
     }
   });
   renderCase();
