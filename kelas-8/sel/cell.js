@@ -900,11 +900,11 @@
   let engageLocked=false;
 
   function renderZoom(){
-    $("[data-zoom-panel]").forEach(p=>{
+    $$("[data-zoom-panel]").forEach(p=>{
       p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;
     });
 
-    $("#zoomTabs [data-zoom]").forEach(btn=>{
+    $$("#zoomTabs [data-zoom]").forEach(btn=>{
       const i=Number(btn.dataset.zoom);
       const unlocked=i<=maxZoomUnlocked;
       btn.disabled=!unlocked;
