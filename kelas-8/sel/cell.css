@@ -841,3 +841,33 @@
 .bottom-nav.is-context-hidden{
   display:none!important;
 }
+
+
+/* Explain comparison completion */
+.compare-intro-head{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+}
+.compare-intro-head h3{
+  margin-bottom:0;
+}
+.compare-buttons button.is-viewed{
+  border-color:#9bcfc2;
+  background:#f0faf6;
+}
+.compare-buttons button.is-viewed::after{
+  content:" ✓";
+  color:var(--primary);
+  font-weight:900;
+}
+.compare-buttons button.is-active.is-viewed{
+  border-color:var(--primary);
+  background:var(--pale);
+}
+@media(max-width:640px){
+  .compare-intro-head{
+    flex-direction:column;
+  }
+}
