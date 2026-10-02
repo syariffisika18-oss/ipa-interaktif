@@ -192,9 +192,10 @@
       case 1:
         return Number(document.querySelector("#zoomTabs [data-zoom].is-active")?.dataset.zoom)===2;
 
-      // Explore hanya mempunyai satu halaman utama.
+      // Explore: footer baru muncul setelah prediksi dikunci
+      // dan hasil pengamatan/pembesaran total sudah dibuka.
       case 2:
-        return true;
+        return document.querySelector(".explore-panel")?.dataset.exploreFinished==="true";
 
       // Explain: tab terakhir = Bandingkan (data-cell-page="3").
       case 3:
@@ -1059,6 +1060,8 @@
 
   // ---------- EXPLORE: POE mikroskop ----------
   let objective=4, magChoice="", predictionLocked=false;
+  const explorePanel=document.querySelector(".explore-panel");
+  if(explorePanel) explorePanel.dataset.exploreFinished="false";
   const ocular=()=>10;
   const total=()=>ocular()*objective;
 
@@ -1170,6 +1173,9 @@
 
   function revealMicroscope(animate=false){
     const item=microPhotos[objective];
+    if(predictionLocked && explorePanel){
+      explorePanel.dataset.exploreFinished="true";
+    }
     syncObjectiveVisual(animate);
 
     $("#totalHidden").textContent=item.total+"×";
@@ -1283,8 +1289,9 @@
       : "<b>Prediksi belum tepat.</b> Pembesaran totalnya <b>"+ocular()+"× × "+objective+"× = "+t+"×</b>.";
 
     $("#lockMagnification").disabled=true;
-    $$("#magnificationOptions button").forEach(b=>b.disabled=true);
+    $("#magnificationOptions button").forEach(b=>b.disabled=true);
     revealMicroscope(false);
+    updateBottomNavVisibility();
   });
 
   buildMagOptions();
