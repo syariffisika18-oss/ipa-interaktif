@@ -1010,7 +1010,7 @@
     $("#objectiveValue").textContent=objective+"×";
     if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";
     if($("#scopeField")) $("#scopeField").dataset.level=String(objective);
-    $(".fov-steps [data-fov]").forEach(el=>{
+    document.querySelectorAll(".fov-steps [data-fov]").forEach(el=>{
       el.classList.toggle("is-active",Number(el.dataset.fov)===objective);
     });
   }
