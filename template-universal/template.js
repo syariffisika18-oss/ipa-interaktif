@@ -24,6 +24,7 @@
   const prevButton = document.getElementById("prevStage");
   const nextButton = document.getElementById("nextStage");
   const completeButton = document.getElementById("completeStage");
+  const bottomNav = document.querySelector(".bottom-nav");
   const progressFill = document.getElementById("progressFill");
   const progressText = document.getElementById("progressText");
   const toast = document.getElementById("toast");
@@ -180,6 +181,46 @@
     });
   }
 
+
+  function defaultStageReady(index){
+    switch(index){
+      case 0:
+        return !!document.querySelector(".orientation-panel [data-demo-feedback] + .feedback-box:not([hidden])");
+      case 1:
+        return !!document.querySelector(".engage-panel .choice.is-selected");
+      case 2:
+        return document.querySelector(".explore-panel")?.dataset.exploreTouched==="true";
+      case 3:
+        return true;
+      case 4:
+        return !!document.querySelector("#strategyGrid .strategy-chip.is-selected");
+      case 5:
+        return !!document.querySelector(".evaluate-panel #answerFeedback:not([hidden])");
+      case 6:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  function stageReady(index=activeStage){
+    if(typeof window.IPA_STAGE_COMPLETE_CHECK==="function"){
+      try{return !!window.IPA_STAGE_COMPLETE_CHECK(index)}catch(error){
+        console.error("Stage completion check failed",error);
+        return false;
+      }
+    }
+    return defaultStageReady(index);
+  }
+
+  function updateStageFooterVisibility(){
+    if(!bottomNav) return;
+    const ready=stageReady(activeStage);
+    bottomNav.classList.toggle("is-context-hidden",!ready);
+    bottomNav.setAttribute("aria-hidden",ready?"false":"true");
+  }
+  window.refreshStageFooter=updateStageFooterVisibility;
+
   function showStage(index, doScroll = true) {
     activeStage = Math.max(0, Math.min(stageCount - 1, index));
 
@@ -206,6 +247,7 @@
     }
 
     renderProgress();
+    updateStageFooterVisibility();
     saveState();
   }
 
@@ -384,6 +426,7 @@
       button.addEventListener("click", () => {
         const feedback = button.nextElementSibling;
         if (feedback) feedback.hidden = !feedback.hidden;
+        updateStageFooterVisibility();
       });
     });
 
@@ -393,6 +436,7 @@
           item.classList.remove("is-selected");
         });
         button.classList.add("is-selected");
+        updateStageFooterVisibility();
         showToast(
           mode === "guru"
             ? "Prediksi tersimpan. Diskusikan alasannya sebelum membuka penjelasan."
@@ -405,6 +449,8 @@
     const output = document.getElementById("demoOutput");
     slider?.addEventListener("input", () => {
       output.textContent = slider.value;
+      document.querySelector(".explore-panel")?.setAttribute("data-explore-touched","true");
+      updateStageFooterVisibility();
     });
 
     document.getElementById("strategyGrid")?.addEventListener("click", event => {
@@ -416,6 +462,7 @@
       button.addEventListener("click", () => {
         const feedback = document.getElementById("answerFeedback");
         feedback.hidden = false;
+        updateStageFooterVisibility();
 
         if (mode === "guru") {
           feedback.textContent =
@@ -463,6 +510,9 @@
       location.replace(url.toString());
     });
   }
+
+  const contextFooterObserver=new MutationObserver(()=>updateStageFooterVisibility());
+  panels.forEach(panel=>contextFooterObserver.observe(panel,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class","hidden","data-stage-complete","data-evaluation-finished"]}));
 
   function bindFeedbackForm() {
     const nameField = document.getElementById("studentName");
