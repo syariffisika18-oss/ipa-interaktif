@@ -1008,7 +1008,7 @@
   }
   function updateLensPreview(){
     $("#ocularValue").textContent=ocular()+"×";
-    $("#objectiveValue").textContent=objective+"×";
+    $("#objectiveValue").textContent=objective+"×";\n    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";\n    $(".fov-steps [data-fov]").forEach(el=>el.classList.toggle("is-active",Number(el.dataset.fov)===objective));
     if(!predictionLocked){
       $("#totalHidden").textContent="?";
       $("#totalMagnification").textContent="Belum dibuka";
@@ -1022,7 +1022,7 @@
     const t=total();
     $("#totalHidden").textContent=t+"×";
     $("#totalMagnification").textContent=t+"×";
-    $("#scopeField").dataset.level=String(objective);
+    $("#scopeField").dataset.level=String(objective);\n    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";\n    $(".fov-steps [data-fov]").forEach(el=>el.classList.toggle("is-active",Number(el.dataset.fov)===objective));
     $("#fieldObservation").textContent=objective>=40
       ?"Objek tampak jauh lebih besar; bagian bidang pandang yang terlihat lebih sempit."
       : objective>=10
