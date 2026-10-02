@@ -1089,7 +1089,7 @@
     info.innerHTML='<span class="organelle-number">'+button.textContent+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
     const seen=kind==="animal"?seenAnimal:seenPlant;
     seen.add(key);
-    (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?8:11)+" dikenali";
+    (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
   $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
   $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
