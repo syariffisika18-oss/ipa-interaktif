@@ -6,6 +6,7 @@ const tabs=[...document.querySelectorAll(".stage-tab")];
 const prev=document.getElementById("prevStage");
 const next=document.getElementById("nextStage");
 const complete=document.getElementById("completeStage");
+const bottomNav=document.querySelector(".bottom-nav");
 const progressFill=document.getElementById("progressFill");
 const progressText=document.getElementById("progressText");
 const toast=document.getElementById("toast");
@@ -31,6 +32,37 @@ function centerTab(i){
     nav.scrollTo({left:Math.max(0,left),behavior:"smooth"});
   });
 }
+
+function stageReady(){
+  switch(active){
+    case 0:
+      return !!state.diag;
+    case 1:
+      return true;
+    case 2:
+      return state.firstDigit===true;
+    case 3:
+      return processIndex===processSteps.length-1;
+    case 4:{
+      const q=practices[practiceIndex];
+      const onLastProblem=practiceIndex===practices.length-1;
+      const onDoneStep=q?.steps?.[practiceStepIndex]?.type==="done";
+      return onLastProblem && onDoneStep && practiceCompleted.size===practices.length;
+    }
+    case 5:
+      return evalCompleted.size===evaluations.length
+        && document.getElementById("masteryCard")?.hidden===false;
+    default:
+      return false;
+  }
+}
+function updateFooter(){
+  if(!bottomNav)return;
+  const ready=stageReady();
+  bottomNav.classList.toggle("is-context-hidden",!ready);
+  bottomNav.setAttribute("aria-hidden",ready?"false":"true");
+}
+
 function render(){
   panels.forEach((p,i)=>p.classList.toggle("active",i===active));
   tabs.forEach((t,i)=>{t.classList.toggle("active",i===active);t.classList.toggle("done",done.has(i))});
@@ -38,7 +70,7 @@ function render(){
   complete.textContent=done.has(active)?"✓ Sudah selesai":"Tandai selesai";
   const pct=Math.round(done.size/N*100);progressFill.style.width=pct+"%";
   progressText.textContent=done.size+" dari "+N+" langkah • "+pct+"%";
-  centerTab(active);save();
+  centerTab(active);updateFooter();save();
 }
 function show(i,scroll=true){
   document.body.classList.remove("mobile-chrome-hidden");
@@ -64,6 +96,7 @@ document.querySelectorAll("#diagChoices button").forEach(b=>b.onclick=()=>{
   else if(b.dataset.value==="dontknow"){fb.className="feedback neutral";fb.textContent="Tidak apa-apa. Gunakan modul ini dari langkah pertama."}
   else{b.classList.add("wrong");fb.className="feedback warn";fb.textContent="Belum kita nilai sebagai gagal. Kita akan memakai kelipatan 35 untuk menentukannya."}
   save();
+  updateFooter();
 });
 
 // Tabel kelipatan interaktif: tidak ada jawaban yang dipilih otomatis.
@@ -118,6 +151,7 @@ buildMultiples(35,240,document.getElementById("multipleGrid"),{
       state.firstDigit=false;
     }
     save();
+    updateFooter();
   }
 });
 
@@ -368,6 +402,7 @@ document.getElementById("processNext").onclick=()=>{
   state.processIndex=processIndex;
   save();
   renderProcess();
+  updateFooter();
 };
 renderProcess();
 
@@ -759,6 +794,7 @@ document.getElementById("practiceNextProblem").onclick=()=>{
   state.practiceIndex=practiceIndex;
   save();
   renderPractice();
+  updateFooter();
 };
 
 renderPractice();
@@ -1210,10 +1246,16 @@ document.getElementById("evalReset").onclick=()=>{
   document.getElementById("masteryCard").hidden=true;
   save();
   renderEvaluation();
+  updateFooter();
 };
 
 renderEvaluation();
 
+
+const footerAuditObserver=new MutationObserver(()=>updateFooter());
+panels.forEach(panel=>footerAuditObserver.observe(panel,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class","hidden","disabled"]}));
+document.addEventListener("click",()=>setTimeout(updateFooter,0),true);
+document.addEventListener("input",()=>setTimeout(updateFooter,0),true);
 
 // Smart swipe navigation for mobile portrait + landscape.
 // Internal steps move first; only at the edge do we change the main stage.
