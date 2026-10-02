@@ -1006,9 +1006,19 @@
     $("#magnificationOptions").innerHTML=candidates.sort((a,b)=>a-b).map(v=>'<button type="button" data-mag="'+v+'">'+v+'×</button>').join("");
     magChoice="";
   }
+  function syncObjectiveVisual(){
+    $("#objectiveValue").textContent=objective+"×";
+    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";
+    if($("#scopeField")) $("#scopeField").dataset.level=String(objective);
+    $(".fov-steps [data-fov]").forEach(el=>{
+      el.classList.toggle("is-active",Number(el.dataset.fov)===objective);
+    });
+  }
+
   function updateLensPreview(){
     $("#ocularValue").textContent=ocular()+"×";
-    $("#objectiveValue").textContent=objective+"×";\n    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";\n    $(".fov-steps [data-fov]").forEach(el=>el.classList.toggle("is-active",Number(el.dataset.fov)===objective));
+    syncObjectiveVisual();
+
     if(!predictionLocked){
       $("#totalHidden").textContent="?";
       $("#totalMagnification").textContent="Belum dibuka";
@@ -1018,16 +1028,20 @@
       revealMicroscope();
     }
   }
+
   function revealMicroscope(){
     const t=total();
+    syncObjectiveVisual();
+
     $("#totalHidden").textContent=t+"×";
     $("#totalMagnification").textContent=t+"×";
-    $("#scopeField").dataset.level=String(objective);\n    if($("#objectiveReadout")) $("#objectiveReadout").textContent="Objektif "+objective+"×";\n    $(".fov-steps [data-fov]").forEach(el=>el.classList.toggle("is-active",Number(el.dataset.fov)===objective));
+
     $("#fieldObservation").textContent=objective>=40
-      ?"Objek tampak jauh lebih besar; bagian bidang pandang yang terlihat lebih sempit."
+      ?"Objektif 40×: hanya bagian kecil dari preparat yang terlihat, tetapi detail struktur tampak jauh lebih besar."
       : objective>=10
-        ?"Objek tampak lebih besar dibanding objektif 4×."
-        :"Objek tampak lebih kecil, tetapi area bidang pandang lebih luas.";
+        ?"Objektif 10×: bagian preparat yang terlihat lebih sempit daripada 4× dan struktur tampak lebih besar."
+        :"Objektif 4×: bidang pandang paling luas sehingga lebih banyak bagian preparat terlihat sekaligus.";
+
     $("#poeExplain").hidden=false;
     $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
   }
