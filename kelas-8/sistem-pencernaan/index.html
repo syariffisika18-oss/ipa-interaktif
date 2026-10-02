@@ -627,7 +627,7 @@
       </div>
     </section>
 
-    <div class="bottom-nav">
+    <div class="bottom-nav is-context-hidden" aria-hidden="true">
       <button id="prevStage" type="button">← Sebelumnya</button>
       <button id="completeStage" class="complete-button" type="button">Tandai selesai</button>
       <button id="nextStage" class="primary-button" type="button">Berikutnya →</button>
@@ -636,7 +636,8 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20260929-1"></script>
-  <script src="../../template-universal/template.js?v=20260929-fix1"></script>
-  <script src="digestive.js?v=20260930-contextual-support1"></script>
+  <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
+  <script src="../../template-universal/template.js?v=20261002-contextfooter1"></script>
+  <script src="digestive.js?v=20261002-contextfooter2"></script>
 </body>
 </html>
