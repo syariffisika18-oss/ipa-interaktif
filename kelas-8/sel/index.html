@@ -7,7 +7,7 @@
   <meta name="description" content="Modul interaktif IPA Kelas VIII tentang sel, mikroskop, dan organel">
   <title>Sel dan Mikroskop — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
-  <link rel="stylesheet" href="cell.css?v=20261002-cell1">
+  <link rel="stylesheet" href="cell.css?v=20261002-cell2">
 </head>
 <body>
   <header class="app-header">
@@ -123,38 +123,49 @@
           <div><p class="stage-kicker">Guided inquiry</p><h3>Dari daun menuju sel</h3></div>
           <span class="principle">Amati sebelum membaca definisi</span>
         </div>
-        <div class="zoom-tabs" id="zoomTabs">
+        <div class="zoom-tabs" id="zoomTabs" aria-label="Tahap pengamatan">
           <button class="is-active" type="button" data-zoom="0">1. Daun</button>
-          <button type="button" data-zoom="1">2. Jaringan</button>
-          <button type="button" data-zoom="2">3. Sel</button>
+          <button type="button" data-zoom="1" disabled>2. Jaringan</button>
+          <button type="button" data-zoom="2" disabled>3. Sel</button>
         </div>
+
         <div class="zoom-stage" id="zoomStage">
           <div class="zoom-visual leaf-visual" data-zoom-panel="0">
             <div class="leaf-shape"><span>🍃</span></div>
-            <p>Satu daun tampak sebagai satu bagian utuh.</p>
+            <p><b>Amati:</b> satu daun tampak sebagai satu bagian utuh.</p>
           </div>
+
           <div class="zoom-visual tissue-visual" data-zoom-panel="1" hidden>
             <div class="tissue-grid" aria-label="Model jaringan tumbuhan">
               <span></span><span></span><span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
-            <p>Ketika diperbesar, jaringan tampak tersusun dari banyak unit.</p>
+            <p><b>Amati:</b> setelah diperbesar, bagian daun tampak tersusun dari banyak unit kecil.</p>
           </div>
+
           <div class="zoom-visual cell-visual" data-zoom-panel="2" hidden>
             <div class="mini-plant-cell"><i class="mini-vacuole"></i><i class="mini-nucleus"></i><i class="mini-chloroplast c1"></i><i class="mini-chloroplast c2"></i><i class="mini-chloroplast c3"></i></div>
-            <p>Salah satu unit tersebut adalah sel.</p>
+            <p><b>Hasil pengamatan:</b> salah satu unit penyusun jaringan tersebut adalah sel.</p>
           </div>
         </div>
-        <div class="engage-question">
+
+        <div class="zoom-navigation">
+          <button type="button" class="secondary-action" id="zoomPrev" hidden>← Kembali</button>
+          <span id="zoomGuide">Apa yang mungkin terlihat jika daun diperbesar?</span>
+          <button type="button" class="primary-inline" id="zoomNext">Perbesar daun →</button>
+        </div>
+
+        <div class="engage-question" id="engageQuestion" hidden>
+          <p class="stage-kicker">Prediksi sebelum membuka tahap 3</p>
           <h3>Apa dugaanmu?</h3>
-          <p>Jika jaringan diperbesar terus, unit apakah yang masih dapat menjalankan proses kehidupan?</p>
+          <p>Jaringan tampak tersusun dari banyak unit kecil. Unit apakah yang masih dapat menjalankan proses kehidupan?</p>
           <div class="option-grid" id="engageOptions">
             <button type="button" data-engage="molekul">Molekul</button>
             <button type="button" data-engage="sel">Sel</button>
             <button type="button" data-engage="organ">Organ</button>
           </div>
           <button type="button" class="primary-inline" id="lockEngage">Kunci prediksi</button>
-          <div id="engageFeedback" class="module-feedback neutral">Prediksi akan diuji pada tahap berikutnya.</div>
+          <div id="engageFeedback" class="module-feedback neutral">Kunci prediksi sebelum membuka pengamatan berikutnya.</div>
         </div>
       </section>
     </section>
@@ -426,6 +437,6 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261002-cell1"></script>
-  <script src="cell.js?v=20261002-cell1"></script>
+  <script src="cell.js?v=20261002-cell2"></script>
 </body>
 </html>
