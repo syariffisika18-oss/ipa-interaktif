@@ -1234,18 +1234,66 @@
   }));
 
   const organelles = {
-    nucleus:{name:"Nukleus",function:"Mengatur aktivitas sel dan menyimpan sebagian besar materi genetik.",impact:"Pengaturan aktivitas sel dan informasi genetik akan terganggu."},
-    nucleolus:{name:"Nukleolus",function:"Berperan dalam pembentukan komponen ribosom di dalam nukleus.",impact:"Pembentukan komponen ribosom dapat terganggu."},
-    er:{name:"Retikulum endoplasma",function:"Membantu sintesis dan transport berbagai molekul di dalam sel; RE kasar berhubungan dengan ribosom.",impact:"Pemrosesan dan transport molekul tertentu menjadi kurang efektif."},
-    golgi:{name:"Badan Golgi",function:"Memodifikasi, mengemas, dan mengarahkan molekul untuk digunakan atau dikirim oleh sel.",impact:"Pengemasan dan pengiriman molekul sel dapat terganggu."},
-    mitochondria:{name:"Mitokondria",function:"Tempat utama respirasi seluler untuk menghasilkan energi yang dapat digunakan sel.",impact:"Ketersediaan energi bagi aktivitas sel dapat menurun."},
-    lysosome:{name:"Lisosom",function:"Mengandung enzim yang membantu menguraikan bahan tertentu dan komponen sel yang rusak.",impact:"Bahan yang seharusnya diuraikan dapat menumpuk."},
-    ribosome:{name:"Ribosom",function:"Tempat sintesis protein.",impact:"Produksi protein sel akan terganggu."},
-    membrane:{name:"Membran sel",function:"Membatasi sel dan mengatur keluar-masuknya zat secara selektif.",impact:"Keseimbangan pertukaran zat antara sel dan lingkungannya dapat terganggu."},
-    wall:{name:"Dinding sel",function:"Memberi dukungan, perlindungan, dan membantu mempertahankan bentuk sel tumbuhan.",impact:"Sel tumbuhan lebih mudah kehilangan dukungan bentuk."},
-    cytoplasm:{name:"Sitoplasma",function:"Medium tempat organel berada dan banyak reaksi kimia sel berlangsung.",impact:"Lingkungan internal untuk berbagai reaksi sel akan terganggu."},
-    vacuole:{name:"Vakuola",function:"Menyimpan air dan berbagai zat; pada sel tumbuhan membantu mempertahankan tekanan turgor.",impact:"Sel tumbuhan dapat kehilangan kekakuan ketika kandungan airnya berkurang."},
-    chloroplast:{name:"Kloroplas",function:"Tempat fotosintesis pada sel tumbuhan yang mengandung klorofil.",impact:"Kemampuan sel melakukan fotosintesis akan terganggu."}
+    nucleus:{
+      name:"Nukleus",
+      function:"Mengatur berbagai kegiatan sel dan menyimpan materi genetik (DNA), yaitu informasi yang mengatur sifat dan kerja sel.",
+      impact:"Pengaturan kegiatan sel dan penyimpanan informasi genetik dapat terganggu."
+    },
+    nucleolus:{
+      name:"Nukleolus",
+      function:"Membantu membentuk ribosom di dalam nukleus.",
+      impact:"Pembentukan ribosom dapat terganggu."
+    },
+    er:{
+      name:"Retikulum endoplasma",
+      function:"Membantu membuat dan memindahkan berbagai zat di dalam sel. RE kasar ditempeli ribosom dan membantu pembuatan protein.",
+      impact:"Pembuatan dan pemindahan zat tertentu di dalam sel dapat terganggu."
+    },
+    golgi:{
+      name:"Badan Golgi",
+      function:"Mengubah, mengemas, dan mengirim protein atau zat lain ke bagian sel yang membutuhkannya.",
+      impact:"Pengemasan dan pengiriman zat di dalam sel dapat terganggu."
+    },
+    mitochondria:{
+      name:"Mitokondria",
+      function:"Tempat berlangsungnya respirasi seluler, yaitu proses menghasilkan energi dari zat makanan untuk digunakan sel.",
+      impact:"Sel dapat kekurangan energi untuk menjalankan kegiatannya."
+    },
+    lysosome:{
+      name:"Lisosom",
+      function:"Mengandung enzim, yaitu protein yang membantu menguraikan zat tertentu dan bagian sel yang sudah rusak.",
+      impact:"Zat dan bagian sel yang seharusnya diuraikan dapat menumpuk."
+    },
+    ribosome:{
+      name:"Ribosom",
+      function:"Membuat protein yang diperlukan sel untuk pertumbuhan dan berbagai kegiatannya.",
+      impact:"Pembuatan protein yang dibutuhkan sel dapat terganggu."
+    },
+    membrane:{
+      name:"Membran sel",
+      function:"Membatasi sel dan mengatur zat yang boleh masuk dan keluar dari sel.",
+      impact:"Keluar-masuknya zat antara sel dan lingkungannya dapat terganggu."
+    },
+    wall:{
+      name:"Dinding sel",
+      function:"Melindungi sel tumbuhan serta membantu mempertahankan bentuk dan kekuatannya.",
+      impact:"Sel tumbuhan lebih mudah kehilangan bentuk dan kekuatannya."
+    },
+    cytoplasm:{
+      name:"Sitoplasma",
+      function:"Cairan kental di dalam sel yang menjadi tempat organel berada dan berbagai reaksi sel berlangsung.",
+      impact:"Berbagai proses yang berlangsung di dalam sel dapat terganggu."
+    },
+    vacuole:{
+      name:"Vakuola",
+      function:"Menyimpan air dan berbagai zat. Pada sel tumbuhan, vakuola juga membantu menjaga sel tetap kaku.",
+      impact:"Sel tumbuhan dapat kehilangan kekakuannya ketika kandungan air berkurang."
+    },
+    chloroplast:{
+      name:"Kloroplas",
+      function:"Tempat fotosintesis, yaitu proses tumbuhan membuat makanan dengan menggunakan energi cahaya.",
+      impact:"Kemampuan sel tumbuhan membuat makanan melalui fotosintesis dapat terganggu."
+    }
   };
 
   const seenAnimal=new Set(), seenPlant=new Set();
