@@ -1045,11 +1045,72 @@
     $("#poeExplain").hidden=false;
     $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
   }
+
+  // Drag / pan preparat di dalam bidang pandang
+  let panX=0, panY=0;
+  let dragging=false, dragStartX=0, dragStartY=0, panStartX=0, panStartY=0;
+
+  function panLimit(){
+    // Semakin besar objektif, semakin luas area preparat yang dapat digeser.
+    if(objective>=40) return 105;
+    if(objective>=10) return 70;
+    return 35;
+  }
+
+  function applyScopePan(){
+    const lim=panLimit();
+    panX=Math.max(-lim,Math.min(lim,panX));
+    panY=Math.max(-lim,Math.min(lim,panY));
+    const canvas=$("#micrographCanvas");
+    if(canvas){
+      canvas.style.setProperty("--pan-x",panX+"px");
+      canvas.style.setProperty("--pan-y",panY+"px");
+    }
+  }
+
+  function recenterScope(){
+    panX=0; panY=0;
+    applyScopePan();
+  }
+
+  $("#scopeField")?.addEventListener("pointerdown",e=>{
+    if(e.button!==undefined && e.button!==0) return;
+    dragging=true;
+    dragStartX=e.clientX;
+    dragStartY=e.clientY;
+    panStartX=panX;
+    panStartY=panY;
+    $("#scopeField").classList.add("is-dragging");
+    $("#scopeField").setPointerCapture?.(e.pointerId);
+    e.preventDefault();
+  });
+
+  $("#scopeField")?.addEventListener("pointermove",e=>{
+    if(!dragging) return;
+    panX=panStartX+(e.clientX-dragStartX);
+    panY=panStartY+(e.clientY-dragStartY);
+    applyScopePan();
+    e.preventDefault();
+  });
+
+  const stopScopeDrag=e=>{
+    if(!dragging) return;
+    dragging=false;
+    $("#scopeField")?.classList.remove("is-dragging");
+    try{$("#scopeField")?.releasePointerCapture?.(e.pointerId)}catch(_){}
+  };
+
+  $("#scopeField")?.addEventListener("pointerup",stopScopeDrag);
+  $("#scopeField")?.addEventListener("pointercancel",stopScopeDrag);
+  $("#scopeField")?.addEventListener("lostpointercapture",()=>{dragging=false;$("#scopeField")?.classList.remove("is-dragging")});
+  $("#recenterScope")?.addEventListener("click",recenterScope);
+
   $("#ocularSelect")?.addEventListener("change",updateLensPreview);
   $("#objectiveButtons")?.addEventListener("click",e=>{
     const b=e.target.closest("[data-objective]"); if(!b)return;
     objective=Number(b.dataset.objective);
-    $$("#objectiveButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    $("#objectiveButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    recenterScope();
     updateLensPreview();
   });
   $("#magnificationOptions")?.addEventListener("click",e=>{
