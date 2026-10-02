@@ -826,12 +826,12 @@
   const lifeItems = [
     {scenario:"Kecambah bertambah tinggi dan daunnya semakin besar dari hari ke hari.", answer:"Tumbuh dan berkembang", distract:["Bergerak","Berkembang biak"]},
     {scenario:"Putri malu menutup daunnya ketika disentuh.", answer:"Peka terhadap rangsangan", distract:["Bernapas","Mengeluarkan zat sisa"]},
-    {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Beradaptasi","Memerlukan nutrisi"]},
+    {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Tersusun dari sel","Memerlukan nutrisi"]},
     {scenario:"Burung mencari biji dan ulat untuk memperoleh bahan dan energi bagi tubuhnya.", answer:"Memerlukan nutrisi", distract:["Berkembang biak","Bergerak"]},
     {scenario:"Ikan berenang mendekati sumber makanan.", answer:"Bergerak", distract:["Tumbuh dan berkembang","Mengeluarkan zat sisa"]},
-    {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Beradaptasi"]},
+    {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Tersusun dari sel"]},
     {scenario:"Ginjal membantu membuang zat sisa metabolisme melalui urine.", answer:"Mengeluarkan zat sisa", distract:["Bernapas","Memerlukan nutrisi"]},
-    {scenario:"Kaktus memiliki daun berbentuk duri yang membantu mengurangi kehilangan air di lingkungan kering.", answer:"Beradaptasi", distract:["Bergerak","Tumbuh dan berkembang"]}
+    {scenario:"Tubuh makhluk hidup, seperti tumbuhan dan hewan, tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Bergerak","Tumbuh dan berkembang"]}
   ];
 
   let lifeIndex=0, lifeChoice="";
