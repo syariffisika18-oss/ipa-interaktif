@@ -483,3 +483,68 @@
   .fov-steps [data-fov="10"] i{width:20px;height:20px}
   .fov-steps [data-fov="40"] i{width:11px;height:11px}
 }
+
+
+/* =========================================================
+   EXPLORE — draggable microscope specimen
+   ========================================================= */
+.scope-field{
+  cursor:grab;
+  touch-action:none;
+}
+.scope-field.is-dragging{
+  cursor:grabbing;
+}
+.micrograph-canvas{
+  translate:var(--pan-x,0px) var(--pan-y,0px);
+}
+.scope-pan-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:8px;
+}
+.scope-pan-controls span{
+  color:var(--muted);
+  font-size:.62rem;
+  line-height:1.35;
+}
+.scope-pan-controls button{
+  flex:0 0 auto;
+  min-height:32px;
+  padding:5px 9px;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:#fff;
+  color:var(--ink);
+  font-size:.64rem;
+  font-weight:850;
+  cursor:pointer;
+}
+.scope-pan-controls button:hover{
+  border-color:var(--primary);
+}
+@media(max-width:640px){
+  .scope-pan-controls{
+    align-items:stretch;
+    flex-direction:column;
+  }
+  .scope-pan-controls button{
+    width:100%;
+  }
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .scope-pan-controls{
+    margin-top:4px;
+    gap:4px;
+  }
+  .scope-pan-controls span,
+  .scope-pan-controls button{
+    font-size:.48rem;
+  }
+  .scope-pan-controls button{
+    min-height:26px;
+    padding:3px 6px;
+  }
+}
