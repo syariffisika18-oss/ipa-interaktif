@@ -845,7 +845,7 @@
   if(explainExampleBack)explainExampleBack.addEventListener("click",()=>showExplainPage(1));
 
   const modelTabs=document.getElementById("modelTabs");
-  modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'><span>'+(i+1)+'</span>'+m.name+'</button>').join("");
+  modelTabs.innerHTML=model.map((m,i)=>'<button type="button" data-model="'+i+'"><span>'+(i+1)+'</span>'+m.name+'</button>').join("");
 
   function renderModel(i,animate=true){
     modelIndex=Math.max(0,Math.min(model.length-1,i));
