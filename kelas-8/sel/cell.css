@@ -18,13 +18,13 @@
 .life-quiz-card,.bridge-card,.zoom-card,.microscope-shell,.cell-case-suite,.cell-eval-card{
   padding:18px;border:1px solid var(--line);border-radius:20px;background:#fff
 }
-.life-quiz-card,.bridge-card{margin-top:12px}
+.life-quiz-card{margin-top:12px}
 .life-scenario{margin:14px 0 10px;padding:14px 16px;border-radius:14px;background:#f4f7ff;font-size:1.05rem;font-weight:750;line-height:1.45}
 .option-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-.option-grid button,.bridge-options button,.lens-buttons button,.compare-buttons button,.eval-options button{
+.option-grid button,.lens-buttons button,.compare-buttons button,.eval-options button{
   min-height:42px;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font-weight:800;cursor:pointer;text-align:left
 }
-.option-grid button.is-selected,.bridge-options button.is-selected,.lens-buttons button.is-active,.compare-buttons button.is-active,.eval-options button.is-selected{
+.option-grid button.is-selected,.lens-buttons button.is-active,.compare-buttons button.is-active,.eval-options button.is-selected{
   border-color:var(--primary);background:var(--pale)
 }
 .lock-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:8px 10px;border-radius:11px;background:#f7faf9}
@@ -34,7 +34,6 @@
 .module-feedback.neutral{background:#f3f6f5;color:var(--muted)}
 .module-feedback.good{background:#e4f8ef;color:#116c50}
 .module-feedback.warn{background:#fff5d8;color:#7b5a08}
-.bridge-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;margin:10px 0}
 
 /* ENGAGE */
 .zoom-card{background:linear-gradient(135deg,#fff,#f7fcfa)}
@@ -142,8 +141,7 @@
   .orientation-cell-grid{grid-template-columns:1fr}
   .life-quiz-card,.bridge-card,.zoom-card,.microscope-shell,.cell-case-suite,.cell-eval-card{padding:11px;border-radius:15px}
   .option-grid{grid-template-columns:1fr}
-  .bridge-options{grid-template-columns:1fr 1fr}
-  .lock-row{align-items:stretch;flex-direction:column}
+    .lock-row{align-items:stretch;flex-direction:column}
   .zoom-stage{min-height:235px;padding:10px}
   .leaf-shape{width:145px;height:95px}.leaf-shape span{font-size:3.6rem}
   .tissue-grid{width:100%;grid-template-columns:repeat(4,1fr)}
@@ -170,8 +168,7 @@
 }
 
 @media(max-width:380px){
-  .bridge-options{grid-template-columns:1fr}
-  .zoom-tabs{grid-template-columns:1fr}
+    .zoom-tabs{grid-template-columns:1fr}
   .case-tabs{grid-template-columns:1fr}
   .case-score{grid-template-columns:1fr}
   .cell-explain-tabs{grid-template-columns:1fr}
@@ -180,7 +177,7 @@
 @media(orientation:landscape) and (max-width:950px) and (max-height:500px){
   .life-quiz-card,.bridge-card,.zoom-card,.microscope-shell,.cell-case-suite,.cell-eval-card{padding:8px}
   .life-scenario{padding:8px;font-size:.7rem}
-  .option-grid button,.bridge-options button,.lens-buttons button,.compare-buttons button,.eval-options button{min-height:31px;padding:4px 6px;font-size:.58rem}
+  .option-grid button,.lens-buttons button,.compare-buttons button,.eval-options button{min-height:31px;padding:4px 6px;font-size:.58rem}
   .zoom-stage{min-height:170px;padding:7px}.leaf-shape{width:110px;height:72px}.leaf-shape span{font-size:2.5rem}.mini-plant-cell{width:160px;height:105px;border-width:6px}.mini-vacuole{left:44px;top:20px;width:84px;height:65px}.mini-nucleus{left:16px;top:40px;width:34px;height:34px}.mini-chloroplast{width:22px;height:12px;border-width:2px}
   .microscope-layout{grid-template-columns:1fr 1fr;gap:7px}.microscope-control-card,.microscope-view-card{padding:7px}.scope-ring{width:180px;padding:8px}.microscope-control-card select{min-height:30px;font-size:.58rem}.microscope-equation{padding:5px;gap:3px}.microscope-equation span{font-size:.48rem}.microscope-equation b{font-size:.65rem}.microscope-equation strong{font-size:.78rem}.micro-prompt,.observe-readout p,.poe-explain{font-size:.55rem}
   .definition-card{padding:9px}.definition-card h3{font-size:.8rem}.definition-card p:last-child,.concept-note{font-size:.56rem}
