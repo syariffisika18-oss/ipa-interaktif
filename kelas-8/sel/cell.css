@@ -831,3 +831,13 @@
 
 
 
+
+
+/* =========================================================
+   CONTEXTUAL STAGE FOOTER
+   Global stage navigation appears only at the terminal
+   internal page/case/question of the active stage.
+   ========================================================= */
+.bottom-nav.is-context-hidden{
+  display:none!important;
+}
