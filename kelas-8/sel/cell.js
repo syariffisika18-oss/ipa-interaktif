@@ -1255,13 +1255,14 @@
     const wrap=button.closest(".cell-model-wrap");
     $$(".organelle-hotspots button",wrap).forEach(b=>b.classList.toggle("is-active",b===button));
     $$(".organelle-shape",wrap).forEach(s=>s.classList.toggle("is-active",s.dataset.orgShape===key));
-    info.innerHTML='<span class="organelle-number">'+button.textContent+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
+    const hotspotLabel=button.querySelector(":scope > span:not(.hotspot-coordinate-tag)")?.textContent?.trim()||"";
+    info.innerHTML='<span class="organelle-number">'+hotspotLabel+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
     const seen=kind==="animal"?seenAnimal:seenPlant;
     seen.add(key);
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
-  $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
-  $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
+  $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>{if(hotspotCalibration?.animal?.active)return;showOrganelle("animal",b.dataset.organelle,b)}));
+  $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>{if(hotspotCalibration?.plant?.active)return;showOrganelle("plant",b.dataset.organelle,b)}));
 
   // ---------- Hotspot manual calibration ----------
   const hotspotCalibration={
@@ -1270,7 +1271,7 @@
   };
 
   function hotspotStorageKey(kind){
-    return "ipa-interaktif:kelas-8-sel:hotspots:"+kind;
+    return "ipa-interaktif:kelas-8-sel:hotspots:v2:"+kind;
   }
 
   function hotspotButtons(kind){
@@ -1354,7 +1355,7 @@
     state.button().classList.toggle("is-active",active);
     state.button().textContent=active?"Selesai mengatur":"Atur posisi hotspot";
     if(active){
-      state.readout().textContent="MODE AKTIF — seret nomor hotspot langsung pada gambar.";
+      state.readout().textContent="MODE AKTIF — seret hotspot pada gambar. Posisi tidak akan berubah saat mode ditutup.";
       hotspotButtons(kind).forEach(btn=>{
         btn.setAttribute("aria-grabbed","false");
         btn.title="Seret untuk mengatur posisi "+(organelles[btn.dataset.organelle]?.name||btn.dataset.organelle);
@@ -1439,8 +1440,8 @@
     const {btn,kind,rect}=hotspotDrag;
     let x=((e.clientX-rect.left)/rect.width)*100;
     let y=((e.clientY-rect.top)/rect.height)*100;
-    x=Math.max(0,Math.min(100,x));
-    y=Math.max(0,Math.min(100,y));
+    x=Math.max(2.5,Math.min(97.5,x));
+    y=Math.max(2.5,Math.min(97.5,y));
 
     btn.style.setProperty("--x",x.toFixed(2)+"%");
     btn.style.setProperty("--y",y.toFixed(2)+"%");
