@@ -824,15 +824,15 @@
 
   // ---------- ORIENTASI: 8 ciri makhluk hidup ----------
   const lifeItems = [
-    {scenario:"Kecambah bertambah tinggi dan daunnya semakin besar dari hari ke hari.", answer:"Tumbuh dan berkembang", distract:["Bergerak","Berkembang biak"]},
-    {scenario:"Putri malu menutup daunnya ketika disentuh.", answer:"Peka terhadap rangsangan", distract:["Bernapas","Mengeluarkan zat sisa"]},
-    {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Tersusun dari sel","Memerlukan nutrisi"]},
-    {scenario:"Burung mencari biji dan ulat untuk memperoleh bahan dan energi bagi tubuhnya.", answer:"Memerlukan nutrisi", distract:["Berkembang biak","Bergerak"]},
-    {scenario:"Ikan berenang mendekati sumber makanan.", answer:"Bergerak", distract:["Tumbuh dan berkembang","Mengeluarkan zat sisa"]},
-    {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Tersusun dari sel"]},
-    {scenario:"Ginjal membantu membuang zat sisa metabolisme melalui urine.", answer:"Mengeluarkan zat sisa", distract:["Bernapas","Memerlukan nutrisi"]},
-    {scenario:"Tubuh makhluk hidup, seperti tumbuhan dan hewan, tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Bergerak","Tumbuh dan berkembang"]}
-  ];
+  {scenario:"Kecambah bertambah tinggi dan daunnya semakin besar dari hari ke hari.", answer:"Tumbuh dan berkembang", distract:["Bergerak","Berkembang biak"]},
+  {scenario:"Putri malu menutup daunnya ketika disentuh.", answer:"Peka terhadap rangsangan", distract:["Bernapas","Mengeluarkan zat sisa"]},
+  {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Beradaptasi","Memerlukan nutrisi"]},
+  {scenario:"Burung mencari biji dan ulat untuk memperoleh bahan dan energi bagi tubuhnya.", answer:"Memerlukan nutrisi", distract:["Berkembang biak","Bergerak"]},
+  {scenario:"Ikan berenang mendekati sumber makanan.", answer:"Bergerak", distract:["Tumbuh dan berkembang","Mengeluarkan zat sisa"]},
+  {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Bernapas"]},
+  {scenario:"Ginjal membantu membuang zat sisa metabolisme melalui urine.", answer:"Mengeluarkan zat sisa", distract:["Bernapas","Memerlukan nutrisi"]},
+  {scenario:"Makhluk hidup tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Berkembang biak","Peka terhadap rangsangan"]}
+];
 
   let lifeIndex=0, lifeChoice="";
   function renderLife(){
@@ -857,9 +857,29 @@
     const item=lifeItems[lifeIndex];
     const good=lifeChoice===item.answer;
     $("#lifeFeedback").className="module-feedback "+(good?"good":"warn");
-    $("#lifeFeedback").innerHTML=good
-      ? "<b>Tepat.</b> Situasi tersebut menunjukkan ciri <b>"+item.answer+"</b>."
-      : "<b>Belum tepat.</b> Ciri yang paling sesuai adalah <b>"+item.answer+"</b>. Perhatikan perubahan atau respons yang terjadi pada organisme.";
+    if (good) {
+  if (lifeIndex === lifeItems.length - 1) {
+    $("#lifeFeedback").className = "module-feedback good";
+    $("#lifeFeedback").innerHTML =
+      "<b>Tepat.</b> Situasi tersebut menunjukkan ciri <b>Tersusun dari sel</b>. " +
+      "Artinya, makhluk hidup dibangun oleh sel. Dari sini kita akan mempelajari mengapa <b>sel disebut unit struktural dan fungsional terkecil kehidupan</b>.";
+  } else {
+    $("#lifeFeedback").className = "module-feedback good";
+    $("#lifeFeedback").innerHTML =
+      "<b>Tepat.</b> Situasi tersebut menunjukkan ciri <b>"+item.answer+"</b>.";
+  }
+} else {
+  if (lifeIndex === lifeItems.length - 1) {
+    $("#lifeFeedback").className = "module-feedback warn";
+    $("#lifeFeedback").innerHTML =
+      "<b>Belum tepat.</b> Ciri yang paling sesuai adalah <b>Tersusun dari sel</b>. " +
+      "Makhluk hidup dibangun oleh sel, sehingga sel menjadi dasar untuk memahami kehidupan.";
+  } else {
+    $("#lifeFeedback").className = "module-feedback warn";
+    $("#lifeFeedback").innerHTML =
+      "<b>Belum tepat.</b> Ciri yang paling sesuai adalah <b>"+item.answer+"</b>. Perhatikan perubahan atau respons yang terjadi pada organisme.";
+  }
+}
     $("#checkLife").disabled=true;
     $$("#lifeOptions button").forEach(b=>b.disabled=true);
     $("#nextLife").hidden=false;
@@ -874,22 +894,6 @@
     }
   });
   renderLife();
-
-  // ---------- Jembatan konsep ----------
-  let bridgeChoice="";
-  $("#bridgeOptions")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-bridge]"); if(!b)return;
-    bridgeChoice=b.dataset.bridge; setSelected($("#bridgeOptions"),b);
-  });
-  $("#checkBridge")?.addEventListener("click",()=>{
-    const fb=$("#bridgeFeedback");
-    if(!bridgeChoice){fb.textContent="Pilih satu tingkat organisasi terlebih dahulu.";return}
-    const good=bridgeChoice==="sel";
-    fb.className="module-feedback "+(good?"good":"warn");
-    fb.innerHTML=good
-      ? "<b>Tepat.</b> Sel merupakan unit struktural dan fungsional terkecil makhluk hidup."
-      : "<b>Belum tepat.</b> Organ dan jaringan masih tersusun atas unit yang lebih kecil. Cari unit terkecil yang masih hidup.";
-  });
 
   // ---------- ENGAGE: progressive zoom Guided Inquiry ----------
   let zoomIndex=0;
