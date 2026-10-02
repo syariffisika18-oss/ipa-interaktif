@@ -1109,7 +1109,7 @@
   $("#objectiveButtons")?.addEventListener("click",e=>{
     const b=e.target.closest("[data-objective]"); if(!b)return;
     objective=Number(b.dataset.objective);
-    $("#objectiveButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    document.querySelectorAll("#objectiveButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
     recenterScope();
     updateLensPreview();
   });
