@@ -242,7 +242,7 @@
       childList:true,
       characterData:true,
       attributes:true,
-      attributeFilter:["class","hidden","data-evaluation-finished"]
+      attributeFilter:["class","hidden","data-explore-finished","data-evaluation-finished"]
     });
   });
 
@@ -1177,6 +1177,7 @@
     const item=microPhotos[objective];
     if(predictionLocked && explorePanel){
       explorePanel.dataset.exploreFinished="true";
+      updateBottomNavVisibility();
     }
     syncObjectiveVisual(animate);
 
