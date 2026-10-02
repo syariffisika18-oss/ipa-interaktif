@@ -24,6 +24,7 @@
   const prevButton = document.getElementById("prevStage");
   const nextButton = document.getElementById("nextStage");
   const completeButton = document.getElementById("completeStage");
+  const bottomNav = document.querySelector(".bottom-nav");
   const progressFill = document.getElementById("progressFill");
   const progressText = document.getElementById("progressText");
   const toast = document.getElementById("toast");
@@ -40,6 +41,7 @@
   restoreDifficulty();
   setMode(mode);
   showStage(activeStage, false);
+  updateBottomNavVisibility();
 
   if (resetRequested) {
     const cleanUrl = location.pathname + location.hash;
@@ -180,6 +182,67 @@
     });
   }
 
+  function isTerminalInternalView(){
+    switch(activeStage){
+      // Orientasi: seluruh 8 ciri sudah diselesaikan dan tombol internal terakhir sudah ditutup.
+      case 0:
+        return /✓/.test(document.getElementById("lifeProgress")?.textContent||"");
+
+      // Engage: sudah sampai tingkat terakhir, yaitu Sel.
+      case 1:
+        return Number(document.querySelector("#zoomTabs [data-zoom].is-active")?.dataset.zoom)===2;
+
+      // Explore hanya mempunyai satu halaman utama.
+      case 2:
+        return true;
+
+      // Explain: tab terakhir = Bandingkan (data-cell-page="3").
+      case 3:
+        return Number(document.querySelector("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3;
+
+      // Elaborate: harus berada pada kasus terakhir DAN kasus tersebut sudah selesai.
+      case 4: {
+        const caseTabs=[...document.querySelectorAll("#caseTabs [data-case]")];
+        const active=caseTabs.find(b=>b.classList.contains("is-active"));
+        const last=caseTabs.at(-1);
+        return !!active && active===last && active.classList.contains("is-done");
+      }
+
+      // Evaluate: tampil hanya setelah hasil akhir evaluasi dibuka.
+      case 5:
+        return document.querySelector(".evaluate-panel")?.dataset.evaluationFinished==="true";
+
+      // Reflect hanya mempunyai satu halaman.
+      case 6:
+        return true;
+
+      default:
+        return false;
+    }
+  }
+
+  function updateBottomNavVisibility(){
+    if(!bottomNav) return;
+    const show=isTerminalInternalView();
+    bottomNav.classList.toggle("is-context-hidden",!show);
+    bottomNav.setAttribute("aria-hidden",show?"false":"true");
+  }
+
+  // Internal widgets change DOM state dynamically. Observe only stage panels,
+  // then recalculate the footer without coupling navigation to every widget.
+  const contextualNavObserver=new MutationObserver(()=>{
+    updateBottomNavVisibility();
+  });
+  panels.forEach(panel=>{
+    contextualNavObserver.observe(panel,{
+      subtree:true,
+      childList:true,
+      characterData:true,
+      attributes:true,
+      attributeFilter:["class","hidden","data-evaluation-finished"]
+    });
+  });
+
   function showStage(index, doScroll = true) {
     activeStage = Math.max(0, Math.min(stageCount - 1, index));
 
@@ -206,6 +269,7 @@
     }
 
     renderProgress();
+    updateBottomNavVisibility();
     saveState();
   }
 
@@ -1482,6 +1546,8 @@
   ];
   let evalIndex=0, evalScore=0, evalChoice=null, evalLocked=false;
   function renderEval(){
+    const evalPanel=document.querySelector(".evaluate-panel");
+    if(evalPanel) evalPanel.dataset.evaluationFinished="false";
     const item=evalItems[evalIndex];
     $("#evalProgress").textContent="Soal "+(evalIndex+1)+" / "+evalItems.length;
     $("#evalScore").textContent="Skor "+evalScore;
@@ -1510,6 +1576,8 @@
     if(evalIndex<evalItems.length-1){evalIndex++;renderEval()}
     else{
       $("#nextEval").hidden=true;
+      const evalPanel=document.querySelector(".evaluate-panel");
+      if(evalPanel) evalPanel.dataset.evaluationFinished="true";
       $("#evalFeedback").className="module-feedback "+(evalScore>=8?"good":"warn");
       $("#evalFeedback").innerHTML="<b>Evaluasi selesai: "+evalScore+" / "+evalItems.length+".</b> "+(evalScore>=8?"Pemahamanmu sudah kuat. Tinjau kembali soal yang masih salah untuk memperkuat alasan.":"Kembali ke Explain dan Elaborate pada konsep yang masih salah, lalu coba jelaskan dengan bahasamu sendiri.");
     }
