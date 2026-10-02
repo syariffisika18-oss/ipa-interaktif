@@ -253,3 +253,90 @@
     font-size:.52rem;
   }
 }
+
+
+/* =========================================================
+   PHOTO CELL MODELS — user supplied diagrams + precise hotspots
+   ========================================================= */
+.photo-cell-wrap{
+  position:relative;
+  display:block;
+  min-height:0;
+  padding:8px;
+  overflow:hidden;
+  background:#fff;
+}
+.cell-photo-image{
+  display:block;
+  width:100%;
+  max-width:520px;
+  height:auto;
+  margin:0 auto;
+  border-radius:14px;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+.photo-cell-wrap .photo-hotspots{
+  position:absolute;
+  inset:8px;
+  pointer-events:none;
+}
+.photo-cell-wrap .photo-hotspots button{
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  transform:translate(-50%,-50%);
+  width:34px;
+  height:34px;
+  padding:0;
+  display:grid;
+  place-items:center;
+  border:2px solid #fff;
+  border-radius:50%;
+  background:rgba(15,118,110,.94);
+  color:#fff;
+  box-shadow:0 2px 7px rgba(0,0,0,.25);
+  cursor:pointer;
+  pointer-events:auto;
+  touch-action:manipulation;
+  z-index:2;
+}
+.photo-cell-wrap .photo-hotspots button span{
+  font-size:.66rem;
+  font-weight:900;
+  line-height:1;
+}
+.photo-cell-wrap .photo-hotspots button::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius:50%;
+  border:2px solid rgba(15,118,110,.16);
+  opacity:0;
+  transform:scale(.8);
+  transition:.18s;
+}
+.photo-cell-wrap .photo-hotspots button:hover::after,
+.photo-cell-wrap .photo-hotspots button:focus-visible::after,
+.photo-cell-wrap .photo-hotspots button.is-active::after{
+  opacity:1;
+  transform:scale(1);
+}
+.photo-cell-wrap .photo-hotspots button.is-active{
+  background:#5268e8;
+  box-shadow:0 0 0 6px rgba(82,104,232,.15),0 2px 7px rgba(0,0,0,.22);
+}
+@media(max-width:640px){
+  .photo-cell-wrap{padding:5px}
+  .cell-photo-image{max-width:100%}
+  .photo-cell-wrap .photo-hotspots{inset:5px}
+  .photo-cell-wrap .photo-hotspots button{
+    width:28px;height:28px;border-width:2px;
+  }
+  .photo-cell-wrap .photo-hotspots button span{font-size:.56rem}
+}
+@media(orientation:landscape) and (max-width:950px) and (max-height:500px){
+  .cell-photo-image{max-width:340px}
+  .photo-cell-wrap .photo-hotspots button{width:24px;height:24px}
+  .photo-cell-wrap .photo-hotspots button span{font-size:.48rem}
+}
