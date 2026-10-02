@@ -708,6 +708,7 @@ function initPredictionCheck(){
         :'Prediksimu tidak sesuai dengan hasil simulasi. Bukti utamanya: Lampu 2 dan 3 tetap menyala setelah Lampu 1 dilepas.';
       retry.hidden=true;
       testActive=false;
+      window.refreshLearningFooter?.();
       return;
     }
 
@@ -726,6 +727,7 @@ function initPredictionCheck(){
       evidenceGroup.querySelector('[data-prediction-evidence="lain-tetap"]')?.classList.add('revealed-correct');
       retry.hidden=true;
       testActive=false;
+      window.refreshLearningFooter?.();
     }
   });
 
@@ -1027,12 +1029,12 @@ window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
     const holder=document.querySelector('[data-stage-group="concrete"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
     const predictionDone=document.getElementById('predictionStatus')?.textContent.trim()==='Prediksi diperiksa';
-    return slides.length>0 && stageIndex.concrete===slides.length-1 && predictionDone;
+    return slides.length>0 && slides.at(-1).classList.contains("active") && predictionDone;
   }
   if(stage===3){
     const holder=document.querySelector('[data-stage-group="explain"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
-    return slides.length>0 && stageIndex.explain===slides.length-1;
+    return slides.length>0 && slides.at(-1).classList.contains("active");
   }
   if(stage===4){
     return typeof window.isListrikElaborateComplete==='function' && window.isListrikElaborateComplete();
