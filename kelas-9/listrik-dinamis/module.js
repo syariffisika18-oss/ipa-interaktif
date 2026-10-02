@@ -12,7 +12,7 @@ if(resetRequested){
 const state=load();
 let active=Number.isInteger(state.activeStage)?state.activeStage:0, done=new Set(Array.isArray(state.completed)?state.completed:[]), mode=state.mode||config.defaultMode||"mandiri";
 if(!state.sessionId) state.sessionId=id();
-const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.querySelectorAll(".u-stage-panel")], fill=document.getElementById("learningProgressFill"), ptxt=document.getElementById("learningProgressText"), prev=document.getElementById("uPrev"), next=document.getElementById("uNext"), complete=document.getElementById("uComplete"), toast=document.getElementById("uToast");
+const tabs=[...document.querySelectorAll(".u-stage-tab")], panels=[...document.querySelectorAll(".u-stage-panel")], fill=document.getElementById("learningProgressFill"), ptxt=document.getElementById("learningProgressText"), prev=document.getElementById("uPrev"), next=document.getElementById("uNext"), complete=document.getElementById("uComplete"), bottomNav=document.querySelector(".u-bottom-nav"), toast=document.getElementById("uToast");
 window.setLearningStage=show;
 window.getEngagePrediction=()=>state.engagePrediction||"";
 window.getLearningMode=()=>mode;
@@ -141,6 +141,7 @@ function initDiag(){
       state.diagnostic=state.diagnostic||{};
       state.diagnostic[k]=b.dataset.value;
       save();
+      updateLearningFooter();
     });
 
     reveal.onclick=()=>chosen&&paint(chosen,true);
@@ -159,10 +160,14 @@ function initEngage(){
       ?"Prediksi tersimpan. Jelaskan alasanmu kepada kelompok/guru sebelum membuka Explore."
       :"Prediksi tersimpan. Jangan ubah dulu—uji melalui simulasi pada tahap Explore.";
     save();
+    updateLearningFooter();
     window.dispatchEvent(new CustomEvent("engagepredictionchange",{detail:{prediction:state.engagePrediction}}));
   });
   if(state.engagePrediction)document.querySelector('[data-prediction="'+state.engagePrediction+'"]')?.classList.add("selected");
 }
+const learningFooterObserver=new MutationObserver(()=>updateLearningFooter());
+panels.forEach(panel=>learningFooterObserver.observe(panel,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:["class","hidden","disabled","data-stage-complete"]}));
+
 function initReflect(){document.querySelectorAll("[data-reflection]").forEach(f=>f.oninput=()=>{state.reflections=state.reflections||{};state.reflections[f.dataset.reflection]=f.value;changed();save()});const g=document.getElementById("difficultyGrid");(config.difficultyCategories||[]).forEach(c=>{const l=document.createElement("label");l.className="difficulty-option";const i=document.createElement("input");i.type="checkbox";i.dataset.difficulty=c;i.checked=(state.difficulties||[]).includes(c);const s=document.createElement("span");s.textContent=c;l.append(i,s);g.appendChild(l)});g.onchange=()=>{state.difficulties=diffs();changed();save()};document.querySelectorAll("[data-confidence]").forEach(b=>b.onclick=()=>{document.querySelectorAll("[data-confidence]").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");state.confidence=+b.dataset.confidence;changed();save()});if(state.confidence)document.querySelector('[data-confidence="'+state.confidence+'"]')?.classList.add("selected");document.getElementById("sendFeedback").onclick=send}
 function restoreReflect(){const r=state.reflections||{};document.querySelectorAll("[data-reflection]").forEach(f=>f.value=r[f.dataset.reflection]||"")}
 function initTeacherControls(){
@@ -386,6 +391,36 @@ function initSwipeNavigation(){
   },{passive:true});
 }
 
+
+function learningStageReady(index=active){
+  switch(index){
+    case 0:{
+      const groups=[...document.querySelectorAll("[data-diagnostic]")];
+      return groups.length>0 && groups.every(g=>!!g.querySelector("button.selected"));
+    }
+    case 1:
+      return !!state.engagePrediction;
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+      return typeof window.LISTRIK_CONTENT_COMPLETE==="function"
+        ? !!window.LISTRIK_CONTENT_COMPLETE(index)
+        : false;
+    case 6:
+      return true;
+    default:
+      return false;
+  }
+}
+function updateLearningFooter(){
+  if(!bottomNav)return;
+  const ready=learningStageReady(active);
+  bottomNav.classList.toggle("is-context-hidden",!ready);
+  bottomNav.setAttribute("aria-hidden",ready?"false":"true");
+}
+window.refreshLearningFooter=updateLearningFooter;
+
 function initNav(){tabs.forEach(t=>t.onclick=()=>show(+t.dataset.uStage));prev.onclick=()=>active>0&&show(active-1);next.onclick=()=>active<N-1&&show(active+1);complete.onclick=()=>{done.has(active)?done.delete(active):done.add(active);changed();render();save()};document.querySelectorAll("[data-go-stage]").forEach(b=>b.onclick=()=>show(+b.dataset.goStage));document.getElementById("resetLearning").onclick=()=>{
   if(!confirm("Reset seluruh progres, jawaban, identitas, dan refleksi modul ini?")) return;
 
@@ -430,6 +465,7 @@ function show(i,doScroll=true){
   complete.classList.toggle("done",done.has(active));
   complete.textContent=done.has(active)?"✓ Sudah selesai":"Tandai selesai";
   render();
+  updateLearningFooter();
   save();
   if(doScroll){
     scrollToStageMenu();
