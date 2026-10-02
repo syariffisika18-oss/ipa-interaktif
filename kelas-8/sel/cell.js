@@ -1349,6 +1349,7 @@
     const state=hotspotCalibration[kind];
     state.active=active;
     state.wrap()?.classList.toggle("is-calibrating",active);
+    state.wrap()?.querySelector(".photo-hotspots")?.classList.toggle("is-calibrating",active);
     state.panel().hidden=!active;
     state.button().classList.toggle("is-active",active);
     state.button().textContent=active?"Selesai mengatur":"Atur posisi hotspot";
@@ -1358,12 +1359,21 @@
   }
 
   ["animal","plant"].forEach(kind=>{
-    ensureHotspotDefaults(kind);
-    loadHotspotPositions(kind);
+    try{
+      ensureHotspotDefaults(kind);
+      loadHotspotPositions(kind);
 
-    hotspotCalibration[kind].button()?.addEventListener("click",()=>{
-      setCalibrationMode(kind,!hotspotCalibration[kind].active);
-    });
+      const control=hotspotCalibration[kind].button();
+      if(control){
+        control.addEventListener("click",e=>{
+          e.preventDefault();
+          e.stopPropagation();
+          setCalibrationMode(kind,!hotspotCalibration[kind].active);
+        });
+      }
+    }catch(err){
+      console.error("Hotspot calibration init failed:",kind,err);
+    }
   });
 
   document.addEventListener("click",async e=>{
