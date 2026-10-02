@@ -163,6 +163,12 @@
   let journeyIndex=0;
   let furthestJourney=0;
   let modelIndex=0;
+  const exploreVisited=new Set([0]);
+  let predictionChecked=false;
+  const modelSeen=new Set([0]);
+  const nutrientSeen=new Set([0]);
+  const explainPagesSeen=new Set([0]);
+  let evalFinished=false;
 
   // =========================================================
   // KOORDINAT VISUAL FINAL — sumber tunggal untuk semua viewport
@@ -624,7 +630,9 @@
     if(!exploreOrder.includes(index))return;
     journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
+    exploreVisited.add(index);
     renderJourney(true);
+    window.refreshStageFooter?.();
   }
 
   route.addEventListener("click",e=>{
@@ -649,6 +657,7 @@
     const b=e.target.closest("[data-prediction]"); if(!b)return;
     prediction=b.dataset.prediction;
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
+    window.refreshStageFooter?.();
     document.getElementById("predictionFeedback").textContent="Prediksi tersimpan. Gunakan Explore untuk mengujinya.";
   });
   document.getElementById("checkPrediction").onclick=()=>{
@@ -656,6 +665,8 @@
     if(furthestJourney<4){box.className="digest-feedback warn";box.textContent="Jelajahi sampai Usus halus terlebih dahulu.";return}
     if(!prediction){box.className="digest-feedback warn";box.textContent="Kamu belum membuat prediksi pada Engage.";return}
     box.className="digest-feedback good";
+    predictionChecked=true;
+    window.refreshStageFooter?.();
     box.textContent=prediction==="usus-halus"
       ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
       :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
@@ -746,6 +757,7 @@
 
   function renderNutrientModel(index){
     index=Math.max(0,Math.min(nutrientModels.length-1,index));
+    nutrientSeen.add(index);
     const n=nutrientModels[index];
     document.querySelectorAll(".nutrient-tab").forEach((b,i)=>b.classList.toggle("is-active",i===index));
     document.getElementById("nutrientIcon").textContent=n.icon;
@@ -784,6 +796,7 @@
     const hasHelper=n.helper&&n.helper!=="—";
     helper.hidden=!hasHelper;
     helperText.textContent=hasHelper?n.helper:"";
+    window.refreshStageFooter?.();
   }
 
   const nutrientTabs=document.getElementById("nutrientTabs");
@@ -801,6 +814,7 @@
 
   function showExplainPage(index){
     explainPageIndex=Math.max(0,Math.min(explainPages.length-1,index));
+    explainPagesSeen.add(explainPageIndex);
     explainPageTabs.forEach((b,i)=>b.classList.toggle("is-active",i===explainPageIndex));
     explainPages.forEach((p,i)=>p.classList.toggle("is-active",i===explainPageIndex));
     if(explainPageIndex===1){
@@ -809,6 +823,7 @@
         renderModel(modelIndex,false);
       });
     }
+    window.refreshStageFooter?.();
   }
 
   explainPageTabs.forEach((button,i)=>{
@@ -828,6 +843,7 @@
 
   function renderModel(i,animate=true){
     modelIndex=Math.max(0,Math.min(model.length-1,i));
+    modelSeen.add(modelIndex);
     const m=model[modelIndex];
     modelTabs.querySelectorAll("button").forEach((b,j)=>b.classList.toggle("is-active",j===modelIndex));
     setHotspots("[data-explain-organ]",modelIndex);
@@ -846,6 +862,7 @@
       '<b>Perjalanan makanan:</b> '+model.map((x,j)=>
         j===modelIndex?'<strong>'+x.name+'</strong>':x.name
       ).join(' → ');
+    window.refreshStageFooter?.();
   }
 
   modelTabs.addEventListener("click",e=>{
@@ -866,6 +883,7 @@
     const i=btn.dataset.elab;
     document.querySelectorAll(".elab-tab").forEach(b=>b.classList.toggle("is-active",b===btn));
     document.querySelectorAll("[data-elab-page]").forEach(p=>p.classList.toggle("is-active",p.dataset.elabPage===i));
+    window.refreshStageFooter?.();
   }));
 
   // Utilitas percobaan terbatas untuk seluruh Elaborate
@@ -1870,6 +1888,49 @@
     renderEval();
   });
   document.getElementById("evalPrev").onclick=()=>{if(qi>0){qi--;renderEval()}};
-  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;renderEval()}else{const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/20. Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari."}};
+  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;renderEval()}else{evalFinished=true;const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/20. Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";window.refreshStageFooter?.()}};
+
+  window.IPA_STAGE_COMPLETE_CHECK=(stage)=>{
+    switch(Number(stage)){
+      case 0:
+        return /^7\s*\/\s*7\b/.test(document.getElementById("nutrientGameScore")?.textContent||"");
+      case 1:
+        return !!prediction;
+      case 2:
+        return journeyIndex===exploreOrder.length-1
+          && exploreVisited.size===exploreOrder.length
+          && predictionChecked;
+      case 3:
+        return explainPageIndex===explainPages.length-1
+          && explainPagesSeen.size===explainPages.length
+          && modelSeen.size===model.length
+          && nutrientSeen.size===nutrientModels.length;
+      case 4: {
+        const activeElab=document.querySelector(".elab-tab.is-active")?.dataset.elab;
+        const casesDone=hotsCaseStates.every((_,i)=>hotsCaseDone(i));
+        return activeElab==="2"
+          && pathwayAttempt.finalized
+          && absorptionAttempt.finalized
+          && casesDone
+          && modelErrorAttempt.finalized
+          && modelCorrectionAttempt.finalized
+          && bileAttempt.finalized;
+      }
+      case 5:
+        return evalFinished && qi===questions.length-1 && responses.every(Boolean);
+      case 6:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const scheduleDigestFooter=()=>setTimeout(()=>window.refreshStageFooter?.(),0);
+  document.addEventListener("click",scheduleDigestFooter,true);
+  document.addEventListener("change",scheduleDigestFooter,true);
+  document.addEventListener("input",scheduleDigestFooter,true);
+  window.refreshStageFooter?.();
+
   renderEval();
+  window.refreshStageFooter?.();
 })();
