@@ -551,3 +551,6 @@
 @media(prefers-reduced-motion:reduce){
   .app-header,.stage-nav{transition:none}
 }
+
+/* CONTEXTUAL FOOTER: hidden until the current stage's internal work is complete */
+.bottom-nav.is-context-hidden{display:none!important}
