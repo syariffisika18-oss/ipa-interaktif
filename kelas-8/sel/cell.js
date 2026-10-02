@@ -891,25 +891,105 @@
       : "<b>Belum tepat.</b> Organ dan jaringan masih tersusun atas unit yang lebih kecil. Cari unit terkecil yang masih hidup.";
   });
 
-  // ---------- ENGAGE: zoom ----------
-  $$("#zoomTabs [data-zoom]").forEach(btn=>btn.addEventListener("click",()=>{
-    const i=Number(btn.dataset.zoom);
-    $$("#zoomTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
-    $$("[data-zoom-panel]").forEach(p=>p.hidden=Number(p.dataset.zoomPanel)!==i);
-  }));
-  let engageChoice="", engageLocked=false;
-  $("#engageOptions")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-engage]"); if(!b||engageLocked)return;
-    engageChoice=b.dataset.engage; setSelected($("#engageOptions"),b);
+  // ---------- ENGAGE: progressive zoom Guided Inquiry ----------
+  let zoomIndex=0;
+  let maxZoomUnlocked=0;
+  let engageChoice="";
+  let engageLocked=false;
+
+  function renderZoom(){
+    $("[data-zoom-panel]").forEach(p=>{
+      p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;
+    });
+
+    $("#zoomTabs [data-zoom]").forEach(btn=>{
+      const i=Number(btn.dataset.zoom);
+      const unlocked=i<=maxZoomUnlocked;
+      btn.disabled=!unlocked;
+      btn.classList.toggle("is-unlocked",unlocked);
+      btn.classList.toggle("is-active",i===zoomIndex);
+    });
+
+    $("#zoomPrev").hidden=zoomIndex===0;
+
+    if(zoomIndex===0){
+      $("#zoomGuide").textContent="Apa yang mungkin terlihat jika daun diperbesar?";
+      $("#zoomNext").hidden=false;
+      $("#zoomNext").textContent="Perbesar daun →";
+      $("#engageQuestion").hidden=true;
+    }else if(zoomIndex===1){
+      $("#zoomGuide").textContent=engageLocked
+        ?"Prediksi sudah dikunci. Sekarang buka unit yang diamati."
+        :"Amati unit-unit kecil ini, lalu buat dugaan sebelum memperbesar lagi.";
+      $("#engageQuestion").hidden=false;
+      $("#zoomNext").hidden=!engageLocked;
+      $("#zoomNext").textContent="Perbesar salah satu unit →";
+    }else{
+      $("#zoomGuide").textContent="Bandingkan hasil pengamatan dengan prediksimu.";
+      $("#zoomNext").hidden=true;
+      $("#engageQuestion").hidden=false;
+    }
+  }
+
+  $("#zoomNext")?.addEventListener("click",()=>{
+    if(zoomIndex===0){
+      zoomIndex=1;
+      maxZoomUnlocked=Math.max(maxZoomUnlocked,1);
+      renderZoom();
+      return;
+    }
+    if(zoomIndex===1&&engageLocked){
+      zoomIndex=2;
+      maxZoomUnlocked=2;
+      renderZoom();
+
+      const good=engageChoice==="sel";
+      $("#engageFeedback").className="module-feedback "+(good?"good":"warn");
+      $("#engageFeedback").innerHTML=good
+        ? "<b>Prediksimu sesuai pengamatan.</b> Unit tersebut adalah sel. Selanjutnya kita akan menyelidiki mengapa sel disebut unit kehidupan."
+        : "<b>Bandingkan kembali dengan pengamatan.</b> Unit yang ditunjukkan adalah sel. Pada Explain nanti kita akan membedakan sel dari molekul dan organ.";
+    }
   });
+
+  $("#zoomPrev")?.addEventListener("click",()=>{
+    if(zoomIndex>0){
+      zoomIndex--;
+      renderZoom();
+    }
+  });
+
+  $("#zoomTabs")?.addEventListener("click",e=>{
+    const b=e.target.closest("[data-zoom]");
+    if(!b||b.disabled)return;
+    const target=Number(b.dataset.zoom);
+    if(target===2&&!engageLocked)return;
+    zoomIndex=target;
+    renderZoom();
+  });
+
+  $("#engageOptions")?.addEventListener("click",e=>{
+    const b=e.target.closest("[data-engage]");
+    if(!b||engageLocked)return;
+    engageChoice=b.dataset.engage;
+    setSelected($("#engageOptions"),b);
+  });
+
   $("#lockEngage")?.addEventListener("click",()=>{
-    if(!engageChoice){$("#engageFeedback").textContent="Pilih satu dugaan terlebih dahulu.";return}
+    if(!engageChoice){
+      $("#engageFeedback").textContent="Pilih satu dugaan terlebih dahulu.";
+      return;
+    }
+
     engageLocked=true;
     $("#lockEngage").disabled=true;
-    $$("#engageOptions button").forEach(b=>b.disabled=true);
+    $("#engageOptions button").forEach(b=>b.disabled=true);
+
     $("#engageFeedback").className="module-feedback neutral";
-    $("#engageFeedback").innerHTML="<b>Prediksi dikunci.</b> Jangan ubah dulu. Gunakan Explore untuk menguji apakah dugaanmu konsisten dengan konsep sel.";
+    $("#engageFeedback").innerHTML="<b>Prediksi dikunci.</b> Jawaban belum dibuka. Tekan <b>Perbesar salah satu unit</b> untuk menguji dugaanmu.";
+    renderZoom();
   });
+
+  renderZoom();
 
   // ---------- EXPLORE: POE mikroskop ----------
   let objective=10, magChoice="", predictionLocked=false;
