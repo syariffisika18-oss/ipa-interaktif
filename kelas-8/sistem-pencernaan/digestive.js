@@ -759,7 +759,10 @@
     index=Math.max(0,Math.min(nutrientModels.length-1,index));
     nutrientSeen.add(index);
     const n=nutrientModels[index];
-    document.querySelectorAll(".nutrient-tab").forEach((b,i)=>b.classList.toggle("is-active",i===index));
+    document.querySelectorAll(".nutrient-tab").forEach((b,i)=>{
+      b.classList.toggle("is-active",i===index);
+      if(i===index)b.classList.add("is-viewed");
+    });
     document.getElementById("nutrientIcon").textContent=n.icon;
     document.getElementById("nutrientName").textContent=n.name;
     document.getElementById("nutrientFinal").textContent=n.final;
@@ -815,7 +818,10 @@
   function showExplainPage(index){
     explainPageIndex=Math.max(0,Math.min(explainPages.length-1,index));
     explainPagesSeen.add(explainPageIndex);
-    explainPageTabs.forEach((b,i)=>b.classList.toggle("is-active",i===explainPageIndex));
+    explainPageTabs.forEach((b,i)=>{
+      b.classList.toggle("is-active",i===explainPageIndex);
+      if(i===explainPageIndex)b.classList.add("is-viewed");
+    });
     explainPages.forEach((p,i)=>p.classList.toggle("is-active",i===explainPageIndex));
     if(explainPageIndex===1){
       requestAnimationFrame(()=>{
@@ -845,7 +851,10 @@
     modelIndex=Math.max(0,Math.min(model.length-1,i));
     modelSeen.add(modelIndex);
     const m=model[modelIndex];
-    modelTabs.querySelectorAll("button").forEach((b,j)=>b.classList.toggle("is-active",j===modelIndex));
+    modelTabs.querySelectorAll("button").forEach((b,j)=>{
+      b.classList.toggle("is-active",j===modelIndex);
+      if(j===modelIndex)b.classList.add("is-viewed");
+    });
     setHotspots("[data-explain-organ]",modelIndex);
     const ball=document.getElementById("explainFoodBall");
     animate?animateBall(ball,modelIndex):placeBall(ball,modelIndex,true);
@@ -1900,11 +1909,14 @@
         return journeyIndex===exploreOrder.length-1
           && exploreVisited.size===exploreOrder.length
           && predictionChecked;
-      case 3:
-        return explainPageIndex===explainPages.length-1
-          && explainPagesSeen.size===explainPages.length
-          && modelSeen.size===model.length
-          && nutrientSeen.size===nutrientModels.length;
+      case 3: {
+        const pagesAll=explainPageTabs.length>0&&explainPageTabs.every(b=>b.classList.contains("is-viewed"));
+        const modelButtons=[...document.querySelectorAll("#modelTabs [data-model]")];
+        const modelsAll=modelButtons.length===model.length&&modelButtons.every(b=>b.classList.contains("is-viewed"));
+        const nutrientButtons=[...document.querySelectorAll("#nutrientTabs [data-nutrient]")];
+        const nutrientsAll=nutrientButtons.length===nutrientModels.length&&nutrientButtons.every(b=>b.classList.contains("is-viewed"));
+        return explainPageIndex===explainPages.length-1&&pagesAll&&modelsAll&&nutrientsAll;
+      }
       case 4: {
         const activeElab=document.querySelector(".elab-tab.is-active")?.dataset.elab;
         const casesDone=hotsCaseStates.every((_,i)=>hotsCaseDone(i));
