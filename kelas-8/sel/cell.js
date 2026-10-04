@@ -379,7 +379,7 @@
     const ignoreTarget = target => {
       if (answerTarget(target)) return false;
       return !!target.closest(
-        "input,textarea,select,a,label,[contenteditable],.stage-nav,.bottom-nav,.mode-card,button"
+        "input,textarea,select,a,label,[contenteditable],.stage-nav,.bottom-nav,.mode-card,button,[data-swipe-lock],.swipe-lock"
       );
     };
 
@@ -1245,6 +1245,18 @@
     photoPanY=0;
     applyPhotoPan();
   }
+
+  $("#scopeField")?.addEventListener("touchstart",e=>{
+    e.stopPropagation();
+  },{passive:true});
+
+  $("#scopeField")?.addEventListener("touchend",e=>{
+    e.stopPropagation();
+  },{passive:true});
+
+  $("#scopeField")?.addEventListener("touchcancel",e=>{
+    e.stopPropagation();
+  },{passive:true});
 
   $("#scopeField")?.addEventListener("pointerdown",e=>{
     if(e.pointerType==="mouse" && e.button!==0) return;
