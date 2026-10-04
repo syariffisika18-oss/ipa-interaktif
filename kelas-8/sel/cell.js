@@ -238,6 +238,14 @@
     bottomNav.setAttribute("aria-hidden",show?"false":"true");
   }
 
+  // Shared bridge for the module-specific interaction IIFE below.
+  // Keeps the internal-view progress sets and contextual footer in one source of truth.
+  window.CELL_MODULE_BRIDGE={
+    engageZoomSeen,
+    explainPageSeen,
+    updateBottomNavVisibility
+  };
+
   // Internal widgets change DOM state dynamically. Observe only stage panels,
   // then recalculate the footer without coupling navigation to every widget.
   const contextualNavObserver=new MutationObserver(()=>{
@@ -890,7 +898,15 @@
    ========================================================= */
 (() => {
   const $ = (s, root=document) => root.querySelector(s);
-  const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+  const $ = (s, root=document) => [...root.querySelectorAll(s)];
+
+  const moduleBridge=window.CELL_MODULE_BRIDGE||{};
+  const engageZoomSeen=moduleBridge.engageZoomSeen||new Set([0]);
+  const explainPageSeen=moduleBridge.explainPageSeen||new Set([0]);
+  const updateBottomNavVisibility=
+    typeof moduleBridge.updateBottomNavVisibility==="function"
+      ? moduleBridge.updateBottomNavVisibility
+      : ()=>{};
 
   function setSelected(root, target){
     $$("button", root).forEach(b=>b.classList.toggle("is-selected", b===target));
