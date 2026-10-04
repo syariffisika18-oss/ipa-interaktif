@@ -898,7 +898,7 @@
    ========================================================= */
 (() => {
   const $ = (s, root=document) => root.querySelector(s);
-  const $ = (s, root=document) => [...root.querySelectorAll(s)];
+  const all = (s, root=document) => [...root.querySelectorAll(s)];
 
   const moduleBridge=window.CELL_MODULE_BRIDGE||{};
   const engageZoomSeen=moduleBridge.engageZoomSeen||new Set([0]);
@@ -909,7 +909,7 @@
       : ()=>{};
 
   function setSelected(root, target){
-    $$("button", root).forEach(b=>b.classList.toggle("is-selected", b===target));
+    all("button", root).forEach(b=>b.classList.toggle("is-selected", b===target));
   }
 
   // ---------- ORIENTASI: 8 ciri makhluk hidup ----------
@@ -969,7 +969,7 @@
   }
 }
     $("#checkLife").disabled=true;
-    $$("#lifeOptions button").forEach(b=>b.disabled=true);
+    all("#lifeOptions button").forEach(b=>b.disabled=true);
     $("#nextLife").hidden=false;
     $("#nextLife").textContent=lifeIndex===lifeItems.length-1?"Lanjut ke sel →":"Situasi berikutnya →";
   });
@@ -991,11 +991,11 @@
 
   function renderZoom(){
     engageZoomSeen.add(zoomIndex);
-    $("[data-zoom-panel]").forEach(p=>{
+    all("[data-zoom-panel]").forEach(p=>{
       p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;
     });
 
-    $$("#zoomTabs [data-zoom]").forEach(btn=>{
+    all("#zoomTabs [data-zoom]").forEach(btn=>{
       const i=Number(btn.dataset.zoom);
       const unlocked=i<=maxZoomUnlocked;
       btn.disabled=!unlocked;
@@ -1076,7 +1076,7 @@
 
     engageLocked=true;
     $("#lockEngage").disabled=true;
-    $$("#engageOptions button").forEach(b=>b.disabled=true);
+    all("#engageOptions button").forEach(b=>b.disabled=true);
 
     $("#engageFeedback").className="module-feedback neutral";
     $("#engageFeedback").innerHTML="<b>Prediksi dikunci.</b> Jawaban belum dibuka. Tekan <b>Perbesar salah satu unit</b> untuk menguji dugaanmu.";
@@ -1317,7 +1317,7 @@
       : "<b>Prediksi belum tepat.</b> Pembesaran totalnya <b>"+ocular()+"× × "+objective+"× = "+t+"×</b>.";
 
     $("#lockMagnification").disabled=true;
-    $("#magnificationOptions button").forEach(b=>b.disabled=true);
+    all("#magnificationOptions button").forEach(b=>b.disabled=true);
     revealMicroscope(false);
     updateBottomNavVisibility();
   });
@@ -1326,11 +1326,11 @@
   updateLensPreview(false);
 
   // ---------- EXPLAIN tabs ----------
-  $("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
+  all("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
     const i=Number(btn.dataset.cellPage);
     explainPageSeen.add(i);
-    $("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
-    $("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
+    all("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
+    all("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
     updateBottomNavVisibility();
   }));
 
@@ -1402,16 +1402,16 @@
     const data=organelles[key]; if(!data)return;
     const info=kind==="animal"?$("#animalOrganelleInfo"):$("#plantOrganelleInfo");
     const wrap=button.closest(".cell-model-wrap");
-    $$(".organelle-hotspots button",wrap).forEach(b=>b.classList.toggle("is-active",b===button));
-    $$(".organelle-shape",wrap).forEach(s=>s.classList.toggle("is-active",s.dataset.orgShape===key));
+    all(".organelle-hotspots button",wrap).forEach(b=>b.classList.toggle("is-active",b===button));
+    all(".organelle-shape",wrap).forEach(s=>s.classList.toggle("is-active",s.dataset.orgShape===key));
     const hotspotLabel=button.querySelector(":scope > span:not(.hotspot-coordinate-tag)")?.textContent?.trim()||"";
     info.innerHTML='<span class="organelle-number">'+hotspotLabel+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
     const seen=kind==="animal"?seenAnimal:seenPlant;
     seen.add(key);
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
-  $$(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
-  $$(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
+  all(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
+  all(".plant-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("plant",b.dataset.organelle,b)));
 
 
   // ---------- Compare ----------
@@ -1424,7 +1424,7 @@
   $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'">'+n+'</button>').join("");
   $("#compareButtons").addEventListener("click",e=>{
     const b=e.target.closest("[data-compare]"); if(!b)return;
-    $("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
+    all("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
     compareSeen.add(b.dataset.compare);
     b.classList.add("is-viewed");
     $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
@@ -1609,7 +1609,7 @@
     if(evalChoice===null){$("#evalFeedback").textContent="Pilih satu jawaban sebelum mengunci.";return}
     const item=evalItems[evalIndex],good=evalChoice===item.a;
     evalLocked=true;if(good)evalScore++;
-    $$("#evalOptions button").forEach((b,i)=>{b.disabled=true;b.classList.toggle("correct",i===item.a);b.classList.toggle("wrong",i===evalChoice&&!good)});
+    all("#evalOptions button").forEach((b,i)=>{b.disabled=true;b.classList.toggle("correct",i===item.a);b.classList.toggle("wrong",i===evalChoice&&!good)});
     $("#evalFeedback").className="module-feedback "+(good?"good":"warn");
     $("#evalFeedback").innerHTML=(good?"<b>Tepat.</b> ":"<b>Belum tepat.</b> ")+item.why;
     $("#evalScore").textContent="Skor "+evalScore;$("#lockEval").disabled=true;$("#nextEval").hidden=false;
