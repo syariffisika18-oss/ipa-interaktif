@@ -1452,23 +1452,23 @@
   const cases=[
     {
       title:"Sel otot bekerja sangat aktif",
-      text:"Sebuah sel otot membutuhkan energi dalam jumlah besar untuk berkontraksi berulang kali.",
+      text:"Sel otot harus berkontraksi berulang kali sehingga membutuhkan banyak energi.",
       organ:"Mitokondria",
       organs:["Ribosom","Mitokondria","Badan Golgi"],
-      hintOrgan:"Cari organel yang paling langsung berkaitan dengan penyediaan energi yang dapat digunakan sel.",
-      reason:"Mitokondria melakukan respirasi seluler yang menghasilkan energi untuk berbagai aktivitas sel.",
+      hintOrgan:"Pikirkan organel yang menghasilkan energi yang digunakan sel untuk beraktivitas.",
+      reason:"Mitokondria menjadi tempat respirasi seluler yang menghasilkan energi untuk berbagai aktivitas sel.",
       reasons:[
-        "Mitokondria melakukan respirasi seluler yang menghasilkan energi untuk berbagai aktivitas sel.",
+        "Mitokondria menjadi tempat respirasi seluler yang menghasilkan energi untuk berbagai aktivitas sel.",
         "Mitokondria mengemas protein agar dapat dikirim ke luar sel.",
         "Mitokondria mengendalikan keluar-masuknya seluruh zat melalui permukaan sel."
       ]
     },
     {
-      title:"Daun tidak mampu berfotosintesis normal",
-      text:"Sel-sel daun masih hidup, tetapi kemampuan menangkap energi cahaya untuk membentuk bahan organik sangat menurun.",
+      title:"Fotosintesis pada daun menurun",
+      text:"Sel-sel daun masih hidup, tetapi kemampuannya menggunakan energi cahaya untuk membuat glukosa melalui fotosintesis sangat menurun.",
       organ:"Kloroplas",
       organs:["Kloroplas","Vakuola","Nukleus"],
-      hintOrgan:"Cari organel tumbuhan yang berkaitan langsung dengan fotosintesis.",
+      hintOrgan:"Pikirkan organel tempat fotosintesis berlangsung.",
       reason:"Kloroplas mengandung klorofil dan menjadi tempat berlangsungnya fotosintesis.",
       reasons:[
         "Kloroplas mengandung klorofil dan menjadi tempat berlangsungnya fotosintesis.",
@@ -1477,40 +1477,40 @@
       ]
     },
     {
-      title:"Pertukaran zat tidak terkendali",
-      text:"Sebuah sel tidak mampu lagi mengatur zat mana yang masuk dan keluar dari lingkungan sekitarnya.",
+      title:"Sel tidak dapat mengatur zat yang masuk dan keluar",
+      text:"Zat dari lingkungan dapat masuk dan keluar sel tanpa pengaturan yang baik.",
       organ:"Membran sel",
       organs:["Membran sel","Dinding sel","Sitoplasma"],
-      hintOrgan:"Fokus pada batas sel yang bersifat selektif.",
-      reason:"Membran sel membatasi sel dan mengatur pertukaran zat secara selektif.",
+      hintOrgan:"Pikirkan bagian sel yang mengatur zat mana yang boleh masuk dan keluar.",
+      reason:"Membran sel membatasi sel dan mengatur zat mana yang dapat masuk atau keluar.",
       reasons:[
-        "Membran sel membatasi sel dan mengatur pertukaran zat secara selektif.",
+        "Membran sel membatasi sel dan mengatur zat mana yang dapat masuk atau keluar.",
         "Membran sel menghasilkan protein yang dibutuhkan seluruh organel.",
         "Membran sel menjadi tempat utama respirasi seluler."
       ]
     },
     {
-      title:"Sel tumbuhan kehilangan kekakuan",
-      text:"Dinding sel masih utuh, tetapi sel tumbuhan kehilangan banyak air sehingga tekanan dari bagian dalam sel menurun.",
+      title:"Sel tumbuhan menjadi kurang tegang",
+      text:"Dinding sel masih utuh, tetapi sel kehilangan banyak air sehingga tekanan dari dalam sel menurun.",
       organ:"Vakuola",
       organs:["Vakuola","Dinding sel","Badan Golgi"],
-      hintOrgan:"Cari kompartemen besar yang menyimpan air dan membantu tekanan turgor.",
-      reason:"Vakuola menyimpan air dan membantu mempertahankan tekanan turgor pada sel tumbuhan.",
+      hintOrgan:"Pikirkan organel besar pada sel tumbuhan yang banyak menyimpan air.",
+      reason:"Vakuola menyimpan banyak air dan membantu mempertahankan tekanan turgor, yaitu tekanan dari dalam sel tumbuhan.",
       reasons:[
-        "Vakuola menyimpan air dan membantu mempertahankan tekanan turgor pada sel tumbuhan.",
+        "Vakuola menyimpan banyak air dan membantu mempertahankan tekanan turgor, yaitu tekanan dari dalam sel tumbuhan.",
         "Vakuola mengandung klorofil sehingga menentukan kekakuan sel.",
         "Vakuola membentuk ribosom yang menjaga dinding sel tetap tegang."
       ]
     },
     {
-      title:"Produksi protein menurun tajam",
-      text:"Sel masih memiliki energi dan nukleus berfungsi, tetapi pembentukan protein baru terganggu secara langsung.",
+      title:"Pembuatan protein menurun tajam",
+      text:"Sel masih memiliki energi dan nukleus berfungsi, tetapi pembuatan protein baru terganggu secara langsung.",
       organ:"Ribosom",
       organs:["Ribosom","Nukleolus","Lisosom"],
-      hintOrgan:"Cari struktur yang menjadi tempat berlangsungnya sintesis protein.",
-      reason:"Ribosom merupakan tempat sintesis protein.",
+      hintOrgan:"Pikirkan organel tempat protein dibuat.",
+      reason:"Ribosom merupakan tempat pembuatan protein atau sintesis protein.",
       reasons:[
-        "Ribosom merupakan tempat sintesis protein.",
+        "Ribosom merupakan tempat pembuatan protein atau sintesis protein.",
         "Ribosom menguraikan komponen sel yang rusak menggunakan enzim.",
         "Ribosom menyimpan materi genetik dan mengatur seluruh aktivitas sel."
       ]
@@ -1524,9 +1524,9 @@
   let activeCase=0;
 
   function attemptText(attempts,done){
-    if(done)return attempts===1?"Selesai pada jawaban pertama":"Selesai setelah 1 revisi";
-    if(attempts===1)return "1 percobaan digunakan • 1 revisi tersisa";
-    return "Belum dikunci • maksimal 2 percobaan";
+    if(done)return attempts===1?"Tepat pada jawaban pertama":"Selesai setelah diperbaiki";
+    if(attempts===1)return "Sudah menjawab 1 kali • 1 kesempatan tersisa";
+    return "Belum dikunci • maksimal 2 kali menjawab";
   }
   function caseDone(i){return caseStates[i].reasonDone}
   function updateCaseSummary(){
@@ -1544,12 +1544,12 @@
     const c=cases[activeCase], s=caseStates[activeCase];
     $("#casePanel").innerHTML=
       '<article class="case-card-main"><p class="stage-kicker">KASUS '+(activeCase+1)+'</p><h3>'+c.title+'</h3><p>'+c.text+'</p></article>'+
-      '<section class="case-step"><p><b>Langkah 1 — Pilih organel yang paling langsung terkait.</b></p><div class="case-step-options" id="caseOrganOpts">'+
+      '<section class="case-step"><p><b>Langkah 1 — Organel mana yang fungsinya paling sesuai dengan kondisi pada kasus ini?</b></p><div class="case-step-options" id="caseOrganOpts">'+
       c.organs.map(x=>'<button type="button" data-case-organ="'+x+'" class="'+(s.organSel===x?"is-selected":"")+'" '+(s.organDone?"disabled":"")+'>'+x+'</button>').join("")+
-      '</div><div class="case-lock"><span>'+attemptText(s.organAttempts,s.organDone)+'</span><button type="button" id="lockCaseOrgan" '+(s.organDone?"disabled":"")+'>Kunci organel</button></div><div id="caseOrganFeedback" class="module-feedback neutral">'+(s.organDone?(s.organFinal?"Organel sudah tepat.":"Pembahasan sudah dibuka; lanjutkan ke alasan."):"Pilih satu organel.")+'</div></section>'+
-      '<section class="case-step '+(!s.organDone?"locked-step":"")+'"><p><b>Langkah 2 — Pilih alasan yang paling menjelaskan hubungan struktur–fungsi.</b></p><div class="case-step-options" id="caseReasonOpts">'+
+      '</div><div class="case-lock"><span>'+attemptText(s.organAttempts,s.organDone)+'</span><button type="button" id="lockCaseOrgan" '+(s.organDone?"disabled":"")+'>Kunci pilihan organel</button></div><div id="caseOrganFeedback" class="module-feedback neutral">'+(s.organDone?(s.organFinal?"Pilihan organelmu tepat.":"Baca pembahasan, lalu lanjutkan ke langkah 2."):"Pilih satu organel yang menurutmu paling sesuai.")+'</div></section>'+
+      '<section class="case-step '+(!s.organDone?"locked-step":"")+'"><p><b>Langkah 2 — Mengapa organel tersebut paling sesuai?</b></p><div class="case-step-options" id="caseReasonOpts">'+
       c.reasons.map(x=>'<button type="button" data-case-reason="'+x.replace(/"/g,'&quot;')+'" class="'+(s.reasonSel===x?"is-selected":"")+'" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>'+x+'</button>').join("")+
-      '</div><div class="case-lock"><span>'+(!s.organDone?"Menunggu langkah 1":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasan sudah tepat.":"Pembahasan sudah dibuka."):"Pilih satu alasan."))+'</div></section>';
+      '</div><div class="case-lock"><span>'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasanmu tepat.":"Baca pembahasan alasan yang benar."):"Pilih alasan yang paling tepat menjelaskan pilihan organelmu."))+'</div></section>';
     renderCaseTabs();
   }
   $("#caseTabs").addEventListener("click",e=>{const b=e.target.closest("[data-case]");if(!b)return;activeCase=Number(b.dataset.case);renderCase()});
@@ -1561,13 +1561,13 @@
     if(b&&s.organDone&&!s.reasonDone){s.reasonSel=b.dataset.caseReason;renderCase();return}
     if(e.target.closest("#lockCaseOrgan")){
       const fbText=()=>{
-        if(!s.organSel)return "Pilih satu organel sebelum mengunci.";
+        if(!s.organSel)return "Pilih satu organel yang menurutmu paling sesuai sebelum mengunci.";
         const good=s.organSel===c.organ;
         s.organAttempts++; if(s.organFirst===null)s.organFirst=good;
         if(good||s.organAttempts>=2){s.organDone=true;s.organFinal=good}
-        if(good)return "<b>Tepat.</b> "+c.organ+" paling langsung sesuai dengan data kasus.";
-        if(!s.organDone)return "<b>Belum tepat.</b> "+c.hintOrgan+" Satu revisi tersisa.";
-        return "<b>Dua percobaan selesai.</b> Organel yang paling tepat adalah <b>"+c.organ+"</b>.";
+        if(good)return "<b>Tepat.</b> Fungsi "+c.organ+" paling sesuai dengan kondisi pada kasus ini.";
+        if(!s.organDone)return "<b>Belum tepat.</b> "+c.hintOrgan+" Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
+        return "<b>Dua kali menjawab selesai.</b> Organel yang paling sesuai adalah <b>"+c.organ+"</b>. Perhatikan kembali fungsi organel tersebut sebelum melanjutkan ke langkah 2.";
       };
       const txt=fbText();renderCase();const f=$("#caseOrganFeedback");f.className="module-feedback "+(s.organFinal?"good":"warn");f.innerHTML=txt;return;
     }
@@ -1578,8 +1578,8 @@
       if(good||s.reasonAttempts>=2){s.reasonDone=true;s.reasonFinal=good}
       let txt;
       if(good)txt="<b>Tepat.</b> "+c.reason;
-      else if(!s.reasonDone)txt="<b>Belum tepat.</b> Periksa kembali fungsi utama "+c.organ+". Satu revisi tersisa.";
-      else txt="<b>Dua percobaan selesai.</b> Penjelasan yang paling kuat: "+c.reason;
+      else if(!s.reasonDone)txt="<b>Belum tepat.</b> Cocokkan kembali alasanmu dengan fungsi utama "+c.organ+". Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
+      else txt="<b>Dua kali menjawab selesai.</b> Penjelasan yang paling tepat: "+c.reason;
       renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
       updateBottomNavVisibility();
     }
