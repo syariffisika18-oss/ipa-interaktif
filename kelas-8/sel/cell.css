@@ -871,3 +871,87 @@
     flex-direction:column;
   }
 }
+
+
+/* =========================================================
+   PORTRAIT HOTSPOT LABEL CLEARANCE
+   Hotspot diperkecil secara visual dan digeser ke arah dalam
+   sel agar tidak menutupi nama organel pada gambar.
+   Hit area tetap ~44px melalui pseudo-element transparan.
+   ========================================================= */
+@media(max-width:640px) and (orientation:portrait){
+  .photo-cell-wrap .photo-hotspots button{
+    width:20px!important;
+    height:20px!important;
+    border-width:1.5px!important;
+    box-shadow:0 1px 4px rgba(0,0,0,.22)!important;
+    z-index:3;
+  }
+
+  .photo-cell-wrap .photo-hotspots button span{
+    font-size:.45rem!important;
+    line-height:1!important;
+  }
+
+  /* Invisible touch target: visual badge kecil, area sentuh tetap nyaman. */
+  .photo-cell-wrap .photo-hotspots button::before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:44px;
+    height:44px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:transparent;
+  }
+
+  .photo-cell-wrap .photo-hotspots button::after{
+    inset:-4px!important;
+    border-width:1px!important;
+  }
+
+  .photo-cell-wrap .photo-hotspots button.is-active{
+    box-shadow:0 0 0 4px rgba(82,104,232,.12),0 1px 4px rgba(0,0,0,.22)!important;
+  }
+
+  /* Sel hewan: label kiri digeser ke kanan, label kanan ke kiri. */
+  .animal-hotspots button[data-organelle="nucleus"],
+  .animal-hotspots button[data-organelle="nucleolus"],
+  .animal-hotspots button[data-organelle="lysosome"]{
+    margin-left:12px;
+  }
+
+  .animal-hotspots button[data-organelle="er"],
+  .animal-hotspots button[data-organelle="ribosome"],
+  .animal-hotspots button[data-organelle="golgi"],
+  .animal-hotspots button[data-organelle="mitochondria"],
+  .animal-hotspots button[data-organelle="membrane"]{
+    margin-left:-12px;
+  }
+
+  .animal-hotspots button[data-organelle="cytoplasm"]{
+    margin-top:-8px;
+  }
+
+  /* Sel tumbuhan: pola yang sama—badge bergerak menjauh dari teks tepi. */
+  .plant-hotspots button[data-organelle="nucleolus"],
+  .plant-hotspots button[data-organelle="nucleus"],
+  .plant-hotspots button[data-organelle="er"],
+  .plant-hotspots button[data-organelle="cytoplasm"]{
+    margin-left:12px;
+  }
+
+  .plant-hotspots button[data-organelle="chloroplast"],
+  .plant-hotspots button[data-organelle="ribosome"],
+  .plant-hotspots button[data-organelle="vacuole"],
+  .plant-hotspots button[data-organelle="membrane"],
+  .plant-hotspots button[data-organelle="wall"]{
+    margin-left:-12px;
+  }
+
+  .plant-hotspots button[data-organelle="golgi"],
+  .plant-hotspots button[data-organelle="mitochondria"]{
+    margin-top:8px;
+  }
+}
