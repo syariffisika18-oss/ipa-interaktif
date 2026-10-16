@@ -1067,7 +1067,7 @@ function renderEvalDivision(q,step){
     ? String(previousEvalStep.expected).replace(".",",")
     : null;
 
-  let quotientHtml=step.q;
+  let quotientHtml=step.revealQ && revealed ? step.revealQ : step.q;
   if(isDivide){
     if(!revealed){
       if(String(step.q).includes("ld-red")){
@@ -1101,7 +1101,8 @@ function renderEvalDivision(q,step){
     ? previousEvalStep.rows.find(r=>r.active && !r.line)
     : null;
 
-  const rows=step.rows.map(row=>{
+  const displayRows=step.revealRows && revealed ? step.revealRows : step.rows;
+  const rows=displayRows.map(row=>{
     if(row.line){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
