@@ -12,6 +12,12 @@ const progressText=document.getElementById("progressText");
 const toast=document.getElementById("toast");
 
 let state=load();
+// Struktur latihan/evaluasi berubah: progres sublangkah lama tidak boleh dianggap benar.
+if(state.decisionStepVersion!==2){
+  ["practiceIndex","practiceSolvedSteps","practiceCompleted","evalIndex","evalSolvedSteps","evalCompleted","evalAttempts","evalMistakePhases","evalFirstTry","evalHelpUsed"].forEach(k=>delete state[k]);
+  state.decisionStepVersion=2;
+  localStorage.setItem(KEY,JSON.stringify(state));
+}
 let active=Math.max(0,Math.min(N-1,state.active||0));
 let done=new Set(state.done||[]);
 
@@ -1015,7 +1021,7 @@ function markEvalStepSolved(){
   saveEvalMetrics();
 }
 function evalScoredStepTotal(){
-  return evaluations.reduce((sum,q)=>sum+q.steps.filter(s=>s.type==="divide"||s.type==="number").length,0);
+  return evaluations.reduce((sum,q)=>sum+q.steps.filter(s=>s.type==="divide"||s.type==="number"||s.type==="choice").length,0);
 }
 function evalWeakPhases(){
   const labels={BAGI:"Bagi",KALI:"Kali",KURANGI:"Kurangi"};
