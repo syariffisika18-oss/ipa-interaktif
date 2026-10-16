@@ -444,6 +444,7 @@ const practices=[
   {
     a:156,b:12,answer:"13",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 12?",expected:15,options:[1,15],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 15 dengan 12",target:15,expected:1,
        instruction:"Pilih kelipatan 12 yang paling besar tetapi tidak melebihi 15.",
        q:"?",rows:[]},
@@ -453,6 +454,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"15 − 12",expected:3,
        instruction:"Kurangkan 15 dengan 12.",q:"1",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"3",pos:"first2",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 3",instruction:"Sisa 3 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Turunkan angka berikutnya",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"1",rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"3",pos:"first2"}]},
       {phase:"TURUNKAN",type:"action",title:"Turunkan angka 6",actionLabel:"Turunkan 6",
        instruction:"Turunkan digit berikutnya agar sisa 3 menjadi 36.",q:"1",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right",active:true}]},
@@ -465,6 +467,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"36 − 36",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"13",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"13",rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"156 ÷ 12 = 13",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"13",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -473,6 +476,7 @@ const practices=[
   {
     a:378,b:27,answer:"14",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 27?",expected:37,options:[3,37],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 37 dengan 27",target:37,expected:1,
        instruction:"Pilih kelipatan 27 yang paling besar tetapi tidak melebihi 37.",q:"?",rows:[]},
       {phase:"KALI",type:"number",title:"Kalikan 1 × 27",expected:27,
@@ -481,6 +485,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"37 − 27",expected:10,
        instruction:"Kurangkan 37 dengan 27.",q:"1",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"10",pos:"first2",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 10",instruction:"Sisa 10 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Turunkan angka berikutnya",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"1",rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"10",pos:"first2"}]},
       {phase:"TURUNKAN",type:"action",title:"Turunkan angka 8",actionLabel:"Turunkan 8",
        instruction:"Turunkan digit berikutnya agar 10 menjadi 108.",q:"1",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right",active:true}]},
@@ -493,6 +498,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"108 − 108",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"14",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"14",rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"378 ÷ 27 = 14",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"14",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
@@ -501,6 +507,7 @@ const practices=[
   {
     a:125,b:8,answer:"15,625",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 8?",expected:12,options:[1,12],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 12 dengan 8",target:12,expected:1,
        instruction:"Pilih kelipatan 8 yang paling besar tetapi tidak melebihi 12.",q:"?",rows:[]},
       {phase:"KALI",type:"number",title:"Kalikan 1 × 8",expected:8,
@@ -508,6 +515,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"12 − 8",expected:4,
        instruction:"Kurangkan 12 dengan 8.",q:"1",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"4",pos:"first2",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 4",instruction:"Sisa 4 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Turunkan angka berikutnya",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"1",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"4",pos:"first2"}]},
       {phase:"TURUNKAN",type:"action",title:"Turunkan angka 5",actionLabel:"Turunkan 5",
        instruction:"Turunkan digit berikutnya agar 4 menjadi 45.",q:"1",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right",active:true}]},
@@ -520,6 +528,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"45 − 40",expected:5,
        instruction:"Kurangkan 45 dengan 40.",q:"15",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"5",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 5",instruction:"Sisa 5 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Lanjutkan ke desimal",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"5",pos:"right"}]},
       {phase:"DESIMAL",type:"action",title:"Tambahkan koma dan 0",actionLabel:"Tambahkan koma dan 0",
        instruction:"Tidak ada digit lagi untuk diturunkan. Tambahkan koma pada hasil dan 0 pada sisa agar 5 menjadi 50.",q:'15<span class="ld-red">,</span>',
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right",active:true}]},
@@ -532,6 +541,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"50 − 48",expected:2,
        instruction:"Kurangkan 50 dengan 48.",q:"15,6",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 2",instruction:"Sisa 2 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Lanjutkan ke desimal",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15,6",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right"}]},
       {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
        instruction:"Tambahkan 0 pada sisa 2 sehingga menjadi 20.",q:"15,6",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right",active:true}]},
@@ -544,6 +554,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"20 − 16",expected:4,
        instruction:"Kurangkan 20 dengan 16.",q:"15,62",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"4",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 4",instruction:"Sisa 4 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Lanjutkan ke desimal",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15,62",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"4",pos:"right"}]},
       {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
        instruction:"Tambahkan 0 pada sisa 4 sehingga menjadi 40.",q:"15,62",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right",active:true}]},
@@ -556,6 +567,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"40 − 40",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"15,625",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15,625",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"125 ÷ 8 = 15,625",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15,625",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -696,7 +708,32 @@ function renderPracticeResponse(q,step){
     feedback.textContent="Langkah ini sudah benar. Kamu dapat melanjutkan atau meninjaunya kembali.";
   }
 
-  if(step.type==="divide"){
+  if(step.type==="choice"){
+    response.innerHTML='<div class="choices step-decision-choices">'+step.options.map((option,i)=>
+      '<button type="button" data-choice-index="'+i+'">'+option+'</button>').join("")+'</div>';
+    response.querySelectorAll("button[data-choice-index]").forEach(button=>{
+      button.onclick=()=>{
+        const choice=step.options[Number(button.dataset.choiceIndex)];
+        response.querySelectorAll("button").forEach(b=>b.classList.remove("selected","correct","wrong"));
+        button.classList.add("selected");
+        if(choice===step.expected){
+          button.classList.add("correct");
+          feedback.className="feedback good";
+          feedback.textContent="Benar. Lanjutkan.";
+          practiceStepSolved=true;
+          markPracticeStepSolved();
+          practiceRevealedSteps.add(practiceStepKey());
+          renderPracticeDivision(q,step);
+          document.getElementById("practiceStepNext").disabled=false;
+        }else{
+          button.classList.add("wrong");
+          feedback.className="feedback warn";
+          feedback.textContent="Belum tepat. Bandingkan dengan pembagi dan periksa apakah masih ada angka untuk diturunkan.";
+          
+        }
+      };
+    });
+  }else if(step.type==="divide"){
     multiplePanel.hidden=false;
     multiplePanel.innerHTML=
       '<div class="multiple-head"><strong>Kelipatan '+q.b+'</strong><span>Cari hasil terbesar ≤ '+step.target+'</span></div>'+
@@ -837,6 +874,7 @@ const evaluations=[
   {
     a:168,b:14,answer:"12",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 14?",expected:16,options:[1,16],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 16 dengan 14",target:16,expected:1,
        instruction:"Pilih kelipatan 14 yang paling besar tetapi tidak melebihi 16.",q:"?",rows:[]},
       {phase:"KALI",type:"number",title:"Kalikan 1 × 14",expected:14,
@@ -844,6 +882,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"16 − 14",expected:2,
        instruction:"Kurangkan 16 dengan 14.",q:"1",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"2",pos:"first2",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 2",instruction:"Sisa 2 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Turunkan angka berikutnya",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"1",rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"2",pos:"first2"}]},
       {phase:"TURUNKAN",type:"action",title:"Turunkan angka 8",actionLabel:"Turunkan 8",
        instruction:"Turunkan digit berikutnya agar sisa 2 menjadi 28.",q:"1",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right",active:true}]},
@@ -856,6 +895,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"28 − 28",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"12",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"12",rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"168 ÷ 14 = 12",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"12",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -864,6 +904,7 @@ const evaluations=[
   {
     a:375,b:25,answer:"15",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 25?",expected:37,options:[3,37],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 37 dengan 25",target:37,expected:1,
        instruction:"Pilih kelipatan 25 yang paling besar tetapi tidak melebihi 37.",q:"?",rows:[]},
       {phase:"KALI",type:"number",title:"Kalikan 1 × 25",expected:25,
@@ -871,6 +912,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"37 − 25",expected:12,
        instruction:"Kurangkan 37 dengan 25.",q:"1",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"12",pos:"first2",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 12",instruction:"Sisa 12 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Turunkan angka berikutnya",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"1",rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"12",pos:"first2"}]},
       {phase:"TURUNKAN",type:"action",title:"Turunkan angka 5",actionLabel:"Turunkan 5",
        instruction:"Turunkan digit berikutnya agar 12 menjadi 125.",q:"1",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right",active:true}]},
@@ -883,6 +925,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"125 − 125",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"15",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15",rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"375 ÷ 25 = 15",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
@@ -891,6 +934,7 @@ const evaluations=[
   {
     a:25,b:4,answer:"6,25",
     steps:[
+      {phase:"BAGI",type:"choice",title:"Pilih angka awal",instruction:"Dari kiri, angka mana yang pertama cukup besar untuk dibagi 4?",expected:25,options:[2,25],q:"?",rows:[]},
       {phase:"BAGI",type:"divide",title:"Bagi 25 dengan 4",target:25,expected:6,
        instruction:"Pilih kelipatan 4 yang paling besar tetapi tidak melebihi 25.",q:"?",rows:[]},
       {phase:"KALI",type:"number",title:"Kalikan 6 × 4",expected:24,
@@ -898,6 +942,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"25 − 24",expected:1,
        instruction:"Kurangkan 25 dengan 24.",q:"6",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"1",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 1",instruction:"Sisa 1 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Lanjutkan ke desimal",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"6",rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"1",pos:"right"}]},
       {phase:"DESIMAL",type:"action",title:"Tambahkan koma dan 0",actionLabel:"Tambahkan koma dan 0",
        instruction:"Tidak ada digit lagi untuk diturunkan. Tambahkan koma pada hasil dan 0 pada sisa agar 1 menjadi 10.",q:'6<span class="ld-red">,</span>',
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right",active:true}]},
@@ -910,6 +955,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"10 − 8",expected:2,
        instruction:"Kurangkan 10 dengan 8.",q:"6,2",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 2",instruction:"Sisa 2 lebih kecil dari pembagi. Apa langkah selanjutnya?",expected:"Lanjutkan ke desimal",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"6,2",rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"2",pos:"right"}]},
       {phase:"LANJUTKAN",type:"action",title:"Tambahkan 0",actionLabel:"Tambahkan 0",
        instruction:"Tambahkan 0 pada sisa 2 sehingga menjadi 20.",q:"6,2",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right",active:true}]},
@@ -922,6 +968,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"20 − 20",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"6,25",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"6,25",rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"25 ÷ 4 = 6,25",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"6,25",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -1075,7 +1122,32 @@ function renderEvalResponse(q,step){
     ?"Langkah ini sudah benar."
     :"Kerjakan tanpa bantuan terlebih dahulu.";
 
-  if(step.type==="divide"){
+  if(step.type==="choice"){
+    response.innerHTML='<div class="choices step-decision-choices">'+step.options.map((option,i)=>
+      '<button type="button" data-choice-index="'+i+'">'+option+'</button>').join("")+'</div>';
+    response.querySelectorAll("button[data-choice-index]").forEach(button=>{
+      button.onclick=()=>{
+        const choice=step.options[Number(button.dataset.choiceIndex)];
+        response.querySelectorAll("button").forEach(b=>b.classList.remove("selected","correct","wrong"));
+        button.classList.add("selected");
+        if(choice===step.expected){
+          button.classList.add("correct");
+          feedback.className="feedback good";
+          feedback.textContent="Benar. Lanjutkan.";
+          evalStepSolved=true;
+          markEvalStepSolved();
+          evalRevealedSteps.add(evalStepKey());
+          renderEvalDivision(q,step);
+          document.getElementById("evalStepNext").disabled=false;
+        }else{
+          button.classList.add("wrong");
+          feedback.className="feedback warn";
+          feedback.textContent="Belum tepat. Periksa sisa dan angka yang tersedia.";
+          recordEvalMistake(step);
+        }
+      };
+    });
+  }else if(step.type==="divide"){
     response.innerHTML=
       '<label class="practice-answer-label">Digit hasil bagi'+
         '<div class="practice-answer-row">'+
