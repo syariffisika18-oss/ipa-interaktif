@@ -160,8 +160,8 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Periksa angka pertama: 2",
-    text:"Mulai dari angka paling kiri, yaitu <b>2</b>. Karena <b>2 &lt; 35</b>, kita belum dapat mengambil satu kelompok berisi 35 dari 2. Jadi jangan menulis digit hasil bagi dulu. Lihat digit berikutnya.",
-    rule:"Bila angka di kiri lebih kecil daripada pembagi, sertakan satu digit berikutnya.",
+    text:"<b>2 &lt; 35</b>. Angka 2 terlalu kecil. Ambil angka berikutnya.",
+    rule:"Jika lebih kecil dari 35, ambil angka berikutnya.",
     quotientHTML:"?",
     divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"<span class=\"ld-red\">2</span>40",
@@ -170,8 +170,8 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Periksa dua angka pertama: 24",
-    text:"Gabungkan <b>2</b> dengan digit berikutnya, <b>4</b>, sehingga menjadi <b>24</b>. Karena <b>24 &lt; 35</b>, jumlah tersebut juga belum cukup untuk membentuk satu kelompok 35. Kita perlu melihat digit berikutnya lagi.",
-    rule:"24 belum dipakai sebagai bagian pertama karena 24 ÷ 35 kurang dari 1.",
+    text:"<b>24 &lt; 35</b>. Angka 24 masih terlalu kecil. Ambil angka berikutnya.",
+    rule:"Jika masih lebih kecil dari 35, lanjutkan.",
     quotientHTML:"?",
     divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"<span class=\"ld-red\">24</span>0",
@@ -180,8 +180,8 @@ const processSteps=[
   {
     phase:"BAGI",
     title:"Gunakan 240 sebagai bagian pertama",
-    text:"Gabungkan <b>24</b> dengan digit terakhir <b>0</b> menjadi <b>240</b>. Sekarang <b>240 ≥ 35</b>, sehingga setidaknya satu kelompok 35 dapat diambil. Itulah sebabnya kita membagi <b>240</b>, bukan 2 atau 24.",
-    rule:"Mulai pembagian ketika bilangan dari kiri sudah sama dengan atau lebih besar daripada pembagi.",
+    text:"<b>240 &gt; 35</b>. Sekarang sudah cukup besar. Mulai bagi <b>240 ÷ 35</b>.",
+    rule:"Mulai membagi saat angkanya ≥ 35.",
     quotientHTML:"?",
     divisorHTML:'<span class="ld-red">35</span>',
     dividendHTML:"<span class=\"ld-red\">240</span>",
