@@ -159,12 +159,32 @@ buildMultiples(35,240,document.getElementById("multipleGrid"),{
 const processSteps=[
   {
     phase:"BAGI",
-    title:"Tentukan bagian pertama yang dibagi",
-    text:"<b>Pertama,</b> lihat dari kiri: <span class=\"num-chip\">2</span> &lt; <span class=\"num-chip red\">35</span>. Gabungkan menjadi <span class=\"num-chip red\">24</span>. Karena <span class=\"num-chip red\">24</span> masih &lt; <span class=\"num-chip red\">35</span>, gunakan <span class=\"num-chip\">240</span>.",
-    rule:"Ambil digit dari kiri sampai nilainya sama dengan atau lebih besar daripada pembagi.",
+    title:"Periksa angka pertama: 2",
+    text:"Mulai dari angka paling kiri, yaitu <b>2</b>. Karena <b>2 &lt; 35</b>, kita belum dapat mengambil satu kelompok berisi 35 dari 2. Jadi jangan menulis digit hasil bagi dulu. Lihat digit berikutnya.",
+    rule:"Bila angka di kiri lebih kecil daripada pembagi, sertakan satu digit berikutnya.",
     quotientHTML:"?",
     divisorHTML:'<span class="ld-red">35</span>',
-    dividendHTML:'<span class="ld-red">24</span>0',
+    dividendHTML:"<span class=\"ld-red\">2</span>40",
+    rows:[]
+  },
+  {
+    phase:"BAGI",
+    title:"Periksa dua angka pertama: 24",
+    text:"Gabungkan <b>2</b> dengan digit berikutnya, <b>4</b>, sehingga menjadi <b>24</b>. Karena <b>24 &lt; 35</b>, jumlah tersebut juga belum cukup untuk membentuk satu kelompok 35. Kita perlu melihat digit berikutnya lagi.",
+    rule:"24 belum dipakai sebagai bagian pertama karena 24 ÷ 35 kurang dari 1.",
+    quotientHTML:"?",
+    divisorHTML:'<span class="ld-red">35</span>',
+    dividendHTML:"<span class=\"ld-red\">24</span>0",
+    rows:[]
+  },
+  {
+    phase:"BAGI",
+    title:"Gunakan 240 sebagai bagian pertama",
+    text:"Gabungkan <b>24</b> dengan digit terakhir <b>0</b> menjadi <b>240</b>. Sekarang <b>240 ≥ 35</b>, sehingga setidaknya satu kelompok 35 dapat diambil. Itulah sebabnya kita membagi <b>240</b>, bukan 2 atau 24.",
+    rule:"Mulai pembagian ketika bilangan dari kiri sudah sama dengan atau lebih besar daripada pembagi.",
+    quotientHTML:"?",
+    divisorHTML:'<span class="ld-red">35</span>',
+    dividendHTML:"<span class=\"ld-red\">240</span>",
     rows:[]
   },
   {
