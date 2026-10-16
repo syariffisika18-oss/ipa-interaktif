@@ -227,6 +227,19 @@ const processSteps=[
     ]
   },
   {
+    phase:"KURANGI",
+    title:"Periksa sisa: 30",
+    text:"<b>30 &lt; 35</b>. Sisa 30 lebih kecil dari 35. Tidak ada angka lagi untuk diturunkan.",
+    rule:"Lanjutkan ke desimal: tulis koma, lalu tambah 0 pada sisa.",
+    quotientHTML:"6",
+    dividendHTML:"240",
+    rows:[
+      {html:"210",kind:"product"},
+      {kind:"line",width:3},
+      {html:'<span class="ld-red">30</span>',kind:"remainder"}
+    ]
+  },
+  {
     phase:"DESIMAL",
     title:"Tambahkan koma dan 0",
     text:"",
