@@ -605,6 +605,7 @@ function mergeRemainderActions(questions){
       question.steps.splice(i+1,0,{
         phase:"PERIKSA ANGKA",
         type:"choice",
+        highlightComparison:true,
         title:"Periksa angka "+value,
         instruction:value+" dibandingkan dengan "+question.b+". Pilih yang benar.",
         expected,
@@ -692,7 +693,7 @@ function renderPracticeDivision(q,step){
       : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
 
-  const divisorHtml=isMultiplyStep
+  const divisorHtml=(isMultiplyStep || step.highlightComparison)
     ? '<span class="ld-red">'+q.b+'</span>'
     : q.b;
 
@@ -707,6 +708,7 @@ function renderPracticeDivision(q,step){
     }
 
     let rowHtml=row.html;
+    if(step.highlightComparison && !row.line && row===displayRows.filter(r=>!r.line).at(-1))rowHtml='<span class="ld-red">'+row.html+"</span>";
     let rowPos=row.pos||"right";
 
     // Sebelum TURUNKAN/DESIMAL/LANJUTKAN dijalankan, pertahankan bukan hanya
@@ -1115,7 +1117,7 @@ function renderEvalDivision(q,step){
       : String(step.q).replace(/<span class="ld-red">,?<\/span>/,'<span class="ld-red">...</span>');
   }
 
-  const divisorHtml=isMultiply?'<span class="ld-red">'+q.b+'</span>':q.b;
+  const divisorHtml=(isMultiply||step.highlightComparison)?'<span class="ld-red">'+q.b+'</span>':q.b;
 
   const previousEvalActiveRow=previousEvalStep
     ? previousEvalStep.rows.find(r=>r.active && !r.line)
@@ -1127,6 +1129,7 @@ function renderEvalDivision(q,step){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
     let rowHtml=row.html;
+    if(step.highlightComparison && !row.line && row===displayRows.filter(r=>!r.line).at(-1))rowHtml='<span class="ld-red">'+row.html+"</span>";
     let rowPos=row.pos||"right";
 
     if(row.active&&(isMultiply||isSubtract||isAction||(step.type==="choice"&&!!step.revealRows))){
