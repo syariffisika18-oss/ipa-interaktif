@@ -12,6 +12,11 @@ const progressText=document.getElementById("progressText");
 const toast=document.getElementById("toast");
 
 let state=load();
+// Setiap halaman dibuka ulang, jawaban sublangkah harus diperiksa lagi.
+// Progres soal yang telah selesai tetap disimpan.
+state.practiceSolvedSteps=[];
+state.evalSolvedSteps=[];
+localStorage.setItem(KEY,JSON.stringify(state));
 // Struktur latihan/evaluasi berubah: progres sublangkah lama tidak boleh dianggap benar.
 if(state.decisionStepVersion!==4){
   ["practiceIndex","practiceSolvedSteps","practiceCompleted","evalIndex","evalSolvedSteps","evalCompleted","evalAttempts","evalMistakePhases","evalFirstTry","evalHelpUsed"].forEach(k=>delete state[k]);
@@ -775,6 +780,12 @@ function renderPracticeResponse(q,step){
           document.getElementById("practiceStepNext").disabled=false;
         }else{
           button.classList.add("wrong");
+          practiceSolvedSteps.delete(practiceStepKey());
+          state.practiceSolvedSteps=[...practiceSolvedSteps];
+          practiceRevealedSteps.delete(practiceStepKey());
+          practiceStepSolved=false;
+          document.getElementById("practiceStepNext").disabled=true;
+          save();
           feedback.className="feedback warn";
           feedback.textContent="Belum tepat. Bandingkan dengan pembagi dan periksa apakah masih ada angka untuk diturunkan.";
           
@@ -1194,6 +1205,12 @@ function renderEvalResponse(q,step){
           document.getElementById("evalStepNext").disabled=false;
         }else{
           button.classList.add("wrong");
+          evalSolvedSteps.delete(evalStepKey());
+          state.evalSolvedSteps=[...evalSolvedSteps];
+          evalRevealedSteps.delete(evalStepKey());
+          evalStepSolved=false;
+          document.getElementById("evalStepNext").disabled=true;
+          save();
           feedback.className="feedback warn";
           feedback.textContent="Belum tepat. Periksa sisa dan angka yang tersedia.";
           recordEvalMistake(step);
