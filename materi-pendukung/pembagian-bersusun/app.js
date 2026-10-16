@@ -681,7 +681,8 @@ function renderPracticeDivision(q,step){
     ? previousPracticeStep.rows.find(r=>r.active && !r.line)
     : null;
 
-  const rows=step.rows.map(row=>{
+  const displayRows=step.revealRows && revealed ? step.revealRows : step.rows;
+  const rows=displayRows.map(row=>{
     if(row.line){
       return '<div class="practice-work-row practice-line '+(row.pos||"right")+'" style="--pw:'+String(row.width||3)+'ch"></div>';
     }
@@ -691,7 +692,7 @@ function renderPracticeDivision(q,step){
 
     // Sebelum TURUNKAN/DESIMAL/LANJUTKAN dijalankan, pertahankan bukan hanya
     // nilai sebelumnya tetapi juga kolom/posisi sebelumnya.
-    if(row.active && (isMultiplyStep || isSubtractStep || isActionStep)){
+    if(row.active && (isMultiplyStep || isSubtractStep || isActionStep || (step.type==="choice" && !!step.revealRows))){
       if(isActionStep && !revealed && previousPracticeAnswer!==null){
         rowHtml='<span class="ld-red">'+previousPracticeAnswer+'</span>';
         if(previousPracticeActiveRow){
@@ -1109,7 +1110,7 @@ function renderEvalDivision(q,step){
     let rowHtml=row.html;
     let rowPos=row.pos||"right";
 
-    if(row.active&&(isMultiply||isSubtract||isAction)){
+    if(row.active&&(isMultiply||isSubtract||isAction||(step.type==="choice"&&!!step.revealRows))){
       if(isAction && !revealed && previousEvalAnswer!==null){
         rowHtml='<span class="ld-red">'+previousEvalAnswer+'</span>';
         if(previousEvalActiveRow){
