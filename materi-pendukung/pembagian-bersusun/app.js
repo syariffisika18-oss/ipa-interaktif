@@ -13,9 +13,9 @@ const toast=document.getElementById("toast");
 
 let state=load();
 // Struktur latihan/evaluasi berubah: progres sublangkah lama tidak boleh dianggap benar.
-if(state.decisionStepVersion!==3){
+if(state.decisionStepVersion!==4){
   ["practiceIndex","practiceSolvedSteps","practiceCompleted","evalIndex","evalSolvedSteps","evalCompleted","evalAttempts","evalMistakePhases","evalFirstTry","evalHelpUsed"].forEach(k=>delete state[k]);
-  state.decisionStepVersion=3;
+  state.decisionStepVersion=4;
   localStorage.setItem(KEY,JSON.stringify(state));
 }
 let active=Math.max(0,Math.min(N-1,state.active||0));
@@ -594,6 +594,25 @@ function mergeRemainderActions(questions){
       current.revealQ=next.q;
       current.instruction += " Pilih jawaban untuk melihat perubahannya.";
       question.steps.splice(i+1,1);
+    }
+    // Setelah menurunkan digit/menambah nol, siswa perlu membandingkan
+    // bilangan baru dengan pembagi sebelum mulai membagi lagi.
+    for(let i=0;i<question.steps.length-1;i++){
+      const prior=question.steps[i], following=question.steps[i+1];
+      if(prior.phase!=="PERIKSA SISA" || !prior.revealRows || following.type!=="divide")continue;
+      const value=following.target;
+      const expected=value>=question.b ? "Sama dengan / lebih besar" : "Lebih kecil";
+      question.steps.splice(i+1,0,{
+        phase:"PERIKSA ANGKA",
+        type:"choice",
+        title:"Periksa angka "+value,
+        instruction:value+" dibandingkan dengan "+question.b+". Pilih yang benar.",
+        expected,
+        options:["Lebih kecil","Sama dengan / lebih besar"],
+        q:following.q==="?" ? prior.q : String(following.q).replace(/<span class="ld-red">[\s\S]*?<\/span>/,""),
+        rows:prior.revealRows.map(r=>({...r,active:false}))
+      });
+      i++;
     }
   });
 }
