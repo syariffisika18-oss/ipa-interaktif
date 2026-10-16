@@ -13,9 +13,9 @@ const toast=document.getElementById("toast");
 
 let state=load();
 // Struktur latihan/evaluasi berubah: progres sublangkah lama tidak boleh dianggap benar.
-if(state.decisionStepVersion!==2){
+if(state.decisionStepVersion!==3){
   ["practiceIndex","practiceSolvedSteps","practiceCompleted","evalIndex","evalSolvedSteps","evalCompleted","evalAttempts","evalMistakePhases","evalFirstTry","evalHelpUsed"].forEach(k=>delete state[k]);
-  state.decisionStepVersion=2;
+  state.decisionStepVersion=3;
   localStorage.setItem(KEY,JSON.stringify(state));
 }
 let active=Math.max(0,Math.min(N-1,state.active||0));
@@ -367,7 +367,8 @@ function renderProcessCompare(step){
 
 function renderLongDivision(step){
   const stack=document.getElementById("divisionStack");
-  const rows=step.rows.map(row=>{
+  const displayRows=step.revealRows && revealed ? step.revealRows : step.rows;
+  const rows=displayRows.map(row=>{
     if(row.kind==="line"){
       return '<div class="ld-work-row ld-line" style="--row-ch:'+String(row.width||3)+'"></div>';
     }
@@ -581,6 +582,23 @@ const practices=[
   }
 ];
 
+
+// Gabungkan pemeriksaan sisa dengan turunkan digit / lanjutkan desimal.
+function mergeRemainderActions(questions){
+  questions.forEach(question=>{
+    for(let i=0;i<question.steps.length-1;i++){
+      const current=question.steps[i], next=question.steps[i+1];
+      if(current.type!=="choice" || current.phase!=="PERIKSA SISA" || next.type!=="action")continue;
+      if(!["TURUNKAN","DESIMAL","LANJUTKAN"].includes(next.phase))continue;
+      current.revealRows=next.rows;
+      current.revealQ=next.q;
+      current.instruction += " Pilih jawaban untuk melihat perubahannya.";
+      question.steps.splice(i+1,1);
+    }
+  });
+}
+
+mergeRemainderActions(practices);
 let practiceIndex=Math.min(state.practiceIndex||0,practices.length-1);
 let practiceStepIndex=0;
 let practiceCompleted=new Set(state.practiceCompleted||[]);
@@ -621,7 +639,7 @@ function renderPracticeDivision(q,step){
     ? String(previousPracticeStep.expected).replace(".",",")
     : null;
 
-  let quotientHtml=step.q;
+  let quotientHtml=step.revealQ && revealed ? step.revealQ : step.q;
 
   // Pada langkah BAGI, digit hasil baru tidak ditampilkan sebelum pilihan benar.
   if(isDivideStep){
@@ -725,7 +743,9 @@ function renderPracticeResponse(q,step){
         if(choice===step.expected){
           button.classList.add("correct");
           feedback.className="feedback good";
-          feedback.textContent="Benar. Lanjutkan.";
+          feedback.textContent=step.revealRows
+            ? "Benar. Angka berikutnya langsung diturunkan atau 0 ditambahkan."
+            : "Benar. Lanjutkan.";
           practiceStepSolved=true;
           markPracticeStepSolved();
           practiceRevealedSteps.add(practiceStepKey());
@@ -982,6 +1002,7 @@ const evaluations=[
   }
 ];
 
+mergeRemainderActions(evaluations);
 let evalIndex=0;
 let evalStepIndex=0;
 let evalCompleted=new Set(state.evalCompleted||[]);
@@ -1139,7 +1160,9 @@ function renderEvalResponse(q,step){
         if(choice===step.expected){
           button.classList.add("correct");
           feedback.className="feedback good";
-          feedback.textContent="Benar. Lanjutkan.";
+          feedback.textContent=step.revealRows
+            ? "Benar. Angka berikutnya langsung diturunkan atau 0 ditambahkan."
+            : "Benar. Lanjutkan.";
           evalStepSolved=true;
           markEvalStepSolved();
           evalRevealedSteps.add(evalStepKey());
