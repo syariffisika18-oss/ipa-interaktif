@@ -474,7 +474,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"36 − 36",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"13",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"13",rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"13",rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"156 ÷ 12 = 13",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"13",
        rows:[{html:"12",pos:"first2"},{line:true,pos:"first2",width:2},{html:"36",pos:"right"},{html:"36",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -505,7 +505,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"108 − 108",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"14",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"14",rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"14",rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"378 ÷ 27 = 14",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"14",
        rows:[{html:"27",pos:"first2"},{line:true,pos:"first2",width:2},{html:"108",pos:"right"},{html:"108",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
@@ -574,7 +574,7 @@ const practices=[
       {phase:"KURANGI",type:"number",title:"40 − 40",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"15,625",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15,625",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15,625",rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"125 ÷ 8 = 15,625",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15,625",
        rows:[{html:"8",pos:"first2"},{line:true,pos:"first2",width:2},{html:"45",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"50",pos:"right"},{html:"48",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"16",pos:"right"},{line:true,pos:"right",width:2},{html:"40",pos:"right"},{html:"40",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -943,7 +943,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"28 − 28",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"12",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"12",rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"12",rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"168 ÷ 14 = 12",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"12",
        rows:[{html:"14",pos:"first2"},{line:true,pos:"first2",width:2},{html:"28",pos:"right"},{html:"28",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
@@ -973,7 +973,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"125 − 125",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"15",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15",rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"15",rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"375 ÷ 25 = 15",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"15",
        rows:[{html:"25",pos:"first2"},{line:true,pos:"first2",width:2},{html:"125",pos:"right"},{html:"125",pos:"right"},{line:true,pos:"right",width:3},{html:"0",pos:"right"}]}
@@ -1016,7 +1016,7 @@ const evaluations=[
       {phase:"KURANGI",type:"number",title:"20 − 20",expected:0,
        instruction:"Kurangkan untuk mengetahui sisanya.",q:"6,25",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right",active:true}]},
-      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang dilakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"6,25",rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
+      {phase:"PERIKSA SISA",type:"choice",title:"Periksa sisa 0",instruction:"Sisanya 0. Apa yang perlu kita lakukan?",expected:"Selesai",options:["Selesai","Turunkan angka berikutnya","Lanjutkan ke desimal"],q:"6,25",rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]},
       {phase:"SELESAI",type:"done",title:"25 ÷ 4 = 6,25",
        instruction:"Sisa sudah 0, sehingga pembagian selesai.",q:"6,25",
        rows:[{html:"24",pos:"right"},{line:true,pos:"right",width:2},{html:"10",pos:"right"},{html:"8",pos:"right"},{line:true,pos:"right",width:2},{html:"20",pos:"right"},{html:"20",pos:"right"},{line:true,pos:"right",width:2},{html:"0",pos:"right"}]}
