@@ -1396,7 +1396,12 @@
           '<button type="button" class="primary-inline" data-hots-submit="transfer" '+((!transferUnlocked||state.transfer.finalized)?'disabled':'')+'>'+stepButtonLabel(state.transfer,"transfer")+'</button>'+
         '</div>'+
         '<div class="digest-feedback '+state.transfer.feedbackTone+'">'+state.transfer.feedbackText+'</div>'+
-      '</div>';
+      '</div>'+
+      (hotsCaseDone(activeHotsCase)
+        ? '<div class="hots-case-next"><button type="button" class="primary-inline" data-hots-next>'+
+          (activeHotsCase<hotsCases.length-1?'Lanjut ke Kasus '+(activeHotsCase+2)+' →':'Lanjut ke Uji Model →')+
+          '</button></div>'
+        : '');
 
     updateHotsCaseTabs();
   }
@@ -1421,6 +1426,20 @@
   });
 
   document.getElementById("hotsCasePanel").addEventListener("click",e=>{
+    const next=e.target.closest("[data-hots-next]");
+    if(next){
+      if(!hotsCaseDone(activeHotsCase))return;
+      if(activeHotsCase<hotsCases.length-1){
+        activeHotsCase++;
+        renderHotsCase();
+        document.getElementById("hotsCasePanel").scrollIntoView({behavior:"smooth",block:"start"});
+      }else{
+        const nextTab=document.querySelector('.elab-tab[data-elab="2"]');
+        if(nextTab)nextTab.click();
+        document.querySelector('[data-elab-page="2"]')?.scrollIntoView({behavior:"smooth",block:"start"});
+      }
+      return;
+    }
     const data=hotsCases[activeHotsCase];
     const state=hotsCaseStates[activeHotsCase];
 
