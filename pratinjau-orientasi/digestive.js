@@ -1156,14 +1156,14 @@
       evidenceCorrect:["water","fiber"],
       evidenceGood:"Tepat. Kedua informasi itu merupakan faktor awal yang paling langsung untuk membangun penjelasan tentang perubahan konsistensi feses.",
       evidenceWarn:"Belum kuat. Bedakan faktor awal yang dapat menjelaskan perubahan feses dari keadaan yang netral atau akibat yang sudah muncul.",
-      mechanismPrompt:"Pilih mekanisme sebab–akibat yang paling konsisten dengan kedua bukti.",
+      mechanismPrompt:"Mengapa kurang minum dan kurang makan serat dapat membuat feses Dika menjadi keras?",
       mechanisms:[
-        {id:"1",label:"Kurang air dan serat → usus halus menyerap hampir seluruh air sebelum sisa mencapai usus besar → feses masuk ke usus besar dalam keadaan kering → sulit dikeluarkan",correct:false},
-        {id:"0",label:"Kurang air dan serat → massa feses kurang terbantu mempertahankan air dan bergerak melalui usus besar → feses makin kering dan padat → sulit dikeluarkan",correct:true},
-        {id:"2",label:"Kurang air dan serat → lambung menahan makanan lebih lama dan menyerap lebih banyak air → kimus menjadi sangat kering sebelum masuk usus halus → feses mengeras",correct:false}
+        {id:"1",label:"Makanan terlalu cepat diserap di usus halus sehingga feses mengeras.",correct:false},
+        {id:"0",label:"Feses kekurangan air dan lebih sulit bergerak melalui usus besar.",correct:true},
+        {id:"2",label:"Makanan terlalu lama berada di lambung sehingga feses menjadi kering.",correct:false}
       ],
-      mechanismGood:"Tepat. Rantai penjelasan menghubungkan faktor awal, perubahan pada massa feses di usus besar, lalu akibat akhirnya.",
-      mechanismWarn:"Belum konsisten. Periksa kembali organ yang paling berperan dalam penyerapan air dan pembentukan feses.",
+      mechanismGood:"Tepat. Kekurangan air dan serat dapat membuat feses lebih keras dan lebih sulit dikeluarkan.",
+      mechanismWarn:"Belum tepat. Ingat kembali fungsi usus besar dan peran air serta serat.",
       transferPrompt:"Perubahan mana yang paling langsung menguji dua faktor penyebab yang telah kamu pilih sekaligus?",
       transfers:[
         {id:"1",label:"Menambah jumlah minum tetapi serat tetap rendah; jika model benar, perbaikannya diperkirakan sama besar seperti saat kedua faktor diperbaiki",correct:false},
@@ -1373,7 +1373,7 @@
       '</div>'+
 
       '<div class="hots-case-step '+(!mechanismUnlocked?'locked-step ':'')+(state.mechanism.finalized?'is-finalized':'')+'">'+
-        '<p><b>Langkah 2 — Bangun mekanisme.</b> '+data.mechanismPrompt+'</p>'+
+        '<p><b>Langkah 2 — Jelaskan penyebabnya.</b> '+data.mechanismPrompt+'</p>'+
         '<div class="reason-options">'+
           data.mechanisms.map(opt=>'<button type="button" data-hots-mechanism="'+opt.id+'" '+((!mechanismUnlocked||state.mechanism.finalized)?'disabled ':'')+'class="'+(state.mechanism.selected===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
         '</div>'+
