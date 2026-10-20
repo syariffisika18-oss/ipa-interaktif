@@ -85,7 +85,16 @@
     .engage-panel .engage-answer-box:focus-within{outline:3px solid #0f766e;outline-offset:2px}
     .engage-panel .engage-answer-box textarea:focus-visible{outline:0!important}
     .engage-panel .engage-bridge{margin:14px 0 6px;padding:12px;background:#ecfdf5;border-radius:10px}
-  </style></head>
+  </style><style id="explore-revision-x1-x6">
+.explore-panel .visual-editor-toggle,.explore-panel .visual-editor-panel{display:none!important}
+.explore-panel .explore-guide,.explore-panel .explore-compare,.explore-panel .explore-original{border:1px solid #d1e0e1;border-radius:12px;padding:12px;margin:12px 0}
+.explore-panel .explore-compare label,.explore-panel .prediction-check label{display:block;margin:14px 0 6px}
+.explore-panel .explore-compare select,.explore-panel .explore-compare textarea,.explore-panel .prediction-check textarea{box-sizing:border-box;width:100%;padding:10px;border:1px solid #94a3b8;border-radius:10px;background:#fff;font:inherit;min-height:44px}
+.explore-panel .explore-compare textarea,.explore-panel .prediction-check textarea{min-height:92px}
+.explore-panel .explore-original{background:#f8fafc;overflow-wrap:anywhere}
+.explore-panel .journey-actions{display:flex;gap:8px;flex-wrap:wrap}
+.explore-panel .journey-actions button{min-height:44px}
+</style></head>
 <body>
   <header class="app-header">
     <div class="shell header-row">
@@ -309,9 +318,10 @@
     <section class="stage-panel explore-panel" data-panel="2">
       <div class="stage-heading">
         <div><p class="stage-kicker">Tahap 3</p><h2>Explore</h2></div>
-        <span class="principle">Guided Inquiry • Amati • Bandingkan</span>
+        <span class="principle">Amati • Bandingkan • Simpulkan</span>
       </div>
 
+      <p class="explore-guide"><strong>Langkah belajar:</strong> Amati perjalanan makanan melalui delapan organ, bandingkan proses pada organ tertentu, kemudian tuliskan simpulan berdasarkan pengamatanmu.</p>
       <div class="inquiry-head">
         <div><p class="stage-kicker">Perjalanan makanan</p><h3>Ikuti perjalanan makanan melalui saluran pencernaan</h3></div>
         <span id="journeyCounter">1 / 8</span>
@@ -370,12 +380,40 @@
       <div class="journey-actions">
         <button id="journeyPrev" type="button">← Organ sebelumnya</button>
         <button id="journeyNext" type="button" class="primary-inline">Organ berikutnya →</button>
+        <button id="journeyRestart" type="button" class="secondary-inline">Ulangi pengamatan</button>
       </div>
 
+      <article class="explore-compare">
+        <h3>Bandingkan hasil pengamatan</h3>
+        <p>Jawablah berdasarkan hal yang kamu amati pada perjalanan makanan, bukan sekadar menebak.</p>
+        <label for="compareMouthStomach"><strong>1. Apa persamaan proses di mulut dan lambung?</strong></label>
+        <select id="compareMouthStomach"><option value="">Pilih hasil pengamatan</option>
+          <option value="olah">Keduanya mengolah makanan dengan gerakan dan cairan pencernaan.</option>
+          <option value="simpan">Keduanya terutama menyimpan makanan.</option>
+          <option value="serap">Keduanya terutama menyerap zat gizi.</option>
+        </select>
+        <label for="compareIntestines"><strong>2. Apa perbedaan peran usus halus dan usus besar?</strong></label>
+        <select id="compareIntestines"><option value="">Pilih hasil pengamatan</option>
+          <option value="zat-air">Usus halus terutama menyerap zat gizi; usus besar menyerap air dari sisa makanan.</option>
+          <option value="air-zat">Usus halus terutama menyerap air; usus besar menyerap zat gizi.</option>
+          <option value="sama">Keduanya mempunyai peran penyerapan yang sama.</option>
+        </select>
+        <label for="exploreConclusion"><strong>3. Apa simpulanmu setelah mengikuti perjalanan makanan?</strong></label>
+        <textarea id="exploreConclusion" rows="3" maxlength="500" placeholder="Menurut pengamatan saya, makanan ..."></textarea>
+      </article>
       <article class="prediction-check">
-        <div><strong>Periksa prediksi Engage</strong><p>Setelah mengamati usus halus, apakah prediksimu masih sama?</p></div>
-        <button id="checkPrediction" type="button">Periksa prediksi saya</button>
-        <div id="predictionCheckResult" class="digest-feedback neutral">Jelajahi organ sampai usus halus terlebih dahulu.</div>
+        <h3>Tinjau kembali prediksi Engage</h3>
+        <p>Bandingkan dugaan awalmu dengan pengamatan di delapan organ.</p>
+        <div class="explore-original">
+          <p><strong>Prediksi proses:</strong> <span id="exploreInitialProcess">Belum dipilih</span></p>
+          <p><strong>Prediksi penyerapan:</strong> <span id="exploreInitialAbsorption">Belum dipilih</span></p>
+          <p><strong>Saya menduga:</strong> <span id="exploreInitialGuess">Belum diisi</span></p>
+          <p><strong>Karena:</strong> <span id="exploreInitialBecause">Belum diisi</span></p>
+        </div>
+        <label for="exploreReview"><strong>Setelah mengamati, apakah dugaanmu tetap sama atau berubah? Jelaskan berdasarkan organ yang diamati.</strong></label>
+        <textarea id="exploreReview" rows="3" maxlength="500" placeholder="Setelah mengamati ..., saya berpendapat ..."></textarea>
+        <button id="checkPrediction" type="button">Simpan tinjauan prediksi</button>
+        <div id="predictionCheckResult" class="digest-feedback neutral" role="status" aria-live="polite">Jelajahi delapan organ, isi tiga pemeriksaan, dan tulis tinjauan prediksimu.</div>
       </article>
     </section>
 
