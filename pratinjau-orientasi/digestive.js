@@ -655,7 +655,7 @@
   };
 
   function engageIsReady(){
-    return !!prediction && !!processPrediction && document.getElementById("engagePredictionReason").value.trim().length>=8;
+    return !!prediction && !!processPrediction && document.getElementById("engagePredictionGuess").value.trim().length>=3 && document.getElementById("engagePredictionBecause").value.trim().length>=3;
   }
   function engageUpdateFeedback(){
     const feedback=document.getElementById("predictionFeedback");
@@ -664,7 +664,7 @@
       feedback.textContent="Dua prediksi dan alasanmu telah dicatat. Lanjutkan ke Explore untuk mengumpulkan bukti; jawaban belum dinilai.";
     }else{
       feedback.className="digest-feedback neutral";
-      feedback.textContent="Lengkapi dua prediksi dan alasan singkat (minimal 8 karakter) sebelum melanjutkan ke Explore.";
+      feedback.textContent="Pilih dua prediksi, lalu isi kedua kotak: Saya menduga dan Karena (masing-masing minimal 3 karakter).";
     }
     window.refreshStageFooter?.();
   }
@@ -677,7 +677,8 @@
     });
     engageUpdateFeedback();
   });
-  document.getElementById("engagePredictionReason").addEventListener("input",engageUpdateFeedback);
+  document.getElementById("engagePredictionGuess").addEventListener("input",engageUpdateFeedback);
+  document.getElementById("engagePredictionBecause").addEventListener("input",engageUpdateFeedback);
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
     prediction=b.dataset.prediction;
