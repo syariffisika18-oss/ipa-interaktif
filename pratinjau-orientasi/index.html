@@ -113,7 +113,7 @@
 .explore-panel .prediction-check .explore-review-answer label{margin:0!important;display:block}
 .explore-panel .prediction-check .explore-review-answer textarea{width:100%!important;min-height:100px!important;border:none!important;outline:none!important;padding:4px 0!important;resize:vertical}
 .explore-panel .prediction-check .explore-review-answer:focus-within{outline:3px solid #0f766e;outline-offset:2px}
-</style></head>
+</style><style id="explore-progressive-unlock">.explore-panel .explore-stage-lock{padding:14px 16px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;color:#475569;margin:12px 0;line-height:1.5}.explore-panel #exploreComparePanel[hidden],.explore-panel #explorePredictionPanel[hidden],.explore-panel .explore-stage-lock[hidden]{display:none!important}</style></head>
 <body>
   <header class="app-header">
     <div class="shell header-row">
@@ -402,7 +402,8 @@
         <button id="journeyRestart" type="button" class="secondary-inline">Ulangi pengamatan</button>
       </div>
 
-      <article class="explore-compare">
+      <div id="exploreCompareLock" class="explore-stage-lock" role="status">🔒 Selesaikan pengamatan dan pertanyaan pada 8 organ untuk membuka kegiatan membandingkan.</div>
+      <article class="explore-compare" id="exploreComparePanel" hidden>
         <h3>Bandingkan hasil pengamatan</h3>
         <p>Jawablah berdasarkan hal yang kamu amati pada perjalanan makanan, bukan sekadar menebak.</p>
         <label for="compareMouthStomach"><strong>1. Apa persamaan proses di mulut dan lambung?</strong></label>
@@ -420,7 +421,8 @@
         <label for="exploreConclusion"><strong>3. Apa simpulanmu setelah mengikuti perjalanan makanan?</strong></label>
         <textarea id="exploreConclusion" rows="3" maxlength="500" placeholder="Menurut pengamatan saya, makanan ..."></textarea>
       </article>
-      <article class="prediction-check">
+      <div id="explorePredictionLock" class="explore-stage-lock" role="status">🔒 Selesaikan kegiatan membandingkan dan simpulan untuk meninjau prediksi Engage.</div>
+      <article class="prediction-check" id="explorePredictionPanel" hidden>
         <h3>Tinjau kembali prediksi Engage</h3>
         <p>Bandingkan dugaan awalmu dengan pengamatan di delapan organ.</p>
         <div class="explore-original">
@@ -808,6 +810,6 @@
   <script src="../kelas-8/sistem-pencernaan/config.js?v=20260929-1"></script>
   <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
   <script src="../template-universal/template.js?v=20261003-contextfooter-test1"></script>
-  <script src="digestive.js?v=20261020-explore-review2"></script>
+  <script src="digestive.js?v=20261020-unlock-explore1"></script>
 </body>
 </html>
