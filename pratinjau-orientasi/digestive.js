@@ -873,7 +873,7 @@
     const core=document.getElementById("enzymePathway");
     const overview=[
       {start:"Pati (contoh: nasi)",end:"Glukosa",note:"Enzim membantu memecah pati secara bertahap hingga glukosa."},
-      {start:"Protein (contoh: telur)",end:"Asam amino",note:"Enzim membantu memecah protein menjadi bagian yang lebih sederhana."},
+      {start:"Protein (contoh: telur)",end:"Peptida → peptida lebih pendek → asam amino",note:"Pepsin bekerja di lambung; tripsin dan peptidase melanjutkan pemecahan protein di usus halus."},
       {start:"Lemak",end:"Asam lemak dan monogliserida",note:"Empedu membantu menyebarkan lemak; lipase membantu mencernanya."}
     ][index];
     core.replaceChildren();
