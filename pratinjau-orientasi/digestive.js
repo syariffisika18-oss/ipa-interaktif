@@ -1164,19 +1164,19 @@
       ],
       mechanismGood:"Tepat. Kekurangan air dan serat dapat membuat feses lebih keras dan lebih sulit dikeluarkan.",
       mechanismWarn:"Belum tepat. Ingat kembali fungsi usus besar dan peran air serta serat.",
-      transferPrompt:"Perubahan mana yang paling langsung menguji dua faktor penyebab yang telah kamu pilih sekaligus?",
+      transferPrompt:"Apa kebiasaan yang sebaiknya Dika perbaiki?",
       transfers:[
-        {id:"1",label:"Menambah jumlah minum tetapi serat tetap rendah; jika model benar, perbaikannya diperkirakan sama besar seperti saat kedua faktor diperbaiki",correct:false},
-        {id:"2",label:"Menambah makanan berserat tetapi minum tetap sedikit; jika model benar, perbaikannya diperkirakan sama besar seperti saat kedua faktor diperbaiki",correct:false},
-        {id:"0",label:"Meningkatkan minum dan asupan serat, lalu mengamati apakah feses menjadi lebih lunak",correct:true}
+        {id:"1",label:"Menambah minum tetapi tetap jarang makan sayur atau buah.",correct:false},
+        {id:"2",label:"Menambah sayur dan buah tetapi tetap minum sedikit.",correct:false},
+        {id:"0",label:"Minum cukup serta makan sayur dan buah secara teratur.",correct:true}
       ],
       transferGood:"Tepat. Perubahan tersebut langsung menguji kedua faktor yang digunakan dalam mekanisme.",
       transferWarn:"Belum tepat. Pilih rancangan yang menguji dua faktor pada penjelasanmu secara langsung, bukan hanya salah satunya."
     },
     {
-      title:"Mengapa roti terasa lebih manis setelah dikunyah lebih lama?",
+      title:"Mengapa roti terasa lebih manis?",
       scenario:"Salsa membandingkan dua potong roti tawar dari jenis dan ukuran yang sama. Potongan A dikunyah lebih lama dan lebih lama bercampur dengan air liur, sedangkan potongan B dikunyah sebentar. Potongan A terasa lebih manis.",
-      evidencePrompt:"Pilih dua bukti yang paling langsung mendukung dugaan bahwa saliva ikut mengubah zat makanan.",
+      evidencePrompt:"Pilih dua informasi tentang perbedaan perlakuan dan hasilnya.",
       evidence:[
         {id:"same",label:"Kedua potong berasal dari roti dengan jenis dan ukuran yang sama"},
         {id:"contact",label:"Potongan A bercampur dengan saliva dalam waktu lebih lama"},
@@ -1186,25 +1186,25 @@
       evidenceCorrect:["contact","sweet"],
       evidenceGood:"Tepat. Satu bukti menunjukkan perbedaan perlakuan dan satu lagi menunjukkan hasil yang berubah.",
       evidenceWarn:"Belum cukup. Cari bukti yang menunjukkan apa yang dibedakan pada perlakuan dan apa yang berubah pada hasil.",
-      mechanismPrompt:"Penjelasan mekanisme mana yang paling konsisten dengan kedua bukti tersebut?",
+      mechanismPrompt:"Mengapa roti A mungkin terasa lebih manis?",
       mechanisms:[
-        {id:"2",label:"Kontak lebih lama dengan saliva → amilase menyelesaikan seluruh pencernaan karbohidrat menjadi glukosa di mulut → konsentrasi glukosa meningkat → rasa manis bertambah",correct:false},
-        {id:"1",label:"Kontak lebih lama dengan saliva → amilase bekerja pada protein roti dan menghasilkan asam amino → jumlah zat terlarut meningkat → rasa manis bertambah",correct:false},
-        {id:"0",label:"Saliva lebih lama bercampur dengan roti → amilase memecah sebagian pati → rasa manis mungkin lebih terasa",correct:true}
+        {id:"2",label:"Amilase mengubah seluruh pati menjadi glukosa di mulut saat roti dikunyah.",correct:false},
+        {id:"1",label:"Amilase memecah protein roti menjadi zat yang terasa lebih manis.",correct:false},
+        {id:"0",label:"Amilase membantu memecah sebagian pati saat roti lebih lama dikunyah.",correct:true}
       ],
       mechanismGood:"Tepat. Penjelasan menggunakan enzim, substrat, dan arah perubahan yang sesuai dengan konsep pencernaan di mulut.",
       mechanismWarn:"Belum tepat. Periksa kembali zat yang menjadi substrat amilase dan sejauh mana pencernaan karbohidrat berlangsung di mulut.",
-      transferPrompt:"Rancangan mana yang paling kuat membedakan pengaruh enzim saliva dari sekadar pengaruh cairan?",
+      transferPrompt:"Bagaimana membandingkan pengaruh air liur dan air biasa?",
       transfers:[
-        {id:"1",label:"Membandingkan roti yang terkena saliva selama lima menit dengan roti yang terkena saliva selama satu menit, lalu membandingkan rasa manisnya",correct:false},
-        {id:"0",label:"Membandingkan roti yang diberi saliva dan roti yang diberi air dalam jumlah, waktu, dan kondisi yang sama, lalu membandingkan perubahan rasa",correct:true},
-        {id:"2",label:"Membandingkan roti bersaliva hangat selama lima menit dengan roti berair dingin selama satu menit, lalu membandingkan perubahan rasa",correct:false}
+        {id:"1",label:"Membandingkan dua roti yang diberi air liur dengan waktu berbeda.",correct:false},
+        {id:"0",label:"Membandingkan roti dengan air liur atau air biasa pada waktu dan jumlah sama.",correct:true},
+        {id:"2",label:"Membandingkan roti dengan air liur hangat dan air dingin pada waktu berbeda.",correct:false}
       ],
       transferGood:"Tepat. Perbedaan utama antarperlakuan adalah keberadaan komponen saliva, sementara faktor lain dibuat sama.",
       transferWarn:"Belum tepat. Rancangan yang kuat sebaiknya hanya mengubah faktor yang ingin diuji dan menjaga faktor lain tetap sama."
     },
     {
-      title:"Mengapa zat gizi sudah terbentuk tetapi penyerapannya tetap menurun?",
+      title:"Mengapa penyerapan zat gizi menurun?",
       scenario:"Pada simulasi, enzim pencernaan bekerja normal sehingga glukosa dan asam amino tetap terbentuk. Jumlah vili usus halus kemudian dikurangi. Hasilnya, lebih sedikit glukosa dan asam amino yang masuk ke tubuh.",
       evidencePrompt:"Pilih dua bukti yang paling penting untuk menentukan bagian proses yang terganggu.",
       evidence:[
@@ -1216,19 +1216,19 @@
       evidenceCorrect:["products","villi"],
       evidenceGood:"Tepat. Hasil pencernaan tetap tersedia, tetapi struktur utama yang memperluas permukaan penyerapan justru berkurang.",
       evidenceWarn:"Belum tepat. Cari bukti yang membantu membedakan gangguan pencernaan kimiawi dari gangguan penyerapan.",
-      mechanismPrompt:"Mekanisme mana yang paling tepat menjelaskan hasil simulasi?",
+      mechanismPrompt:"Mengapa lebih sedikit zat gizi masuk ke tubuh?",
       mechanisms:[
-        {id:"0",label:"Vili berkurang → luas permukaan penyerapan menurun → kontak hasil pencernaan dengan permukaan penyerap berkurang → lebih sedikit glukosa dan asam amino masuk ke tubuh",correct:true},
-        {id:"2",label:"Vili berkurang → gerak isi usus melambat → usus besar menyerap lebih banyak air → glukosa dan asam amino tertahan sehingga penyerapannya menurun",correct:false},
-        {id:"1",label:"Vili berkurang → kontak makanan dengan enzim pencernaan menurun → glukosa dan asam amino lebih sedikit terbentuk → jumlah yang dapat diserap ikut menurun",correct:false}
+        {id:"0",label:"Permukaan penyerapan berkurang sehingga lebih sedikit zat gizi diserap.",correct:true},
+        {id:"2",label:"Gerakan usus melambat sehingga semua zat gizi tertahan di usus besar.",correct:false},
+        {id:"1",label:"Kerja enzim berhenti sehingga zat gizi tidak lagi terbentuk di usus halus.",correct:false}
       ],
       mechanismGood:"Tepat. Kamu membedakan pembentukan hasil pencernaan dari proses masuknya hasil tersebut melalui permukaan usus.",
       mechanismWarn:"Belum tepat. Pada kasus ini glukosa dan asam amino sudah terbentuk; fokuskan penjelasan pada tahap penyerapan.",
-      transferPrompt:"Bagaimana menilai pernyataan: “Jika makanan sudah dicerna menjadi molekul kecil, zat gizinya pasti terserap dengan baik”?",
+      transferPrompt:"Apa kesimpulan yang didukung simulasi vili?",
       transfers:[
-        {id:"2",label:"Pernyataan dapat diterima jika enzim bekerja normal, karena fungsi vili terutama menggerakkan isi usus dan tidak menentukan banyaknya zat yang diserap",correct:false},
-        {id:"0",label:"Pernyataan terlalu umum, karena molekul kecil memang perlu terbentuk tetapi penyerapan juga bergantung pada luas dan kondisi permukaan usus halus",correct:true},
-        {id:"1",label:"Pernyataan dapat diterima, karena setelah molekul menjadi kecil proses masuk ke tubuh berlangsung otomatis tanpa dipengaruhi luas permukaan usus",correct:false}
+        {id:"2",label:"Zat gizi pasti terserap dengan baik jika enzim pencernaan bekerja normal.",correct:false},
+        {id:"0",label:"Zat gizi yang sudah dicerna tetap membutuhkan permukaan usus untuk diserap.",correct:true},
+        {id:"1",label:"Jumlah zat gizi yang diserap hanya ditentukan oleh kerja enzim pencernaan.",correct:false}
       ],
       transferGood:"Tepat. Kamu mengevaluasi batas sebuah pernyataan dengan membedakan syarat pencernaan dan syarat penyerapan.",
       transferWarn:"Belum tepat. Bedakan 'sudah dicerna' dari 'sudah diserap' dan gunakan data tentang vili."
@@ -1246,19 +1246,19 @@
       evidenceCorrect:["acid","protection"],
       evidenceGood:"Tepat. Satu bukti menunjukkan fungsi normal kondisi asam dan satu bukti menunjukkan adanya perlindungan pada dinding lambung.",
       evidenceWarn:"Belum tepat. Pilih bukti yang langsung berkaitan dengan fungsi kondisi asam dan perlindungan dinding lambung.",
-      mechanismPrompt:"Penjelasan mana yang paling hati-hati dan konsisten dengan kedua bukti itu?",
+      mechanismPrompt:"Mengapa asam lambung tidak selalu berbahaya?",
       mechanisms:[
-        {id:"1",label:"Karena lapisan pelindung ada, asam lambung tidak mungkin berkaitan dengan keluhan apa pun; setiap rasa perih pasti berasal dari organ lain",correct:false},
-        {id:"0",label:"Kondisi asam merupakan bagian normal pencernaan karena membantu pepsin, sedangkan adanya keluhan tidak dapat dijelaskan hanya dari keberadaan asam di lambung",correct:true},
-        {id:"2",label:"Karena kondisi asam membantu pepsin, semakin tinggi keasaman selalu semakin baik untuk pencernaan dan tidak mungkin berkaitan dengan gangguan lambung",correct:false}
+        {id:"1",label:"Asam lambung menyerap protein dan lapisan pelindung mempercepat penyerapan.",correct:false},
+        {id:"0",label:"Asam membantu pepsin bekerja dan dinding lambung memiliki lapisan pelindung.",correct:true},
+        {id:"2",label:"Asam lambung mengubah protein menjadi gula dan pelindung lambung mengaduk makanan.",correct:false}
       ],
       mechanismGood:"Tepat. Kamu membedakan fungsi normal kondisi asam dari kesimpulan tentang penyebab suatu keluhan.",
       mechanismWarn:"Belum tepat. Hindari kesimpulan yang bersifat mutlak; gunakan kedua bukti secara bersamaan.",
-      transferPrompt:"Bagaimana sebaiknya mengevaluasi pernyataan: “Seseorang merasa perih di lambung, berarti penyebabnya pasti terlalu banyak asam lambung”?",
+      transferPrompt:"Raka sering merasa perih di perut atas. Apa tindakan yang tepat?",
       transfers:[
-        {id:"0",label:"Pernyataan belum dapat diterima; satu keluhan saja tidak cukup menentukan penyebab dan diperlukan informasi tambahan tentang kondisi lambung serta faktor lain",correct:true},
-        {id:"2",label:"Pernyataan dapat diterima; adanya lapisan pelindung berarti rasa perih hanya mungkin muncul jika jumlah asam lambung sudah melebihi keadaan normal",correct:false},
-        {id:"1",label:"Pernyataan dapat diterima; karena lambung memang bersifat asam, setiap rasa perih paling logis dianggap sebagai akibat kelebihan asam",correct:false}
+        {id:"0",label:"Mencatat keluhan dan berkonsultasi jika berulang atau memburuk.",correct:true},
+        {id:"2",label:"Langsung menganggap asam lambung berlebihan lalu mengobati sendiri.",correct:false},
+        {id:"1",label:"Mengabaikan keluhan karena asam lambung diperlukan untuk pencernaan.",correct:false}
       ],
       transferGood:"Tepat. Kamu mengevaluasi klaim berdasarkan kecukupan bukti dan tidak membuat diagnosis dari satu gejala.",
       transferWarn:"Belum tepat. Pertimbangkan apakah satu gejala saja cukup untuk memastikan satu penyebab."
@@ -1276,25 +1276,27 @@
       evidenceCorrect:["fast","watery"],
       evidenceGood:"Tepat. Kedua bukti menghubungkan kecepatan perjalanan isi usus dengan jumlah air yang tersisa di feses.",
       evidenceWarn:"Belum tepat. Cari bukti yang langsung menghubungkan perjalanan isi usus dengan kadar air feses.",
-      mechanismPrompt:"Mekanisme mana yang paling masuk akal berdasarkan fungsi usus besar yang sudah dipelajari?",
+      mechanismPrompt:"Mengapa feses pada kondisi B lebih cair?",
       mechanisms:[
-        {id:"2",label:"Isi usus bergerak lebih cepat → usus besar menyerap air lebih cepat sebagai kompensasi → air yang sudah diserap kemudian kembali ke rektum → feses menjadi cair",correct:false},
-        {id:"1",label:"Isi usus bergerak lebih cepat → waktu penyerapan air di lambung berkurang → lebih banyak air mencapai usus besar → air tersebut langsung menjadi bagian feses",correct:false},
-        {id:"0",label:"Isi usus bergerak lebih cepat → waktu untuk penyerapan kembali air di usus besar berkurang → lebih banyak air tertinggal dalam feses → feses menjadi cair",correct:true}
+        {id:"2",label:"Usus besar menyerap lebih banyak air sehingga feses menjadi lebih encer.",correct:false},
+        {id:"1",label:"Lambung menyerap lebih sedikit air sehingga feses menjadi lebih cair.",correct:false},
+        {id:"0",label:"Isi usus bergerak cepat sehingga waktu penyerapan air di usus besar berkurang.",correct:true}
       ],
       mechanismGood:"Tepat. Penjelasan menggunakan fungsi usus besar dalam penyerapan kembali air untuk menerangkan konsistensi feses.",
       mechanismWarn:"Belum tepat. Fokuskan penjelasan pada lokasi utama pembentukan feses dan penyerapan kembali air yang telah dipelajari.",
-      transferPrompt:"Jika feses cair terjadi berulang kali, kesimpulan apa yang paling logis tentang keseimbangan cairan tubuh?",
+      transferPrompt:"Apa yang sebaiknya dilakukan ketika seseorang mengalami diare?",
       transfers:[
-        {id:"1",label:"Tubuh tidak memerlukan cairan tambahan karena air pada feses hanya berasal dari makanan",correct:false},
-        {id:"0",label:"Tubuh kehilangan cairan melalui feses; minum oralit dapat membantu menggantikan cairan dan garam yang hilang",correct:true},
-        {id:"2",label:"Tubuh menyimpan lebih banyak cairan karena penyerapan air di usus besar berkurang",correct:false}
+        {id:"1",label:"Mengurangi minum agar feses cair tidak bertambah banyak.",correct:false},
+        {id:"0",label:"Minum oralit untuk mengganti cairan dan garam yang hilang.",correct:true},
+        {id:"2",label:"Hanya makan makanan padat agar kehilangan cairan berkurang.",correct:false}
       ],
       transferGood:"Tepat. Kamu mentransfer konsep penyerapan air untuk menjelaskan konsekuensi keluarnya banyak air bersama feses.",
       transferWarn:"Belum tepat. Bedakan air yang tetap berada di lumen usus dan keluar bersama feses dari air yang berhasil diserap ke tubuh."
     }
   ];
 
+  // Acak pilihan pada awal sesi, dengan kunci tetap melekat pada id pilihan.
+  hotsCases.forEach(c=>{c.evidence=shuffleArray(c.evidence);c.mechanisms=shuffleArray(c.mechanisms);c.transfers=shuffleArray(c.transfers);});
   const hotsCaseStates=hotsCases.map(()=>({
     evidence:{selected:new Set(),...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Pilih tepat dua bukti, lalu kunci jawaban."},
     mechanism:{selected:null,...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Selesaikan analisis bukti terlebih dahulu."},
@@ -1385,7 +1387,7 @@
       '</div>'+
 
       '<div class="hots-case-step '+(!transferUnlocked?'locked-step ':'')+(state.transfer.finalized?'is-finalized':'')+'">'+
-        '<p><b>Langkah 3 — Evaluasi dan transfer.</b> '+data.transferPrompt+'</p>'+
+        '<p><b>Langkah 3 — Tentukan tindakan atau kesimpulan.</b> '+data.transferPrompt+'</p>'+
         '<div class="reason-options">'+
           data.transfers.map(opt=>'<button type="button" data-hots-transfer="'+opt.id+'" '+((!transferUnlocked||state.transfer.finalized)?'disabled ':'')+'class="'+(state.transfer.selected===opt.id?'is-selected':'')+'">'+opt.label+'</button>').join("")+
         '</div>'+
@@ -1490,7 +1492,7 @@
       }
       if(step.finalized){
         state.mechanism.feedbackTone="neutral";
-        state.mechanism.feedbackText="Gunakan hasil analisis bukti di atas untuk memilih mekanisme, lalu kunci alasanmu.";
+        state.mechanism.feedbackText="Gunakan bukti di atas untuk memilih penjelasan yang paling sesuai.";
       }
       renderHotsCase();return;
     }
@@ -1500,7 +1502,7 @@
       if(!state.evidence.finalized||step.finalized)return;
       if(step.selected===null){
         step.feedbackTone="neutral";
-        step.feedbackText="Pilih satu mekanisme sebelum mengunci.";
+        step.feedbackText="Pilih satu penjelasan sebelum memeriksa jawaban.";
         renderHotsCase();return;
       }
       const good=!!data.mechanisms.find(opt=>opt.id===step.selected)?.correct;
@@ -1513,11 +1515,11 @@
         step.feedbackText=data.mechanismWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
+        step.feedbackText="<b>Dua percobaan selesai.</b> Penjelasan yang paling sesuai: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
       }
       if(step.finalized){
         state.transfer.feedbackTone="neutral";
-        state.transfer.feedbackText="Gunakan mekanisme yang sudah diperiksa untuk menilai situasi baru, lalu kunci keputusanmu.";
+        state.transfer.feedbackText="Gunakan penjelasan sebelumnya untuk memilih keputusan atau kesimpulan.";
       }
       renderHotsCase();return;
     }
