@@ -1145,7 +1145,7 @@
   const hotsCases=[
     {
       title:"Mengapa feses Dika menjadi keras?",
-      scenario:"Beberapa hari ini Dika kurang minum dan jarang makan sayur atau buah. Aktivitasnya tetap seperti biasa. Fesesnya kemudian keras dan sulit dikeluarkan. Kedua kebiasaan itu merupakan faktor yang mungkin berperan, bukan bukti penyebab tunggal.",
+      scenario:"Beberapa hari ini Dika kurang minum dan jarang makan sayur atau buah. Aktivitasnya tetap seperti biasa. Fesesnya kemudian keras dan sulit dikeluarkan.",
       evidencePrompt:"Pilih dua bukti yang paling kuat untuk menjelaskan perubahan sifat feses.",
       evidence:[
         {id:"activity",label:"Aktivitas harian Dika tetap seperti biasanya"},
@@ -1175,7 +1175,7 @@
     },
     {
       title:"Mengapa roti terasa lebih manis setelah dikunyah lebih lama?",
-      scenario:"Salsa membandingkan dua potong roti tawar dari jenis dan ukuran yang sama. Potongan A dikunyah lebih lama sehingga lebih lama bercampur dengan saliva, sedangkan potongan B dikunyah sebentar. Potongan A kemudian terasa lebih manis. Rasa manis menjadi petunjuk awal, tetapi bukan pengukuran langsung kadar gula.",
+      scenario:"Salsa membandingkan dua potong roti tawar dari jenis dan ukuran yang sama. Potongan A dikunyah lebih lama dan lebih lama bercampur dengan air liur, sedangkan potongan B dikunyah sebentar. Potongan A terasa lebih manis.",
       evidencePrompt:"Pilih dua bukti yang paling langsung mendukung dugaan bahwa saliva ikut mengubah zat makanan.",
       evidence:[
         {id:"same",label:"Kedua potong berasal dari roti dengan jenis dan ukuran yang sama"},
@@ -1205,7 +1205,7 @@
     },
     {
       title:"Mengapa zat gizi sudah terbentuk tetapi penyerapannya tetap menurun?",
-      scenario:"Dalam simulasi, enzim bekerja normal dan glukosa serta asam amino tetap terbentuk di usus halus. Namun jumlah vili pada permukaan usus halus dibuat jauh lebih sedikit. Hasil simulasi menunjukkan lebih sedikit glukosa dan asam amino yang masuk ke tubuh.",
+      scenario:"Pada simulasi, enzim pencernaan bekerja normal sehingga glukosa dan asam amino tetap terbentuk. Jumlah vili usus halus kemudian dikurangi. Hasilnya, lebih sedikit glukosa dan asam amino yang masuk ke tubuh.",
       evidencePrompt:"Pilih dua bukti yang paling penting untuk menentukan bagian proses yang terganggu.",
       evidence:[
         {id:"villi",label:"Jumlah vili pada permukaan usus halus jauh berkurang"},
@@ -1235,7 +1235,7 @@
     },
     {
       title:"Apakah asam lambung selalu berarti 'maag'?",
-      scenario:"Raka mengatakan bahwa asam di lambung pasti berbahaya dan harus dihilangkan agar tidak terjadi 'maag'. Dalam data kasus disebutkan bahwa kondisi asam membantu pepsin bekerja, sedangkan dinding lambung memiliki lapisan pelindung yang membantu mengurangi kontak langsung jaringan dengan isi lambung. Sebutan 'maag' adalah istilah umum untuk keluhan, bukan diagnosis pasti.",
+      scenario:"Raka berkata, “Asam lambung pasti berbahaya dan sebaiknya dihilangkan agar tidak terjadi maag.” Dalam materi yang dipelajari, kondisi asam membantu pepsin bekerja dan dinding lambung memiliki lapisan pelindung.",
       evidencePrompt:"Pilih dua informasi yang paling penting untuk mengevaluasi pendapat Raka.",
       evidence:[
         {id:"chyme",label:"Lambung mengaduk makanan dan membentuk campuran semi-cair berupa kimus"},
@@ -1265,7 +1265,7 @@
     },
     {
       title:"Mengapa feses menjadi sangat cair saat diare?",
-      scenario:"Pada sebuah simulasi, sisa makanan pada kondisi A bergerak lebih lambat melalui usus besar dan lebih banyak air diserap kembali. Pada kondisi B, isi usus bergerak jauh lebih cepat dan feses yang keluar mengandung lebih banyak air. Kondisi B adalah model sederhana diare, bukan penjelasan untuk semua penyebab diare.",
+      scenario:"Pada sebuah simulasi, sisa makanan pada kondisi A bergerak lebih lambat melalui usus besar dan lebih banyak air diserap kembali. Pada kondisi B, isi usus bergerak jauh lebih cepat dan feses yang keluar mengandung lebih banyak air. Kondisi B menunjukkan feses yang lebih cair.",
       evidencePrompt:"Pilih dua hasil simulasi yang paling penting untuk menjelaskan feses cair.",
       evidence:[
         {id:"stomach",label:"Lambung tetap mengaduk makanan dan membentuk kimus pada kondisi B"},
