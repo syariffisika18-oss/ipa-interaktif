@@ -622,6 +622,7 @@
     exploreQuizChoices.set(journeyIndex,answer);
     if(exploreQuizOptions[journeyIndex][answer].correct){exploreQuizSolved.add(journeyIndex);}else{exploreQuizSolved.delete(journeyIndex);predictionChecked=false;exploreReviewSaved=false;}
     renderExploreQuestion();
+    updateExploreUnlock();
     document.getElementById("journeyNext").disabled=journeyIndex===exploreOrder.length-1||!exploreQuizSolved.has(journeyIndex);
     window.refreshStageFooter?.();
   });
@@ -664,6 +665,7 @@
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     exploreVisited.add(index);
     renderJourney(true);
+    updateExploreUnlock();
     window.refreshStageFooter?.();
   }
 
@@ -690,6 +692,20 @@
   const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreObservationText","exploreReview"];
   const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length && exploreQuizSolved.size===exploreQuiz.length
     && exploreObservationFields.every(id=>document.getElementById(id).value.trim().length >= (id.startsWith("compare")?1:12));
+  const allOrgansCompleted=()=>exploreQuizSolved.size===exploreQuiz.length&&exploreVisited.size===exploreOrder.length;
+  const comparisonsCompleted=()=>["compareMouthStomach","compareIntestines"].every(id=>!!document.getElementById(id).value)
+    && document.getElementById("exploreConclusion").value.trim().length>=12;
+  function updateExploreUnlock(){
+    const allDone=allOrgansCompleted(), compared=allDone&&comparisonsCompleted();
+    document.getElementById("exploreComparePanel").hidden=!allDone;
+    document.getElementById("exploreCompareLock").hidden=allDone;
+    document.getElementById("explorePredictionPanel").hidden=!compared;
+    document.getElementById("explorePredictionLock").hidden=compared;
+  }
+  ["compareMouthStomach","compareIntestines","exploreConclusion"].forEach(id=>{
+    document.getElementById(id).addEventListener("input",updateExploreUnlock);
+    document.getElementById(id).addEventListener("change",updateExploreUnlock);
+  });
   function exploreShowEngage(){
     const processLabels={fisik:"Makanan dihancurkan menjadi bagian kecil agar mudah diserap tubuh.",keduanya:"Makanan dipecah menjadi zat yang lebih sederhana agar dapat diserap tubuh.",langsung:"Makanan dilunakkan dan dicampur cairan agar mudah diserap tubuh."};
     const placeLabels={lambung:"Lambung","usus-halus":"Usus halus","usus-besar":"Usus besar"};
