@@ -160,6 +160,7 @@
   ];
 
   let prediction="";
+  let processPrediction="";
   let journeyIndex=0;
   let furthestJourney=0;
   let modelIndex=0;
@@ -653,12 +654,38 @@
     selectJourney(pos===exploreOrder.length-1?exploreOrder[0]:exploreOrder[pos+1]);
   };
 
+  function engageIsReady(){
+    return !!prediction && !!processPrediction && document.getElementById("engagePredictionReason").value.trim().length>=8;
+  }
+  function engageUpdateFeedback(){
+    const feedback=document.getElementById("predictionFeedback");
+    if(engageIsReady()){
+      feedback.className="digest-feedback good";
+      feedback.textContent="Dua prediksi dan alasanmu telah dicatat. Lanjutkan ke Explore untuk mengumpulkan bukti; jawaban belum dinilai.";
+    }else{
+      feedback.className="digest-feedback neutral";
+      feedback.textContent="Lengkapi dua prediksi dan alasan singkat (minimal 8 karakter) sebelum melanjutkan ke Explore.";
+    }
+    window.refreshStageFooter?.();
+  }
+  document.getElementById("processPredictionOptions").addEventListener("click",e=>{
+    const b=e.target.closest("[data-process-prediction]");if(!b)return;
+    processPrediction=b.dataset.processPrediction;
+    e.currentTarget.querySelectorAll("button").forEach(x=>{
+      x.classList.toggle("is-selected",x===b);
+      x.setAttribute("aria-pressed",String(x===b));
+    });
+    engageUpdateFeedback();
+  });
+  document.getElementById("engagePredictionReason").addEventListener("input",engageUpdateFeedback);
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
     prediction=b.dataset.prediction;
-    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
-    window.refreshStageFooter?.();
-    document.getElementById("predictionFeedback").textContent="Prediksi tersimpan. Gunakan Explore untuk mengujinya.";
+    e.currentTarget.querySelectorAll("button").forEach(x=>{
+      x.classList.toggle("is-selected",x===b);
+      x.setAttribute("aria-pressed",String(x===b));
+    });
+    engageUpdateFeedback();
   });
   document.getElementById("checkPrediction").onclick=()=>{
     const box=document.getElementById("predictionCheckResult");
@@ -1932,7 +1959,7 @@
       case 0:
         return nutrientExamined;
       case 1:
-        return !!prediction;
+        return engageIsReady();
       case 2:
         return journeyIndex===exploreOrder.length-1
           && exploreVisited.size===exploreOrder.length
