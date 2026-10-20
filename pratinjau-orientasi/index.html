@@ -107,6 +107,12 @@
 .explore-panel .prediction-check textarea{display:block!important;min-height:142px!important;width:100%!important;resize:vertical!important}
 .explore-panel .prediction-check #checkPrediction{min-height:48px!important;width:100%!important}
 @media(max-width:680px){.explore-panel .prediction-check .explore-original{grid-template-columns:1fr!important}}
+</style><style id="explore-two-review-fields">
+.explore-panel .prediction-check .explore-review-two{display:grid!important;grid-template-columns:1fr!important;gap:12px!important;width:100%!important;max-width:none!important}
+.explore-panel .prediction-check .explore-review-answer{display:flex;flex-direction:column;gap:6px;padding:12px;border:1px solid #94a3b8;border-radius:12px;box-sizing:border-box;width:100%;background:white}
+.explore-panel .prediction-check .explore-review-answer label{margin:0!important;display:block}
+.explore-panel .prediction-check .explore-review-answer textarea{width:100%!important;min-height:100px!important;border:none!important;outline:none!important;padding:4px 0!important;resize:vertical}
+.explore-panel .prediction-check .explore-review-answer:focus-within{outline:3px solid #0f766e;outline-offset:2px}
 </style></head>
 <body>
   <header class="app-header">
@@ -423,8 +429,11 @@
           <p><strong>Saya menduga:</strong> <span id="exploreInitialGuess">Belum diisi</span></p>
           <p><strong>Karena:</strong> <span id="exploreInitialBecause">Belum diisi</span></p>
         </div>
-        <label for="exploreReview"><strong>Setelah mengamati, apakah dugaanmu tetap sama atau berubah? Jelaskan berdasarkan organ yang diamati.</strong></label>
-        <textarea id="exploreReview" rows="3" maxlength="500" placeholder="Setelah mengamati ..., saya berpendapat ..."></textarea>
+        <p class="explore-review-instruction"><strong>Apakah dugaan awalmu tetap sama atau berubah?</strong> Gunakan hasil pengamatan untuk menjelaskannya.</p>
+        <div class="explore-review-two">
+          <div class="explore-review-answer"><label for="exploreObservationText"><strong>Setelah mengamati ...</strong></label><textarea id="exploreObservationText" rows="3" maxlength="500" placeholder="Tuliskan hal yang kamu amati"></textarea></div>
+          <div class="explore-review-answer"><label for="exploreReview"><strong>Saya menyimpulkan ...</strong></label><textarea id="exploreReview" rows="3" maxlength="500" placeholder="Lanjutkan simpulanmu berdasarkan pengamatan"></textarea></div>
+        </div>
         <button id="checkPrediction" type="button">Simpan tinjauan prediksi</button>
         <div id="predictionCheckResult" class="digest-feedback neutral" role="status" aria-live="polite">Jelajahi delapan organ, isi tiga pemeriksaan, dan tulis tinjauan prediksimu.</div>
       </article>
@@ -799,6 +808,6 @@
   <script src="../kelas-8/sistem-pencernaan/config.js?v=20260929-1"></script>
   <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
   <script src="../template-universal/template.js?v=20261003-contextfooter-test1"></script>
-  <script src="digestive.js?v=20261020-explore-review-layout1"></script>
+  <script src="digestive.js?v=20261020-explore-review2"></script>
 </body>
 </html>
