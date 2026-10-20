@@ -597,6 +597,34 @@
     return '<button type="button" data-organ="'+organIndex+'"><b>'+(displayIndex+1)+'.</b> '+o.name+'</button>';
   }).join("");
 
+  const exploreQuiz=[{"q":"Mengapa makanan perlu dikunyah?","o":["Agar lebih mudah ditelan","Agar tercampur cairan lambung","Agar segera diserap tubuh"],"a":0,"why":"Mengunyah memperkecil makanan agar mudah ditelan."},{"q":"Apa yang membantu makanan tidak masuk jalan napas?","o":["Gerakan dinding kerongkongan","Epiglotis saat menelan","Cairan dari kelenjar ludah"],"a":1,"why":"Epiglotis membantu menutup jalan napas saat menelan."},{"q":"Bagaimana makanan bergerak ke lambung?","o":["Didorong gerakan otot kerongkongan","Mengalir bersama air liur saja","Jatuh karena beratnya makanan saja"],"a":0,"why":"Gerak peristaltik mendorong makanan menuju lambung."},{"q":"Mengapa makanan diaduk di lambung?","o":["Agar langsung diserap dinding lambung","Agar bercampur dengan cairan lambung","Agar menjadi feses lebih cepat"],"a":1,"why":"Pengadukan mencampurkan makanan dengan cairan lambung."},{"q":"Mengapa usus halus memiliki banyak lipatan?","o":["Agar makanan tersimpan lebih lama","Agar gerakan makanan berhenti","Agar permukaan penyerapan lebih luas"],"a":2,"why":"Lipatan dan vili memperluas permukaan penyerapan."},{"q":"Apa yang terjadi saat air diserap di usus besar?","o":["Sisa makanan menjadi lebih padat","Sisa makanan menjadi lebih encer","Sisa makanan berubah jadi zat gizi"],"a":0,"why":"Penyerapan air menjadikan sisa makanan lebih padat."},{"q":"Mengapa rektum menampung feses sementara?","o":["Agar feses dicerna kembali","Agar pengeluarannya dapat dikendalikan","Agar zat gizi diserap lebih banyak"],"a":1,"why":"Rektum menampung feses sebelum dikeluarkan."},{"q":"Apa yang mengatur keluarnya feses melalui anus?","o":["Gerak usus halus","Cairan pencernaan","Otot di sekitar anus"],"a":2,"why":"Otot sfingter membantu mengatur pengeluaran feses."}];
+  const exploreQuizOptions=exploreQuiz.map(q=>shuffleArray(q.o.map((label,i)=>({label,correct:i===q.a}))));
+  const exploreQuizSolved=new Set();
+  const exploreQuizChoices=new Map();
+  function renderExploreQuestion(){
+    const q=exploreQuiz[journeyIndex],area=document.getElementById("exploreOrganQuestion");
+    const saved=exploreQuizChoices.get(journeyIndex);
+    area.replaceChildren();
+    const heading=document.createElement("strong");heading.textContent=q.q;area.appendChild(heading);
+    exploreQuizOptions[journeyIndex].forEach((opt,i)=>{
+      const b=document.createElement("button");b.type="button";b.dataset.option=i;
+      b.textContent=String.fromCharCode(65+i)+". "+opt.label;
+      b.classList.toggle("is-selected",saved===i);b.setAttribute("aria-pressed",String(saved===i));area.appendChild(b);
+    });
+    const f=document.getElementById("exploreOrganFeedback");
+    if(exploreQuizSolved.has(journeyIndex)){f.className="digest-feedback good";f.textContent="Tepat. "+q.why;}
+    else if(saved!==undefined){f.className="digest-feedback warn";f.textContent="Belum tepat. Amati kembali dan coba pilihan lain.";}
+    else{f.className="digest-feedback neutral";f.textContent="Amati organ ini, lalu pilih A, B, atau C.";}
+  }
+  document.getElementById("exploreOrganQuestion").addEventListener("click",e=>{
+    const b=e.target.closest("button[data-option]");if(!b)return;
+    const answer=Number(b.dataset.option);
+    exploreQuizChoices.set(journeyIndex,answer);
+    if(exploreQuizOptions[journeyIndex][answer].correct)exploreQuizSolved.add(journeyIndex);
+    renderExploreQuestion();
+    document.getElementById("journeyNext").disabled=journeyIndex===exploreOrder.length-1||!exploreQuizSolved.has(journeyIndex);
+    window.refreshStageFooter?.();
+  });
   function renderJourney(animate=true){
     const o=journey[journeyIndex];
     const explorePos=exploreOrder.indexOf(journeyIndex);
@@ -612,7 +640,7 @@
       ).join("");
       termBox.hidden=!o.terms||!o.terms.length;
     }
-    document.getElementById("organPrompt").innerHTML="<b>Pertanyaan pengarah:</b> "+o.prompt;
+    document.getElementById("organPrompt").textContent="Amati organ ini, lalu jawab pertanyaan berikut.";renderExploreQuestion();
     route.querySelectorAll("button").forEach(b=>{
       const organIndex=Number(b.dataset.organ);
       const pos=exploreOrder.indexOf(organIndex);
@@ -625,11 +653,12 @@
     animate?animateBall(ball,journeyIndex):placeBall(ball,journeyIndex,true);
     document.getElementById("journeyPrev").disabled=explorePos===0;
     document.getElementById("journeyNext").textContent=explorePos===exploreOrder.length-1?"Akhir perjalanan":"Organ berikutnya →";
-    document.getElementById("journeyNext").disabled=explorePos===exploreOrder.length-1;
+    document.getElementById("journeyNext").disabled=explorePos===exploreOrder.length-1||!exploreQuizSolved.has(journeyIndex);
   }
 
   function selectJourney(index){
     if(!exploreOrder.includes(index))return;
+    if(index>journeyIndex&&!exploreQuizSolved.has(journeyIndex)){const fb=document.getElementById("exploreOrganFeedback");fb.className="digest-feedback warn";fb.textContent="Jawab dengan tepat sebelum menuju organ berikutnya.";return;}
     journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     exploreVisited.add(index);
@@ -658,7 +687,7 @@
   document.getElementById("journeyRestart").addEventListener("click",()=>selectJourney(0));
   let exploreReviewSaved=false;
   const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreReview"];
-  const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length
+  const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length && exploreQuizSolved.size===exploreQuiz.length
     && exploreObservationFields.every(id=>document.getElementById(id).value.trim().length >= (id.startsWith("compare")?1:12));
   function exploreShowEngage(){
     const processLabels={fisik:"Makanan dihancurkan menjadi bagian kecil agar mudah diserap tubuh.",keduanya:"Makanan dipecah menjadi zat yang lebih sederhana agar dapat diserap tubuh.",langsung:"Makanan dilunakkan dan dicampur cairan agar mudah diserap tubuh."};
