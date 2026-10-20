@@ -113,7 +113,12 @@
 .explore-panel .prediction-check .explore-review-answer label{margin:0!important;display:block}
 .explore-panel .prediction-check .explore-review-answer textarea{width:100%!important;min-height:100px!important;border:none!important;outline:none!important;padding:4px 0!important;resize:vertical}
 .explore-panel .prediction-check .explore-review-answer:focus-within{outline:3px solid #0f766e;outline-offset:2px}
-</style><style id="explore-progressive-unlock">.explore-panel .explore-stage-lock{padding:14px 16px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;color:#475569;margin:12px 0;line-height:1.5}.explore-panel #exploreComparePanel[hidden],.explore-panel #explorePredictionPanel[hidden],.explore-panel .explore-stage-lock[hidden]{display:none!important}</style></head>
+</style><style id="explore-progressive-unlock">.explore-panel .explore-stage-lock{padding:14px 16px;border:1px solid #cbd5e1;border-radius:12px;background:#f8fafc;color:#475569;margin:12px 0;line-height:1.5}.explore-panel #exploreComparePanel[hidden],.explore-panel #explorePredictionPanel[hidden],.explore-panel .explore-stage-lock[hidden]{display:none!important}</style><style id="explore-conclusion-fixed-prefix">
+.explore-panel .explore-conclusion-answer{box-sizing:border-box;width:100%;padding:12px;border:1px solid #94a3b8;border-radius:12px;background:#fff;display:flex;flex-direction:column;gap:6px}
+.explore-panel .explore-conclusion-prefix{font-weight:700;margin:0!important;color:#134e4a}
+.explore-panel .explore-conclusion-answer #exploreConclusion{border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;padding:4px 0!important;min-height:100px;resize:vertical}
+.explore-panel .explore-conclusion-answer:focus-within{outline:3px solid #0f766e;outline-offset:2px}
+</style></head>
 <body>
   <header class="app-header">
     <div class="shell header-row">
@@ -419,7 +424,7 @@
           <option value="sama">Usus halus menyerap zat gizi dan air, sedangkan usus besar hanya menyimpan sisa makanan.</option>
         </select>
         <label for="exploreConclusion"><strong>3. Apa simpulanmu setelah mengikuti perjalanan makanan?</strong></label>
-        <textarea id="exploreConclusion" rows="3" maxlength="500" placeholder="Menurut pengamatan saya, makanan ..."></textarea>
+        <div class="explore-conclusion-answer"><label for="exploreConclusion" class="explore-conclusion-prefix">Menurut pengamatan saya, ...</label><textarea id="exploreConclusion" rows="3" maxlength="500" aria-label="Lanjutkan kalimat Menurut pengamatan saya" placeholder="Tuliskan simpulanmu di sini"></textarea></div>
       </article>
       <div id="explorePredictionLock" class="explore-stage-lock" role="status">🔒 Selesaikan kegiatan membandingkan dan simpulan untuk meninjau prediksi Engage.</div>
       <article class="prediction-check" id="explorePredictionPanel" hidden>
