@@ -1579,37 +1579,37 @@
       key:"protein",
       food:{id:"telur",emoji:"🥚",label:"Telur"},
       nutrient:{id:"protein",emoji:"",label:"Protein"},
-      function:{id:"jaringan",label:"Membangun dan memperbaiki jaringan"}
+      function:{id:"jaringan",label:"Membangun dan memperbaiki tubuh"}
     },
     {
       key:"lemak",
       food:{id:"minyak",emoji:"🫒",label:"Minyak"},
       nutrient:{id:"lemak",emoji:"",label:"Lemak"},
-      function:{id:"cadangan",label:"Cadangan energi dan membantu melindungi organ"}
+      function:{id:"cadangan",label:"Cadangan energi"}
     },
     {
       key:"vitamin",
       food:{id:"jeruk",emoji:"🍊",label:"Jeruk"},
       nutrient:{id:"vitamin",emoji:"",label:"Vitamin"},
-      function:{id:"mengatur",label:"Membantu mengatur berbagai proses tubuh"}
+      function:{id:"mengatur",label:"Menjaga fungsi tubuh"}
     },
     {
       key:"mineral",
       food:{id:"susu",emoji:"🥛",label:"Susu"},
       nutrient:{id:"mineral",emoji:"",label:"Mineral"},
-      function:{id:"tulang-gigi",label:"Membantu membentuk dan menjaga kekuatan tulang dan gigi"}
+      function:{id:"tulang-gigi",label:"Menjaga tulang dan gigi"}
     },
     {
       key:"serat",
       food:{id:"sayur",emoji:"🥬",label:"Sayur berserat"},
       nutrient:{id:"serat",emoji:"",label:"Serat"},
-      function:{id:"pencernaan",label:"Membantu pergerakan isi saluran pencernaan"}
+      function:{id:"pencernaan",label:"Membantu pencernaan"}
     },
     {
       key:"air",
       food:{id:"airputih",emoji:"💧",label:"Air putih"},
       nutrient:{id:"air",emoji:"",label:"Air"},
-      function:{id:"pelarut",label:"Pelarut dan membantu mengangkut zat"}
+      function:{id:"pelarut",label:"Melarutkan dan mengangkut zat"}
     }
   ];
 
