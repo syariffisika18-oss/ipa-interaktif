@@ -618,13 +618,14 @@
       const pos=exploreOrder.indexOf(organIndex);
       const currentPos=exploreOrder.indexOf(journeyIndex);
       b.classList.toggle("is-active",organIndex===journeyIndex);
-      b.classList.toggle("is-visited",pos<=currentPos);
+      b.classList.toggle("is-visited",exploreVisited.has(organIndex));
     });
     setHotspots("[data-explore-organ]",journeyIndex);
     const ball=document.getElementById("exploreFoodBall");
     animate?animateBall(ball,journeyIndex):placeBall(ball,journeyIndex,true);
     document.getElementById("journeyPrev").disabled=explorePos===0;
-    document.getElementById("journeyNext").textContent=explorePos===exploreOrder.length-1?"Kembali ke awal":"Bagian berikutnya →";
+    document.getElementById("journeyNext").textContent=explorePos===exploreOrder.length-1?"Akhir perjalanan":"Organ berikutnya →";
+    document.getElementById("journeyNext").disabled=explorePos===exploreOrder.length-1;
   }
 
   function selectJourney(index){
@@ -651,8 +652,26 @@
   };
   document.getElementById("journeyNext").onclick=()=>{
     const pos=exploreOrder.indexOf(journeyIndex);
-    selectJourney(pos===exploreOrder.length-1?exploreOrder[0]:exploreOrder[pos+1]);
+    if(pos<exploreOrder.length-1)selectJourney(exploreOrder[pos+1]);
   };
+
+  document.getElementById("journeyRestart").addEventListener("click",()=>selectJourney(0));
+  let exploreReviewSaved=false;
+  const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreReview"];
+  const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length
+    && exploreObservationFields.every(id=>document.getElementById(id).value.trim().length >= (id.startsWith("compare")?1:12));
+  function exploreShowEngage(){
+    const processLabels={fisik:"Makanan dihancurkan menjadi bagian kecil agar mudah diserap tubuh.",keduanya:"Makanan dipecah menjadi zat yang lebih sederhana agar dapat diserap tubuh.",langsung:"Makanan dilunakkan dan dicampur cairan agar mudah diserap tubuh."};
+    const placeLabels={lambung:"Lambung","usus-halus":"Usus halus","usus-besar":"Usus besar"};
+    document.getElementById("exploreInitialProcess").textContent=processLabels[processPrediction]||"Belum dipilih";
+    document.getElementById("exploreInitialAbsorption").textContent=placeLabels[prediction]||"Belum dipilih";
+    document.getElementById("exploreInitialGuess").textContent=document.getElementById("engagePredictionGuess").value||"Belum diisi";
+    document.getElementById("exploreInitialBecause").textContent=document.getElementById("engagePredictionBecause").value||"Belum diisi";
+  }
+  exploreObservationFields.forEach(id=>document.getElementById(id).addEventListener("input",()=>{
+    exploreReviewSaved=false;predictionChecked=false;exploreShowEngage();window.refreshStageFooter?.();
+  }));
+  exploreShowEngage();
 
   function engageIsReady(){
     return !!prediction && !!processPrediction && document.getElementById("engagePredictionGuess").value.trim().length>=3 && document.getElementById("engagePredictionBecause").value.trim().length>=3;
@@ -690,14 +709,17 @@
   });
   document.getElementById("checkPrediction").onclick=()=>{
     const box=document.getElementById("predictionCheckResult");
-    if(furthestJourney<4){box.className="digest-feedback warn";box.textContent="Jelajahi sampai Usus halus terlebih dahulu.";return}
-    if(!prediction){box.className="digest-feedback warn";box.textContent="Kamu belum membuat prediksi pada Engage.";return}
-    box.className="digest-feedback good";
+    exploreShowEngage();
+    if(!exploreObservationsComplete()){
+      box.className="digest-feedback warn";
+      box.textContent="Kunjungi delapan organ dan lengkapi dua perbandingan, simpulan, serta tinjauan prediksi (masing-masing minimal 12 karakter untuk jawaban tertulis).";
+      return;
+    }
     predictionChecked=true;
+    exploreReviewSaved=true;
+    box.className="digest-feedback good";
+    box.textContent="Tinjauan tersimpan. Bandingkan dugaanmu dengan bukti dari organ yang diamati. Penjelasan ilmiah lebih lengkap dipelajari pada Explain.";
     window.refreshStageFooter?.();
-    box.textContent=prediction==="usus-halus"
-      ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
-      :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
   };
 
   const nutrientModels=[
@@ -1962,9 +1984,7 @@
       case 1:
         return engageIsReady();
       case 2:
-        return journeyIndex===exploreOrder.length-1
-          && exploreVisited.size===exploreOrder.length
-          && predictionChecked;
+        return exploreObservationsComplete() && predictionChecked && exploreReviewSaved;
       case 3: {
         const pagesAll=explainPageTabs.length>0&&explainPageTabs.every(b=>b.classList.contains("is-viewed"));
         const modelButtons=[...document.querySelectorAll("#modelTabs [data-model]")];
