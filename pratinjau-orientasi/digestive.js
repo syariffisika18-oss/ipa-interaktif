@@ -692,6 +692,12 @@
   const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreObservationText","exploreReview"];
   const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length && exploreQuizSolved.size===exploreQuiz.length
     && exploreObservationFields.every(id=>document.getElementById(id).value.trim().length >= (id.startsWith("compare")?1:12));
+  // Acak urutan alternatif, tanpa mengubah nilai jawaban atau opsi petunjuk.
+  ["compareMouthStomach","compareIntestines"].forEach(id=>{
+    const select=document.getElementById(id);
+    const options=[...select.querySelectorAll("option")].slice(1);
+    shuffleArray(options).forEach(option=>select.appendChild(option));
+  });
   const allOrgansCompleted=()=>exploreQuizSolved.size===exploreQuiz.length&&exploreVisited.size===exploreOrder.length;
   const comparisonsCompleted=()=>["compareMouthStomach","compareIntestines"].every(id=>!!document.getElementById(id).value)
     && document.getElementById("exploreConclusion").value.trim().length>=12;
