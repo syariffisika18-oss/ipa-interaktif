@@ -1620,6 +1620,27 @@
   const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
   const nutrientGameScore=document.getElementById("nutrientGameScore");
   let selectedRelationCard=null;
+  let nutrientFirstScore=null;
+  let nutrientExamined=false;
+  let nutrientValidated=false;
+  function nutrientInvalidate(){
+    nutrientValidated=false;
+    nutrientGameScore.textContent="Susunan diubah · periksa kembali";
+    document.querySelectorAll(".nutrition-chain-row").forEach(row=>row.removeAttribute("data-check-status"));
+    window.refreshStageFooter?.();
+  }
+  function nutrientFeedbackHint(key,type){
+    const hints={
+      vitamin:"Vitamin tidak terutama berfungsi sebagai sumber energi. Jeruk adalah contoh sumber vitamin C.",
+      mineral:"Kalsium adalah contoh mineral yang membantu pembentukan dan pemeliharaan tulang dan gigi.",
+      serat:"Serat membantu kerja saluran pencernaan dan tidak dipecah oleh enzim manusia seperti pati.",
+      karbohidrat:"Pikirkan makanan sumber energi dan peran karbohidrat.",
+      protein:"Pikirkan zat pembangun dan perbaikan jaringan tubuh.",
+      lemak:"Ingat peran lemak sebagai cadangan energi.",
+      air:"Air membantu melarutkan dan mengangkut zat."
+    };
+    return (type==="food"?"Contoh makanan: ":"Fungsi: ")+(hints[key]||"Periksa kembali kecocokan pasangan.");
+  }
 
   const relationTypeLabel={
     food:"Makanan",
@@ -1718,8 +1739,9 @@
     slot.appendChild(card);
     selectedRelationCard=null;
     clearRelationMarks();
+    nutrientInvalidate();
     nutrientGameFeedback.className="digest-feedback neutral";
-    nutrientGameFeedback.textContent="Lanjutkan sampai setiap nutrisi memiliki pasangan makanan dan fungsi yang sesuai.";
+    nutrientGameFeedback.textContent="Susunan berubah. Periksa kembali setelah semua rantai lengkap.";
   }
 
   document.querySelectorAll(".relation-slot:not(.nutrient-slot)").forEach(slot=>{
@@ -1753,6 +1775,7 @@
         bank.appendChild(card);
         selectedRelationCard=null;
         clearRelationMarks();
+        nutrientInvalidate();
       }
     });
   });
@@ -1769,37 +1792,36 @@
       return;
     }
 
-    let correctChains=0;
+    let correctChains=0, correctPairs=0;
+    const feedbackParts=[];
     rows.forEach(row=>{
       const food=row.querySelector(".food-slot .relation-card");
-      const nutrient=row.querySelector(".nutrient-slot");
       const func=row.querySelector(".function-slot .relation-card");
-      const chainKey=nutrient.dataset.correctNutrient;
-      const chainOK=
-        food.dataset.correctNutrient===chainKey&&
-        func.dataset.correctNutrient===chainKey;
-
-      [food,func].forEach(card=>{
-        card.classList.toggle("is-correct",chainOK);
-        card.classList.toggle("is-wrong",!chainOK);
-      });
-      row.querySelectorAll(".relation-slot").forEach(slot=>{
-        slot.classList.toggle("has-correct",chainOK);
-        slot.classList.toggle("has-wrong",!chainOK);
-      });
-      row.classList.toggle("chain-correct",chainOK);
-      row.classList.toggle("chain-wrong",!chainOK);
-      if(chainOK)correctChains++;
+      const key=row.querySelector(".nutrient-slot").dataset.correctNutrient;
+      const foodOK=food.dataset.correctNutrient===key;
+      const funcOK=func.dataset.correctNutrient===key;
+      for(const [card,slot,ok,type] of [[food,row.querySelector(".food-slot"),foodOK,"food"],[func,row.querySelector(".function-slot"),funcOK,"function"]]){
+        card.classList.toggle("is-correct",ok);
+        card.classList.toggle("is-wrong",!ok);
+        slot.classList.toggle("has-correct",ok);
+        slot.classList.toggle("has-wrong",!ok);
+        if(ok)correctPairs++;
+        else feedbackParts.push(nutrientFeedbackHint(key,type));
+      }
+      row.classList.toggle("chain-correct",foodOK&&funcOK);
+      row.classList.toggle("chain-wrong",!(foodOK&&funcOK));
+      if(foodOK&&funcOK)correctChains++;
     });
-
-    nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
-    if(correctChains===7){
-      nutrientGameFeedback.className="digest-feedback good";
-      nutrientGameFeedback.textContent="Semua hubungan tepat. Kamu sudah menghubungkan makanan, jenis nutrisi, dan fungsi utamanya.";
-    }else{
-      nutrientGameFeedback.className="digest-feedback warn";
-      nutrientGameFeedback.textContent=correctChains+" dari 7 rantai sudah tepat. Perbaiki pasangan makanan dan fungsi pada baris yang ditandai.";
+    nutrientExamined=true;
+    nutrientValidated=true;
+    if(nutrientFirstScore===null){
+      nutrientFirstScore=correctChains;
+      document.getElementById("nutrientFirstResult").textContent="Hasil diagnostik awal: "+correctChains+"/7 rantai tepat. Hasil ini tetap tersimpan selama sesi ini; percobaan berikutnya adalah latihan.";
     }
+    nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
+    nutrientGameFeedback.className="digest-feedback "+(correctChains===7?"good":"warn");
+    nutrientGameFeedback.textContent=(correctChains===7?"Semua hubungan tepat. ":"Sebanyak "+correctChains+"/7 rantai tepat ("+correctPairs+"/14 pasangan benar). ")+"Kamu boleh lanjut ke Engage setelah pemeriksaan pertama. "+(feedbackParts.length?"Petunjuk: "+[...new Set(feedbackParts)].slice(0,3).join(" "):"Kamu dapat mengulang sebagai latihan.");
+    window.refreshStageFooter?.();
   });
 
   function resetNutritionRelationGame(message){
@@ -1810,17 +1832,23 @@
     renderRelationBanks();
     clearRelationMarks();
     selectedRelationCard=null;
-    nutrientGameScore.textContent="0 / 7 rantai tepat";
+    nutrientInvalidate();
     nutrientGameFeedback.className="digest-feedback neutral";
     nutrientGameFeedback.textContent=message;
   }
 
   document.getElementById("shuffleNutrientGame").addEventListener("click",()=>{
-    resetNutritionRelationGame("Kartu makanan dan fungsi sudah diacak ulang. Nutrisi tetap berada di tengah.");
+    Object.values(relationBanks).forEach(bank=>{
+      shuffleArray([...bank.querySelectorAll(".relation-card")]).forEach(card=>bank.appendChild(card));
+    });
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Kartu yang belum dipasang telah diacak. Jawaban pada rantai tidak berubah.";
   });
 
   document.getElementById("resetNutrientGame").addEventListener("click",()=>{
-    resetNutritionRelationGame("Permainan diulang. Pasangkan makanan dan fungsi dengan nutrisi yang sudah tersedia.");
+    const hasPlaced=!!document.querySelector(".nutrition-chain-row .relation-card");
+    if(hasPlaced&&!window.confirm("Ulangi permainan? Susunan kartu akan dikosongkan, tetapi hasil diagnostik pertama tetap disimpan."))return;
+    resetNutritionRelationGame("Permainan diulang. Hasil diagnostik pertama tetap tersimpan. Silakan berlatih lagi.");
   });
 
   renderRelationBanks();
@@ -1902,7 +1930,7 @@
   window.IPA_STAGE_COMPLETE_CHECK=(stage)=>{
     switch(Number(stage)){
       case 0:
-        return /^7\s*\/\s*7\b/.test(document.getElementById("nutrientGameScore")?.textContent||"");
+        return nutrientExamined;
       case 1:
         return !!prediction;
       case 2:
