@@ -40,6 +40,26 @@
     .compact-game-help summary{cursor:pointer;font-weight:600;font-size:.9rem}
     .compact-game-help .nutrient-game-instruction{margin-top:8px!important}
     @media(max-width:640px){
+      .orientation-panel .nutrient-game-actions{
+        display:grid!important;
+        grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+        gap:8px!important;
+        align-items:stretch!important;
+      }
+      .orientation-panel .nutrient-game-actions button{
+        box-sizing:border-box!important;
+        width:100%!important;
+        min-width:0!important;
+        min-height:48px!important;
+        height:100%!important;
+        margin:0!important;
+        padding:9px 6px!important;
+        font-size:clamp(.85rem,3.4vw,1rem)!important;
+        text-align:center!important;
+        white-space:normal!important;
+      }
+      .orientation-panel #resetNutrientGame{grid-column:1 / -1!important;}
+
       .orientation-panel .relation-card,.orientation-panel .relation-slot{min-height:44px!important}
       .orientation-panel .nutrition-chain-row{gap:4px!important}
       .orientation-panel .relation-slot{padding:5px 4px!important}
