@@ -94,6 +94,11 @@
 .explore-panel .explore-original{background:#f8fafc;overflow-wrap:anywhere}
 .explore-panel .journey-actions{display:flex;gap:8px;flex-wrap:wrap}
 .explore-panel .journey-actions button{min-height:44px}
+</style><style id="explore-eight-questions">
+.explore-panel .explore-organ-question{display:grid;gap:7px;margin-top:12px}
+.explore-panel .explore-organ-question button{min-height:44px;text-align:left;white-space:normal;padding:10px 12px;border:1px solid #bdd5d0;border-radius:10px;background:#fff;color:#123b37;font:inherit;cursor:pointer}
+.explore-panel .explore-organ-question button.is-selected{border:2px solid #0f766e;background:#e2f7ef}
+.explore-panel .explore-organ-question button:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
 </style></head>
 <body>
   <header class="app-header">
@@ -372,7 +377,7 @@
               <div><b>Apa hasilnya?</b><p id="organResult"></p></div>
             </div>
             <div class="term-box" id="organTerms" aria-label="Arti istilah ilmiah"></div>
-            <div class="inquiry-prompt" id="organPrompt"></div>
+            <div class="inquiry-prompt" id="organPrompt"></div><div class="explore-organ-question" id="exploreOrganQuestion"></div><div id="exploreOrganFeedback" class="digest-feedback neutral" role="status" aria-live="polite">Amati organ ini, lalu pilih jawaban.</div>
           </div>
         </article>
       </div>
