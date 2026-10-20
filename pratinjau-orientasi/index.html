@@ -76,8 +76,10 @@
     .engage-panel .engage-second-heading{margin-top:18px}
     .engage-panel .engage-reason-label{display:block;margin:16px 0 7px;line-height:1.5}
     .engage-panel .engage-reason-label span{font-weight:400}
-    .engage-panel #engagePredictionReason{display:block;width:100%;box-sizing:border-box;min-height:82px;padding:11px;border:1px solid #94a3b8;border-radius:10px;font:inherit;resize:vertical}
-    .engage-panel #engagePredictionReason:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+    .engage-panel .engage-two-answers textarea{display:block;width:100%;box-sizing:border-box;min-height:82px;padding:11px;border:1px solid #94a3b8;border-radius:10px;font:inherit;resize:vertical}
+    .engage-panel .engage-two-answers textarea:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+    .engage-panel .engage-two-answers{display:grid;gap:8px}
+    .engage-panel .engage-two-answers label{margin-top:7px}
     .engage-panel .engage-bridge{margin:14px 0 6px;padding:12px;background:#ecfdf5;border-radius:10px}
   </style></head>
 <body>
@@ -284,8 +286,13 @@
           <button type="button" data-prediction="usus-halus" aria-pressed="false">Usus halus</button>
           <button type="button" data-prediction="usus-besar" aria-pressed="false">Usus besar</button>
         </div>
-        <label class="engage-reason-label" for="engagePredictionReason"><strong>3. Mengapa kamu memilih dugaan tersebut?</strong><span> Jelaskan secara singkat alasanmu tentang perubahan makanan atau lokasi penyerapannya.</span></label>
-        <textarea id="engagePredictionReason" rows="2" maxlength="500" placeholder="Saya menduga ... karena ..."></textarea>
+        <div class="engage-reason-label"><strong>3. Jelaskan dugaan dan alasanmu.</strong><span> Tuliskan masing-masing secara singkat. Tidak harus benar pada tahap ini.</span></div>
+        <div class="engage-two-answers">
+          <label for="engagePredictionGuess"><strong>Saya menduga ...</strong></label>
+          <textarea id="engagePredictionGuess" rows="2" maxlength="250" placeholder="Tuliskan dugaanmu di sini"></textarea>
+          <label for="engagePredictionBecause"><strong>Karena ...</strong></label>
+          <textarea id="engagePredictionBecause" rows="2" maxlength="250" placeholder="Tuliskan alasanmu di sini"></textarea>
+        </div>
         <div id="predictionFeedback" class="digest-feedback neutral" role="status" aria-live="polite">Pilih dua prediksi dan tuliskan alasan singkat. Jawaban akan diperiksa kembali setelah mempelajari proses pencernaan.</div>
         <p class="engage-bridge"><strong>Pertanyaan untuk nanti:</strong> Apa yang mungkin terjadi jika salah satu organ pencernaan tidak bekerja dengan baik?</p>
         <p class="teacher-note">Diskusikan alasan awal siswa tanpa membuka jawaban final. Pertanyaan gangguan organ akan dikaji lebih lanjut pada Elaborate.</p>
