@@ -659,6 +659,7 @@
   function selectJourney(index){
     if(!exploreOrder.includes(index))return;
     if(index>journeyIndex&&!exploreQuizSolved.has(journeyIndex)){const fb=document.getElementById("exploreOrganFeedback");fb.className="digest-feedback warn";fb.textContent="Jawab dengan tepat sebelum menuju organ berikutnya.";return;}
+    exploreShowEngage();
     journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     exploreVisited.add(index);
@@ -706,6 +707,7 @@
     return !!prediction && !!processPrediction && document.getElementById("engagePredictionGuess").value.trim().length>=3 && document.getElementById("engagePredictionBecause").value.trim().length>=3;
   }
   function engageUpdateFeedback(){
+    exploreShowEngage();
     const feedback=document.getElementById("predictionFeedback");
     if(engageIsReady()){
       feedback.className="digest-feedback good";
