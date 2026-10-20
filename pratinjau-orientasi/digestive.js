@@ -79,10 +79,10 @@
   const model=[
     {
       name:"Mulut",
-      process:"Mengunyah + mencampur makanan dengan saliva",
+      process:"Mengunyah dan mencampur makanan dengan air liur",
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
-      chemical:"Saliva (air liur)",
+      chemical:"Air liur (mengandung enzim amilase)",
       result:"Bolus; pencernaan karbohidrat mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
       why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
@@ -90,7 +90,7 @@
     {
       name:"Faring",
       process:"Menelan dan mengarahkan bolus",
-      type:"Mekanik / transport",
+      type:"Pengangkutan makanan",
       mechanical:"Otot faring, epiglotis",
       chemical:"—",
       result:"Bolus masuk ke kerongkongan",
@@ -100,7 +100,7 @@
     {
       name:"Kerongkongan",
       process:"Gerak peristaltik",
-      type:"Mekanik / transport",
+      type:"Pengangkutan makanan",
       mechanical:"Otot dinding kerongkongan",
       chemical:"—",
       result:"Bolus menuju lambung",
@@ -112,24 +112,24 @@
       process:"Mengaduk + mencerna protein",
       type:"Mekanik + kimiawi",
       mechanical:"Otot dinding lambung",
-      chemical:"Cairan lambung",
+      chemical:"Asam lambung (HCl) dan enzim pepsin",
       result:"Kimus; protein mulai dipecah",
       term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung.",
       why:"Pengadukan dan kondisi asam membantu kerja pepsin serta membentuk kimus."
     },
     {
       name:"Usus halus",
-      process:"Pencernaan lanjutan + penyerapan zat gizi",
+      process:"Pencernaan lanjutan dan penyerapan zat gizi",
       type:"Mekanik + kimiawi + penyerapan",
       mechanical:"Otot dinding usus",
-      chemical:"Empedu (bukan enzim), cairan pankreas, cairan usus",
+      chemical:"Empedu (bukan enzim); enzim dari pankreas dan usus halus",
       result:"Zat gizi sederhana diserap melalui permukaan usus halus",
       term:"Vili = tonjolan kecil pada dinding usus halus yang memperluas permukaan penyerapan.",
       why:"Permukaan luas dan banyak vili menjadikan usus halus tempat utama penyerapan zat gizi."
     },
     {
       name:"Usus besar",
-      process:"Penyerapan air + pembentukan feses",
+      process:"Menyerap air dan membentuk feses",
       type:"Penyerapan + gerak usus",
       mechanical:"Otot dinding usus",
       chemical:"—",
@@ -870,7 +870,17 @@
     document.getElementById("nutrientName").textContent=n.name;
     document.getElementById("nutrientFinal").textContent=n.final;
 
-    const pathway=document.getElementById("enzymePathway");
+    const core=document.getElementById("enzymePathway");
+    const overview=[
+      {start:"Pati (contoh: nasi)",end:"Glukosa",note:"Enzim membantu memecah pati secara bertahap hingga glukosa."},
+      {start:"Protein (contoh: telur)",end:"Asam amino",note:"Enzim membantu memecah protein menjadi bagian yang lebih sederhana."},
+      {start:"Lemak",end:"Asam lemak dan monogliserida",note:"Empedu membantu menyebarkan lemak; lipase membantu mencernanya."}
+    ][index];
+    core.replaceChildren();
+    const explain=document.createElement("div");explain.className="digestion-note";
+    explain.textContent=overview.start+" → "+overview.end+". "+overview.note;
+    core.appendChild(explain);
+    const pathway=document.getElementById("detailedEnzymePathway");
     pathway.innerHTML=n.steps.map((step,i)=>`
       <article class="enzyme-step">
         <div class="enzyme-step-number">${i+1}</div>
@@ -915,6 +925,18 @@
   }
 
   let explainPageIndex=0;
+  let explainConceptAnswer="";
+  document.getElementById("explainConceptOptions").addEventListener("click",e=>{
+    const b=e.target.closest("[data-explain-answer]");if(!b)return;
+    explainConceptAnswer=b.dataset.explainAnswer;
+    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
+    const fb=document.getElementById("explainConceptFeedback");
+    const correct=explainConceptAnswer==="gerak";
+    fb.className="digest-feedback "+(correct?"good":"warn");
+    fb.textContent=correct?"Tepat. Mengunyah mengubah ukuran; enzim memecah zat makanan.":"Belum tepat. Periksa perbedaan perubahan ukuran dan perubahan zat penyusun makanan.";
+    window.refreshStageFooter?.();
+  });
+  document.getElementById("explainAbsorptionReason").addEventListener("input",()=>window.refreshStageFooter?.());
   const explainPageTabs=[...document.querySelectorAll(".explain-page-tab")];
   const explainPages=[...document.querySelectorAll("[data-explain-content]")];
 
@@ -2044,7 +2066,7 @@
         const modelsAll=modelButtons.length===model.length&&modelButtons.every(b=>b.classList.contains("is-viewed"));
         const nutrientButtons=[...document.querySelectorAll("#nutrientTabs [data-nutrient]")];
         const nutrientsAll=nutrientButtons.length===nutrientModels.length&&nutrientButtons.every(b=>b.classList.contains("is-viewed"));
-        return explainPageIndex===explainPages.length-1&&pagesAll&&modelsAll&&nutrientsAll;
+        return pagesAll&&modelsAll&&nutrientsAll&&explainConceptAnswer==="gerak"&&document.getElementById("explainAbsorptionReason").value.trim().length>=12;
       }
       case 4: {
         const activeElab=document.querySelector(".elab-tab.is-active")?.dataset.elab;
