@@ -1170,8 +1170,8 @@
         {id:"2",label:"Menambah sayur dan buah tetapi tetap minum sedikit.",correct:false},
         {id:"0",label:"Minum cukup serta makan sayur dan buah secara teratur.",correct:true}
       ],
-      transferGood:"Tepat. Perubahan tersebut langsung menguji kedua faktor yang digunakan dalam mekanisme.",
-      transferWarn:"Belum tepat. Pilih rancangan yang menguji dua faktor pada penjelasanmu secara langsung, bukan hanya salah satunya."
+      transferGood:"Tepat. Minum cukup dan makan berserat adalah kebiasaan yang relevan dengan kondisi Dika. Kondisi feses tetap dapat dipengaruhi faktor lain.",
+      transferWarn:"Belum tepat. Pilih kebiasaan yang memperbaiki asupan air sekaligus serat."
     },
     {
       title:"Mengapa roti terasa lebih manis?",
@@ -1192,16 +1192,16 @@
         {id:"1",label:"Amilase memecah protein roti menjadi zat yang terasa lebih manis.",correct:false},
         {id:"0",label:"Amilase membantu memecah sebagian pati saat roti lebih lama dikunyah.",correct:true}
       ],
-      mechanismGood:"Tepat. Penjelasan menggunakan enzim, substrat, dan arah perubahan yang sesuai dengan konsep pencernaan di mulut.",
-      mechanismWarn:"Belum tepat. Periksa kembali zat yang menjadi substrat amilase dan sejauh mana pencernaan karbohidrat berlangsung di mulut.",
+      mechanismGood:"Tepat. Amilase membantu memecah sebagian pati dalam roti. Rasa lebih manis tidak memastikan berapa banyak gula yang terbentuk.",
+      mechanismWarn:"Belum tepat. Periksa zat makanan yang dibantu oleh enzim amilase.",
       transferPrompt:"Bagaimana membandingkan pengaruh air liur dan air biasa?",
       transfers:[
         {id:"1",label:"Membandingkan dua roti yang diberi air liur dengan waktu berbeda.",correct:false},
         {id:"0",label:"Membandingkan roti dengan air liur atau air biasa pada waktu dan jumlah sama.",correct:true},
         {id:"2",label:"Membandingkan roti dengan air liur hangat dan air dingin pada waktu berbeda.",correct:false}
       ],
-      transferGood:"Tepat. Perbedaan utama antarperlakuan adalah keberadaan komponen saliva, sementara faktor lain dibuat sama.",
-      transferWarn:"Belum tepat. Rancangan yang kuat sebaiknya hanya mengubah faktor yang ingin diuji dan menjaga faktor lain tetap sama."
+      transferGood:"Tepat. Air liur dan air biasa dibandingkan dengan jumlah serta waktu yang sama.",
+      transferWarn:"Belum tepat. Bandingkan dua perlakuan dengan jumlah cairan dan waktu yang sama."
     },
     {
       title:"Mengapa penyerapan zat gizi menurun?",
@@ -1222,7 +1222,7 @@
         {id:"2",label:"Gerakan usus melambat sehingga semua zat gizi tertahan di usus besar.",correct:false},
         {id:"1",label:"Kerja enzim berhenti sehingga zat gizi tidak lagi terbentuk di usus halus.",correct:false}
       ],
-      mechanismGood:"Tepat. Kamu membedakan pembentukan hasil pencernaan dari proses masuknya hasil tersebut melalui permukaan usus.",
+      mechanismGood:"Tepat. Vili memperluas permukaan penyerapan, meskipun hasil pencernaan sudah terbentuk.",
       mechanismWarn:"Belum tepat. Pada kasus ini glukosa dan asam amino sudah terbentuk; fokuskan penjelasan pada tahap penyerapan.",
       transferPrompt:"Apa kesimpulan yang didukung simulasi vili?",
       transfers:[
@@ -1230,7 +1230,7 @@
         {id:"0",label:"Zat gizi yang sudah dicerna tetap membutuhkan permukaan usus untuk diserap.",correct:true},
         {id:"1",label:"Jumlah zat gizi yang diserap hanya ditentukan oleh kerja enzim pencernaan.",correct:false}
       ],
-      transferGood:"Tepat. Kamu mengevaluasi batas sebuah pernyataan dengan membedakan syarat pencernaan dan syarat penyerapan.",
+      transferGood:"Tepat. Zat gizi perlu dicerna dan kemudian diserap. Keduanya proses berbeda.",
       transferWarn:"Belum tepat. Bedakan 'sudah dicerna' dari 'sudah diserap' dan gunakan data tentang vili."
     },
     {
@@ -1252,7 +1252,7 @@
         {id:"0",label:"Asam membantu pepsin bekerja dan dinding lambung memiliki lapisan pelindung.",correct:true},
         {id:"2",label:"Asam lambung mengubah protein menjadi gula dan pelindung lambung mengaduk makanan.",correct:false}
       ],
-      mechanismGood:"Tepat. Kamu membedakan fungsi normal kondisi asam dari kesimpulan tentang penyebab suatu keluhan.",
+      mechanismGood:"Tepat. Asam lambung membantu pencernaan. Penyebab keluhan tidak dapat ditentukan dari satu gejala.",
       mechanismWarn:"Belum tepat. Hindari kesimpulan yang bersifat mutlak; gunakan kedua bukti secara bersamaan.",
       transferPrompt:"Raka sering merasa perih di perut atas. Apa tindakan yang tepat?",
       transfers:[
@@ -1260,8 +1260,8 @@
         {id:"2",label:"Langsung menganggap asam lambung berlebihan lalu mengobati sendiri.",correct:false},
         {id:"1",label:"Mengabaikan keluhan karena asam lambung diperlukan untuk pencernaan.",correct:false}
       ],
-      transferGood:"Tepat. Kamu mengevaluasi klaim berdasarkan kecukupan bukti dan tidak membuat diagnosis dari satu gejala.",
-      transferWarn:"Belum tepat. Pertimbangkan apakah satu gejala saja cukup untuk memastikan satu penyebab."
+      transferGood:"Tepat. Keluhan berulang perlu diperhatikan dan dapat diperiksakan, bukan langsung didiagnosis sendiri.",
+      transferWarn:"Belum tepat. Jangan memastikan penyebab keluhan hanya dari satu gejala."
     },
     {
       title:"Mengapa feses menjadi sangat cair saat diare?",
@@ -1290,8 +1290,8 @@
         {id:"0",label:"Minum oralit untuk mengganti cairan dan garam yang hilang.",correct:true},
         {id:"2",label:"Hanya makan makanan padat agar kehilangan cairan berkurang.",correct:false}
       ],
-      transferGood:"Tepat. Kamu mentransfer konsep penyerapan air untuk menjelaskan konsekuensi keluarnya banyak air bersama feses.",
-      transferWarn:"Belum tepat. Bedakan air yang tetap berada di lumen usus dan keluar bersama feses dari air yang berhasil diserap ke tubuh."
+      transferGood:"Tepat. Oralit mengganti cairan dan garam yang hilang. Segera minta pertolongan jika ada tanda dehidrasi, darah pada feses, atau kondisi memburuk.",
+      transferWarn:"Belum tepat. Diare menyebabkan kehilangan cairan dan garam. Pilih tindakan untuk menggantinya."
     }
   ];
 
