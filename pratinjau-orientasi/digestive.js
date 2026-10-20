@@ -620,7 +620,7 @@
     const b=e.target.closest("button[data-option]");if(!b)return;
     const answer=Number(b.dataset.option);
     exploreQuizChoices.set(journeyIndex,answer);
-    if(exploreQuizOptions[journeyIndex][answer].correct)exploreQuizSolved.add(journeyIndex);
+    if(exploreQuizOptions[journeyIndex][answer].correct){exploreQuizSolved.add(journeyIndex);}else{exploreQuizSolved.delete(journeyIndex);predictionChecked=false;exploreReviewSaved=false;}
     renderExploreQuestion();
     document.getElementById("journeyNext").disabled=journeyIndex===exploreOrder.length-1||!exploreQuizSolved.has(journeyIndex);
     window.refreshStageFooter?.();
