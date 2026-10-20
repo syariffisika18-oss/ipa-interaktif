@@ -687,7 +687,7 @@
 
   document.getElementById("journeyRestart").addEventListener("click",()=>selectJourney(0));
   let exploreReviewSaved=false;
-  const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreReview"];
+  const exploreObservationFields=["compareMouthStomach","compareIntestines","exploreConclusion","exploreObservationText","exploreReview"];
   const exploreObservationsComplete=()=>exploreVisited.size===exploreOrder.length && exploreQuizSolved.size===exploreQuiz.length
     && exploreObservationFields.every(id=>document.getElementById(id).value.trim().length >= (id.startsWith("compare")?1:12));
   function exploreShowEngage(){
@@ -743,7 +743,7 @@
     exploreShowEngage();
     if(!exploreObservationsComplete()){
       box.className="digest-feedback warn";
-      box.textContent="Kunjungi delapan organ dan lengkapi dua perbandingan, simpulan, serta tinjauan prediksi (masing-masing minimal 12 karakter untuk jawaban tertulis).";
+      box.textContent="Kunjungi delapan organ dan lengkapi dua perbandingan, simpulan, serta kedua kotak tinjauan prediksi (setiap jawaban tertulis minimal 12 karakter).";
       return;
     }
     predictionChecked=true;
