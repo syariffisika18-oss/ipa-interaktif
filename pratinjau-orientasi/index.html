@@ -118,6 +118,20 @@
 .explore-panel .explore-conclusion-prefix{font-weight:700;margin:0!important;color:#134e4a}
 .explore-panel .explore-conclusion-answer #exploreConclusion{border:0!important;border-radius:0!important;outline:0!important;box-shadow:none!important;padding:4px 0!important;min-height:100px;resize:vertical}
 .explore-panel .explore-conclusion-answer:focus-within{outline:3px solid #0f766e;outline-offset:2px}
+</style><style id="explain-p1-p6">
+.explain-panel .visual-editor-toggle,.explain-panel .visual-editor-panel{display:none!important}
+.explain-panel .explain-two-types{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.explain-panel .explain-two-types>div,.explain-panel .explain-check{padding:14px;border:1px solid #cbd5e1;border-radius:12px}
+.explain-panel .explain-two-types p{margin:6px 0 0}
+.explain-panel .explain-more-enzymes{margin:12px 0;padding:12px;border:1px solid #cbd5e1;border-radius:10px}
+.explain-panel .explain-more-enzymes summary{cursor:pointer;font-weight:650}
+.explain-panel .explain-check-options{display:grid;gap:8px}
+.explain-panel .explain-check-options button{text-align:left;white-space:normal;min-height:44px;padding:10px;border:1px solid #cbd5e1;border-radius:10px}
+.explain-panel .explain-check-options button.is-selected{border:2px solid #0f766e;background:#e0f2ef}
+.explain-panel .explain-answer-wrap{border:1px solid #94a3b8;border-radius:10px;padding:12px;display:grid;gap:8px}
+.explain-panel .explain-answer-wrap span{font-weight:700}
+.explain-panel .explain-answer-wrap textarea{width:100%;box-sizing:border-box;border:0;min-height:95px;padding:5px;font:inherit}
+@media(max-width:650px){.explain-panel .explain-two-types{grid-template-columns:1fr}}
 </style></head>
 <body>
   <header class="app-header">
@@ -462,7 +476,7 @@
         <div class="digestion-concept-card">
           <p class="stage-kicker">Konsep utama</p>
           <h3>Apa itu pencernaan?</h3>
-          <p class="digestion-definition"><strong>Pencernaan</strong> adalah proses memecah makanan menjadi zat yang lebih sederhana agar dapat diserap dan digunakan oleh tubuh.</p>
+          <p class="digestion-definition"><strong>Pencernaan</strong> adalah proses mengolah makanan agar zat gizinya dapat diserap dan dimanfaatkan tubuh.</p><div class="explain-two-types"><div><strong>Mekanik</strong><p>Makanan dihancurkan atau diaduk tanpa mengubah jenis zatnya. Contoh: mengunyah nasi.</p></div><div><strong>Kimiawi</strong><p>Enzim memecah zat makanan menjadi zat yang lebih sederhana. Contoh: amilase membantu mencerna pati.</p></div></div>
 
           <div class="digestion-flow" aria-label="Alur sederhana proses pencernaan">
             <div><span>🍚</span><b>Makanan</b></div>
@@ -474,9 +488,7 @@
             <div><span>🩸</span><b>Diserap tubuh</b></div>
           </div>
 
-          <div class="digestion-note">
-            <b>Intinya:</b> makanan perlu dipecah menjadi bentuk yang lebih sederhana agar dapat diserap dan digunakan oleh tubuh.
-          </div>
+          <div class="digestion-note"><b>Hubungkan dengan Explore:</b> Organ manakah yang melakukan proses mekanik sekaligus kimiawi?</div>
 
           <button type="button" class="primary-inline explain-concept-next" id="explainConceptNext">Lihat proses pada setiap organ →</button>
         </div>
@@ -532,7 +544,7 @@
                 <div><span>PROSES</span><strong id="modelProcess"></strong></div>
                 <div><span>JENIS</span><strong id="modelType"></strong></div>
                 <div><span>PEMERAN MEKANIK</span><strong id="modelMechanical"></strong></div>
-                <div><span>PEMERAN KIMIAWI</span><strong id="modelChemical"></strong></div>
+                <div><span>ZAT YANG MEMBANTU</span><strong id="modelChemical"></strong></div>
                 <div class="model-result-card"><span>HASIL / PERAN</span><strong id="modelResult"></strong></div>
               </div>
               <div class="model-term"><span>ISTILAH PENTING</span><strong id="modelTerm"></strong></div>
@@ -570,7 +582,7 @@
               </div>
             </div>
 
-            <div class="enzyme-pathway" id="enzymePathway" aria-label="Diagram enzim pencernaan"></div>
+            <div class="enzyme-pathway" id="enzymePathway" aria-label="Alur sederhana pencernaan zat gizi"></div>
 
             <div class="nutrient-helper" id="nutrientHelper" hidden>
               <span>ZAT PEMBANTU NON-ENZIM</span>
@@ -578,10 +590,21 @@
             </div>
           </div>
 
-          <div class="digestion-note secondary-note">
-            <b>Tidak semua zat makanan perlu dicerna.</b> Air, vitamin, dan mineral dapat diserap tanpa dipecah menjadi molekul yang lebih kecil terlebih dahulu.
-          </div>
+          <div class="digestion-note secondary-note"><b>Tidak semua zat makanan harus dipecah.</b> Air, vitamin, dan mineral umumnya dapat diserap tanpa dicerna oleh enzim. Serat tidak dicerna oleh enzim manusia seperti pati, tetapi membantu menjaga kesehatan pencernaan.</div>
+          <details class="explain-more-enzymes"><summary>Pelajari lebih lanjut: enzim dan hasil pencernaan</summary><div id="detailedEnzymePathway"></div></details>
 
+          <div class="explain-check" id="explainUnderstandingCheck">
+            <h3>Periksa pemahamanmu</h3>
+            <p><strong>1. Apa perbedaan mengunyah makanan dan kerja enzim?</strong></p>
+            <div id="explainConceptOptions" class="explain-check-options">
+              <button type="button" data-explain-answer="gerak">Mengunyah mengecilkan makanan, sedangkan enzim memecah zat penyusunnya.</button>
+              <button type="button" data-explain-answer="air">Mengunyah melunakkan makanan, sedangkan enzim hanya menambahkan air.</button>
+              <button type="button" data-explain-answer="sama">Mengunyah dan enzim sama-sama hanya mengubah bentuk makanan.</button>
+            </div>
+            <p id="explainConceptFeedback" class="digest-feedback neutral" aria-live="polite">Pilih satu jawaban berdasarkan materi.</p>
+            <label for="explainAbsorptionReason"><strong>2. Mengapa zat gizi tertentu perlu dipecah sebelum diserap?</strong></label>
+            <div class="explain-answer-wrap"><span>Menurut saya, ...</span><textarea id="explainAbsorptionReason" rows="3" maxlength="400" placeholder="Lanjutkan penjelasanmu di sini"></textarea></div>
+          </div>
           <button type="button" class="secondary-inline explain-example-back" id="explainExampleBack">← Kembali ke model organ</button>
         </div>
       </section>
@@ -815,6 +838,6 @@
   <script src="../kelas-8/sistem-pencernaan/config.js?v=20260929-1"></script>
   <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
   <script src="../template-universal/template.js?v=20261003-contextfooter-test1"></script>
-  <script src="digestive.js?v=20261020-compare-v2"></script>
+  <script src="digestive.js?v=20261020-explain-p1p6"></script>
 </body>
 </html>
