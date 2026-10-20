@@ -70,7 +70,16 @@
       .orientation-panel #resetNutrientGame{grid-column:1 / -1!important;grid-row:2!important}
     }
   </style>
-</head>
+<style id="engage-revision-e1-e6">
+    .engage-panel .engage-process-options{display:grid;grid-template-columns:1fr;gap:8px}
+    .engage-panel .engage-process-options button{white-space:normal;text-align:left;min-height:44px}
+    .engage-panel .engage-second-heading{margin-top:18px}
+    .engage-panel .engage-reason-label{display:block;margin:16px 0 7px;line-height:1.5}
+    .engage-panel .engage-reason-label span{font-weight:400}
+    .engage-panel #engagePredictionReason{display:block;width:100%;box-sizing:border-box;min-height:82px;padding:11px;border:1px solid #94a3b8;border-radius:10px;font:inherit;resize:vertical}
+    .engage-panel #engagePredictionReason:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+    .engage-panel .engage-bridge{margin:14px 0 6px;padding:12px;background:#ecfdf5;border-radius:10px}
+  </style></head>
 <body>
   <header class="app-header">
     <div class="shell header-row">
@@ -255,19 +264,32 @@
         <div class="meal-visual" aria-hidden="true"><span>🍚</span><span>🥚</span><span>🥬</span><span>🥄</span></div>
         <div>
           <p class="stage-kicker">Fenomena</p>
-          <h3>Nasi, telur, dan sayur masuk ke tubuh dalam bentuk yang masih dapat kita kenali.</h3>
-          <p>Beberapa jam kemudian, bentuknya berubah dan zat gizinya dapat masuk ke dalam tubuh. Di bagian mana sebagian besar zat gizi diserap?</p>
+          <h3>🍚🥚🥬 Apa yang terjadi pada makanan di dalam tubuh?</h3>
+          <p>Bayangkan kamu makan nasi, telur, dan sayur. Makanan masuk melalui mulut, tetapi tubuh tidak langsung menggunakan seluruh zat gizinya dalam bentuk semula.</p>
+          <p><strong>Bagaimana sistem pencernaan mengubah makanan agar zat gizinya dapat dimanfaatkan tubuh?</strong></p>
         </div>
       </div>
 
       <div class="prediction-card">
-        <p class="question-kicker">Prediksi dulu</p>
-        <h3>Organ mana yang menurutmu paling berperan dalam penyerapan zat gizi?</h3>
-        <div class="prediction-options" id="predictionOptions">
-          <button data-prediction="lambung">Lambung</button>
-          <button data-prediction="usus-halus">Usus halus</button>
-          <button data-prediction="usus-besar">Usus besar</button>
+        <p class="question-kicker">Prediksi dulu · Tidak dinilai benar atau salah sekarang</p>
+        <h3>1. Bagaimana makanan berubah selama pencernaan?</h3>
+        <div class="prediction-options engage-process-options" id="processPredictionOptions" role="group" aria-label="Prediksi proses pencernaan">
+          <button type="button" data-process-prediction="fisik" aria-pressed="false">A. Makanan hanya dihancurkan menjadi bagian kecil.</button>
+          <button type="button" data-process-prediction="keduanya" aria-pressed="false">B. Makanan mengalami perubahan fisik dan pemecahan kimiawi.</button>
+          <button type="button" data-process-prediction="langsung" aria-pressed="false">C. Makanan langsung diserap tanpa perubahan.</button>
         </div>
+        <h3 class="engage-second-heading">2. Di organ manakah sebagian besar zat gizi diserap?</h3>
+        <div class="prediction-options" id="predictionOptions" role="group" aria-label="Prediksi lokasi penyerapan">
+          <button type="button" data-prediction="lambung" aria-pressed="false">Lambung</button>
+          <button type="button" data-prediction="usus-halus" aria-pressed="false">Usus halus</button>
+          <button type="button" data-prediction="usus-besar" aria-pressed="false">Usus besar</button>
+        </div>
+        <label class="engage-reason-label" for="engagePredictionReason"><strong>3. Mengapa kamu memilih dugaan tersebut?</strong><span> Jelaskan secara singkat alasanmu tentang perubahan makanan atau lokasi penyerapannya.</span></label>
+        <textarea id="engagePredictionReason" rows="2" maxlength="500" placeholder="Saya menduga ... karena ..."></textarea>
+        <div id="predictionFeedback" class="digest-feedback neutral" role="status" aria-live="polite">Pilih dua prediksi dan tuliskan alasan singkat. Jawaban akan diperiksa kembali setelah mempelajari proses pencernaan.</div>
+        <p class="engage-bridge"><strong>Pertanyaan untuk nanti:</strong> Apa yang mungkin terjadi jika salah satu organ pencernaan tidak bekerja dengan baik?</p>
+        <p class="teacher-note">Diskusikan alasan awal siswa tanpa membuka jawaban final. Pertanyaan gangguan organ akan dikaji lebih lanjut pada Elaborate.</p>
+      </div>
         <div id="predictionFeedback" class="digest-feedback neutral">Prediksimu akan diperiksa kembali setelah Explore.</div>
         <p class="teacher-note">Minta beberapa siswa menjelaskan alasannya. Jangan membuka jawaban final dulu.</p>
       </div>
