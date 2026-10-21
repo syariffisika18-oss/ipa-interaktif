@@ -8,6 +8,7 @@
   const stageCount = 7;
 
   const resetRequested = new URLSearchParams(location.search).has("_reset");
+  window.IPA_RESET_REQUESTED = resetRequested;
   if (resetRequested) {
     if (config.requireStageProgression === true && config.materialId) {
       localStorage.removeItem(STORAGE_KEY);
