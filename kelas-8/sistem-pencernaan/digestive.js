@@ -1214,7 +1214,7 @@
               && hotsCases[index].evidenceCorrect.every(id=>src.selected.includes(id))
             : !!(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers)
                 .find(option=>option.id===src.selected)?.correct;
-          const finalized=selectedCorrect||src.attempts===2;
+          const finalized=src.attempts>0&&(selectedCorrect||src.attempts===2);
           if(src.attempts===0 && (src.finalized||src.firstCorrect!==null||src.finalCorrect!==null))return;
           if(src.attempts>0 && (src.finalized!==finalized
             || src.finalCorrect!==(finalized?selectedCorrect:null)
