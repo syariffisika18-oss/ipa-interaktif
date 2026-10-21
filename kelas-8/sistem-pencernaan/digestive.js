@@ -590,6 +590,55 @@
   window.addEventListener("orientationchange",syncVisualCoordinates,{passive:true});
 
   const exploreOrder=[0,1,2,3,4,5,6,7];
+  const exploreStorageKey="ipa:digestive:explore:v1";
+  function saveExploreSession(){
+    try{
+      sessionStorage.setItem(exploreStorageKey,JSON.stringify({
+        prediction,journeyIndex,visited:[...exploreVisited],predictionChecked
+      }));
+    }catch(error){console.warn("Progres Explore belum tersimpan",error);}
+  }
+  function restoreExploreSession(){
+    try{
+      if(window.IPA_RESET_REQUESTED===true){
+        sessionStorage.removeItem(exploreStorageKey);
+        return;
+      }
+      const saved=JSON.parse(sessionStorage.getItem(exploreStorageKey)||"null");
+      if(!saved||!Array.isArray(saved.visited))return;
+      const visited=[...new Set(saved.visited)];
+      if(!visited.length||visited.length>exploreOrder.length
+        ||!visited.every(index=>Number.isInteger(index)&&exploreOrder.includes(index))
+        ||!visited.includes(0))return;
+      if(!Number.isInteger(saved.journeyIndex)
+        ||!visited.includes(saved.journeyIndex))return;
+      const allowedPredictions=[...document.querySelectorAll("#predictionOptions [data-prediction]")]
+        .map(button=>button.dataset.prediction);
+      if(saved.prediction!==""&&!allowedPredictions.includes(saved.prediction))return;
+      if(saved.predictionChecked===true
+        && (!saved.prediction||!visited.includes(4)))return;
+      prediction=saved.prediction;
+      journeyIndex=saved.journeyIndex;
+      exploreVisited.clear();
+      visited.forEach(index=>exploreVisited.add(index));
+      furthestJourney=Math.max(...visited);
+      predictionChecked=saved.predictionChecked===true;
+      document.querySelectorAll("#predictionOptions [data-prediction]").forEach(button=>
+        button.classList.toggle("is-selected",button.dataset.prediction===prediction));
+      if(prediction){
+        document.getElementById("predictionFeedback").textContent=
+          "Prediksi sebelumnya berhasil dipulihkan. Lanjutkan pengamatan di Explore.";
+      }
+      if(predictionChecked){
+        const box=document.getElementById("predictionCheckResult");
+        box.className="digest-feedback good";
+        box.textContent=prediction==="usus-halus"
+          ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
+          :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
+      }
+    }catch(error){console.warn("Progres Explore belum dapat dipulihkan",error);}
+  }
+  restoreExploreSession();
   const route=document.getElementById("organRoute");
   route.innerHTML=exploreOrder.map((organIndex,displayIndex)=>{
     const o=journey[organIndex];
@@ -617,7 +666,7 @@
       const pos=exploreOrder.indexOf(organIndex);
       const currentPos=exploreOrder.indexOf(journeyIndex);
       b.classList.toggle("is-active",organIndex===journeyIndex);
-      b.classList.toggle("is-visited",pos<=currentPos);
+      b.classList.toggle("is-visited",exploreVisited.has(organIndex));
     });
     setHotspots("[data-explore-organ]",journeyIndex);
     const ball=document.getElementById("exploreFoodBall");
@@ -631,6 +680,7 @@
     journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     exploreVisited.add(index);
+    saveExploreSession();
     renderJourney(true);
     window.refreshStageFooter?.();
   }
@@ -656,6 +706,9 @@
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
     prediction=b.dataset.prediction;
+    predictionChecked=false;
+    document.getElementById("predictionCheckResult").textContent="Prediksi diubah. Uji kembali menggunakan hasil Explore.";
+    saveExploreSession();
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     window.refreshStageFooter?.();
     document.getElementById("predictionFeedback").textContent="Prediksi tersimpan. Gunakan Explore untuk mengujinya.";
@@ -666,6 +719,7 @@
     if(!prediction){box.className="digest-feedback warn";box.textContent="Kamu belum membuat prediksi pada Engage.";return}
     box.className="digest-feedback good";
     predictionChecked=true;
+    saveExploreSession();
     window.refreshStageFooter?.();
     box.textContent=prediction==="usus-halus"
       ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
