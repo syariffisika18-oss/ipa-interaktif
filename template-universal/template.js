@@ -17,11 +17,13 @@
   let completed = Array.isArray(state.completed) ? new Set(state.completed) : new Set();
   let mode = state.mode || config.defaultMode || "mandiri";
   const progressionEnabled = config.requireStageProgression === true;
-  const progressionKey = STORAGE_KEY + ":unlocked:" + (config.materialId || "default");
-  let furthestUnlocked = progressionEnabled
-    ? Math.max(0, Math.min(stageCount - 1, Number(sessionStorage.getItem(progressionKey)) || 0))
-    : stageCount - 1;
-  if (progressionEnabled) activeStage = Math.min(activeStage, furthestUnlocked);
+  // Activity state is not restored by the learning module, so do not restore
+  // unlocked stages independently after a page reload.
+  let furthestUnlocked = progressionEnabled ? 0 : stageCount - 1;
+  if (progressionEnabled) {
+    activeStage = 0;
+    completed = new Set();
+  }
 
   if (!state.sessionId) state.sessionId = makeId();
 
@@ -137,6 +139,10 @@
     });
 
     completeButton.addEventListener("click", () => {
+      if (progressionEnabled && !stageReady(activeStage)) {
+        showToast("Selesaikan aktivitas tahap ini sebelum menandai selesai.");
+        return;
+      }
       if (completed.has(activeStage)) {
         completed.delete(activeStage);
         showToast("Tanda selesai dibatalkan.");
@@ -232,7 +238,6 @@
     if (progressionEnabled && target > furthestUnlocked) {
       if (target === furthestUnlocked + 1 && activeStage === furthestUnlocked && stageReady(activeStage)) {
         furthestUnlocked = target;
-        sessionStorage.setItem(progressionKey, String(furthestUnlocked));
       } else {
         showToast("Selesaikan aktivitas tahap saat ini sebelum melanjutkan secara berurutan.");
         return;
