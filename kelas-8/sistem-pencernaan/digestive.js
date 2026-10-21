@@ -2109,7 +2109,7 @@
       ||!Number.isInteger(snapshot.score)
       ||snapshot.score!==snapshot.choices.reduce((sum,value,i)=>
         sum+(value!==null&&value===bank[snapshot.order[i]].a?1:0),0)
-      ||(snapshot.finished===true&&answered!==bank.length)
+      ||(snapshot.finished===true&&(answered!==bank.length||snapshot.index!==bank.length-1))
       ||(snapshot.finished!==true&&answered===bank.length&&snapshot.index!==bank.length-1))return false;
     return true;
   }
