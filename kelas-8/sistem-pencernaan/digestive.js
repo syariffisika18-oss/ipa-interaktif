@@ -812,6 +812,7 @@
   function renderNutrientModel(index){
     index=Math.max(0,Math.min(nutrientModels.length-1,index));
     nutrientSeen.add(index);
+    if(!restoringExplain)saveExplainSession();
     const n=nutrientModels[index];
     document.querySelectorAll(".nutrient-tab").forEach((b,i)=>{
       b.classList.toggle("is-active",i===index);
@@ -866,12 +867,44 @@
   }
 
   let explainPageIndex=0;
+  const explainStorageKey="ipa:digestive:explain:v1";
+  let restoringExplain=true;
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(explainStorageKey);}catch(error){console.warn("Reset Explain gagal",error);}
+  }
+  function saveExplainSession(){
+    try{sessionStorage.setItem(explainStorageKey,JSON.stringify({
+      page:explainPageIndex,organ:modelIndex,
+      pages:[...explainPagesSeen],organs:[...modelSeen],nutrients:[...nutrientSeen]
+    }));}catch(error){console.warn("Progres Explain belum tersimpan",error);}
+  }
+  function restoreExplainSession(){
+    try{
+      const saved=JSON.parse(sessionStorage.getItem(explainStorageKey)||"null");
+      if(!saved)return;
+      const valid=(items,max)=>Array.isArray(items)&&items.length<=max
+        &&items.every(n=>Number.isInteger(n)&&n>=0&&n<max);
+      if(!valid(saved.pages,explainPages.length)||!valid(saved.organs,model.length)
+        ||!valid(saved.nutrients,nutrientModels.length)
+        ||!Number.isInteger(saved.page)||saved.page<0||saved.page>=explainPages.length
+        ||!Number.isInteger(saved.organ)||saved.organ<0||saved.organ>=model.length)return;
+      explainPagesSeen.clear();saved.pages.forEach(n=>explainPagesSeen.add(n));
+      modelSeen.clear();saved.organs.forEach(n=>modelSeen.add(n));
+      nutrientSeen.clear();saved.nutrients.forEach(n=>nutrientSeen.add(n));
+      explainPageTabs.forEach((button,i)=>button.classList.toggle("is-viewed",explainPagesSeen.has(i)));
+      modelTabs.querySelectorAll("[data-model]").forEach((button,i)=>button.classList.toggle("is-viewed",modelSeen.has(i)));
+      nutrientTabs.querySelectorAll("[data-nutrient]").forEach((button,i)=>button.classList.toggle("is-viewed",nutrientSeen.has(i)));
+      renderModel(saved.organ,false);
+      showExplainPage(saved.page);
+    }catch(error){console.warn("Progres Explain belum dapat dipulihkan",error);}
+  }
   const explainPageTabs=[...document.querySelectorAll(".explain-page-tab")];
   const explainPages=[...document.querySelectorAll("[data-explain-content]")];
 
   function showExplainPage(index){
     explainPageIndex=Math.max(0,Math.min(explainPages.length-1,index));
     explainPagesSeen.add(explainPageIndex);
+    if(!restoringExplain)saveExplainSession();
     explainPageTabs.forEach((b,i)=>{
       b.classList.toggle("is-active",i===explainPageIndex);
       if(i===explainPageIndex)b.classList.add("is-viewed");
@@ -904,6 +937,7 @@
   function renderModel(i,animate=true){
     modelIndex=Math.max(0,Math.min(model.length-1,i));
     modelSeen.add(modelIndex);
+    if(!restoringExplain)saveExplainSession();
     const m=model[modelIndex];
     modelTabs.querySelectorAll("button").forEach((b,j)=>{
       b.classList.toggle("is-active",j===modelIndex);
@@ -941,6 +975,9 @@
   renderJourney(false);
   renderModel(0,false);
   showExplainPage(0);
+  restoreExplainSession();
+  restoringExplain=false;
+  saveExplainSession();
 
   document.querySelectorAll(".elab-tab").forEach(btn=>btn.addEventListener("click",()=>{
     const i=btn.dataset.elab;
