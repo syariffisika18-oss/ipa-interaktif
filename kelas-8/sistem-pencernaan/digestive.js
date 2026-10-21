@@ -2265,9 +2265,18 @@
         if(finished){
           document.querySelectorAll(containers[index]).forEach(b=>b.disabled=true);
           document.getElementById(checkIds[index]).disabled=true;
-          if(index===0)document.getElementById("absorptionTransferStep").classList.remove("locked-step");
-          if(index===2)document.getElementById("modelCorrectionStep").classList.remove("locked-step");
-          if(index===3)document.getElementById("bilePredictionStep").classList.remove("locked-step");
+          if(index===0){
+            document.getElementById("absorptionTransferStep").classList.remove("locked-step");
+            if(!absorptionAttempt.finalized)document.getElementById("checkAbsorption").disabled=false;
+          }
+          if(index===2){
+            document.getElementById("modelCorrectionStep").classList.remove("locked-step");
+            if(!modelCorrectionAttempt.finalized)document.getElementById("checkModelCorrection").disabled=false;
+          }
+          if(index===3){
+            document.getElementById("bilePredictionStep").classList.remove("locked-step");
+            if(!bileAttempt.finalized)document.getElementById("checkBilePrediction").disabled=false;
+          }
         }
         const feedbackIds=["pathwayFeedback","absorptionFeedback","modelErrorFeedback","modelCorrectionFeedback","bileFeedback"];
         const fb=document.getElementById(feedbackIds[index]);
