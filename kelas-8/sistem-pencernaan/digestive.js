@@ -169,6 +169,7 @@
   const nutrientSeen=new Set([0]);
   const explainPagesSeen=new Set([0]);
   let evalFinished=false;
+  let restoringExplain=true;
 
   // =========================================================
   // KOORDINAT VISUAL FINAL — sumber tunggal untuk semua viewport
@@ -868,7 +869,6 @@
 
   let explainPageIndex=0;
   const explainStorageKey="ipa:digestive:explain:v1";
-  let restoringExplain=true;
   if(window.IPA_RESET_REQUESTED===true){
     try{sessionStorage.removeItem(explainStorageKey);}catch(error){console.warn("Reset Explain gagal",error);}
   }
