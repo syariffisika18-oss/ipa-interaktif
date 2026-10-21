@@ -1375,7 +1375,7 @@
         step.feedbackText=data.evidenceWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Bukti yang paling kuat: "+correctEvidenceText(data)+". "+data.evidenceGood;
+        step.feedbackText="Dua percobaan selesai. Bukti yang paling kuat: "+correctEvidenceText(data)+". "+data.evidenceGood;
       }
       if(step.finalized){
         state.mechanism.feedbackTone="neutral";
@@ -1402,7 +1402,7 @@
         step.feedbackText=data.mechanismWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
+        step.feedbackText="Dua percobaan selesai. Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
       }
       if(step.finalized){
         state.transfer.feedbackTone="neutral";
@@ -1429,7 +1429,7 @@
         step.feedbackText=data.transferWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Keputusan yang paling kuat: "+correctOptionText(data.transfers)+". "+data.transferGood;
+        step.feedbackText="Dua percobaan selesai. Keputusan yang paling kuat: "+correctOptionText(data.transfers)+". "+data.transferGood;
       }
       renderHotsCase();
     }
