@@ -1208,12 +1208,27 @@
             ? Array.isArray(src.selected)&&src.selected.length<=2&&src.selected.every(id=>hotsCases[index].evidence.some(e=>e.id===id))
             : src.selected===null||(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers).some(e=>e.id===src.selected);
           if(!validSelection)return;
+          // Reject inconsistent snapshots instead of trusting stored grading flags.
+          const selectedCorrect=kind==="evidence"
+            ? src.selected.length===hotsCases[index].evidenceCorrect.length
+              && hotsCases[index].evidenceCorrect.every(id=>src.selected.includes(id))
+            : !!(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers)
+                .find(option=>option.id===src.selected)?.correct;
+          const finalized=selectedCorrect||src.attempts===2;
+          if(src.attempts===0 && (src.finalized||src.firstCorrect!==null||src.finalCorrect!==null))return;
+          if(src.attempts>0 && (src.finalized!==finalized
+            || src.finalCorrect!==(finalized?selectedCorrect:null)
+            || typeof src.firstCorrect!=="boolean"))return;
+          if(src.attempts===1 && src.firstCorrect!==selectedCorrect)return;
+          if(src.attempts===2 && src.firstCorrect!==false)return;
+          if(kind==="mechanism"&&!target.evidence.finalized&&src.attempts>0)return;
+          if(kind==="transfer"&&!target.mechanism.finalized&&src.attempts>0)return;
           const dst=target[kind];
           dst.selected=kind==="evidence"?new Set(src.selected):src.selected;
           dst.attempts=src.attempts;
-          dst.finalized=src.finalized===true&&src.attempts>=1;
-          dst.firstCorrect=typeof src.firstCorrect==="boolean"?src.firstCorrect:null;
-          dst.finalCorrect=dst.finalized&&typeof src.finalCorrect==="boolean"?src.finalCorrect:null;
+          dst.finalized=finalized;
+          dst.firstCorrect=src.firstCorrect;
+          dst.finalCorrect=finalized?selectedCorrect:null;
           dst.feedbackTone=dst.finalized?(dst.finalCorrect?"good":"warn"):"neutral";
           if(dst.finalized){
             const data=hotsCases[index];
