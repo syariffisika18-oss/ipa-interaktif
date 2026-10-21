@@ -25,12 +25,31 @@
   let completed = Array.isArray(state.completed) ? new Set(state.completed) : new Set();
   let mode = state.mode || config.defaultMode || "mandiri";
   const progressionEnabled = config.requireStageProgression === true;
-  // Activity state is not restored by the learning module, so do not restore
-  // unlocked stages independently after a page reload.
-  let furthestUnlocked = progressionEnabled ? 0 : stageCount - 1;
+  // Only same-tab, previously verified transitions are restored.
+  // A new tab has no checkpoint, so it begins at Orientasi.
+  const checkpointKey = STORAGE_PREFIX + "stage-checkpoint:" + (config.materialId || "default");
+  let savedCheckpoint = null;
   if (progressionEnabled) {
-    activeStage = 0;
-    completed = new Set();
+    try {
+      if (resetRequested) sessionStorage.removeItem(checkpointKey);
+      savedCheckpoint = JSON.parse(sessionStorage.getItem(checkpointKey) || "null");
+    } catch (error) {
+      console.warn("Checkpoint navigasi tidak dapat dibaca", error);
+    }
+  }
+  const checkpointValid = savedCheckpoint
+    && Number.isInteger(savedCheckpoint.unlocked)
+    && savedCheckpoint.unlocked >= 0
+    && savedCheckpoint.unlocked < stageCount
+    && Number.isInteger(savedCheckpoint.active)
+    && savedCheckpoint.active >= 0
+    && savedCheckpoint.active <= savedCheckpoint.unlocked;
+  let furthestUnlocked = progressionEnabled
+    ? (checkpointValid ? savedCheckpoint.unlocked : 0)
+    : stageCount - 1;
+  if (progressionEnabled) {
+    activeStage = checkpointValid ? savedCheckpoint.active : 0;
+    completed = new Set(Array.from({length: furthestUnlocked}, (_,i) => i));
   }
 
   if (!state.sessionId) state.sessionId = makeId();
@@ -847,6 +866,13 @@
   }
 
   function saveState() {
+    if (progressionEnabled) {
+      try {
+        sessionStorage.setItem(checkpointKey, JSON.stringify({
+          unlocked:furthestUnlocked,active:activeStage
+        }));
+      } catch (error) { console.warn("Checkpoint navigasi belum tersimpan", error); }
+    }
     state.activeStage = activeStage;
     state.completed = [...completed];
     state.mode = mode;
