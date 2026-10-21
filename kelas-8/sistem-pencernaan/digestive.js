@@ -1176,6 +1176,52 @@
     transfer:{selected:null,...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Bangun mekanisme terlebih dahulu."}
   }));
   let activeHotsCase=0;
+  // Restore only finalized/attempt-count assessment data; never trust a stored score.
+  const hotsStorageKey="ipa:digestive:hots:v1";
+  function persistHotsProgress(){
+    try {
+      sessionStorage.setItem(hotsStorageKey,JSON.stringify({
+        activeCase:activeHotsCase,
+        cases:hotsCaseStates.map(s=>Object.fromEntries(
+          ["evidence","mechanism","transfer"].map(kind=>[kind,{
+            selected:kind==="evidence"?[...s[kind].selected]:s[kind].selected,
+            attempts:s[kind].attempts,firstCorrect:s[kind].firstCorrect,
+            finalCorrect:s[kind].finalCorrect,finalized:s[kind].finalized
+          }])
+        ))
+      }));
+    } catch(error){console.warn("Progres kasus tidak tersimpan",error);}
+  }
+  function restoreHotsProgress(){
+    try {
+      const saved=JSON.parse(sessionStorage.getItem(hotsStorageKey)||"null");
+      if(!saved||!Array.isArray(saved.cases)||saved.cases.length!==hotsCases.length)return;
+      saved.cases.forEach((record,index)=>{
+        const target=hotsCaseStates[index];
+        ["evidence","mechanism","transfer"].forEach(kind=>{
+          const src=record?.[kind];
+          if(!src||!Number.isInteger(src.attempts)||src.attempts<0||src.attempts>2)return;
+          const validSelection=kind==="evidence"
+            ? Array.isArray(src.selected)&&src.selected.length<=2&&src.selected.every(id=>hotsCases[index].evidence.some(e=>e.id===id))
+            : src.selected===null||(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers).some(e=>e.id===src.selected);
+          if(!validSelection)return;
+          const dst=target[kind];
+          dst.selected=kind==="evidence"?new Set(src.selected):src.selected;
+          dst.attempts=src.attempts;
+          dst.finalized=src.finalized===true&&src.attempts>=1;
+          dst.firstCorrect=typeof src.firstCorrect==="boolean"?src.firstCorrect:null;
+          dst.finalCorrect=dst.finalized&&typeof src.finalCorrect==="boolean"?src.finalCorrect:null;
+          dst.feedbackTone=dst.finalized?(dst.finalCorrect?"good":"warn"):"neutral";
+          dst.feedbackText=dst.finalized
+            ? "Jawaban sebelumnya sudah dikunci. "+(dst.finalCorrect?"Benar.":"Periksa pembahasan bersama guru.")
+            : (dst.attempts===1?"Satu kesempatan revisi tersisa.":"Pilih jawaban, lalu kunci.");
+        });
+      });
+      const active=Number(saved.activeCase);
+      if(Number.isInteger(active)&&active>=0&&active<hotsCases.length)activeHotsCase=active;
+    } catch(error){console.warn("Progres kasus tidak dapat dipulihkan",error);}
+  }
+  restoreHotsProgress();
 
   function hotsCaseDone(index){
     const s=hotsCaseStates[index];
@@ -1221,6 +1267,7 @@
   }
 
   function renderHotsCase(){
+    persistHotsProgress();
     const data=hotsCases[activeHotsCase];
     const state=hotsCaseStates[activeHotsCase];
     const evidenceUnlocked=true;
