@@ -2085,9 +2085,48 @@
 
   const shuffle=a=>{const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
   const tierOrder=["Dasar","Pemahaman","Aplikasi","Penalaran"];
-  const questions=tierOrder.flatMap(t=>shuffle(bank.filter(q=>q.tier===t)));
-  let qi=0,score=0;
-  const responses=Array(questions.length).fill(null);
+  const evalStorageKey="ipa:digestive:evaluate:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(evalStorageKey);}catch(error){console.warn("Reset Evaluate gagal",error);}
+  }
+  let savedEval=null;
+  try{savedEval=JSON.parse(sessionStorage.getItem(evalStorageKey)||"null");}
+  catch(error){console.warn("Data Evaluate tidak terbaca",error);}
+  const defaultOrder=tierOrder.flatMap(t=>shuffle(bank.filter(q=>q.tier===t))).map(q=>bank.indexOf(q));
+  function validEvalSnapshot(snapshot){
+    if(!snapshot||!Array.isArray(snapshot.order)||snapshot.order.length!==bank.length
+      ||new Set(snapshot.order).size!==bank.length
+      ||!snapshot.order.every(i=>Number.isInteger(i)&&i>=0&&i<bank.length)
+      ||!tierOrder.every((tier,index)=>snapshot.order.slice(
+        tierOrder.slice(0,index).reduce((sum,t)=>sum+bank.filter(q=>q.tier===t).length,0),
+        tierOrder.slice(0,index+1).reduce((sum,t)=>sum+bank.filter(q=>q.tier===t).length,0)
+      ).every(i=>bank[i].tier===tier)))return false;
+    if(!Array.isArray(snapshot.choices)||snapshot.choices.length!==bank.length
+      ||!snapshot.choices.every((value,i)=>value===null
+        ||Number.isInteger(value)&&value>=0&&value<bank[snapshot.order[i]].o.length))return false;
+    const answered=snapshot.choices.reduce((sum,value)=>sum+(value!==null?1:0),0);
+    if(!Number.isInteger(snapshot.index)||snapshot.index<0||snapshot.index>=bank.length
+      ||!Number.isInteger(snapshot.score)
+      ||snapshot.score!==snapshot.choices.reduce((sum,value,i)=>
+        sum+(value!==null&&value===bank[snapshot.order[i]].a?1:0),0)
+      ||(snapshot.finished===true&&answered!==bank.length)
+      ||(snapshot.finished!==true&&answered===bank.length&&snapshot.index!==bank.length-1))return false;
+    return true;
+  }
+  if(!validEvalSnapshot(savedEval))savedEval=null;
+  const evalOrder=savedEval?savedEval.order:defaultOrder;
+  const questions=evalOrder.map(index=>bank[index]);
+  let qi=savedEval?savedEval.index:0;
+  let score=savedEval?savedEval.score:0;
+  const responses=(savedEval?savedEval.choices:Array(questions.length).fill(null))
+    .map((choice,i)=>choice===null?null:{choice,correct:choice===questions[i].a});
+  evalFinished=!!savedEval?.finished;
+  function saveEvalSession(){
+    try{sessionStorage.setItem(evalStorageKey,JSON.stringify({
+      order:evalOrder,index:qi,score,finished:evalFinished,
+      choices:responses.map(response=>response?response.choice:null)
+    }));}catch(error){console.warn("Progres Evaluate belum tersimpan",error);}
+  }
 
   function renderEval(){
     const q=questions[qi];
@@ -2115,10 +2154,11 @@
     const b=e.target.closest("[data-opt]");if(!b||responses[qi])return;
     const choice=Number(b.dataset.opt),correct=choice===questions[qi].a;
     responses[qi]={choice,correct};if(correct)score++;
+    saveEvalSession();
     renderEval();
   });
-  document.getElementById("evalPrev").onclick=()=>{if(qi>0){qi--;renderEval()}};
-  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;renderEval()}else{evalFinished=true;const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/20. Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";window.refreshStageFooter?.()}};
+  document.getElementById("evalPrev").onclick=()=>{if(qi>0){qi--;saveEvalSession();renderEval()}};
+  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;saveEvalSession();renderEval()}else{evalFinished=true;saveEvalSession();renderEval();const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/"+questions.length+". Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";window.refreshStageFooter?.()}};
 
   window.IPA_STAGE_COMPLETE_CHECK=(stage)=>{
     switch(Number(stage)){
@@ -2165,5 +2205,6 @@
   window.refreshStageFooter?.();
 
   renderEval();
+  if(evalFinished){const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/"+questions.length+". Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";}
   window.refreshStageFooter?.();
 })();
