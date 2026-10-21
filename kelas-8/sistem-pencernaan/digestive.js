@@ -82,7 +82,7 @@
       process:"Mengunyah + mencampur makanan dengan air liur",
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
-      chemical:"Air liur (air liur)",
+      chemical:"Air liur",
       result:"Bolus; pencernaan karbohidrat mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
       why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
