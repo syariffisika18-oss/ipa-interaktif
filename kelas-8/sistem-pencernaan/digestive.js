@@ -1178,6 +1178,9 @@
   let activeHotsCase=0;
   // Restore only finalized/attempt-count assessment data; never trust a stored score.
   const hotsStorageKey="ipa:digestive:hots:v1";
+  if(new URLSearchParams(location.search).has("_reset")){
+    try{sessionStorage.removeItem(hotsStorageKey);}catch(error){console.warn("Reset progres kasus gagal",error);}
+  }
   function persistHotsProgress(){
     try {
       sessionStorage.setItem(hotsStorageKey,JSON.stringify({
