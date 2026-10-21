@@ -16,6 +16,12 @@
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
   let completed = Array.isArray(state.completed) ? new Set(state.completed) : new Set();
   let mode = state.mode || config.defaultMode || "mandiri";
+  const progressionEnabled = config.requireStageProgression === true;
+  const progressionKey = STORAGE_KEY + ":unlocked:" + (config.materialId || "default");
+  let furthestUnlocked = progressionEnabled
+    ? Math.max(0, Math.min(stageCount - 1, Number(sessionStorage.getItem(progressionKey)) || 0))
+    : stageCount - 1;
+  if (progressionEnabled) activeStage = Math.min(activeStage, furthestUnlocked);
 
   if (!state.sessionId) state.sessionId = makeId();
 
@@ -222,7 +228,17 @@
   window.refreshStageFooter=updateStageFooterVisibility;
 
   function showStage(index, doScroll = true) {
-    activeStage = Math.max(0, Math.min(stageCount - 1, index));
+    const target = Math.max(0, Math.min(stageCount - 1, index));
+    if (progressionEnabled && target > furthestUnlocked) {
+      if (target === furthestUnlocked + 1 && activeStage === furthestUnlocked && stageReady(activeStage)) {
+        furthestUnlocked = target;
+        sessionStorage.setItem(progressionKey, String(furthestUnlocked));
+      } else {
+        showToast("Selesaikan aktivitas tahap saat ini sebelum melanjutkan secara berurutan.");
+        return;
+      }
+    }
+    activeStage = target;
 
     panels.forEach((panel, i) => {
       panel.classList.toggle("is-active", i === activeStage);
