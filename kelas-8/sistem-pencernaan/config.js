@@ -2,6 +2,7 @@ window.IPA_TEMPLATE_CONFIG = {
   appTitle: "IPA Interaktif • Kelas VIII",
   templateVersion: "0.6-digestive",
   materialId: "kelas-8-sistem-pencernaan",
+  requireStageProgression: true,
   materialTitle: "Sistem Pencernaan Manusia",
   materialMeta: "Kelas VIII • Sistem tubuh manusia • 7 tahap",
   objective: "Setelah pembelajaran, peserta didik mampu menjelaskan urutan organ pencernaan, membedakan pencernaan mekanik dan kimiawi, menghubungkan organ dengan proses serta zat yang berperan, dan menerapkan konsep pada situasi sehari-hari.",

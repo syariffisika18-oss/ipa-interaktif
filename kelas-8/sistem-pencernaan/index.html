@@ -8,6 +8,16 @@
   <title>Sistem Pencernaan — IPA Interaktif Kelas VIII</title>
   <link rel="stylesheet" href="../../template-universal/style.css?v=20260928-master1">
   <link rel="stylesheet" href="digestive.css?v=20260930-model-line1">
+  <style>
+    .digest-readiness{margin-top:1rem;padding:1rem;border:1px solid var(--line,#cbd5e1);border-radius:12px}
+    .digest-readiness label{display:block;margin-bottom:.5rem}
+    .digest-readiness select{max-width:100%;width:100%;padding:.65rem;border-radius:8px}
+    .relation-card:focus-visible,.relation-slot:focus-visible{outline:3px solid #0f766e;outline-offset:3px}
+    .relation-slot.has-correct{border-color:#16a34a}
+    .relation-slot.has-wrong{border-color:#dc2626}
+    .relation-slot .relation-card.is-correct{box-shadow:inset 0 0 0 2px #16a34a}
+    .relation-slot .relation-card.is-wrong{box-shadow:inset 0 0 0 2px #dc2626}
+  </style>
 </head>
 <body>
   <header class="app-header">
@@ -64,17 +74,18 @@
         <article class="learning-card objective-card">
           <h3>🎯 Tujuan pembelajaran</h3>
           <ul class="digest-list">
-            <li>Menjelaskan urutan organ yang dilalui makanan.</li>
-            <li>Membedakan pencernaan mekanik dan kimiawi.</li>
-            <li>Menghubungkan organ dengan proses, zat yang berperan, dan hasilnya.</li>
-            <li>Menerapkan konsep pencernaan pada situasi sehari-hari.</li>
+            <li>Mengidentifikasi urutan organ pencernaan dan menjelaskan fungsi utamanya.</li>
+            <li>Membedakan pencernaan mekanik dan kimiawi serta menghubungkan organ, zat yang berperan, dan hasil pencernaan.</li>
+            <li>Menganalisis gangguan pencernaan sederhana berdasarkan fungsi organ dan bukti pada kasus.</li>
+            <li>Menentukan cara menjaga kesehatan sistem pencernaan dengan alasan ilmiah.</li>
           </ul>
         </article>
 
         <section class="identity-card digest-identity" aria-labelledby="identityTitle">
           <div><p class="stage-kicker">Identitas sesi</p><h3 id="identityTitle">Siapa yang belajar?</h3></div>
           <div class="identity-grid">
-            <label><span>Nama / nomor absen</span><input id="studentName" type="text" maxlength="80" placeholder="Contoh: Andi / 12"></label>
+            <label><span>Nama siswa</span><input id="studentName" type="text" maxlength="80" autocomplete="name" placeholder="Contoh: Andi"></label>
+            <label><span>Nomor absen</span><input id="studentNumber" type="text" inputmode="numeric" maxlength="3" placeholder="Contoh: 12"></label>
             <label><span>Kelas</span><input id="studentClass" type="text" maxlength="30" placeholder="Contoh: VIII A"></label>
           </div>
         </section>
@@ -87,13 +98,13 @@
             <h3>🍽️ Hubungkan makanan, nutrisi, dan fungsinya</h3>
             <p>Lengkapi setiap rantai: <b>Makanan → Nutrisi → Fungsi</b>.</p>
           </div>
-          <div class="nutrient-game-score" id="nutrientGameScore">0 / 7 rantai tepat</div>
+          <div class="nutrient-game-score" id="nutrientGameScore" aria-live="polite">Belum diperiksa</div>
         </div>
 
         <div class="nutrient-game-instruction">
           <b>Desktop:</b> seret kartu makanan dan fungsi ke baris nutrisi yang sesuai.
           <b>HP:</b> sentuh kartu makanan atau fungsi, lalu sentuh kotak tujuan pada baris nutrisi yang sesuai.
-          <span>Nutrisi sudah ditempatkan di tengah. Pasangkan makanan dan fungsi yang paling sesuai dengan setiap nutrisi.</span>
+          <span>Nutrisi sudah ditempatkan di tengah. Pasangkan makanan dan fungsi yang paling sesuai dengan setiap nutrisi. Satu makanan dapat mengandung berbagai zat gizi; permainan ini menonjolkan salah satu kandungannya. Jeruk: contoh sumber vitamin C; susu: contoh sumber kalsium. Serat membantu kesehatan pencernaan, tetapi tidak dicerna enzim manusia seperti pati atau protein.</span>
         </div>
 
         <div class="relation-bank-grid">
@@ -162,8 +173,19 @@
           <button type="button" class="secondary-inline" id="resetNutrientGame">Ulangi</button>
         </div>
 
-        <div id="nutrientGameFeedback" class="digest-feedback neutral">
-          Lengkapi tujuh rantai makanan → nutrisi → fungsi.
+        <div id="nutrientGameFeedback" class="digest-feedback neutral" role="status" aria-live="polite">
+          Lengkapi tujuh rantai makanan → nutrisi → fungsi, lalu periksa sekali untuk mengetahui pemahaman awalmu.
+        </div>
+        <p id="nutrientFirstResult" class="digest-feedback neutral" aria-live="polite">Hasil diagnostik awal: belum ada. Hasil pertama tidak akan berubah saat kamu berlatih.</p>
+        <div class="digest-readiness">
+          <label for="digestReadiness"><b>Apa yang paling ingin kamu pelajari?</b></label>
+          <select id="digestReadiness">
+            <option value="">Pilih satu (opsional)</option>
+            <option value="organ">Fungsi organ pencernaan</option>
+            <option value="proses">Proses pencernaan makanan</option>
+            <option value="gangguan">Gangguan dan cara menjaga kesehatan pencernaan</option>
+          </select>
+          <p>Untuk dipikirkan: setelah makanan masuk ke tubuh, bagaimana zat gizinya dapat digunakan oleh sel-sel tubuh?</p>
         </div>
       </article>
     </section>
@@ -435,7 +457,7 @@
             <div class="pathway-options">
               <button type="button" data-pathway-opt="0">Karbohidrat kompleks dari nasi → amilase bekerja di mulut dan usus halus → maltosa terbentuk → maltosa langsung diserap tanpa pemecahan lanjutan</button>
               <button type="button" data-pathway-opt="1">Karbohidrat kompleks dari nasi → amilase bekerja di mulut dan usus halus → terbentuk molekul lebih sederhana → enzim permukaan usus menghasilkan monosakarida → diserap di usus halus</button>
-              <button type="button" data-pathway-opt="2">Karbohidrat kompleks dari nasi → amilase saliva menyelesaikan seluruh pencernaan di mulut → glukosa terbentuk → sebagian besar glukosa diserap di lambung</button>
+              <button type="button" data-pathway-opt="2">Karbohidrat kompleks dari nasi → amilase air liur menyelesaikan seluruh pencernaan di mulut → glukosa terbentuk → sebagian besar glukosa diserap di lambung</button>
             </div>
           </article>
 
@@ -635,9 +657,9 @@
   </main>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="config.js?v=20260929-1"></script>
+  <script src="config.js?v=20261022-final3"></script>
   <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
-  <script src="../../template-universal/template.js?v=20261003-contextfooter-test1"></script>
-  <script src="digestive.js?v=20261002-e2efix2"></script>
+  <script src="../../template-universal/template.js?v=20261022-final3"></script>
+  <script src="digestive.js?v=20261022-final3"></script>
 </body>
 </html>

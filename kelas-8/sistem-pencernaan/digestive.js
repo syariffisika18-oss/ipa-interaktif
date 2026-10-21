@@ -79,10 +79,10 @@
   const model=[
     {
       name:"Mulut",
-      process:"Mengunyah + mencampur makanan dengan saliva",
+      process:"Mengunyah + mencampur makanan dengan air liur",
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
-      chemical:"Saliva (air liur)",
+      chemical:"Air liur",
       result:"Bolus; pencernaan karbohidrat mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
       why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
@@ -169,6 +169,7 @@
   const nutrientSeen=new Set([0]);
   const explainPagesSeen=new Set([0]);
   let evalFinished=false;
+  let restoringExplain=true;
 
   // =========================================================
   // KOORDINAT VISUAL FINAL — sumber tunggal untuk semua viewport
@@ -590,6 +591,55 @@
   window.addEventListener("orientationchange",syncVisualCoordinates,{passive:true});
 
   const exploreOrder=[0,1,2,3,4,5,6,7];
+  const exploreStorageKey="ipa:digestive:explore:v1";
+  function saveExploreSession(){
+    try{
+      sessionStorage.setItem(exploreStorageKey,JSON.stringify({
+        prediction,journeyIndex,visited:[...exploreVisited],predictionChecked
+      }));
+    }catch(error){console.warn("Progres Explore belum tersimpan",error);}
+  }
+  function restoreExploreSession(){
+    try{
+      if(window.IPA_RESET_REQUESTED===true){
+        sessionStorage.removeItem(exploreStorageKey);
+        return;
+      }
+      const saved=JSON.parse(sessionStorage.getItem(exploreStorageKey)||"null");
+      if(!saved||!Array.isArray(saved.visited))return;
+      const visited=[...new Set(saved.visited)];
+      if(!visited.length||visited.length>exploreOrder.length
+        ||!visited.every(index=>Number.isInteger(index)&&exploreOrder.includes(index))
+        ||!visited.includes(0))return;
+      if(!Number.isInteger(saved.journeyIndex)
+        ||!visited.includes(saved.journeyIndex))return;
+      const allowedPredictions=[...document.querySelectorAll("#predictionOptions [data-prediction]")]
+        .map(button=>button.dataset.prediction);
+      if(saved.prediction!==""&&!allowedPredictions.includes(saved.prediction))return;
+      if(saved.predictionChecked===true
+        && (!saved.prediction||!visited.includes(4)))return;
+      prediction=saved.prediction;
+      journeyIndex=saved.journeyIndex;
+      exploreVisited.clear();
+      visited.forEach(index=>exploreVisited.add(index));
+      furthestJourney=Math.max(...visited);
+      predictionChecked=saved.predictionChecked===true;
+      document.querySelectorAll("#predictionOptions [data-prediction]").forEach(button=>
+        button.classList.toggle("is-selected",button.dataset.prediction===prediction));
+      if(prediction){
+        document.getElementById("predictionFeedback").textContent=
+          "Prediksi sebelumnya berhasil dipulihkan. Lanjutkan pengamatan di Explore.";
+      }
+      if(predictionChecked){
+        const box=document.getElementById("predictionCheckResult");
+        box.className="digest-feedback good";
+        box.textContent=prediction==="usus-halus"
+          ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
+          :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
+      }
+    }catch(error){console.warn("Progres Explore belum dapat dipulihkan",error);}
+  }
+  restoreExploreSession();
   const route=document.getElementById("organRoute");
   route.innerHTML=exploreOrder.map((organIndex,displayIndex)=>{
     const o=journey[organIndex];
@@ -617,7 +667,7 @@
       const pos=exploreOrder.indexOf(organIndex);
       const currentPos=exploreOrder.indexOf(journeyIndex);
       b.classList.toggle("is-active",organIndex===journeyIndex);
-      b.classList.toggle("is-visited",pos<=currentPos);
+      b.classList.toggle("is-visited",exploreVisited.has(organIndex));
     });
     setHotspots("[data-explore-organ]",journeyIndex);
     const ball=document.getElementById("exploreFoodBall");
@@ -631,6 +681,7 @@
     journeyIndex=index;
     furthestJourney=Math.max(furthestJourney,journeyIndex);
     exploreVisited.add(index);
+    saveExploreSession();
     renderJourney(true);
     window.refreshStageFooter?.();
   }
@@ -656,6 +707,9 @@
   document.getElementById("predictionOptions").addEventListener("click",e=>{
     const b=e.target.closest("[data-prediction]"); if(!b)return;
     prediction=b.dataset.prediction;
+    predictionChecked=false;
+    document.getElementById("predictionCheckResult").textContent="Prediksi diubah. Uji kembali menggunakan hasil Explore.";
+    saveExploreSession();
     e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     window.refreshStageFooter?.();
     document.getElementById("predictionFeedback").textContent="Prediksi tersimpan. Gunakan Explore untuk mengujinya.";
@@ -666,6 +720,7 @@
     if(!prediction){box.className="digest-feedback warn";box.textContent="Kamu belum membuat prediksi pada Engage.";return}
     box.className="digest-feedback good";
     predictionChecked=true;
+    saveExploreSession();
     window.refreshStageFooter?.();
     box.textContent=prediction==="usus-halus"
       ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
@@ -680,7 +735,7 @@
       steps:[
         {
           place:"Mulut",
-          enzyme:"Amilase saliva",
+          enzyme:"Amilase air liur",
           producer:"Kelenjar ludah",
           product:"Maltosa + dekstrin"
         },
@@ -758,6 +813,7 @@
   function renderNutrientModel(index){
     index=Math.max(0,Math.min(nutrientModels.length-1,index));
     nutrientSeen.add(index);
+    if(!restoringExplain)saveExplainSession();
     const n=nutrientModels[index];
     document.querySelectorAll(".nutrient-tab").forEach((b,i)=>{
       b.classList.toggle("is-active",i===index);
@@ -812,12 +868,43 @@
   }
 
   let explainPageIndex=0;
+  const explainStorageKey="ipa:digestive:explain:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(explainStorageKey);}catch(error){console.warn("Reset Explain gagal",error);}
+  }
+  function saveExplainSession(){
+    try{sessionStorage.setItem(explainStorageKey,JSON.stringify({
+      page:explainPageIndex,organ:modelIndex,
+      pages:[...explainPagesSeen],organs:[...modelSeen],nutrients:[...nutrientSeen]
+    }));}catch(error){console.warn("Progres Explain belum tersimpan",error);}
+  }
+  function restoreExplainSession(){
+    try{
+      const saved=JSON.parse(sessionStorage.getItem(explainStorageKey)||"null");
+      if(!saved)return;
+      const valid=(items,max)=>Array.isArray(items)&&items.length<=max
+        &&items.every(n=>Number.isInteger(n)&&n>=0&&n<max);
+      if(!valid(saved.pages,explainPages.length)||!valid(saved.organs,model.length)
+        ||!valid(saved.nutrients,nutrientModels.length)
+        ||!Number.isInteger(saved.page)||saved.page<0||saved.page>=explainPages.length
+        ||!Number.isInteger(saved.organ)||saved.organ<0||saved.organ>=model.length)return;
+      explainPagesSeen.clear();saved.pages.forEach(n=>explainPagesSeen.add(n));
+      modelSeen.clear();saved.organs.forEach(n=>modelSeen.add(n));
+      nutrientSeen.clear();saved.nutrients.forEach(n=>nutrientSeen.add(n));
+      explainPageTabs.forEach((button,i)=>button.classList.toggle("is-viewed",explainPagesSeen.has(i)));
+      modelTabs.querySelectorAll("[data-model]").forEach((button,i)=>button.classList.toggle("is-viewed",modelSeen.has(i)));
+      nutrientTabs.querySelectorAll("[data-nutrient]").forEach((button,i)=>button.classList.toggle("is-viewed",nutrientSeen.has(i)));
+      renderModel(saved.organ,false);
+      showExplainPage(saved.page);
+    }catch(error){console.warn("Progres Explain belum dapat dipulihkan",error);}
+  }
   const explainPageTabs=[...document.querySelectorAll(".explain-page-tab")];
   const explainPages=[...document.querySelectorAll("[data-explain-content]")];
 
   function showExplainPage(index){
     explainPageIndex=Math.max(0,Math.min(explainPages.length-1,index));
     explainPagesSeen.add(explainPageIndex);
+    if(!restoringExplain)saveExplainSession();
     explainPageTabs.forEach((b,i)=>{
       b.classList.toggle("is-active",i===explainPageIndex);
       if(i===explainPageIndex)b.classList.add("is-viewed");
@@ -850,6 +937,7 @@
   function renderModel(i,animate=true){
     modelIndex=Math.max(0,Math.min(model.length-1,i));
     modelSeen.add(modelIndex);
+    if(!restoringExplain)saveExplainSession();
     const m=model[modelIndex];
     modelTabs.querySelectorAll("button").forEach((b,j)=>{
       b.classList.toggle("is-active",j===modelIndex);
@@ -887,6 +975,9 @@
   renderJourney(false);
   renderModel(0,false);
   showExplainPage(0);
+  restoreExplainSession();
+  restoringExplain=false;
+  saveExplainSession();
 
   document.querySelectorAll(".elab-tab").forEach(btn=>btn.addEventListener("click",()=>{
     const i=btn.dataset.elab;
@@ -1050,11 +1141,11 @@
     },
     {
       title:"Mengapa roti terasa lebih manis setelah dikunyah lebih lama?",
-      scenario:"Salsa membandingkan dua potong roti tawar dari jenis dan ukuran yang sama. Potongan A dikunyah lebih lama sehingga lebih lama bercampur dengan saliva, sedangkan potongan B dikunyah sebentar. Potongan A kemudian terasa lebih manis.",
-      evidencePrompt:"Pilih dua bukti yang paling langsung mendukung dugaan bahwa saliva ikut mengubah zat makanan.",
+      scenario:"Salsa membandingkan dua potong roti tawar dari jenis dan ukuran yang sama. Potongan A dikunyah lebih lama sehingga lebih lama bercampur dengan air liur, sedangkan potongan B dikunyah sebentar. Potongan A kemudian terasa lebih manis.",
+      evidencePrompt:"Pilih dua bukti yang paling langsung mendukung dugaan bahwa air liur ikut mengubah zat makanan.",
       evidence:[
         {id:"same",label:"Kedua potong berasal dari roti dengan jenis dan ukuran yang sama"},
-        {id:"contact",label:"Potongan A bercampur dengan saliva dalam waktu lebih lama"},
+        {id:"contact",label:"Potongan A bercampur dengan air liur dalam waktu lebih lama"},
         {id:"sweet",label:"Potongan A terasa lebih manis setelah dikunyah lebih lama"},
         {id:"teeth",label:"Kedua potong sama-sama dihancurkan secara mekanik oleh gigi"}
       ],
@@ -1063,19 +1154,19 @@
       evidenceWarn:"Belum cukup. Cari bukti yang menunjukkan apa yang dibedakan pada perlakuan dan apa yang berubah pada hasil.",
       mechanismPrompt:"Penjelasan mekanisme mana yang paling konsisten dengan kedua bukti tersebut?",
       mechanisms:[
-        {id:"2",label:"Kontak lebih lama dengan saliva → amilase menyelesaikan seluruh pencernaan karbohidrat menjadi glukosa di mulut → konsentrasi glukosa meningkat → rasa manis bertambah",correct:false},
-        {id:"1",label:"Kontak lebih lama dengan saliva → amilase bekerja pada protein roti dan menghasilkan asam amino → jumlah zat terlarut meningkat → rasa manis bertambah",correct:false},
-        {id:"0",label:"Kontak lebih lama dengan saliva → amilase bekerja lebih lama pada karbohidrat dan menghasilkan molekul yang lebih sederhana → rasa manis menjadi lebih terasa",correct:true}
+        {id:"2",label:"Kontak lebih lama dengan air liur → amilase menyelesaikan seluruh pencernaan karbohidrat menjadi glukosa di mulut → konsentrasi glukosa meningkat → rasa manis bertambah",correct:false},
+        {id:"1",label:"Kontak lebih lama dengan air liur → amilase bekerja pada protein roti dan menghasilkan asam amino → jumlah zat terlarut meningkat → rasa manis bertambah",correct:false},
+        {id:"0",label:"Kontak lebih lama dengan air liur → amilase bekerja lebih lama pada karbohidrat dan menghasilkan molekul yang lebih sederhana → rasa manis menjadi lebih terasa",correct:true}
       ],
       mechanismGood:"Tepat. Penjelasan menggunakan enzim, substrat, dan arah perubahan yang sesuai dengan konsep pencernaan di mulut.",
       mechanismWarn:"Belum tepat. Periksa kembali zat yang menjadi substrat amilase dan sejauh mana pencernaan karbohidrat berlangsung di mulut.",
-      transferPrompt:"Rancangan mana yang paling kuat membedakan pengaruh enzim saliva dari sekadar pengaruh cairan?",
+      transferPrompt:"Rancangan mana yang paling kuat membedakan pengaruh enzim air liur dari sekadar pengaruh cairan?",
       transfers:[
-        {id:"1",label:"Membandingkan roti yang terkena saliva selama lima menit dengan roti yang terkena saliva selama satu menit, lalu membandingkan rasa manisnya",correct:false},
-        {id:"0",label:"Membandingkan roti yang diberi saliva dan roti yang diberi air dalam jumlah, waktu, dan kondisi yang sama, lalu membandingkan perubahan rasa",correct:true},
-        {id:"2",label:"Membandingkan roti bersaliva hangat selama lima menit dengan roti berair dingin selama satu menit, lalu membandingkan perubahan rasa",correct:false}
+        {id:"1",label:"Membandingkan roti yang terkena air liur selama lima menit dengan roti yang terkena air liur selama satu menit, lalu membandingkan rasa manisnya",correct:false},
+        {id:"0",label:"Membandingkan roti yang diberi air liur dan roti yang diberi air dalam jumlah, waktu, dan kondisi yang sama, lalu membandingkan perubahan rasa",correct:true},
+        {id:"2",label:"Membandingkan roti diberi air liur hangat selama lima menit dengan roti berair dingin selama satu menit, lalu membandingkan perubahan rasa",correct:false}
       ],
-      transferGood:"Tepat. Perbedaan utama antarperlakuan adalah keberadaan komponen saliva, sementara faktor lain dibuat sama.",
+      transferGood:"Tepat. Perbedaan utama antarperlakuan adalah keberadaan komponen air liur, sementara faktor lain dibuat sama.",
       transferWarn:"Belum tepat. Rancangan yang kuat sebaiknya hanya mengubah faktor yang ingin diuji dan menjaga faktor lain tetap sama."
     },
     {
@@ -1176,6 +1267,79 @@
     transfer:{selected:null,...makeAttemptState(),feedbackTone:"neutral",feedbackText:"Bangun mekanisme terlebih dahulu."}
   }));
   let activeHotsCase=0;
+  // Restore only finalized/attempt-count assessment data; never trust a stored score.
+  const hotsStorageKey="ipa:digestive:hots:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(hotsStorageKey);}catch(error){console.warn("Reset progres kasus gagal",error);}
+  }
+  function persistHotsProgress(){
+    try {
+      sessionStorage.setItem(hotsStorageKey,JSON.stringify({
+        activeCase:activeHotsCase,
+        cases:hotsCaseStates.map(s=>Object.fromEntries(
+          ["evidence","mechanism","transfer"].map(kind=>[kind,{
+            selected:kind==="evidence"?[...s[kind].selected]:s[kind].selected,
+            attempts:s[kind].attempts,firstCorrect:s[kind].firstCorrect,
+            finalCorrect:s[kind].finalCorrect,finalized:s[kind].finalized
+          }])
+        ))
+      }));
+    } catch(error){console.warn("Progres kasus tidak tersimpan",error);}
+  }
+  function restoreHotsProgress(){
+    try {
+      const saved=JSON.parse(sessionStorage.getItem(hotsStorageKey)||"null");
+      if(!saved||!Array.isArray(saved.cases)||saved.cases.length!==hotsCases.length)return;
+      saved.cases.forEach((record,index)=>{
+        const target=hotsCaseStates[index];
+        ["evidence","mechanism","transfer"].forEach(kind=>{
+          const src=record?.[kind];
+          if(!src||!Number.isInteger(src.attempts)||src.attempts<0||src.attempts>2)return;
+          const validSelection=kind==="evidence"
+            ? Array.isArray(src.selected)&&src.selected.length<=2&&src.selected.every(id=>hotsCases[index].evidence.some(e=>e.id===id))
+            : src.selected===null||(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers).some(e=>e.id===src.selected);
+          if(!validSelection)return;
+          // Reject inconsistent snapshots instead of trusting stored grading flags.
+          const selectedCorrect=kind==="evidence"
+            ? src.selected.length===hotsCases[index].evidenceCorrect.length
+              && hotsCases[index].evidenceCorrect.every(id=>src.selected.includes(id))
+            : !!(kind==="mechanism"?hotsCases[index].mechanisms:hotsCases[index].transfers)
+                .find(option=>option.id===src.selected)?.correct;
+          const finalized=src.attempts>0&&(selectedCorrect||src.attempts===2);
+          if(src.attempts===0 && (src.finalized||src.firstCorrect!==null||src.finalCorrect!==null))return;
+          if(src.attempts>0 && (src.finalized!==finalized
+            || src.finalCorrect!==(finalized?selectedCorrect:null)
+            || typeof src.firstCorrect!=="boolean"))return;
+          if(src.attempts===1 && src.firstCorrect!==selectedCorrect)return;
+          if(src.attempts===2 && src.firstCorrect!==false)return;
+          if(kind==="mechanism"&&!target.evidence.finalized&&src.attempts>0)return;
+          if(kind==="transfer"&&!target.mechanism.finalized&&src.attempts>0)return;
+          const dst=target[kind];
+          dst.selected=kind==="evidence"?new Set(src.selected):src.selected;
+          dst.attempts=src.attempts;
+          dst.finalized=finalized;
+          dst.firstCorrect=src.firstCorrect;
+          dst.finalCorrect=finalized?selectedCorrect:null;
+          dst.feedbackTone=dst.finalized?(dst.finalCorrect?"good":"warn"):"neutral";
+          if(dst.finalized){
+            const data=hotsCases[index];
+            const goodText=kind==="evidence"?data.evidenceGood:kind==="mechanism"?data.mechanismGood:data.transferGood;
+            const answer=kind==="evidence"
+              ? data.evidenceCorrect.map(id=>data.evidence.find(option=>option.id===id)?.label).filter(Boolean).join(" + ")
+              : (kind==="mechanism"?data.mechanisms:data.transfers).find(option=>option.correct)?.label||"";
+            dst.feedbackText=dst.finalCorrect
+              ? goodText+" Jawaban dikunci."
+              : "Dua percobaan selesai. Jawaban yang paling tepat: "+answer+". "+goodText;
+          }else{
+            dst.feedbackText=dst.attempts===1?"Satu kesempatan revisi tersisa.":"Pilih jawaban, lalu kunci.";
+          }
+        });
+      });
+      const active=Number(saved.activeCase);
+      if(Number.isInteger(active)&&active>=0&&active<hotsCases.length)activeHotsCase=active;
+    } catch(error){console.warn("Progres kasus tidak dapat dipulihkan",error);}
+  }
+  restoreHotsProgress();
 
   function hotsCaseDone(index){
     const s=hotsCaseStates[index];
@@ -1221,6 +1385,7 @@
   }
 
   function renderHotsCase(){
+    persistHotsProgress();
     const data=hotsCases[activeHotsCase];
     const state=hotsCaseStates[activeHotsCase];
     const evidenceUnlocked=true;
@@ -1269,7 +1434,12 @@
           '<button type="button" class="primary-inline" data-hots-submit="transfer" '+((!transferUnlocked||state.transfer.finalized)?'disabled':'')+'>'+stepButtonLabel(state.transfer,"transfer")+'</button>'+
         '</div>'+
         '<div class="digest-feedback '+state.transfer.feedbackTone+'">'+state.transfer.feedbackText+'</div>'+
-      '</div>';
+      '</div>'+
+      (hotsCaseDone(activeHotsCase)
+        ? '<div class="hots-step-submit-row">'+(activeHotsCase<hotsCases.length-1
+            ? '<button type="button" class="primary-inline" data-hots-next> Lanjut Kasus '+(activeHotsCase+2)+' →</button>'
+            : '<p role="status">Semua langkah pada kasus terakhir telah selesai.</p>')+'</div>'
+        : '');
 
     updateHotsCaseTabs();
   }
@@ -1294,6 +1464,15 @@
   });
 
   document.getElementById("hotsCasePanel").addEventListener("click",e=>{
+    const nextButton=e.target.closest("[data-hots-next]");
+    if(nextButton){
+      if(hotsCaseDone(activeHotsCase)&&activeHotsCase<hotsCases.length-1){
+        activeHotsCase+=1;
+        renderHotsCase();
+        document.getElementById("hotsCasePanel").scrollIntoView({behavior:"smooth",block:"start"});
+      }
+      return;
+    }
     const data=hotsCases[activeHotsCase];
     const state=hotsCaseStates[activeHotsCase];
 
@@ -1361,7 +1540,7 @@
         step.feedbackText=data.evidenceWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Bukti yang paling kuat: "+correctEvidenceText(data)+". "+data.evidenceGood;
+        step.feedbackText="Dua percobaan selesai. Bukti yang paling kuat: "+correctEvidenceText(data)+". "+data.evidenceGood;
       }
       if(step.finalized){
         state.mechanism.feedbackTone="neutral";
@@ -1388,7 +1567,7 @@
         step.feedbackText=data.mechanismWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
+        step.feedbackText="Dua percobaan selesai. Mekanisme yang paling konsisten: "+correctOptionText(data.mechanisms)+". "+data.mechanismGood;
       }
       if(step.finalized){
         state.transfer.feedbackTone="neutral";
@@ -1415,7 +1594,7 @@
         step.feedbackText=data.transferWarn+" Satu kesempatan revisi tersisa; jawaban benar belum ditampilkan.";
       }else{
         step.feedbackTone="warn";
-        step.feedbackText="<b>Dua percobaan selesai.</b> Keputusan yang paling kuat: "+correctOptionText(data.transfers)+". "+data.transferGood;
+        step.feedbackText="Dua percobaan selesai. Keputusan yang paling kuat: "+correctOptionText(data.transfers)+". "+data.transferGood;
       }
       renderHotsCase();
     }
@@ -1620,6 +1799,39 @@
   const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
   const nutrientGameScore=document.getElementById("nutrientGameScore");
   let selectedRelationCard=null;
+  const nutrientFirstScoreKey="ipa:digestive:first-diagnostic:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(nutrientFirstScoreKey);}catch(error){console.warn("Reset hasil diagnostik gagal",error);}
+  }
+  let nutrientFirstScore=null;
+  try{
+    const saved=JSON.parse(sessionStorage.getItem(nutrientFirstScoreKey)||"null");
+    if(Number.isInteger(saved)&&saved>=0&&saved<=7)nutrientFirstScore=saved;
+  }catch(error){console.warn("Hasil diagnostik awal tidak dapat dipulihkan",error);}
+  if(nutrientFirstScore!==null){
+    document.getElementById("nutrientFirstResult").textContent=
+      "Hasil diagnostik awal: "+nutrientFirstScore+"/7 rantai tepat. Hasil ini tersimpan untuk sesi tab ini. Susun dan periksa kembali rantai untuk melanjutkan pembelajaran.";
+  }
+  let nutrientExamined=false;
+  let nutrientValidated=false;
+  function nutrientInvalidate(){
+    nutrientValidated=false;
+    nutrientGameScore.textContent="Susunan diubah · periksa kembali";
+    document.querySelectorAll(".nutrition-chain-row").forEach(row=>row.removeAttribute("data-check-status"));
+    window.refreshStageFooter?.();
+  }
+  function nutrientFeedbackHint(key,type){
+    const hints={
+      vitamin:"Vitamin tidak terutama berfungsi sebagai sumber energi. Jeruk adalah contoh sumber vitamin C.",
+      mineral:"Kalsium adalah contoh mineral yang membantu pembentukan dan pemeliharaan tulang dan gigi.",
+      serat:"Serat membantu kerja saluran pencernaan dan tidak dipecah oleh enzim manusia seperti pati.",
+      karbohidrat:"Pikirkan makanan sumber energi dan peran karbohidrat.",
+      protein:"Pikirkan zat pembangun dan perbaikan jaringan tubuh.",
+      lemak:"Ingat peran lemak sebagai cadangan energi.",
+      air:"Air membantu melarutkan dan mengangkut zat."
+    };
+    return (type==="food"?"Contoh makanan: ":"Fungsi: ")+(hints[key]||"Periksa kembali kecocokan pasangan.");
+  }
 
   const relationTypeLabel={
     food:"Makanan",
@@ -1718,8 +1930,9 @@
     slot.appendChild(card);
     selectedRelationCard=null;
     clearRelationMarks();
+    nutrientInvalidate();
     nutrientGameFeedback.className="digest-feedback neutral";
-    nutrientGameFeedback.textContent="Lanjutkan sampai setiap nutrisi memiliki pasangan makanan dan fungsi yang sesuai.";
+    nutrientGameFeedback.textContent="Susunan berubah. Periksa kembali setelah semua rantai lengkap.";
   }
 
   document.querySelectorAll(".relation-slot:not(.nutrient-slot)").forEach(slot=>{
@@ -1753,6 +1966,7 @@
         bank.appendChild(card);
         selectedRelationCard=null;
         clearRelationMarks();
+        nutrientInvalidate();
       }
     });
   });
@@ -1769,37 +1983,38 @@
       return;
     }
 
-    let correctChains=0;
+    let correctChains=0, correctPairs=0;
+    const feedbackParts=[];
     rows.forEach(row=>{
       const food=row.querySelector(".food-slot .relation-card");
-      const nutrient=row.querySelector(".nutrient-slot");
       const func=row.querySelector(".function-slot .relation-card");
-      const chainKey=nutrient.dataset.correctNutrient;
-      const chainOK=
-        food.dataset.correctNutrient===chainKey&&
-        func.dataset.correctNutrient===chainKey;
-
-      [food,func].forEach(card=>{
-        card.classList.toggle("is-correct",chainOK);
-        card.classList.toggle("is-wrong",!chainOK);
-      });
-      row.querySelectorAll(".relation-slot").forEach(slot=>{
-        slot.classList.toggle("has-correct",chainOK);
-        slot.classList.toggle("has-wrong",!chainOK);
-      });
-      row.classList.toggle("chain-correct",chainOK);
-      row.classList.toggle("chain-wrong",!chainOK);
-      if(chainOK)correctChains++;
+      const key=row.querySelector(".nutrient-slot").dataset.correctNutrient;
+      const foodOK=food.dataset.correctNutrient===key;
+      const funcOK=func.dataset.correctNutrient===key;
+      for(const [card,slot,ok,type] of [[food,row.querySelector(".food-slot"),foodOK,"food"],[func,row.querySelector(".function-slot"),funcOK,"function"]]){
+        card.classList.toggle("is-correct",ok);
+        card.classList.toggle("is-wrong",!ok);
+        slot.classList.toggle("has-correct",ok);
+        slot.classList.toggle("has-wrong",!ok);
+        if(ok)correctPairs++;
+        else feedbackParts.push(nutrientFeedbackHint(key,type));
+      }
+      row.classList.toggle("chain-correct",foodOK&&funcOK);
+      row.classList.toggle("chain-wrong",!(foodOK&&funcOK));
+      if(foodOK&&funcOK)correctChains++;
     });
-
-    nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
-    if(correctChains===7){
-      nutrientGameFeedback.className="digest-feedback good";
-      nutrientGameFeedback.textContent="Semua hubungan tepat. Kamu sudah menghubungkan makanan, jenis nutrisi, dan fungsi utamanya.";
-    }else{
-      nutrientGameFeedback.className="digest-feedback warn";
-      nutrientGameFeedback.textContent=correctChains+" dari 7 rantai sudah tepat. Perbaiki pasangan makanan dan fungsi pada baris yang ditandai.";
+    nutrientExamined=true;
+    nutrientValidated=true;
+    if(nutrientFirstScore===null){
+      nutrientFirstScore=correctChains;
+      try{sessionStorage.setItem(nutrientFirstScoreKey,JSON.stringify(nutrientFirstScore));}
+      catch(error){console.warn("Hasil diagnostik awal tidak tersimpan",error);}
+      document.getElementById("nutrientFirstResult").textContent="Hasil diagnostik awal: "+correctChains+"/7 rantai tepat. Hasil ini tetap tersimpan selama sesi ini; percobaan berikutnya adalah latihan.";
     }
+    nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
+    nutrientGameFeedback.className="digest-feedback "+(correctChains===7?"good":"warn");
+    nutrientGameFeedback.textContent=(correctChains===7?"Semua hubungan tepat. ":"Sebanyak "+correctChains+"/7 rantai tepat ("+correctPairs+"/14 pasangan benar). ")+"Kamu boleh lanjut ke Engage setelah pemeriksaan pertama. "+(feedbackParts.length?"Petunjuk: "+[...new Set(feedbackParts)].slice(0,3).join(" "):"Kamu dapat mengulang sebagai latihan.");
+    window.refreshStageFooter?.();
   });
 
   function resetNutritionRelationGame(message){
@@ -1810,17 +2025,23 @@
     renderRelationBanks();
     clearRelationMarks();
     selectedRelationCard=null;
-    nutrientGameScore.textContent="0 / 7 rantai tepat";
+    nutrientInvalidate();
     nutrientGameFeedback.className="digest-feedback neutral";
     nutrientGameFeedback.textContent=message;
   }
 
   document.getElementById("shuffleNutrientGame").addEventListener("click",()=>{
-    resetNutritionRelationGame("Kartu makanan dan fungsi sudah diacak ulang. Nutrisi tetap berada di tengah.");
+    Object.values(relationBanks).forEach(bank=>{
+      shuffleArray([...bank.querySelectorAll(".relation-card")]).forEach(card=>bank.appendChild(card));
+    });
+    nutrientGameFeedback.className="digest-feedback neutral";
+    nutrientGameFeedback.textContent="Kartu yang belum dipasang telah diacak. Jawaban pada rantai tidak berubah.";
   });
 
   document.getElementById("resetNutrientGame").addEventListener("click",()=>{
-    resetNutritionRelationGame("Permainan diulang. Pasangkan makanan dan fungsi dengan nutrisi yang sudah tersedia.");
+    const hasPlaced=!!document.querySelector(".nutrition-chain-row .relation-card");
+    if(hasPlaced&&!window.confirm("Ulangi permainan? Susunan kartu akan dikosongkan, tetapi hasil diagnostik pertama tetap disimpan."))return;
+    resetNutritionRelationGame("Permainan diulang. Hasil diagnostik pertama tetap tersimpan. Silakan berlatih lagi.");
   });
 
   renderRelationBanks();
@@ -1837,7 +2058,7 @@
   });
 
   const bank=[
-    {tier:"Dasar",q:"Organ pertama tempat makanan mengalami pencernaan adalah...",o:["Mulut","Lambung","Usus halus","Usus besar"],a:0,e:"Pencernaan dimulai di mulut melalui pengunyahan dan kerja saliva."},
+    {tier:"Dasar",q:"Organ pertama tempat makanan mengalami pencernaan adalah...",o:["Mulut","Lambung","Usus halus","Usus besar"],a:0,e:"Pencernaan dimulai di mulut melalui pengunyahan dan kerja air liur."},
     {tier:"Dasar",q:"Gerak yang mendorong makanan di kerongkongan disebut...",o:["Difusi","Peristaltik","Filtrasi","Inspirasi"],a:1,e:"Peristaltik adalah kontraksi bergelombang dinding saluran pencernaan."},
     {tier:"Dasar",q:"Organ yang mengaduk makanan dan menghasilkan kimus adalah...",o:["Mulut","Kerongkongan","Lambung","Rektum"],a:2,e:"Lambung mengaduk makanan dan mencampurnya dengan cairan lambung."},
     {tier:"Dasar",q:"Sebagian besar zat gizi hasil pencernaan diserap di...",o:["Lambung","Usus halus","Usus besar","Rektum"],a:1,e:"Usus halus memiliki permukaan luas dan vili untuk absorpsi."},
@@ -1850,23 +2071,62 @@
     {tier:"Pemahaman",q:"Rektum berfungsi terutama untuk...",o:["Menyimpan feses sementara","Mencerna karbohidrat","Menghasilkan HCl","Mengemulsikan lemak"],a:0,e:"Rektum menyimpan feses sementara sebelum dikeluarkan."},
 
     {tier:"Aplikasi",q:"Jika gerak peristaltik kerongkongan terganggu, proses yang paling langsung terhambat adalah...",o:["Pemindahan bolus ke lambung","Penyerapan glukosa","Produksi empedu","Pembentukan feses"],a:0,e:"Kerongkongan terutama berfungsi memindahkan bolus melalui peristaltik."},
-    {tier:"Aplikasi",q:"Kerusakan vili usus halus paling mungkin menyebabkan...",o:["Penyerapan zat gizi menurun","Pengunyahan terganggu","Produksi saliva meningkat","Feses disimpan lebih lama di rektum"],a:0,e:"Vili merupakan struktur penting untuk memperluas area absorpsi."},
-    {tier:"Aplikasi",q:"Nasi terutama mulai mengalami pencernaan kimiawi di...",o:["Mulut","Rektum","Anus","Usus besar"],a:0,e:"Karbohidrat pada nasi mulai dicerna oleh amilase saliva di mulut."},
+    {tier:"Aplikasi",q:"Kerusakan vili usus halus paling mungkin menyebabkan...",o:["Penyerapan zat gizi menurun","Pengunyahan terganggu","Produksi air liur meningkat","Feses disimpan lebih lama di rektum"],a:0,e:"Vili merupakan struktur penting untuk memperluas area absorpsi."},
+    {tier:"Aplikasi",q:"Nasi terutama mulai mengalami pencernaan kimiawi di...",o:["Mulut","Rektum","Anus","Usus besar"],a:0,e:"Karbohidrat pada nasi mulai dicerna oleh amilase air liur di mulut."},
     {tier:"Aplikasi",q:"Protein pada telur mulai banyak mengalami pencernaan kimiawi di...",o:["Mulut","Lambung","Usus besar","Rektum"],a:1,e:"Pepsin di lambung memulai pencernaan protein secara bermakna."},
     {tier:"Aplikasi",q:"Setelah keluar dari lambung, kimus pertama kali masuk ke...",o:["Usus halus","Usus besar","Rektum","Kerongkongan"],a:0,e:"Kimus bergerak dari lambung menuju bagian awal usus halus."},
 
     {tier:"Penalaran",q:"Jika aliran empedu ke usus halus berkurang, proses yang paling langsung terganggu adalah...",o:["Emulsifikasi lemak","Pencernaan protein oleh pepsin","Gerak peristaltik kerongkongan","Penyimpanan feses"],a:0,e:"Empedu membantu memecah lemak secara fisik menjadi butiran lebih kecil."},
     {tier:"Penalaran",q:"Mengapa makanan dikunyah sebelum ditelan?",o:["Agar luas permukaan bertambah dan lebih mudah diproses","Agar semua zat gizi langsung diserap di mulut","Agar tidak memerlukan enzim","Agar air tidak diserap usus besar"],a:0,e:"Ukuran lebih kecil memperluas permukaan kontak dan memudahkan proses berikutnya."},
     {tier:"Penalaran",q:"Seseorang jarang minum dan mengonsumsi sedikit serat. Kondisi yang paling mungkin terjadi adalah...",o:["Feses lebih keras dan sulit dikeluarkan","Semua protein tidak dapat dicerna","Empedu berhenti diproduksi","Makanan tidak dapat masuk ke lambung"],a:0,e:"Asupan cairan dan serat berkaitan dengan konsistensi dan pergerakan feses."},
-    {tier:"Penalaran",q:"Pernyataan yang paling tepat tentang lambung dan usus halus adalah...",o:["Lambung terutama mengolah makanan, usus halus menyelesaikan pencernaan dan banyak menyerap zat gizi","Keduanya hanya menyimpan makanan","Usus halus hanya menyerap air sedangkan lambung menyerap semua zat gizi","Lambung menghasilkan empedu dan usus halus menghasilkan saliva"],a:0,e:"Fungsi kedua organ berbeda tetapi saling berlanjut dalam satu sistem."},
+    {tier:"Penalaran",q:"Pernyataan yang paling tepat tentang lambung dan usus halus adalah...",o:["Lambung terutama mengolah makanan, usus halus menyelesaikan pencernaan dan banyak menyerap zat gizi","Keduanya hanya menyimpan makanan","Usus halus hanya menyerap air sedangkan lambung menyerap semua zat gizi","Lambung menghasilkan empedu dan usus halus menghasilkan air liur"],a:0,e:"Fungsi kedua organ berbeda tetapi saling berlanjut dalam satu sistem."},
     {tier:"Penalaran",q:"Urutan penjelasan yang paling tepat untuk perjalanan makanan adalah...",o:["Mulut → kerongkongan → lambung → usus halus → usus besar → rektum → anus","Mulut → lambung → kerongkongan → usus besar → usus halus → anus","Mulut → usus halus → lambung → kerongkongan → rektum","Lambung → mulut → usus besar → usus halus → anus"],a:0,e:"Urutan saluran pencernaan harus mengikuti jalur yang benar dari masuk hingga dikeluarkan."}
   ];
 
   const shuffle=a=>{const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x};
   const tierOrder=["Dasar","Pemahaman","Aplikasi","Penalaran"];
-  const questions=tierOrder.flatMap(t=>shuffle(bank.filter(q=>q.tier===t)));
-  let qi=0,score=0;
-  const responses=Array(questions.length).fill(null);
+  const evalStorageKey="ipa:digestive:evaluate:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(evalStorageKey);}catch(error){console.warn("Reset Evaluate gagal",error);}
+  }
+  let savedEval=null;
+  try{savedEval=JSON.parse(sessionStorage.getItem(evalStorageKey)||"null");}
+  catch(error){console.warn("Data Evaluate tidak terbaca",error);}
+  const defaultOrder=tierOrder.flatMap(t=>shuffle(bank.filter(q=>q.tier===t))).map(q=>bank.indexOf(q));
+  function validEvalSnapshot(snapshot){
+    if(!snapshot||!Array.isArray(snapshot.order)||snapshot.order.length!==bank.length
+      ||new Set(snapshot.order).size!==bank.length
+      ||!snapshot.order.every(i=>Number.isInteger(i)&&i>=0&&i<bank.length)
+      ||!tierOrder.every((tier,index)=>snapshot.order.slice(
+        tierOrder.slice(0,index).reduce((sum,t)=>sum+bank.filter(q=>q.tier===t).length,0),
+        tierOrder.slice(0,index+1).reduce((sum,t)=>sum+bank.filter(q=>q.tier===t).length,0)
+      ).every(i=>bank[i].tier===tier)))return false;
+    if(!Array.isArray(snapshot.choices)||snapshot.choices.length!==bank.length
+      ||!snapshot.choices.every((value,i)=>value===null
+        ||Number.isInteger(value)&&value>=0&&value<bank[snapshot.order[i]].o.length))return false;
+    const answered=snapshot.choices.reduce((sum,value)=>sum+(value!==null?1:0),0);
+    if(!Number.isInteger(snapshot.index)||snapshot.index<0||snapshot.index>=bank.length
+      ||!Number.isInteger(snapshot.score)
+      ||snapshot.score!==snapshot.choices.reduce((sum,value,i)=>
+        sum+(value!==null&&value===bank[snapshot.order[i]].a?1:0),0)
+      ||(snapshot.finished===true&&answered!==bank.length)
+      ||(snapshot.finished!==true&&answered===bank.length&&snapshot.index!==bank.length-1))return false;
+    return true;
+  }
+  if(!validEvalSnapshot(savedEval))savedEval=null;
+  const evalOrder=savedEval?savedEval.order:defaultOrder;
+  const questions=evalOrder.map(index=>bank[index]);
+  let qi=savedEval?savedEval.index:0;
+  let score=savedEval?savedEval.score:0;
+  const responses=(savedEval?savedEval.choices:Array(questions.length).fill(null))
+    .map((choice,i)=>choice===null?null:{choice,correct:choice===questions[i].a});
+  evalFinished=!!savedEval?.finished;
+  function saveEvalSession(){
+    try{sessionStorage.setItem(evalStorageKey,JSON.stringify({
+      order:evalOrder,index:qi,score,finished:evalFinished,
+      choices:responses.map(response=>response?response.choice:null)
+    }));}catch(error){console.warn("Progres Evaluate belum tersimpan",error);}
+  }
 
   function renderEval(){
     const q=questions[qi];
@@ -1894,15 +2154,16 @@
     const b=e.target.closest("[data-opt]");if(!b||responses[qi])return;
     const choice=Number(b.dataset.opt),correct=choice===questions[qi].a;
     responses[qi]={choice,correct};if(correct)score++;
+    saveEvalSession();
     renderEval();
   });
-  document.getElementById("evalPrev").onclick=()=>{if(qi>0){qi--;renderEval()}};
-  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;renderEval()}else{evalFinished=true;const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/20. Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";window.refreshStageFooter?.()}};
+  document.getElementById("evalPrev").onclick=()=>{if(qi>0){qi--;saveEvalSession();renderEval()}};
+  document.getElementById("evalNext").onclick=()=>{if(!responses[qi])return;if(qi<questions.length-1){qi++;saveEvalSession();renderEval()}else{evalFinished=true;saveEvalSession();renderEval();const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/"+questions.length+". Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";window.refreshStageFooter?.()}};
 
   window.IPA_STAGE_COMPLETE_CHECK=(stage)=>{
     switch(Number(stage)){
       case 0:
-        return /^7\s*\/\s*7\b/.test(document.getElementById("nutrientGameScore")?.textContent||"");
+        return nutrientExamined;
       case 1:
         return !!prediction;
       case 2:
@@ -1937,6 +2198,114 @@
     }
   };
 
+  // Save all five non-case Elaborate attempts and their selected answers.
+  const elaborateExtraKey="ipa:digestive:elaborate-extra:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(elaborateExtraKey);}catch(error){console.warn("Reset aktivitas Elaborate gagal",error);}
+  }
+  const extraTasks=[
+    {state:pathwayAttempt,get:()=>[0,1,2].map(i=>pathwayAnswers[i]??null),correct:v=>v.length===3&&pathwayCorrect.every((x,i)=>v[i]===x),options:[0,1,2]},
+    {state:absorptionAttempt,get:()=>absorptionChoice,correct:v=>v==="all",selector:"#absorptionOptions [data-absorb]",attribute:"absorb"},
+    {state:modelErrorAttempt,get:()=>modelErrorChoice,correct:v=>v==="enzyme",selector:"#modelErrorOptions [data-model-error]",attribute:"modelError"},
+    {state:modelCorrectionAttempt,get:()=>modelCorrectionChoice,correct:v=>v==="1",selector:"#modelCorrectionOptions [data-correction]",attribute:"correction"},
+    {state:bileAttempt,get:()=>bileChoice,correct:v=>v==="fat",selector:"#bileOptions [data-bile]",attribute:"bile"}
+  ];
+  function saveExtraElaborate(){
+    try{sessionStorage.setItem(elaborateExtraKey,JSON.stringify(extraTasks.map(task=>({
+      choice:task.get(),attempts:task.state.attempts,
+      firstCorrect:task.state.firstCorrect,finalized:task.state.finalized,
+      finalCorrect:task.state.finalCorrect
+    }))));}catch(error){console.warn("Aktivitas Elaborate belum tersimpan",error);}
+  }
+  function restoreExtraElaborate(){
+    try{
+      const saved=JSON.parse(sessionStorage.getItem(elaborateExtraKey)||"null");
+      if(!Array.isArray(saved)||saved.length!==extraTasks.length)return;
+      let previousFinal=true;
+      saved.forEach((snapshot,index)=>{
+        const task=extraTasks[index],state=task.state;
+        if(index===2)previousFinal=true;
+        if(!snapshot||!previousFinal)return;
+        const validChoice=index===0
+          ? Array.isArray(snapshot.choice)&&snapshot.choice.length===3&&snapshot.choice.every(v=>v===null||Number.isInteger(v)&&v>=0&&v<=2)
+          : typeof snapshot.choice==="string"&&(
+            snapshot.choice===""||[...document.querySelectorAll(task.selector)].some(b=>b.dataset[task.attribute]===snapshot.choice));
+        if(!validChoice||!Number.isInteger(snapshot.attempts)||snapshot.attempts<0||snapshot.attempts>2)return;
+        const correct=task.correct(snapshot.choice),finished=snapshot.attempts>0&&(correct||snapshot.attempts===2);
+        if(snapshot.finalized!==finished||
+          snapshot.finalCorrect!==(finished?correct:null)||
+          (snapshot.attempts===0&&snapshot.firstCorrect!==null)||
+          (snapshot.attempts>0&&typeof snapshot.firstCorrect!=="boolean")||
+          (snapshot.attempts===1&&snapshot.firstCorrect!==correct)||
+          (snapshot.attempts===2&&snapshot.firstCorrect!==false))return;
+        state.attempts=snapshot.attempts;
+        state.firstCorrect=snapshot.firstCorrect;
+        state.finalized=finished;
+        state.finalCorrect=finished?correct:null;
+        if(index===0){
+          snapshot.choice.forEach((value,row)=>{
+            if(value!==null){
+              pathwayAnswers[row]=value;
+              document.querySelectorAll('[data-pathway-row="'+row+'"] [data-pathway-opt]').forEach(b=>
+                b.classList.toggle("is-selected",Number(b.dataset.pathwayOpt)===value));
+            }
+          });
+        }else{
+          if(index===1)absorptionChoice=snapshot.choice;
+          if(index===2)modelErrorChoice=snapshot.choice;
+          if(index===3)modelCorrectionChoice=snapshot.choice;
+          if(index===4)bileChoice=snapshot.choice;
+          document.querySelectorAll(task.selector).forEach(b=>
+            b.classList.toggle("is-selected",b.dataset[task.attribute]===snapshot.choice));
+        }
+        const labelIds=["pathwayAttemptLabel","absorptionAttemptLabel","modelErrorAttemptLabel","modelCorrectionAttemptLabel","bileAttemptLabel"];
+        const checkIds=["checkPathwayChallenge","checkAbsorption","checkModelError","checkModelCorrection","checkBilePrediction"];
+        const containers=["#pathwayChallenge [data-pathway-opt]","#absorptionOptions button","#modelErrorOptions button","#modelCorrectionOptions button","#bileOptions button"];
+        document.getElementById(labelIds[index]).textContent=attemptLabel(state);
+        if(finished){
+          document.querySelectorAll(containers[index]).forEach(b=>b.disabled=true);
+          document.getElementById(checkIds[index]).disabled=true;
+          if(index===0){
+            document.getElementById("absorptionTransferStep").classList.remove("locked-step");
+            if(!absorptionAttempt.finalized)document.getElementById("checkAbsorption").disabled=false;
+          }
+          if(index===2){
+            document.getElementById("modelCorrectionStep").classList.remove("locked-step");
+            if(!modelCorrectionAttempt.finalized)document.getElementById("checkModelCorrection").disabled=false;
+          }
+          if(index===3){
+            document.getElementById("bilePredictionStep").classList.remove("locked-step");
+            if(!bileAttempt.finalized)document.getElementById("checkBilePrediction").disabled=false;
+          }
+        }
+        const feedbackIds=["pathwayFeedback","absorptionFeedback","modelErrorFeedback","modelCorrectionFeedback","bileFeedback"];
+        const fb=document.getElementById(feedbackIds[index]);
+        if(state.attempts){
+          fb.className="digest-feedback "+(finished?(correct?"good":"warn"):"warn");
+          const feedbackByStep=[
+            ["Analisis tepat. Ketiga jalur sudah konsisten dengan enzim, hasil pencernaan, dan lokasi penyerapan.","Dua percobaan selesai. Karbohidrat dipecah menjadi monosakarida, protein menjadi asam amino, dan lemak dibantu empedu serta lipase; penyerapan terutama terjadi di usus halus."],
+            ["Tepat. Hasil pencernaan karbohidrat, protein, dan lemak terutama diserap di usus halus.","Dua percobaan selesai. Glukosa, asam amino, dan hasil pencernaan lemak dapat terdampak jika permukaan usus halus berkurang."],
+            ["Tepat. Empedu bukan enzim.","Dua percobaan selesai. Empedu membantu emulsifikasi lemak dan bukan enzim pencernaan."],
+            ["Tepat. Empedu mengemulsikan lemak sedangkan lipase mencerna lemak secara kimiawi.","Dua percobaan selesai. Perbaikan model: empedu mengemulsikan lemak menjadi tetesan kecil agar lipase lebih efektif."],
+            ["Tepat. Berkurangnya emulsifikasi mengurangi permukaan kontak lemak untuk lipase.","Dua percobaan selesai. Jika emulsifikasi berkurang, permukaan kontak lemak menurun dan kerja lipase kurang efektif."]
+          ];
+          fb.textContent=finished
+            ? feedbackByStep[index][correct?0:1]
+            : "Percobaan pertama belum tepat. Satu kesempatan revisi tersisa.";
+        }
+        previousFinal=finished;
+        // Tasks 1–2 and 3–5 are separate sequences.
+        if(index===1)previousFinal=true;
+      });
+    }catch(error){console.warn("Progres aktivitas Elaborate tidak dapat dipulihkan",error);}
+  }
+  restoreExtraElaborate();
+  document.addEventListener("click",event=>{
+    if(event.target.closest("#pathwayChallenge,#checkPathwayChallenge,#absorptionOptions,#checkAbsorption,#modelErrorOptions,#checkModelError,#modelCorrectionOptions,#checkModelCorrection,#bileOptions,#checkBilePrediction")){
+      saveExtraElaborate();
+    }
+  });
+
   const scheduleDigestFooter=()=>setTimeout(()=>window.refreshStageFooter?.(),0);
   document.addEventListener("click",scheduleDigestFooter,true);
   document.addEventListener("change",scheduleDigestFooter,true);
@@ -1944,5 +2313,6 @@
   window.refreshStageFooter?.();
 
   renderEval();
+  if(evalFinished){const fb=document.getElementById("evalFeedback");fb.className="digest-feedback good";fb.textContent="Evaluasi selesai. Skor akhir: "+score+"/"+questions.length+". Gunakan Reflect untuk mencatat bagian yang masih perlu dipelajari.";}
   window.refreshStageFooter?.();
 })();

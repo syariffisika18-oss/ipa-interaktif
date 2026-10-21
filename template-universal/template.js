@@ -1,14 +1,22 @@
 (() => {
   const config = window.IPA_TEMPLATE_CONFIG || {};
-  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.5";
   const STORAGE_PREFIX = "ipa-interaktif:template-universal:";
+  // Use a material-specific key only for modules that opt in to strict progression.
+  const STORAGE_KEY = config.requireStageProgression === true && config.materialId
+    ? STORAGE_PREFIX + "v0.6:" + config.materialId
+    : STORAGE_PREFIX + "v0.5";
   const stageCount = 7;
 
   const resetRequested = new URLSearchParams(location.search).has("_reset");
+  window.IPA_RESET_REQUESTED = resetRequested;
   if (resetRequested) {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
-    });
+    if (config.requireStageProgression === true && config.materialId) {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+      });
+    }
   }
 
   const state = loadState();
@@ -16,6 +24,33 @@
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
   let completed = Array.isArray(state.completed) ? new Set(state.completed) : new Set();
   let mode = state.mode || config.defaultMode || "mandiri";
+  const progressionEnabled = config.requireStageProgression === true;
+  // Only same-tab, previously verified transitions are restored.
+  // A new tab has no checkpoint, so it begins at Orientasi.
+  const checkpointKey = STORAGE_PREFIX + "stage-checkpoint:" + (config.materialId || "default");
+  let savedCheckpoint = null;
+  if (progressionEnabled) {
+    try {
+      if (resetRequested) sessionStorage.removeItem(checkpointKey);
+      savedCheckpoint = JSON.parse(sessionStorage.getItem(checkpointKey) || "null");
+    } catch (error) {
+      console.warn("Checkpoint navigasi tidak dapat dibaca", error);
+    }
+  }
+  const checkpointValid = savedCheckpoint
+    && Number.isInteger(savedCheckpoint.unlocked)
+    && savedCheckpoint.unlocked >= 0
+    && savedCheckpoint.unlocked < stageCount
+    && Number.isInteger(savedCheckpoint.active)
+    && savedCheckpoint.active >= 0
+    && savedCheckpoint.active <= savedCheckpoint.unlocked;
+  let furthestUnlocked = progressionEnabled
+    ? (checkpointValid ? savedCheckpoint.unlocked : 0)
+    : stageCount - 1;
+  if (progressionEnabled) {
+    activeStage = checkpointValid ? savedCheckpoint.active : 0;
+    completed = new Set(Array.from({length: furthestUnlocked}, (_,i) => i));
+  }
 
   if (!state.sessionId) state.sessionId = makeId();
 
@@ -131,6 +166,10 @@
     });
 
     completeButton.addEventListener("click", () => {
+      if (progressionEnabled && !stageReady(activeStage)) {
+        showToast("Selesaikan aktivitas tahap ini sebelum menandai selesai.");
+        return;
+      }
       if (completed.has(activeStage)) {
         completed.delete(activeStage);
         showToast("Tanda selesai dibatalkan.");
@@ -222,7 +261,18 @@
   window.refreshStageFooter=updateStageFooterVisibility;
 
   function showStage(index, doScroll = true) {
-    activeStage = Math.max(0, Math.min(stageCount - 1, index));
+    const target = Math.max(0, Math.min(stageCount - 1, index));
+    if (progressionEnabled && target > furthestUnlocked) {
+      if (target === furthestUnlocked + 1 && activeStage === furthestUnlocked && stageReady(activeStage)) {
+        // Advancing a valid stage should also update the progress indicator.
+        completed.add(activeStage);
+        furthestUnlocked = target;
+      } else {
+        showToast("Selesaikan aktivitas tahap saat ini sebelum melanjutkan secara berurutan.");
+        return;
+      }
+    }
+    activeStage = target;
 
     panels.forEach((panel, i) => {
       panel.classList.toggle("is-active", i === activeStage);
@@ -816,6 +866,13 @@
   }
 
   function saveState() {
+    if (progressionEnabled) {
+      try {
+        sessionStorage.setItem(checkpointKey, JSON.stringify({
+          unlocked:furthestUnlocked,active:activeStage
+        }));
+      } catch (error) { console.warn("Checkpoint navigasi belum tersimpan", error); }
+    }
     state.activeStage = activeStage;
     state.completed = [...completed];
     state.mode = mode;
