@@ -245,6 +245,8 @@
     const target = Math.max(0, Math.min(stageCount - 1, index));
     if (progressionEnabled && target > furthestUnlocked) {
       if (target === furthestUnlocked + 1 && activeStage === furthestUnlocked && stageReady(activeStage)) {
+        // Advancing a valid stage should also update the progress indicator.
+        completed.add(activeStage);
         furthestUnlocked = target;
       } else {
         showToast("Selesaikan aktivitas tahap saat ini sebelum melanjutkan secara berurutan.");
