@@ -1,14 +1,21 @@
 (() => {
   const config = window.IPA_TEMPLATE_CONFIG || {};
-  const STORAGE_KEY = "ipa-interaktif:template-universal:v0.5";
   const STORAGE_PREFIX = "ipa-interaktif:template-universal:";
+  // Use a material-specific key only for modules that opt in to strict progression.
+  const STORAGE_KEY = config.requireStageProgression === true && config.materialId
+    ? STORAGE_PREFIX + "v0.6:" + config.materialId
+    : STORAGE_PREFIX + "v0.5";
   const stageCount = 7;
 
   const resetRequested = new URLSearchParams(location.search).has("_reset");
   if (resetRequested) {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
-    });
+    if (config.requireStageProgression === true && config.materialId) {
+      localStorage.removeItem(STORAGE_KEY);
+    } else {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith(STORAGE_PREFIX)) localStorage.removeItem(key);
+      });
+    }
   }
 
   const state = loadState();
