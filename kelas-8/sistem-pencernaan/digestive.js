@@ -1708,7 +1708,19 @@
   const nutrientGameFeedback=document.getElementById("nutrientGameFeedback");
   const nutrientGameScore=document.getElementById("nutrientGameScore");
   let selectedRelationCard=null;
+  const nutrientFirstScoreKey="ipa:digestive:first-diagnostic:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(nutrientFirstScoreKey);}catch(error){console.warn("Reset hasil diagnostik gagal",error);}
+  }
   let nutrientFirstScore=null;
+  try{
+    const saved=JSON.parse(sessionStorage.getItem(nutrientFirstScoreKey)||"null");
+    if(Number.isInteger(saved)&&saved>=0&&saved<=7)nutrientFirstScore=saved;
+  }catch(error){console.warn("Hasil diagnostik awal tidak dapat dipulihkan",error);}
+  if(nutrientFirstScore!==null){
+    document.getElementById("nutrientFirstResult").textContent=
+      "Hasil diagnostik awal: "+nutrientFirstScore+"/7 rantai tepat. Hasil ini tersimpan untuk sesi tab ini. Susun dan periksa kembali rantai untuk melanjutkan pembelajaran.";
+  }
   let nutrientExamined=false;
   let nutrientValidated=false;
   function nutrientInvalidate(){
@@ -1904,6 +1916,8 @@
     nutrientValidated=true;
     if(nutrientFirstScore===null){
       nutrientFirstScore=correctChains;
+      try{sessionStorage.setItem(nutrientFirstScoreKey,JSON.stringify(nutrientFirstScore));}
+      catch(error){console.warn("Hasil diagnostik awal tidak tersimpan",error);}
       document.getElementById("nutrientFirstResult").textContent="Hasil diagnostik awal: "+correctChains+"/7 rantai tepat. Hasil ini tetap tersimpan selama sesi ini; percobaan berikutnya adalah latihan.";
     }
     nutrientGameScore.textContent=correctChains+" / 7 rantai tepat";
