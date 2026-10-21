@@ -2282,8 +2282,15 @@
         const fb=document.getElementById(feedbackIds[index]);
         if(state.attempts){
           fb.className="digest-feedback "+(finished?(correct?"good":"warn"):"warn");
+          const feedbackByStep=[
+            ["Analisis tepat. Ketiga jalur sudah konsisten dengan enzim, hasil pencernaan, dan lokasi penyerapan.","Dua percobaan selesai. Karbohidrat dipecah menjadi monosakarida, protein menjadi asam amino, dan lemak dibantu empedu serta lipase; penyerapan terutama terjadi di usus halus."],
+            ["Tepat. Hasil pencernaan karbohidrat, protein, dan lemak terutama diserap di usus halus.","Dua percobaan selesai. Glukosa, asam amino, dan hasil pencernaan lemak dapat terdampak jika permukaan usus halus berkurang."],
+            ["Tepat. Empedu bukan enzim.","Dua percobaan selesai. Empedu membantu emulsifikasi lemak dan bukan enzim pencernaan."],
+            ["Tepat. Empedu mengemulsikan lemak sedangkan lipase mencerna lemak secara kimiawi.","Dua percobaan selesai. Perbaikan model: empedu mengemulsikan lemak menjadi tetesan kecil agar lipase lebih efektif."],
+            ["Tepat. Berkurangnya emulsifikasi mengurangi permukaan kontak lemak untuk lipase.","Dua percobaan selesai. Jika emulsifikasi berkurang, permukaan kontak lemak menurun dan kerja lipase kurang efektif."]
+          ];
           fb.textContent=finished
-            ? (correct?"Jawaban sebelumnya benar dan sudah dikunci.":"Dua percobaan selesai. Tinjau kembali pembahasan materi bersama guru.")
+            ? feedbackByStep[index][correct?0:1]
             : "Percobaan pertama belum tepat. Satu kesempatan revisi tersisa.";
         }
         previousFinal=finished;
