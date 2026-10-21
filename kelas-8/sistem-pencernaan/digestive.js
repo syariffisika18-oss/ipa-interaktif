@@ -1215,9 +1215,18 @@
           dst.firstCorrect=typeof src.firstCorrect==="boolean"?src.firstCorrect:null;
           dst.finalCorrect=dst.finalized&&typeof src.finalCorrect==="boolean"?src.finalCorrect:null;
           dst.feedbackTone=dst.finalized?(dst.finalCorrect?"good":"warn"):"neutral";
-          dst.feedbackText=dst.finalized
-            ? "Jawaban sebelumnya sudah dikunci. "+(dst.finalCorrect?"Benar.":"Periksa pembahasan bersama guru.")
-            : (dst.attempts===1?"Satu kesempatan revisi tersisa.":"Pilih jawaban, lalu kunci.");
+          if(dst.finalized){
+            const data=hotsCases[index];
+            const goodText=kind==="evidence"?data.evidenceGood:kind==="mechanism"?data.mechanismGood:data.transferGood;
+            const answer=kind==="evidence"
+              ? data.evidenceCorrect.map(id=>data.evidence.find(option=>option.id===id)?.label).filter(Boolean).join(" + ")
+              : (kind==="mechanism"?data.mechanisms:data.transfers).find(option=>option.correct)?.label||"";
+            dst.feedbackText=dst.finalCorrect
+              ? goodText+" Jawaban dikunci."
+              : "Dua percobaan selesai. Jawaban yang paling tepat: "+answer+". "+goodText;
+          }else{
+            dst.feedbackText=dst.attempts===1?"Satu kesempatan revisi tersisa.":"Pilih jawaban, lalu kunci.";
+          }
         });
       });
       const active=Number(saved.activeCase);
