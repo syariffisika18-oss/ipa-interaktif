@@ -2190,7 +2190,7 @@
           && bileAttempt.finalized;
       }
       case 5:
-        return evalFinished && qi===questions.length-1 && responses.every(Boolean);
+        return evalFinished && responses.every(Boolean);
       case 6:
         return true;
       default:
