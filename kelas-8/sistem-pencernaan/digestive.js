@@ -2224,6 +2224,7 @@
       let previousFinal=true;
       saved.forEach((snapshot,index)=>{
         const task=extraTasks[index],state=task.state;
+        if(index===2)previousFinal=true;
         if(!snapshot||!previousFinal)return;
         const validChoice=index===0
           ? Array.isArray(snapshot.choice)&&snapshot.choice.length===3&&snapshot.choice.every(v=>v===null||Number.isInteger(v)&&v>=0&&v<=2)
@@ -2257,7 +2258,6 @@
           document.querySelectorAll(task.selector).forEach(b=>
             b.classList.toggle("is-selected",b.dataset[task.attribute]===snapshot.choice));
         }
-        const ids=["pathway","absorption","modelError","modelCorrection","bile"];
         const labelIds=["pathwayAttemptLabel","absorptionAttemptLabel","modelErrorAttemptLabel","modelCorrectionAttemptLabel","bileAttemptLabel"];
         const checkIds=["checkPathwayChallenge","checkAbsorption","checkModelError","checkModelCorrection","checkBilePrediction"];
         const containers=["#pathwayChallenge [data-pathway-opt]","#absorptionOptions button","#modelErrorOptions button","#modelCorrectionOptions button","#bileOptions button"];
