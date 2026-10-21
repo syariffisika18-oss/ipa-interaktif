@@ -2198,6 +2198,98 @@
     }
   };
 
+  // Save all five non-case Elaborate attempts and their selected answers.
+  const elaborateExtraKey="ipa:digestive:elaborate-extra:v1";
+  if(window.IPA_RESET_REQUESTED===true){
+    try{sessionStorage.removeItem(elaborateExtraKey);}catch(error){console.warn("Reset aktivitas Elaborate gagal",error);}
+  }
+  const extraTasks=[
+    {state:pathwayAttempt,get:()=>[0,1,2].map(i=>pathwayAnswers[i]??null),correct:v=>v.length===3&&pathwayCorrect.every((x,i)=>v[i]===x),options:[0,1,2]},
+    {state:absorptionAttempt,get:()=>absorptionChoice,correct:v=>v==="all",selector:"#absorptionOptions [data-absorb]",attribute:"absorb"},
+    {state:modelErrorAttempt,get:()=>modelErrorChoice,correct:v=>v==="enzyme",selector:"#modelErrorOptions [data-model-error]",attribute:"modelError"},
+    {state:modelCorrectionAttempt,get:()=>modelCorrectionChoice,correct:v=>v==="1",selector:"#modelCorrectionOptions [data-correction]",attribute:"correction"},
+    {state:bileAttempt,get:()=>bileChoice,correct:v=>v==="fat",selector:"#bileOptions [data-bile]",attribute:"bile"}
+  ];
+  function saveExtraElaborate(){
+    try{sessionStorage.setItem(elaborateExtraKey,JSON.stringify(extraTasks.map(task=>({
+      choice:task.get(),attempts:task.state.attempts,
+      firstCorrect:task.state.firstCorrect,finalized:task.state.finalized,
+      finalCorrect:task.state.finalCorrect
+    }))));}catch(error){console.warn("Aktivitas Elaborate belum tersimpan",error);}
+  }
+  function restoreExtraElaborate(){
+    try{
+      const saved=JSON.parse(sessionStorage.getItem(elaborateExtraKey)||"null");
+      if(!Array.isArray(saved)||saved.length!==extraTasks.length)return;
+      let previousFinal=true;
+      saved.forEach((snapshot,index)=>{
+        const task=extraTasks[index],state=task.state;
+        if(!snapshot||!previousFinal)return;
+        const validChoice=index===0
+          ? Array.isArray(snapshot.choice)&&snapshot.choice.length===3&&snapshot.choice.every(v=>v===null||Number.isInteger(v)&&v>=0&&v<=2)
+          : typeof snapshot.choice==="string"&&(
+            snapshot.choice===""||[...document.querySelectorAll(task.selector)].some(b=>b.dataset[task.attribute]===snapshot.choice));
+        if(!validChoice||!Number.isInteger(snapshot.attempts)||snapshot.attempts<0||snapshot.attempts>2)return;
+        const correct=task.correct(snapshot.choice),finished=snapshot.attempts>0&&(correct||snapshot.attempts===2);
+        if(snapshot.finalized!==finished||
+          snapshot.finalCorrect!==(finished?correct:null)||
+          (snapshot.attempts===0&&snapshot.firstCorrect!==null)||
+          (snapshot.attempts>0&&typeof snapshot.firstCorrect!=="boolean")||
+          (snapshot.attempts===1&&snapshot.firstCorrect!==correct)||
+          (snapshot.attempts===2&&snapshot.firstCorrect!==false))return;
+        state.attempts=snapshot.attempts;
+        state.firstCorrect=snapshot.firstCorrect;
+        state.finalized=finished;
+        state.finalCorrect=finished?correct:null;
+        if(index===0){
+          snapshot.choice.forEach((value,row)=>{
+            if(value!==null){
+              pathwayAnswers[row]=value;
+              document.querySelectorAll('[data-pathway-row="'+row+'"] [data-pathway-opt]').forEach(b=>
+                b.classList.toggle("is-selected",Number(b.dataset.pathwayOpt)===value));
+            }
+          });
+        }else{
+          if(index===1)absorptionChoice=snapshot.choice;
+          if(index===2)modelErrorChoice=snapshot.choice;
+          if(index===3)modelCorrectionChoice=snapshot.choice;
+          if(index===4)bileChoice=snapshot.choice;
+          document.querySelectorAll(task.selector).forEach(b=>
+            b.classList.toggle("is-selected",b.dataset[task.attribute]===snapshot.choice));
+        }
+        const ids=["pathway","absorption","modelError","modelCorrection","bile"];
+        const labelIds=["pathwayAttemptLabel","absorptionAttemptLabel","modelErrorAttemptLabel","modelCorrectionAttemptLabel","bileAttemptLabel"];
+        const checkIds=["checkPathwayChallenge","checkAbsorption","checkModelError","checkModelCorrection","checkBilePrediction"];
+        const containers=["#pathwayChallenge [data-pathway-opt]","#absorptionOptions button","#modelErrorOptions button","#modelCorrectionOptions button","#bileOptions button"];
+        document.getElementById(labelIds[index]).textContent=attemptLabel(state);
+        if(finished){
+          document.querySelectorAll(containers[index]).forEach(b=>b.disabled=true);
+          document.getElementById(checkIds[index]).disabled=true;
+          if(index===0)document.getElementById("absorptionTransferStep").classList.remove("locked-step");
+          if(index===2)document.getElementById("modelCorrectionStep").classList.remove("locked-step");
+          if(index===3)document.getElementById("bilePredictionStep").classList.remove("locked-step");
+        }
+        const feedbackIds=["pathwayFeedback","absorptionFeedback","modelErrorFeedback","modelCorrectionFeedback","bileFeedback"];
+        const fb=document.getElementById(feedbackIds[index]);
+        if(state.attempts){
+          fb.className="digest-feedback "+(finished?(correct?"good":"warn"):"warn");
+          fb.textContent=finished
+            ? (correct?"Jawaban sebelumnya benar dan sudah dikunci.":"Dua percobaan selesai. Tinjau kembali pembahasan materi bersama guru.")
+            : "Percobaan pertama belum tepat. Satu kesempatan revisi tersisa.";
+        }
+        previousFinal=finished;
+        // Tasks 1–2 and 3–5 are separate sequences.
+        if(index===1)previousFinal=true;
+      });
+    }catch(error){console.warn("Progres aktivitas Elaborate tidak dapat dipulihkan",error);}
+  }
+  restoreExtraElaborate();
+  document.addEventListener("click",event=>{
+    if(event.target.closest("#pathwayChallenge,#checkPathwayChallenge,#absorptionOptions,#checkAbsorption,#modelErrorOptions,#checkModelError,#modelCorrectionOptions,#checkModelCorrection,#bileOptions,#checkBilePrediction")){
+      saveExtraElaborate();
+    }
+  });
+
   const scheduleDigestFooter=()=>setTimeout(()=>window.refreshStageFooter?.(),0);
   document.addEventListener("click",scheduleDigestFooter,true);
   document.addEventListener("change",scheduleDigestFooter,true);
