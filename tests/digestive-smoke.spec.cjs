@@ -18,8 +18,10 @@ for (const device of [
     });
     test('Engage choice and Explore visit survive reload',async ({page})=>{
       await page.goto('http://127.0.0.1:8765/kelas-8/sistem-pencernaan/index.html?_reset=1');
-      await page.locator('#predictionOptions [data-prediction]').first().click({force:true});
-      await page.locator('#organRoute [data-organ="4"]').click({force:true});
+      await page.evaluate(()=>{
+        document.querySelector('#predictionOptions [data-prediction]').click();
+        document.querySelector('#organRoute [data-organ="4"]').click();
+      });
       const choice=await page.locator('#predictionOptions [data-prediction].is-selected').getAttribute('data-prediction');
       await page.goto('http://127.0.0.1:8765/kelas-8/sistem-pencernaan/index.html');
       await expect(page.locator('#predictionOptions [data-prediction="'+choice+'"]')).toHaveClass(/is-selected/);
