@@ -1004,3 +1004,9 @@
   .case-tabs button{min-height:38px!important;font-size:.82rem!important}
   .photo-cell-wrap .photo-hotspots button span{font-size:.6rem!important}
 }
+
+/* Tanda organel telah ditinjau, juga setelah progres dimuat ulang. */
+.photo-cell-wrap .photo-hotspots button.is-viewed:not(.is-active){
+  background:#1967a3!important;
+  box-shadow:0 0 0 3px rgba(25,103,163,.3)!important;
+}
