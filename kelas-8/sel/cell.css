@@ -998,3 +998,9 @@
   .case-lock button,.zoom-tabs button,.cell-explain-tabs button{min-height:38px!important;font-size:.78rem!important}
   .organelle-info{min-height:0!important;padding:13px!important}
 }
+
+@media(max-width:640px) and (orientation:portrait){
+  .case-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .case-tabs button{min-height:38px!important;font-size:.82rem!important}
+  .photo-cell-wrap .photo-hotspots button span{font-size:.6rem!important}
+}
