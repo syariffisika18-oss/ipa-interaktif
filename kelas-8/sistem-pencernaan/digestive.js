@@ -82,10 +82,10 @@
       process:"Mengunyah + mencampur makanan dengan air liur",
       type:"Mekanik + kimiawi",
       mechanical:"Gigi, lidah",
-      chemical:"Air liur",
+      chemical:"Air liur (enzim amilase)",
       result:"Bolus; pencernaan karbohidrat mulai",
       term:"Bolus = gumpalan makanan yang sudah dikunyah dan bercampur air liur.",
-      why:"Penghancuran memperluas permukaan makanan sehingga proses berikutnya lebih efektif."
+      why:"Mengunyah memperluas permukaan makanan. Enzim amilase dalam air liur mulai menguraikan amilum (zat tepung) menjadi gula yang lebih sederhana."
     },
     {
       name:"Faring",
@@ -929,7 +929,9 @@
   if(explainConceptNext)explainConceptNext.addEventListener("click",()=>showExplainPage(1));
 
   const explainModelNext=document.getElementById("explainModelNext");
-  if(explainModelNext)explainModelNext.addEventListener("click",()=>showExplainPage(2));
+  if(explainModelNext)explainModelNext.addEventListener("click",()=>{
+    if(modelSeen.size===model.length)showExplainPage(2);
+  });
 
   const explainExampleBack=document.getElementById("explainExampleBack");
   if(explainExampleBack)explainExampleBack.addEventListener("click",()=>showExplainPage(1));
@@ -940,6 +942,7 @@
   function renderModel(i,animate=true){
     modelIndex=Math.max(0,Math.min(model.length-1,i));
     modelSeen.add(modelIndex);
+    if(explainModelNext)explainModelNext.hidden=modelSeen.size!==model.length;
     if(!restoringExplain)saveExplainSession();
     const m=model[modelIndex];
     modelTabs.querySelectorAll("button").forEach((b,j)=>{
