@@ -114,8 +114,8 @@
       mechanical:"Otot dinding lambung",
       chemical:"Asam lambung (HCl) dan enzim pepsin",
       result:"Kimus; protein mulai dipecah",
-      term:"Kimus = campuran makanan semi-cair setelah bercampur cairan lambung. Pengayaan: rennin (kimosin), yang sering disebut renin dalam buku sekolah, membantu menggumpalkan protein susu pada mamalia muda; bukan enzim utama pencernaan lambung manusia.",
-      why:"Otot lambung mengaduk makanan. HCl menciptakan suasana asam dan membantu mengaktifkan pepsin; pepsin memecah protein menjadi peptida. Campurannya membentuk kimus."
+      term:"Kimus = makanan yang telah diaduk dan bercampur dengan cairan lambung hingga menjadi setengah cair.",
+      why:"Otot lambung mengaduk makanan. HCl membuat suasana asam sehingga enzim pepsin dapat memecah protein menjadi bagian yang lebih kecil."
     },
     {
       name:"Usus halus",
