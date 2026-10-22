@@ -30,7 +30,7 @@ for (const device of [
       const choice=await page.locator('#predictionText').inputValue();
       await page.goto('http://127.0.0.1:8765/kelas-8/sistem-pencernaan/index.html');
       await expect(page.locator('#predictionText')).toHaveValue(choice);
-      await expect(page.locator('#predictionReason')).not.toBeEmpty();
+      await expect(page.locator('#predictionReason')).toHaveValue(/.+/);
       await expect(page.locator('#organRoute [data-organ="4"]')).toHaveClass(/is-visited/);
     });
   });
