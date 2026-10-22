@@ -115,7 +115,7 @@
     document.getElementById("modeNote").textContent =
       mode === "mandiri"
         ? "Petunjuk, feedback, dan progres membantu siswa belajar secara mandiri."
-        : "Jawaban dapat ditahan agar pendidik mengendalikan diskusi dan scaffolding.";
+        : "Gunakan simulasi untuk diskusi bersama guru; progres aktivitas tetap tercatat pada perangkat ini.";
 
     saveState();
   }
@@ -1074,6 +1074,8 @@
   function saveMicro(){rememberActivity("microscope",{objective,locked:predictionLocked,seen:[...microSeen],concluded:microConclusionSaved,text:$("#microConclusion").value});}
   function refreshMicroInquiry(){
     $("#microscopeView").hidden=!predictionLocked;
+    $("#scopeLockedNotice").hidden=predictionLocked;
+    $("#observedObjectives").textContent="Sudah diamati: "+microSeen.size+" dari 3 objektif (4×, 10×, 40×).";
     $("#microAnalysis").hidden=!predictionLocked||microSeen.size!==3;
     $("#poeExplain").hidden=!microConclusionSaved;
     $("#saveMicroAnalysis").disabled=microConclusionSaved;
@@ -1378,7 +1380,7 @@
   const organelles = {
     nucleus:{
       name:"Nukleus",
-      function:"Mengatur berbagai kegiatan sel dan menyimpan materi genetik (DNA), yaitu informasi yang mengatur sifat dan kerja sel.",
+      function:"Mengatur kegiatan sel dan menyimpan DNA, yaitu informasi sifat makhluk hidup.",
       impact:"Pengaturan kegiatan sel dan penyimpanan informasi genetik dapat terganggu."
     },
     nucleolus:{
@@ -1388,32 +1390,32 @@
     },
     er:{
       name:"Retikulum endoplasma",
-      function:"Membantu membuat dan memindahkan berbagai zat di dalam sel. RE kasar ditempeli ribosom dan membantu pembuatan protein.",
+      function:"RE kasar membantu membuat protein; RE halus membantu membuat lemak.",
       impact:"Pembuatan dan pemindahan zat tertentu di dalam sel dapat terganggu."
     },
     golgi:{
       name:"Badan Golgi",
-      function:"Mengubah, mengemas, dan mengirim protein atau zat lain ke bagian sel yang membutuhkannya.",
+      function:"Mengemas dan mengirim protein ke bagian sel yang membutuhkannya.",
       impact:"Pengemasan dan pengiriman zat di dalam sel dapat terganggu."
     },
     mitochondria:{
       name:"Mitokondria",
-      function:"Tempat berlangsungnya respirasi seluler, yaitu proses menghasilkan energi dari zat makanan untuk digunakan sel.",
+      function:"Tempat respirasi seluler yang menyediakan energi bagi kegiatan sel.",
       impact:"Sel dapat kekurangan energi untuk menjalankan kegiatannya."
     },
     lysosome:{
       name:"Lisosom",
-      function:"Mengandung enzim, yaitu protein yang membantu menguraikan zat tertentu dan bagian sel yang sudah rusak.",
+      function:"Menguraikan zat dan bagian sel yang rusak dengan bantuan enzim.",
       impact:"Zat dan bagian sel yang seharusnya diuraikan dapat menumpuk."
     },
     ribosome:{
       name:"Ribosom",
-      function:"Membuat protein yang diperlukan sel untuk pertumbuhan dan berbagai kegiatannya.",
+      function:"Membuat protein yang dibutuhkan sel.",
       impact:"Pembuatan protein yang dibutuhkan sel dapat terganggu."
     },
     membrane:{
       name:"Membran sel",
-      function:"Membatasi sel dan mengatur zat yang boleh masuk dan keluar dari sel.",
+      function:"Membatasi sel dan mengatur zat yang masuk serta keluar.",
       impact:"Keluar-masuknya zat antara sel dan lingkungannya dapat terganggu."
     },
     wall:{
@@ -1423,17 +1425,17 @@
     },
     cytoplasm:{
       name:"Sitoplasma",
-      function:"Cairan kental di dalam sel yang menjadi tempat organel berada dan berbagai reaksi sel berlangsung.",
+      function:"Cairan tempat organel berada dan berbagai reaksi sel berlangsung.",
       impact:"Berbagai proses yang berlangsung di dalam sel dapat terganggu."
     },
     vacuole:{
       name:"Vakuola",
-      function:"Menyimpan air dan berbagai zat. Pada sel tumbuhan, vakuola juga membantu menjaga sel tetap kaku.",
+      function:"Menyimpan air dan membantu sel tumbuhan tetap tegang.",
       impact:"Sel tumbuhan dapat kehilangan kekakuannya ketika kandungan air berkurang."
     },
     chloroplast:{
       name:"Kloroplas",
-      function:"Tempat fotosintesis, yaitu proses tumbuhan membuat makanan dengan menggunakan energi cahaya.",
+      function:"Tempat fotosintesis, yaitu proses membuat makanan dengan bantuan cahaya.",
       impact:"Kemampuan sel tumbuhan membuat makanan melalui fotosintesis dapat terganggu."
     }
   };
@@ -1484,7 +1486,9 @@
     const where=item[2], name=item[1];
     const animal=where==="both"||where==="animal", plant=where==="both"||where==="plant";
     $("#animalCompare").innerHTML='<span>SEL HEWAN</span><strong>'+(animal?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(animal?" terdapat pada model sel hewan.":" bukan ciri khas model sel hewan pada pembelajaran ini.")+'</p>';
-    $("#plantCompare").innerHTML='<span>SEL TUMBUHAN</span><strong>'+(plant?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(plant?" terdapat pada model sel tumbuhan.":" bukan ciri khas model sel tumbuhan pada pembelajaran ini.")+'</p>';
+    $("#plantCompare").innerHTML=where==="animal"&&item[0]==="lysosome"
+      ? '<span>SEL TUMBUHAN</span><strong>Fungsi serupa</strong><p>Vakuola pada banyak sel tumbuhan membantu menguraikan zat, seperti fungsi lisosom.</p>'
+      : '<span>SEL TUMBUHAN</span><strong>'+(plant?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(plant?" terdapat pada model sel tumbuhan.":" bukan ciri khas model sel tumbuhan pada pembelajaran ini.")+'</p>';
     updateBottomNavVisibility();
   });
 
