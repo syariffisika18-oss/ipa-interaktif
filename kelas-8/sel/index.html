@@ -68,14 +68,14 @@
         </article>
         <article class="learning-card">
           <h3>🧠 Dari makhluk hidup menuju sel</h3>
-          <p>Ingat kembali <b>8 ciri makhluk hidup</b>. Ciri terakhir, <b>tersusun dari sel</b>, akan menjadi jembatan menuju materi sel.</p>
+          <p>Periksa pengetahuan awalmu lewat <b>3 situasi sehari-hari</b>. Setelah itu, selidiki bagian terkecil penyusun tubuh makhluk hidup melalui pengamatan.</p>
         </article>
       </div>
 
       <section class="life-quiz-card" aria-labelledby="lifeQuizTitle">
         <div class="compact-head">
-          <div><p class="stage-kicker">Cek prasyarat</p><h3 id="lifeQuizTitle">Kenali 8 ciri makhluk hidup</h3></div>
-          <span id="lifeProgress" class="score-badge">1 / 8</span>
+          <div><p class="stage-kicker">Cek prasyarat</p><h3 id="lifeQuizTitle">Cek 3 ciri makhluk hidup</h3></div>
+          <span id="lifeProgress" class="score-badge">1 / 3</span>
         </div>
         <p class="life-scenario" id="lifeScenario"></p>
         <div class="option-grid" id="lifeOptions"></div>
@@ -145,13 +145,14 @@
         <div class="engage-question" id="engageQuestion" hidden>
           <p class="stage-kicker">Prediksi sebelum membuka tahap 3</p>
           <h3>Apa dugaanmu?</h3>
-          <p>Jaringan tampak tersusun dari banyak unit kecil. Unit apakah yang masih dapat menjalankan proses kehidupan?</p>
+          <p>Daun terdiri atas banyak bagian kecil. Menurutmu, unit apakah yang menyusun jaringan daun dan dapat melakukan proses kehidupan?</p>
           <div class="option-grid" id="engageOptions">
             <button type="button" data-engage="molekul">Molekul</button>
             <button type="button" data-engage="sel">Sel</button>
             <button type="button" data-engage="organ">Organ</button>
           </div>
-          <button type="button" class="primary-inline" id="lockEngage">Kunci prediksi</button>
+          <label class="module-written-label" for="engageReason">Mengapa kamu memilih jawaban itu?<textarea id="engageReason" maxlength="300" rows="3" placeholder="Saya menduga demikian karena..."></textarea></label>
+          <button type="button" class="primary-inline" id="lockEngage">Simpan prediksi dan alasan</button>
           <div id="engageFeedback" class="module-feedback neutral">Kunci prediksi sebelum membuka pengamatan berikutnya.</div>
         </div>
       </section>
@@ -193,7 +194,7 @@
             <div id="magnificationFeedback" class="module-feedback neutral">Belum diperiksa.</div>
           </div>
 
-          <div class="microscope-view-card">
+          <div class="microscope-view-card" id="microscopeView" hidden>
             <div class="scope-head">
               <span>Bidang pandang preparat yang sama</span>
               <strong id="objectiveReadout">Objektif 4×</strong>
@@ -236,6 +237,11 @@
           </div>
         </div>
 
+        <div class="module-written-card" id="microAnalysis" hidden>
+          <label class="module-written-label" for="microConclusion">Setelah mengamati objektif 4×, 10×, dan 40×, apa yang berubah pada ukuran gambar dan luas bidang pandang?<textarea id="microConclusion" maxlength="450" rows="3" placeholder="Ketika pembesaran diperbesar, ... karena ..."></textarea></label>
+          <button type="button" class="primary-inline" id="saveMicroAnalysis">Simpan kesimpulan pengamatan</button>
+          <div id="microAnalysisFeedback" class="module-feedback neutral" role="status">Amati ketiga objektif sebelum menyimpulkan.</div>
+        </div>
         <div class="poe-explain" id="poeExplain" hidden>
           <b>Kesimpulan:</b>
           <span>Pembesaran total = pembesaran lensa okuler × pembesaran lensa objektif.</span>
@@ -338,7 +344,7 @@
             </div>
             <span class="score-badge" id="compareProgress">0 / 9 ditinjau</span>
           </div>
-          <p>Pilih setiap struktur. Dua kartu di bawah akan menunjukkan keberadaannya.</p>
+          <p>Pilih setiap struktur setelah mengamati organel sel hewan dan tumbuhan. Kartu menjelaskan perbandingan pada <b>model sel</b>; setiap jenis sel dapat mempunyai kekhususan.</p>
         </div>
         <div class="compare-buttons" id="compareButtons"></div>
         <div class="compare-cells">
@@ -429,6 +435,7 @@
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script src="config.js?v=20261002-cell1"></script>
-  <script src="cell-images.js?v=20261002-photo3"></script>\n  <script src="cell.js?v=20261004-language-audit1"></script>
+  <script src="cell-images.js?v=20261002-photo3"></script>
+  <script src="cell.js?v=20261022-audit5e1"></script>
 </body>
 </html>
