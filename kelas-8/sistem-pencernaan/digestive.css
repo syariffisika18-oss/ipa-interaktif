@@ -21,7 +21,11 @@
 .phenomenon-card h3{margin:5px 0 8px;font-size:1.35rem}.phenomenon-card p:last-child{margin:0;color:var(--muted);line-height:1.55}
 .prediction-card{margin-top:14px;padding:18px;border:1px solid var(--line);border-radius:18px;background:#fff}
 .question-kicker{margin:0;color:var(--primary);font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
-.prediction-card h3{margin:6px 0 12px}.prediction-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.prediction-card h3{margin:6px 0 12px}
+.prediction-card label{display:block;margin:12px 0 6px;color:var(--text,#18312e);font-size:.95rem}
+.prediction-card textarea{display:block;width:100%;box-sizing:border-box;min-height:90px;padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:#fff;color:inherit;font:inherit;line-height:1.55;resize:vertical}
+.prediction-card textarea:focus{outline:2px solid var(--primary);outline-offset:2px}
+.prediction-options{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .digest-feedback{margin-top:10px;padding:9px 11px;border-radius:11px;font-size:.84rem;line-height:1.4}
 .digest-feedback.neutral{background:#f3f6f5;color:var(--muted)}
 .digest-feedback.good{background:#dcf6eb;color:#185a44}

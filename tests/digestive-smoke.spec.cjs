@@ -19,12 +19,18 @@ for (const device of [
     test('Engage choice and Explore visit survive reload',async ({page})=>{
       await page.goto('http://127.0.0.1:8765/kelas-8/sistem-pencernaan/index.html?_reset=1');
       await page.evaluate(()=>{
-        document.querySelector('#predictionOptions [data-prediction]').click();
+        const pred=document.querySelector('#predictionText');
+        pred.value='Saya menduga zat gizi diserap di dalam usus.';
+        pred.dispatchEvent(new Event('input',{bubbles:true}));
+        const reason=document.querySelector('#predictionReason');
+        reason.value='Karena zat gizi perlu masuk dari usus ke tubuh.';
+        reason.dispatchEvent(new Event('input',{bubbles:true}));
         document.querySelector('#organRoute [data-organ="4"]').click();
       });
-      const choice=await page.locator('#predictionOptions [data-prediction].is-selected').getAttribute('data-prediction');
+      const choice=await page.locator('#predictionText').inputValue();
       await page.goto('http://127.0.0.1:8765/kelas-8/sistem-pencernaan/index.html');
-      await expect(page.locator('#predictionOptions [data-prediction="'+choice+'"]')).toHaveClass(/is-selected/);
+      await expect(page.locator('#predictionText')).toHaveValue(choice);
+      await expect(page.locator('#predictionReason')).toHaveValue(/.+/);
       await expect(page.locator('#organRoute [data-organ="4"]')).toHaveClass(/is-visited/);
     });
   });
