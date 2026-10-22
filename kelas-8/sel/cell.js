@@ -1064,7 +1064,28 @@
   renderZoom();
 
   // ---------- EXPLORE: POE mikroskop ----------
-  let objective=4, magChoice="", predictionLocked=false;
+  const savedMicro=activitySave.microscope||{};
+  let objective=[4,10,40].includes(savedMicro.objective)?savedMicro.objective:4;
+  let magChoice="", predictionLocked=savedMicro.locked===true;
+  const microSeen=new Set(Array.isArray(savedMicro.seen)?savedMicro.seen.filter(v=>[4,10,40].includes(v)):[]);
+  let microConclusionSaved=predictionLocked&&microSeen.size===3&&savedMicro.concluded===true
+    &&typeof savedMicro.text==="string"&&savedMicro.text.trim().length>=25;
+  $("#microConclusion").value=typeof savedMicro.text==="string"?savedMicro.text.slice(0,450):"";
+  function saveMicro(){rememberActivity("microscope",{objective,locked:predictionLocked,seen:[...microSeen],concluded:microConclusionSaved,text:$("#microConclusion").value});}
+  function refreshMicroInquiry(){
+    $("#microscopeView").hidden=!predictionLocked;
+    $("#microAnalysis").hidden=!predictionLocked||microSeen.size!==3;
+    $("#poeExplain").hidden=!microConclusionSaved;
+    $("#saveMicroAnalysis").disabled=microConclusionSaved;
+    $("#microConclusion").readOnly=microConclusionSaved;
+    if(microConclusionSaved){
+      $("#microAnalysisFeedback").className="module-feedback good";
+      $("#microAnalysisFeedback").textContent="Kesimpulan tersimpan. Bandingkan penjelasanmu dengan konsep di bawah.";
+    }
+    if(explorePanel)explorePanel.dataset.exploreFinished=String(microConclusionSaved&&microSeen.size===3);
+    saveMicro();
+    updateBottomNavVisibility();
+  }
   const explorePanel=document.querySelector(".explore-panel");
   if(explorePanel) explorePanel.dataset.exploreFinished="false";
   const ocular=()=>10;
@@ -1178,17 +1199,14 @@
 
   function revealMicroscope(animate=false){
     const item=microPhotos[objective];
-    if(predictionLocked && explorePanel){
-      explorePanel.dataset.exploreFinished="true";
-      updateBottomNavVisibility();
-    }
+    if(predictionLocked)microSeen.add(objective);
     syncObjectiveVisual(animate);
 
     $("#totalHidden").textContent=item.total+"×";
     $("#totalMagnification").textContent=item.total+"×";
     $("#fieldObservation").textContent=item.observation;
-    $("#poeExplain").hidden=false;
-    $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
+    $("#microscopeModeBadge").textContent=microConclusionSaved?"PREDICT → OBSERVE → EXPLAIN":"OBSERVE";
+    refreshMicroInquiry();
   }
 
 
@@ -1293,6 +1311,7 @@
   });
 
   $("#lockMagnification")?.addEventListener("click",()=>{
+    if(predictionLocked)return;
     if(!magChoice){
       $("#magnificationFeedback").textContent="Pilih hasil pembesaran total terlebih dahulu.";
       return;
@@ -1312,8 +1331,29 @@
     updateBottomNavVisibility();
   });
 
+  $("#microConclusion")?.addEventListener("input",()=>{
+    if(microConclusionSaved)return;
+    saveMicro();
+  });
+  $("#saveMicroAnalysis")?.addEventListener("click",()=>{
+    if(microSeen.size!==3){return;}
+    if($("#microConclusion").value.trim().length<25){
+      $("#microAnalysisFeedback").className="module-feedback warn";
+      $("#microAnalysisFeedback").textContent="Tuliskan hasil perbandingan dan alasanmu minimal 25 karakter.";
+      return;
+    }
+    microConclusionSaved=true;
+    refreshMicroInquiry();
+  });
   buildMagOptions();
   updateLensPreview(false);
+  $("#lockMagnification").disabled=predictionLocked;
+  if(predictionLocked){
+    $("#magnificationOptions").innerHTML="";
+    $("#magnificationFeedback").className="module-feedback neutral";
+    $("#magnificationFeedback").textContent="Prediksi telah dikunci. Bandingkan foto dengan memilih ketiga objektif.";
+    revealMicroscope(false);
+  }
 
   // ---------- EXPLAIN tabs ----------
   all("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
