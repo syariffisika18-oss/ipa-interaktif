@@ -992,7 +992,7 @@
   const savedEngage=activitySave.engage||{};
   let zoomIndex=Number.isInteger(savedEngage.zoom)&&savedEngage.zoom>=0&&savedEngage.zoom<=2?savedEngage.zoom:0;
   let maxZoomUnlocked=Number.isInteger(savedEngage.max)&&savedEngage.max>=0&&savedEngage.max<=2?savedEngage.max:0;
-  let engageChoice=["molekul","sel","organ"].includes(savedEngage.choice)?savedEngage.choice:"";
+  let engageChoice=["kosong","bagian","daun"].includes(savedEngage.choice)?savedEngage.choice:"";
   let engageLocked=savedEngage.locked===true&&!!engageChoice&&typeof savedEngage.reason==="string"&&savedEngage.reason.trim().length>=12;
   if(!engageLocked)zoomIndex=Math.min(zoomIndex,1);
   if(zoomIndex>maxZoomUnlocked)maxZoomUnlocked=zoomIndex;
@@ -1032,7 +1032,7 @@
     if(engageLocked){
       $("#engageFeedback").className="module-feedback neutral";
       $("#engageFeedback").textContent=zoomIndex===2
-        ?"Unit penyusun jaringan tersebut adalah sel. Bandingkan dengan alasan yang kamu tulis."
+        ?"Model sel menunjukkan beberapa bagian di dalamnya. Bandingkan dengan alasan yang kamu tulis."
         :"Prediksi dan alasan tersimpan. Buka hasil pengamatan untuk membandingkannya.";
     }
     saveEngage();
