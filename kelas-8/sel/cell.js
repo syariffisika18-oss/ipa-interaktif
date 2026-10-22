@@ -1631,56 +1631,99 @@
   });
   renderCase();
 
-  // ---------- EVALUATE ----------
+  // ---------- EVALUATE: 10 butir, jawaban dan hasil tahan muat ulang ----------
   const evalItems=[
-    {domain:"Konsep sel",q:"Unit struktural dan fungsional terkecil makhluk hidup adalah ...",opts:["Jaringan","Sel","Organ","Sistem organ"],a:1,why:"Sel merupakan unit terkecil yang masih menjalankan fungsi kehidupan."},
-    {domain:"Mikroskop",q:"Mikroskop menggunakan okuler 10× dan objektif 40×. Pembesaran totalnya adalah ...",opts:["50×","100×","400×","4.000×"],a:2,why:"Pembesaran total = 10× × 40× = 400×."},
-    {domain:"Mikroskop",q:"Okuler 15× dipasangkan dengan objektif 10×. Pembesaran totalnya adalah ...",opts:["25×","150×","1500×","5×"],a:1,why:"15× × 10× = 150×."},
-    {domain:"Organel",q:"Organel yang menjadi tempat sintesis protein adalah ...",opts:["Ribosom","Lisosom","Vakuola","Kloroplas"],a:0,why:"Ribosom merupakan tempat sintesis protein."},
-    {domain:"Organel",q:"Sel yang membutuhkan banyak energi untuk bekerja diperkirakan memiliki banyak ...",opts:["Mitokondria","Badan Golgi","Dinding sel","Nukleolus"],a:0,why:"Mitokondria berperan utama dalam respirasi seluler dan penyediaan energi."},
-    {domain:"Sel tumbuhan",q:"Struktur yang secara langsung berperan dalam fotosintesis adalah ...",opts:["Kloroplas","Vakuola","Membran sel","Lisosom"],a:0,why:"Kloroplas mengandung klorofil dan merupakan tempat fotosintesis."},
-    {domain:"Sel hewan & tumbuhan",q:"Struktur yang terdapat pada sel hewan maupun sel tumbuhan adalah ...",opts:["Dinding sel","Kloroplas","Membran sel","Vakuola besar"],a:2,why:"Membran sel dimiliki keduanya; dinding sel dan kloroplas merupakan ciri penting sel tumbuhan."},
-    {domain:"Struktur–fungsi",q:"Jika kemampuan mengatur keluar-masuknya zat terganggu, bagian yang paling langsung perlu diperiksa adalah ...",opts:["Membran sel","Ribosom","Nukleolus","Kloroplas"],a:0,why:"Membran sel mengatur pertukaran zat secara selektif."},
-    {domain:"Sel tumbuhan",q:"Sel tumbuhan kehilangan banyak air dan menjadi kurang tegang meskipun dinding sel tetap utuh. Struktur yang paling berkaitan adalah ...",opts:["Vakuola","Badan Golgi","Ribosom","Nukleus"],a:0,why:"Vakuola menyimpan air dan membantu mempertahankan tekanan turgor."},
-    {domain:"Mikroskop",q:"Ketika pembesaran objektif dinaikkan dari 10× menjadi 40×, pengamatan umumnya menunjukkan bahwa ...",opts:["Objek tampak lebih kecil dan bidang pandang lebih sempit","Objek tampak lebih besar dan bidang pandang lebih sempit","Objek tampak sama besar dan bidang pandang lebih luas","Objek hilang karena pembesaran total selalu berkurang"],a:1,why:"Pembesaran lebih tinggi membuat objek tampak lebih besar, sedangkan area bidang pandang yang terlihat menjadi lebih sempit."}
+    {domain:"Pengamatan sel",q:"Saat mengamati epidermis bawang, Rani menemukan banyak ruang kecil berbatas jelas yang menyusun jaringan. Ruang-ruang tersebut paling tepat disebut ...",opts:["Organ","Sel","Sistem organ","Molekul"],a:1,why:"Jaringan tersusun atas sel-sel yang memiliki batas dan menjalankan fungsi kehidupan."},
+    {domain:"Mikroskop",q:"Mikroskop memakai okuler 10× dan objektif 40×. Pembesaran total yang digunakan adalah ...",opts:["50×","100×","400×","4.000×"],a:2,why:"Pembesaran total = okuler × objektif = 10 × 40 = 400 kali."},
+    {domain:"Mikroskop",q:"Jika okuler 15× dipasangkan dengan objektif 10×, berapakah pembesaran totalnya?",opts:["1.500×","150×","25×","5×"],a:1,why:"15 × 10 = 150 kali."},
+    {domain:"Penggunaan mikroskop",q:"Objek sulit ditemukan pada objektif 40×. Langkah awal yang paling tepat untuk mencari kembali objek adalah ...",opts:["Langsung memakai minyak imersi","Memutar makrometer pada objektif 40× hingga mentok","Mengganti preparat tanpa pemeriksaan","Kembali ke objektif rendah lalu pusatkan objek"],a:3,why:"Mulailah dengan objektif rendah dan pusatkan objek sebelum menaikkan pembesaran. Hindari memaksa pemutar fokus kasar pada objektif tinggi."},
+    {domain:"Struktur dan fungsi",q:"Sel otot bekerja terus-menerus dan membutuhkan lebih banyak energi. Organel yang berkaitan langsung dengan kondisi ini adalah ...",opts:["Mitokondria","Kloroplas","Dinding sel","Vakuola"],a:0,why:"Mitokondria menjadi tempat respirasi seluler yang menyediakan energi bagi aktivitas sel."},
+    {domain:"Sel tumbuhan",q:"Sel daun masih hidup, tetapi produksi gula melalui fotosintesis menurun tajam. Organel yang perlu ditinjau terlebih dahulu adalah ...",opts:["Ribosom","Lisosom","Kloroplas","Nukleolus"],a:2,why:"Kloroplas merupakan tempat berlangsungnya fotosintesis pada sel tumbuhan."},
+    {domain:"Struktur dan fungsi",q:"Jika sebuah sel gagal mengatur zat yang masuk dan keluar, bagian sel yang paling berkaitan ialah ...",opts:["Badan Golgi","Membran sel","Nukleolus","Kloroplas"],a:1,why:"Membran sel berperan sebagai batas selektif untuk pertukaran zat."},
+    {domain:"Sel tumbuhan",q:"Dinding sel tetap utuh, tetapi sel tumbuhan kehilangan air dan menjadi layu. Bagian yang paling terkait dengan penyimpanan air adalah ...",opts:["Ribosom","Badan Golgi","Vakuola","Nukleus"],a:2,why:"Vakuola membantu menyimpan air dan menjaga tekanan turgor pada sel tumbuhan."},
+    {domain:"Perbandingan model sel",q:"Sebuah model sel memiliki dinding sel, vakuola besar, dan kloroplas. Model tersebut paling mungkin menunjukkan ...",opts:["Sel otot manusia","Sel darah merah manusia","Sel saraf manusia","Sel tumbuhan hijau"],a:3,why:"Dinding sel, vakuola besar, dan kloroplas merupakan ciri umum model sel tumbuhan hijau."},
+    {domain:"Analisis mikroskop",q:"Maya mengganti objektif 10× menjadi 40× tanpa mengganti okuler. Perubahan yang biasanya terjadi adalah ...",opts:["Gambar mengecil dan bidang pandang makin luas","Gambar membesar dan bidang pandang makin sempit","Gambar sama besar dan bidang pandang tetap","Pembesaran total berkurang"],a:1,why:"Objektif lebih kuat memperbesar gambar, sedangkan luas area preparat yang tampak menjadi lebih sempit."}
   ];
-  let evalIndex=0, evalScore=0, evalChoice=null, evalLocked=false;
+  const savedEval=activitySave.evaluationV2||{};
+  const evalAnswers=Array.isArray(savedEval.answers)&&savedEval.answers.length===evalItems.length
+    ? savedEval.answers.map(x=>Number.isInteger(x)&&x>=0&&x<=3?x:null)
+    : Array(evalItems.length).fill(null);
+  let evalIndex=Number.isInteger(savedEval.index)&&savedEval.index>=0&&savedEval.index<evalItems.length?savedEval.index:0;
+  let evalFinished=savedEval.finished===true&&evalAnswers.every(x=>x!==null);
+  let evalScore=evalAnswers.reduce((sum,a,i)=>sum+(a===evalItems[i].a?1:0),0);
+  let evalChoice=evalAnswers[evalIndex],evalLocked=evalChoice!==null;
+  function saveEvaluation(){
+    rememberActivity("evaluationV2",{index:evalIndex,answers:evalAnswers,finished:evalFinished});
+  }
   function renderEval(){
-    const evalPanel=document.querySelector(".evaluate-panel");
-    if(evalPanel) evalPanel.dataset.evaluationFinished="false";
-    const item=evalItems[evalIndex];
+    const item=evalItems[evalIndex],answer=evalAnswers[evalIndex];
+    evalChoice=answer;evalLocked=answer!==null;
     $("#evalProgress").textContent="Soal "+(evalIndex+1)+" / "+evalItems.length;
     $("#evalScore").textContent="Skor "+evalScore;
     $("#evalBar").style.width=((evalIndex+1)/evalItems.length*100)+"%";
     $("#evalDomain").textContent=item.domain;
     $("#evalQuestion").textContent=item.q;
     $("#evalOptions").innerHTML=item.opts.map((x,i)=>'<button type="button" data-eval="'+i+'">'+x+'</button>').join("");
-    $("#evalFeedback").className="module-feedback neutral";$("#evalFeedback").textContent="Pilih satu jawaban.";
-    $("#lockEval").disabled=false;$("#nextEval").hidden=true;evalChoice=null;evalLocked=false;
+    $("#lockEval").disabled=evalLocked||evalFinished;
+    $("#nextEval").hidden=!evalLocked||evalFinished;
+    $("#nextEval").textContent=evalIndex===evalItems.length-1?"Lihat hasil akhir →":"Soal berikutnya →";
+    const fb=$("#evalFeedback");
+    if(evalLocked){
+      const good=answer===item.a;
+      all("#evalOptions button").forEach((b,i)=>{
+        b.disabled=true;
+        b.classList.toggle("correct",i===item.a);
+        b.classList.toggle("wrong",i===answer&&!good);
+      });
+      fb.className="module-feedback "+(good?"good":"warn");
+      fb.textContent=(good?"Tepat. ":"Belum tepat. ")+item.why;
+    }else{
+      fb.className="module-feedback neutral";
+      fb.textContent="Pilih satu jawaban.";
+    }
+    const p=$(".evaluate-panel");
+    if(p)p.dataset.evaluationFinished=String(evalFinished);
+    if(evalFinished){
+      fb.className="module-feedback "+(evalScore>=8?"good":"warn");
+      fb.textContent="Evaluasi selesai: "+evalScore+" / "+evalItems.length+". "+
+        (evalScore>=8?"Pelajari kembali alasan pada soal yang belum tepat.":"Tinjau kembali hasil pengamatan dan fungsi organel, lalu jelaskan perbaikannya.");
+    }
+    updateBottomNavVisibility();
   }
   $("#evalOptions").addEventListener("click",e=>{
-    const b=e.target.closest("[data-eval]");if(!b||evalLocked)return;
+    const b=e.target.closest("[data-eval]");if(!b||evalLocked||evalFinished)return;
     evalChoice=Number(b.dataset.eval);setSelected($("#evalOptions"),b);
   });
   $("#lockEval").addEventListener("click",()=>{
-    if(evalChoice===null){$("#evalFeedback").textContent="Pilih satu jawaban sebelum mengunci.";return}
-    const item=evalItems[evalIndex],good=evalChoice===item.a;
-    evalLocked=true;if(good)evalScore++;
-    all("#evalOptions button").forEach((b,i)=>{b.disabled=true;b.classList.toggle("correct",i===item.a);b.classList.toggle("wrong",i===evalChoice&&!good)});
-    $("#evalFeedback").className="module-feedback "+(good?"good":"warn");
-    $("#evalFeedback").innerHTML=(good?"<b>Tepat.</b> ":"<b>Belum tepat.</b> ")+item.why;
-    $("#evalScore").textContent="Skor "+evalScore;$("#lockEval").disabled=true;$("#nextEval").hidden=false;
-    $("#nextEval").textContent=evalIndex===evalItems.length-1?"Lihat hasil akhir →":"Soal berikutnya →";
+    if(evalLocked||evalFinished)return;
+    if(evalChoice===null){$("#evalFeedback").textContent="Pilih satu jawaban sebelum mengunci.";return;}
+    evalAnswers[evalIndex]=evalChoice;
+    evalScore=evalAnswers.reduce((sum,a,i)=>sum+(a===evalItems[i].a?1:0),0);
+    saveEvaluation();renderEval();
   });
   $("#nextEval").addEventListener("click",()=>{
-    if(evalIndex<evalItems.length-1){evalIndex++;renderEval()}
-    else{
-      $("#nextEval").hidden=true;
-      const evalPanel=document.querySelector(".evaluate-panel");
-      if(evalPanel) evalPanel.dataset.evaluationFinished="true";
-      $("#evalFeedback").className="module-feedback "+(evalScore>=8?"good":"warn");
-      $("#evalFeedback").innerHTML="<b>Evaluasi selesai: "+evalScore+" / "+evalItems.length+".</b> "+(evalScore>=8?"Pemahamanmu sudah kuat. Tinjau kembali soal yang masih salah untuk memperkuat alasan.":"Kembali ke Explain dan Elaborate pada konsep yang masih salah, lalu coba jelaskan dengan bahasamu sendiri.");
-    }
+    if(!evalLocked||evalFinished)return;
+    if(evalIndex<evalItems.length-1){evalIndex++;saveEvaluation();renderEval();}
+    else {evalFinished=true;saveEvaluation();renderEval();}
   });
   renderEval();
+
+  // Bukti ketercapaian setiap tahap. Footer bukan jalan pintas penyelesaian.
+  moduleBridge.isStageReady=stage=>{
+    switch(Number(stage)){
+      case 0:return lifeDone;
+      case 1:return zoomIndex===2&&engageLocked&&$("#engageReason").value.trim().length>=12;
+      case 2:return predictionLocked&&microSeen.size===3&&microConclusionSaved;
+      case 3:return explainPageSeen.size===4&&seenAnimal.size===9&&seenPlant.size===11
+        &&compareSeen.size===compareItems.length
+        &&Number($("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3;
+      case 4:return activeCase===cases.length-1&&caseStates.every((_,i)=>caseDone(i));
+      case 5:return evalFinished;
+      case 6:return Boolean($("#studentName").value.trim()&&$("#studentClass").value.trim()
+        &&[...document.querySelectorAll("[data-reflection]")].some(f=>f.value.trim().length>=10)
+        &&document.querySelector("[data-confidence].is-selected"));
+      default:return false;
+    }
+  };
+  updateBottomNavVisibility();
 })();
