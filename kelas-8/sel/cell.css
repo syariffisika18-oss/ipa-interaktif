@@ -983,3 +983,18 @@
   .module-written-card{padding:12px}
   .module-written-label textarea{font-size:16px}
 }
+
+/* Prioritas keterbacaan ponsel: jangan memakai huruf 8–10 px untuk aktivitas IPA */
+.micro-seen-status{margin:0 0 9px;color:var(--primary,#0f766e);font-size:.82rem;font-weight:750}
+@media(max-width:640px) and (orientation:portrait){
+  .microscope-layout,.organelle-layout{grid-template-columns:minmax(0,1fr)!important}
+  .eval-options,.case-step-options{grid-template-columns:minmax(0,1fr)!important}
+  .microscope-control-card,.microscope-view-card{padding:12px!important}
+  .option-grid button,.lens-buttons button,.compare-buttons button,.eval-options button,
+  .case-step-options button{min-height:42px!important;padding:9px 11px!important;font-size:.85rem!important}
+  .micro-prompt,.scope-photo-note,.observe-readout p,.poe-explain,.organelle-info p,.organelle-facts,
+  .case-step p,.case-card-main p,.concept-note{font-size:.85rem!important;line-height:1.5!important}
+  .organelle-info h3,.cell-eval-card h3,.case-card-main h3{font-size:1rem!important}
+  .case-lock button,.zoom-tabs button,.cell-explain-tabs button{min-height:38px!important;font-size:.78rem!important}
+  .organelle-info{min-height:0!important;padding:13px!important}
+}
