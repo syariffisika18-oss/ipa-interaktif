@@ -812,6 +812,7 @@ body[data-mode="guru"] .visual-editor-toggle{display:inline-flex;align-items:cen
   width:100%;
   margin-top:10px;
 }
+.explain-model-next[hidden]{display:none!important}
 .digestion-example-card{
   padding:22px;
   border:1px solid var(--line);
