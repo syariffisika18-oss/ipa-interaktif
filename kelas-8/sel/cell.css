@@ -955,3 +955,31 @@
     margin-top:8px;
   }
 }
+
+
+/* Audit 2026-10-22: masukan tertulis dan transparansi bukti 5E */
+.microscope-view-card[hidden],
+.module-written-card[hidden],
+#poeExplain[hidden],
+.zoom-visual[hidden],
+#engageQuestion[hidden]{display:none!important}
+.module-written-label{display:block;font-weight:750;color:var(--text,#193630);line-height:1.45}
+.module-written-label textarea{
+  display:block;width:100%;box-sizing:border-box;min-height:88px;margin-top:8px;
+  padding:11px 13px;border:1px solid var(--line,#cbd5e1);border-radius:12px;
+  background:#fff;color:inherit;font:inherit;line-height:1.5;resize:vertical
+}
+.module-written-label textarea:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+.module-written-card{margin-top:14px;padding:14px;border:1px solid var(--line,#cbd5e1);border-radius:16px;background:#f4faf8}
+.module-written-card .primary-inline{margin-top:12px}
+.module-written-card .module-feedback{margin-top:10px}
+.photo-locked-note{display:grid;align-content:center;justify-items:center;gap:8px;min-height:180px;text-align:center;padding:18px;border:1px dashed #78a9a2;border-radius:16px;background:#f2faf7}
+.photo-locked-note p{margin:0;color:var(--muted,#526963);font-weight:650}
+.photo-locked-note strong{font-size:1rem}
+.photo-locked-note[hidden]{display:none!important}
+.organelle-hotspots button.is-viewed:not(.is-active){box-shadow:0 0 0 2px #0f766e}
+@media(max-width:640px){
+  .photo-locked-note{min-height:115px;padding:13px}
+  .module-written-card{padding:12px}
+  .module-written-label textarea{font-size:16px}
+}
