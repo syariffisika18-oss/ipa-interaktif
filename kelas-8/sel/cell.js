@@ -12,9 +12,16 @@
   }
 
   const state = loadState();
+  // Bukti aktivitas sebelumnya berbeda dengan audit 5E baru.
+  // Simpan identitas/refleksi, tetapi jangan gunakan tanda selesai lama sebagai bukti.
+  if (state.learningAuditVersion!=="20261022-5e1"){
+    state.activeStage=0;
+    state.completed=[];
+    state.learningAuditVersion="20261022-5e1";
+  }
 
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
-  let completed = Array.isArray(state.completed) ? new Set(state.completed) : new Set();
+  let completed = Array.isArray(state.completed) ? new Set(state.completed.filter(x=>Number.isInteger(x)&&x>=0&&x<stageCount)) : new Set();
   let mode = state.mode || config.defaultMode || "mandiri";
 
   if (!state.sessionId) state.sessionId = makeId();
@@ -115,7 +122,7 @@
     document.getElementById("modeNote").textContent =
       mode === "mandiri"
         ? "Petunjuk, feedback, dan progres membantu siswa belajar secara mandiri."
-        : "Jawaban dapat ditahan agar pendidik mengendalikan diskusi dan scaffolding.";
+        : "Gunakan simulasi untuk diskusi bersama guru; progres aktivitas tetap tercatat pada perangkat ini.";
 
     saveState();
   }
@@ -134,6 +141,10 @@
     });
 
     completeButton.addEventListener("click", () => {
+      if (!completed.has(activeStage) && !window.CELL_MODULE_BRIDGE?.isStageReady?.(activeStage)) {
+        showToast("Selesaikan aktivitas tahap ini terlebih dahulu.");
+        return;
+      }
       if (completed.has(activeStage)) {
         completed.delete(activeStage);
         showToast("Tanda selesai dibatalkan.");
@@ -142,6 +153,8 @@
         showToast("Tahap ditandai selesai.");
       }
       renderProgress();
+      nextButton.disabled = activeStage === stageCount - 1 || !completed.has(activeStage);
+      nextButton.style.opacity = nextButton.disabled ? ".45" : "1";
       markFeedbackChanged();
       saveState();
     });
@@ -185,6 +198,9 @@
   }
 
   function isTerminalInternalView(){
+    if (typeof window.CELL_MODULE_BRIDGE?.isStageReady === "function") {
+      return window.CELL_MODULE_BRIDGE.isStageReady(activeStage);
+    }
     switch(activeStage){
       // Orientasi: seluruh 8 ciri sudah diselesaikan dan tombol internal terakhir sudah ditutup.
       case 0:
@@ -262,7 +278,16 @@
   });
 
   function showStage(index, doScroll = true) {
-    activeStage = Math.max(0, Math.min(stageCount - 1, index));
+    index = Math.max(0, Math.min(stageCount - 1, index));
+    if (index > activeStage) {
+      for (let step = activeStage; step < index; step++) {
+        if (!completed.has(step)) {
+          showToast("Tandai tahap sebelumnya selesai setelah menyelesaikan aktivitasnya.");
+          return;
+        }
+      }
+    }
+    activeStage = index;
 
     panels.forEach((panel, i) => {
       panel.classList.toggle("is-active", i === activeStage);
@@ -274,8 +299,8 @@
     });
 
     prevButton.disabled = activeStage === 0;
-    nextButton.disabled = activeStage === stageCount - 1;
-    nextButton.style.opacity = activeStage === stageCount - 1 ? ".45" : "1";
+    nextButton.disabled = activeStage === stageCount - 1 || !completed.has(activeStage);
+    nextButton.style.opacity = nextButton.disabled ? ".45" : "1";
 
     completeButton.classList.toggle("is-complete", completed.has(activeStage));
     completeButton.textContent = completed.has(activeStage) ? "✓ Sudah selesai" : "Tandai selesai";
@@ -900,6 +925,16 @@
   const $ = (s, root=document) => root.querySelector(s);
   const all = (s, root=document) => [...root.querySelectorAll(s)];
 
+  const activityStorageKey="ipa-interaktif:kelas-8-sel:activities:v1";
+  let activitySave={};
+  try { activitySave=JSON.parse(localStorage.getItem(activityStorageKey)||"{}")||{}; }
+  catch { activitySave={}; }
+  function rememberActivity(key,value){
+    activitySave[key]=value;
+    try { localStorage.setItem(activityStorageKey,JSON.stringify(activitySave)); }
+    catch (error) { console.warn("Progres aktivitas belum dapat disimpan",error); }
+  }
+
   const moduleBridge=window.CELL_MODULE_BRIDGE||{};
   const engageZoomSeen=moduleBridge.engageZoomSeen||new Set([0]);
   const explainPageSeen=moduleBridge.explainPageSeen||new Set([0]);
@@ -912,181 +947,154 @@
     all("button", root).forEach(b=>b.classList.toggle("is-selected", b===target));
   }
 
-  // ---------- ORIENTASI: 8 ciri makhluk hidup ----------
-  const lifeItems = [
-  {scenario:"Kecambah bertambah tinggi dan daunnya semakin besar dari hari ke hari.", answer:"Tumbuh dan berkembang", distract:["Bergerak","Berkembang biak"]},
-  {scenario:"Putri malu menutup daunnya ketika disentuh.", answer:"Peka terhadap rangsangan", distract:["Bernapas","Mengeluarkan zat sisa"]},
-  {scenario:"Manusia menghirup oksigen dan melepaskan karbon dioksida melalui sistem pernapasan.", answer:"Bernapas", distract:["Peka terhadap rangsangan","Memerlukan nutrisi"]},
-  {scenario:"Burung mencari biji dan ulat untuk memperoleh bahan dan energi bagi tubuhnya.", answer:"Memerlukan nutrisi", distract:["Berkembang biak","Bergerak"]},
-  {scenario:"Ikan berenang mendekati sumber makanan.", answer:"Bergerak", distract:["Tumbuh dan berkembang","Mengeluarkan zat sisa"]},
-  {scenario:"Kucing menghasilkan anak yang memiliki ciri menyerupai induknya.", answer:"Berkembang biak", distract:["Peka terhadap rangsangan","Bernapas"]},
-  {scenario:"Ginjal membantu membuang zat sisa metabolisme melalui urine.", answer:"Mengeluarkan zat sisa", distract:["Bernapas","Memerlukan nutrisi"]},
-  {scenario:"Tubuh makhluk hidup tersusun atas satu atau banyak unit kecil yang disebut sel.", answer:"Tersusun dari sel", distract:["Berkembang biak","Peka terhadap rangsangan"]}
-];
-
-  let lifeIndex=0, lifeChoice="";
+  // ---------- ORIENTASI: cek prasyarat ringkas, tanpa membocorkan fenomena Engage ----------
+  const lifeItems=[
+    {scenario:"Biji kacang tumbuh menjadi kecambah yang semakin tinggi.",answer:"Tumbuh dan berkembang",distract:["Bergerak","Berkembang biak"]},
+    {scenario:"Daun putri malu menutup setelah disentuh.",answer:"Peka terhadap rangsangan",distract:["Bernapas","Mengeluarkan zat sisa"]},
+    {scenario:"Seekor burung memakan biji untuk memperoleh zat makanan dan energi.",answer:"Memerlukan nutrisi",distract:["Berkembang biak","Mengeluarkan zat sisa"]}
+  ];
+  const savedLife=activitySave.life||{};
+  let lifeIndex=Number.isInteger(savedLife.index)&&savedLife.index>=0&&savedLife.index<lifeItems.length?savedLife.index:0;
+  let lifeChoice="",lifeDone=savedLife.done===true;
+  function saveLife(){rememberActivity("life",{index:lifeIndex,done:lifeDone});}
   function renderLife(){
     const item=lifeItems[lifeIndex];
-    $("#lifeProgress").textContent=(lifeIndex+1)+" / "+lifeItems.length;
-    $("#lifeScenario").textContent=item.scenario;
+    $("#lifeProgress").textContent=lifeDone?lifeItems.length+" / "+lifeItems.length+" ✓":(lifeIndex+1)+" / "+lifeItems.length;
+    $("#lifeScenario").textContent=lifeDone?"Kamu sudah meninjau tiga ciri makhluk hidup. Sekarang, amati penyusun daun pada tahap Engage.":item.scenario;
     const opts=[item.answer,...item.distract].sort((a,b)=>a.localeCompare(b));
-    $("#lifeOptions").innerHTML=opts.map(x=>'<button type="button" data-life="'+x+'">'+x+'</button>').join("");
+    $("#lifeOptions").innerHTML=lifeDone?"":opts.map(x=>'<button type="button" data-life="'+x+'">'+x+'</button>').join("");
     lifeChoice="";
-    $("#lifeFeedback").className="module-feedback neutral";
-    $("#lifeFeedback").textContent="Belum diperiksa.";
-    $("#lifeAttempt").textContent="Pilih satu ciri, lalu kunci.";
-    $("#checkLife").disabled=false;
+    $("#lifeFeedback").className="module-feedback "+(lifeDone?"good":"neutral");
+    $("#lifeFeedback").textContent=lifeDone?"Prasyarat selesai. Lanjutkan dengan mengamati fenomena.":"Pilih satu jawaban, kemudian periksa.";
+    $("#lifeAttempt").textContent=lifeDone?"Tiga situasi telah ditinjau.":"Tentukan ciri yang paling sesuai.";
+    $("#checkLife").hidden=lifeDone;
+    $("#checkLife").disabled=lifeDone;
     $("#nextLife").hidden=true;
+    updateBottomNavVisibility();
   }
   $("#lifeOptions")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-life]"); if(!b||$("#checkLife").disabled)return;
-    lifeChoice=b.dataset.life; setSelected($("#lifeOptions"),b);
+    const b=e.target.closest("[data-life]");
+    if(!b||$("#checkLife").disabled)return;
+    lifeChoice=b.dataset.life;
+    setSelected($("#lifeOptions"),b);
   });
   $("#checkLife")?.addEventListener("click",()=>{
-    if(!lifeChoice){$("#lifeFeedback").textContent="Pilih satu jawaban terlebih dahulu.";return}
-    const item=lifeItems[lifeIndex];
-    const good=lifeChoice===item.answer;
+    if(!lifeChoice){$("#lifeFeedback").textContent="Pilih satu jawaban terlebih dahulu.";return;}
+    const good=lifeChoice===lifeItems[lifeIndex].answer;
     $("#lifeFeedback").className="module-feedback "+(good?"good":"warn");
-    if (good) {
-  if (lifeIndex === lifeItems.length - 1) {
-    $("#lifeFeedback").className = "module-feedback good";
-    $("#lifeFeedback").innerHTML =
-      "<b>Tepat.</b> Makhluk hidup <b>tersusun dari sel</b>. Karena sel menyusun tubuh sekaligus menjalankan berbagai proses kehidupan, sel menjadi dasar untuk memahami kehidupan. <b>Selanjutnya, kita akan melihat sel lebih dekat.</b>";
-  } else {
-    $("#lifeFeedback").className = "module-feedback good";
-    $("#lifeFeedback").innerHTML =
-      "<b>Tepat.</b> Situasi tersebut menunjukkan ciri <b>"+item.answer+"</b>.";
-  }
-} else {
-  if (lifeIndex === lifeItems.length - 1) {
-    $("#lifeFeedback").className = "module-feedback warn";
-    $("#lifeFeedback").innerHTML =
-      "<b>Belum tepat.</b> Ciri yang dimaksud adalah <b>tersusun dari sel</b>. Sel merupakan unit penyusun makhluk hidup dan menjadi jembatan menuju materi yang akan kita pelajari berikutnya.";
-  } else {
-    $("#lifeFeedback").className = "module-feedback warn";
-    $("#lifeFeedback").innerHTML =
-      "<b>Belum tepat.</b> Ciri yang paling sesuai adalah <b>"+item.answer+"</b>. Perhatikan perubahan atau respons yang terjadi pada organisme.";
-  }
-}
+    $("#lifeFeedback").textContent=(good?"Sesuai. ":"Periksa kembali cirinya. ")+
+      "Jawaban yang tepat: "+lifeItems[lifeIndex].answer+".";
     $("#checkLife").disabled=true;
     all("#lifeOptions button").forEach(b=>b.disabled=true);
     $("#nextLife").hidden=false;
-    $("#nextLife").textContent=lifeIndex===lifeItems.length-1?"Lanjut ke sel →":"Situasi berikutnya →";
+    $("#nextLife").textContent=lifeIndex===lifeItems.length-1?"Selesai mengamati →":"Situasi berikutnya →";
   });
   $("#nextLife")?.addEventListener("click",()=>{
-    if(lifeIndex<lifeItems.length-1){lifeIndex++;renderLife()}
-    else{
-      $("#nextLife").hidden=true;
-      $("#lifeAttempt").textContent="8 ciri selesai. Selanjutnya: melihat sel lebih dekat.";
-      $("#lifeProgress").textContent="8 / 8 ✓";
-    }
+    if(lifeIndex<lifeItems.length-1){lifeIndex++;saveLife();renderLife();}
+    else {lifeDone=true;saveLife();renderLife();}
   });
   renderLife();
 
-  // ---------- ENGAGE: progressive zoom Guided Inquiry ----------
-  let zoomIndex=0;
-  let maxZoomUnlocked=0;
-  let engageChoice="";
-  let engageLocked=false;
-
+  // ---------- ENGAGE: amati fenomena, simpan prediksi serta alasan ----------
+  const savedEngage=activitySave.engage||{};
+  let zoomIndex=Number.isInteger(savedEngage.zoom)&&savedEngage.zoom>=0&&savedEngage.zoom<=2?savedEngage.zoom:0;
+  let maxZoomUnlocked=Number.isInteger(savedEngage.max)&&savedEngage.max>=0&&savedEngage.max<=2?savedEngage.max:0;
+  let engageChoice=["kosong","bagian","daun"].includes(savedEngage.choice)?savedEngage.choice:"";
+  let engageLocked=savedEngage.locked===true&&!!engageChoice&&typeof savedEngage.reason==="string"&&savedEngage.reason.trim().length>=12;
+  if(!engageLocked)zoomIndex=Math.min(zoomIndex,1);
+  if(zoomIndex>maxZoomUnlocked)maxZoomUnlocked=zoomIndex;
+  $("#engageReason").value=typeof savedEngage.reason==="string"?savedEngage.reason.slice(0,300):"";
+  function saveEngage(){rememberActivity("engage",{zoom:zoomIndex,max:maxZoomUnlocked,choice:engageChoice,locked:engageLocked,reason:$("#engageReason").value});}
   function renderZoom(){
     engageZoomSeen.add(zoomIndex);
-    all("[data-zoom-panel]").forEach(p=>{
-      p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;
-    });
-
+    all("[data-zoom-panel]").forEach(p=>{p.hidden=Number(p.dataset.zoomPanel)!==zoomIndex;});
     all("#zoomTabs [data-zoom]").forEach(btn=>{
-      const i=Number(btn.dataset.zoom);
-      const unlocked=i<=maxZoomUnlocked;
+      const i=Number(btn.dataset.zoom),unlocked=i<=maxZoomUnlocked;
       btn.disabled=!unlocked;
       btn.classList.toggle("is-unlocked",unlocked);
       btn.classList.toggle("is-active",i===zoomIndex);
     });
-
     $("#zoomPrev").hidden=zoomIndex===0;
-
     if(zoomIndex===0){
       $("#zoomGuide").textContent="Apa yang mungkin terlihat jika daun diperbesar?";
       $("#zoomNext").hidden=false;
       $("#zoomNext").textContent="Perbesar daun →";
       $("#engageQuestion").hidden=true;
     }else if(zoomIndex===1){
-      $("#zoomGuide").textContent=engageLocked
-        ?"Prediksi sudah dikunci. Sekarang buka unit yang diamati."
-        :"Amati unit-unit kecil ini, lalu buat dugaan sebelum memperbesar lagi.";
+      $("#zoomGuide").textContent=engageLocked?"Prediksi tersimpan. Buka pengamatan sel.":"Amati unit kecil, lalu tulis dugaan dan alasannya.";
       $("#engageQuestion").hidden=false;
       $("#zoomNext").hidden=!engageLocked;
       $("#zoomNext").textContent="Perbesar salah satu unit →";
     }else{
-      $("#zoomGuide").textContent="Bandingkan hasil pengamatan dengan prediksimu.";
+      $("#zoomGuide").textContent="Bandingkan pengamatan dengan prediksi dan alasan awalmu.";
       $("#zoomNext").hidden=true;
       $("#engageQuestion").hidden=false;
     }
+    $("#engageReason").readOnly=engageLocked;
+    $("#lockEngage").disabled=engageLocked;
+    all("#engageOptions button").forEach(b=>{
+      b.disabled=engageLocked;
+      b.classList.toggle("is-selected",b.dataset.engage===engageChoice);
+    });
+    if(engageLocked){
+      $("#engageFeedback").className="module-feedback neutral";
+      $("#engageFeedback").textContent=zoomIndex===2
+        ?"Model sel menunjukkan beberapa bagian di dalamnya. Bandingkan dengan alasan yang kamu tulis."
+        :"Prediksi dan alasan tersimpan. Buka hasil pengamatan untuk membandingkannya.";
+    }
+    saveEngage();
     updateBottomNavVisibility();
   }
-
   $("#zoomNext")?.addEventListener("click",()=>{
-    if(zoomIndex===0){
-      zoomIndex=1;
-      maxZoomUnlocked=Math.max(maxZoomUnlocked,1);
-      renderZoom();
-      return;
-    }
-    if(zoomIndex===1&&engageLocked){
-      zoomIndex=2;
-      maxZoomUnlocked=2;
-      renderZoom();
-
-      const good=engageChoice==="sel";
-      $("#engageFeedback").className="module-feedback "+(good?"good":"warn");
-      $("#engageFeedback").innerHTML=good
-        ? "<b>Prediksimu sesuai pengamatan.</b> Unit tersebut adalah sel. Selanjutnya kita akan menyelidiki mengapa sel disebut unit kehidupan."
-        : "<b>Bandingkan kembali dengan pengamatan.</b> Unit yang ditunjukkan adalah sel. Pada Explain nanti kita akan membedakan sel dari molekul dan organ.";
-    }
+    if(zoomIndex===0){zoomIndex=1;maxZoomUnlocked=Math.max(maxZoomUnlocked,1);renderZoom();}
+    else if(zoomIndex===1&&engageLocked){zoomIndex=2;maxZoomUnlocked=2;renderZoom();}
   });
-
-  $("#zoomPrev")?.addEventListener("click",()=>{
-    if(zoomIndex>0){
-      zoomIndex--;
-      renderZoom();
-    }
-  });
-
+  $("#zoomPrev")?.addEventListener("click",()=>{if(zoomIndex>0){zoomIndex--;renderZoom();}});
   $("#zoomTabs")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-zoom]");
-    if(!b||b.disabled)return;
-    const target=Number(b.dataset.zoom);
-    if(target===2&&!engageLocked)return;
-    zoomIndex=target;
-    renderZoom();
+    const b=e.target.closest("[data-zoom]");if(!b||b.disabled)return;
+    const target=Number(b.dataset.zoom);if(target===2&&!engageLocked)return;
+    zoomIndex=target;renderZoom();
   });
-
   $("#engageOptions")?.addEventListener("click",e=>{
-    const b=e.target.closest("[data-engage]");
-    if(!b||engageLocked)return;
-    engageChoice=b.dataset.engage;
-    setSelected($("#engageOptions"),b);
+    const b=e.target.closest("[data-engage]");if(!b||engageLocked)return;
+    engageChoice=b.dataset.engage;setSelected($("#engageOptions"),b);saveEngage();
   });
-
+  $("#engageReason")?.addEventListener("input",saveEngage);
   $("#lockEngage")?.addEventListener("click",()=>{
-    if(!engageChoice){
-      $("#engageFeedback").textContent="Pilih satu dugaan terlebih dahulu.";
+    if(!engageChoice||$("#engageReason").value.trim().length<12){
+      $("#engageFeedback").className="module-feedback warn";
+      $("#engageFeedback").textContent="Pilih satu prediksi dan tulis alasan minimal 12 karakter.";
       return;
     }
-
-    engageLocked=true;
-    $("#lockEngage").disabled=true;
-    all("#engageOptions button").forEach(b=>b.disabled=true);
-
-    $("#engageFeedback").className="module-feedback neutral";
-    $("#engageFeedback").innerHTML="<b>Prediksi dikunci.</b> Jawaban belum dibuka. Tekan <b>Perbesar salah satu unit</b> untuk menguji dugaanmu.";
-    renderZoom();
+    engageLocked=true;renderZoom();
   });
-
   renderZoom();
 
   // ---------- EXPLORE: POE mikroskop ----------
-  let objective=4, magChoice="", predictionLocked=false;
+  const savedMicro=activitySave.microscope||{};
+  let objective=[4,10,40].includes(savedMicro.objective)?savedMicro.objective:4;
+  let magChoice="", predictionLocked=savedMicro.locked===true;
+  const microSeen=new Set(Array.isArray(savedMicro.seen)?savedMicro.seen.filter(v=>[4,10,40].includes(v)):[]);
+  let microConclusionSaved=predictionLocked&&microSeen.size===3&&savedMicro.concluded===true
+    &&typeof savedMicro.text==="string"&&savedMicro.text.trim().length>=25;
+  $("#microConclusion").value=typeof savedMicro.text==="string"?savedMicro.text.slice(0,450):"";
+  function saveMicro(){rememberActivity("microscope",{objective,locked:predictionLocked,seen:[...microSeen],concluded:microConclusionSaved,text:$("#microConclusion").value});}
+  function refreshMicroInquiry(){
+    $("#microscopeView").hidden=!predictionLocked;
+    $("#scopeLockedNotice").hidden=predictionLocked;
+    $("#observedObjectives").textContent="Sudah diamati: "+microSeen.size+" dari 3 objektif (4×, 10×, 40×).";
+    $("#microAnalysis").hidden=!predictionLocked||microSeen.size!==3;
+    $("#poeExplain").hidden=!microConclusionSaved;
+    $("#saveMicroAnalysis").disabled=microConclusionSaved;
+    $("#microConclusion").readOnly=microConclusionSaved;
+    if(microConclusionSaved){
+      $("#microAnalysisFeedback").className="module-feedback good";
+      $("#microAnalysisFeedback").textContent="Kesimpulan tersimpan. Bandingkan penjelasanmu dengan konsep di bawah.";
+    }
+    if(explorePanel)explorePanel.dataset.exploreFinished=String(microConclusionSaved&&microSeen.size===3);
+    saveMicro();
+    updateBottomNavVisibility();
+  }
   const explorePanel=document.querySelector(".explore-panel");
   if(explorePanel) explorePanel.dataset.exploreFinished="false";
   const ocular=()=>10;
@@ -1200,17 +1208,14 @@
 
   function revealMicroscope(animate=false){
     const item=microPhotos[objective];
-    if(predictionLocked && explorePanel){
-      explorePanel.dataset.exploreFinished="true";
-      updateBottomNavVisibility();
-    }
+    if(predictionLocked)microSeen.add(objective);
     syncObjectiveVisual(animate);
 
     $("#totalHidden").textContent=item.total+"×";
     $("#totalMagnification").textContent=item.total+"×";
     $("#fieldObservation").textContent=item.observation;
-    $("#poeExplain").hidden=false;
-    $("#microscopeModeBadge").textContent="OBSERVE + EXPLAIN";
+    $("#microscopeModeBadge").textContent=microConclusionSaved?"PREDICT → OBSERVE → EXPLAIN":"OBSERVE";
+    refreshMicroInquiry();
   }
 
 
@@ -1315,6 +1320,7 @@
   });
 
   $("#lockMagnification")?.addEventListener("click",()=>{
+    if(predictionLocked)return;
     if(!magChoice){
       $("#magnificationFeedback").textContent="Pilih hasil pembesaran total terlebih dahulu.";
       return;
@@ -1334,13 +1340,45 @@
     updateBottomNavVisibility();
   });
 
+  $("#microConclusion")?.addEventListener("input",()=>{
+    if(microConclusionSaved)return;
+    saveMicro();
+  });
+  $("#saveMicroAnalysis")?.addEventListener("click",()=>{
+    if(microSeen.size!==3){return;}
+    if($("#microConclusion").value.trim().length<25){
+      $("#microAnalysisFeedback").className="module-feedback warn";
+      $("#microAnalysisFeedback").textContent="Tuliskan hasil perbandingan dan alasanmu minimal 25 karakter.";
+      return;
+    }
+    microConclusionSaved=true;
+    refreshMicroInquiry();
+  });
   buildMagOptions();
   updateLensPreview(false);
+  $("#lockMagnification").disabled=predictionLocked;
+  if(predictionLocked){
+    $("#magnificationOptions").innerHTML="";
+    $("#magnificationFeedback").className="module-feedback neutral";
+    $("#magnificationFeedback").textContent="Prediksi telah dikunci. Bandingkan foto dengan memilih ketiga objektif.";
+    revealMicroscope(false);
+  }
 
   // ---------- EXPLAIN tabs ----------
+  const savedExplain=activitySave.explain||{};
+  if(Array.isArray(savedExplain.pages))savedExplain.pages.filter(i=>Number.isInteger(i)&&i>=0&&i<4).forEach(i=>explainPageSeen.add(i));
+  function saveExplain(){
+    rememberActivity("explain",{
+      pages:[...explainPageSeen],
+      animal:[...seenAnimal],
+      plant:[...seenPlant],
+      compare:[...compareSeen]
+    });
+  }
   all("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
     const i=Number(btn.dataset.cellPage);
     explainPageSeen.add(i);
+    saveExplain();
     all("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
     all("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
     updateBottomNavVisibility();
@@ -1349,7 +1387,7 @@
   const organelles = {
     nucleus:{
       name:"Nukleus",
-      function:"Mengatur berbagai kegiatan sel dan menyimpan materi genetik (DNA), yaitu informasi yang mengatur sifat dan kerja sel.",
+      function:"Mengatur kegiatan sel dan menyimpan DNA, yaitu informasi sifat makhluk hidup.",
       impact:"Pengaturan kegiatan sel dan penyimpanan informasi genetik dapat terganggu."
     },
     nucleolus:{
@@ -1359,32 +1397,32 @@
     },
     er:{
       name:"Retikulum endoplasma",
-      function:"Membantu membuat dan memindahkan berbagai zat di dalam sel. RE kasar ditempeli ribosom dan membantu pembuatan protein.",
+      function:"RE kasar membantu membuat protein; RE halus membantu membuat lemak.",
       impact:"Pembuatan dan pemindahan zat tertentu di dalam sel dapat terganggu."
     },
     golgi:{
       name:"Badan Golgi",
-      function:"Mengubah, mengemas, dan mengirim protein atau zat lain ke bagian sel yang membutuhkannya.",
+      function:"Mengemas dan mengirim protein ke bagian sel yang membutuhkannya.",
       impact:"Pengemasan dan pengiriman zat di dalam sel dapat terganggu."
     },
     mitochondria:{
       name:"Mitokondria",
-      function:"Tempat berlangsungnya respirasi seluler, yaitu proses menghasilkan energi dari zat makanan untuk digunakan sel.",
+      function:"Tempat respirasi seluler yang menyediakan energi bagi kegiatan sel.",
       impact:"Sel dapat kekurangan energi untuk menjalankan kegiatannya."
     },
     lysosome:{
       name:"Lisosom",
-      function:"Mengandung enzim, yaitu protein yang membantu menguraikan zat tertentu dan bagian sel yang sudah rusak.",
+      function:"Menguraikan zat dan bagian sel yang rusak dengan bantuan enzim.",
       impact:"Zat dan bagian sel yang seharusnya diuraikan dapat menumpuk."
     },
     ribosome:{
       name:"Ribosom",
-      function:"Membuat protein yang diperlukan sel untuk pertumbuhan dan berbagai kegiatannya.",
+      function:"Membuat protein yang dibutuhkan sel.",
       impact:"Pembuatan protein yang dibutuhkan sel dapat terganggu."
     },
     membrane:{
       name:"Membran sel",
-      function:"Membatasi sel dan mengatur zat yang boleh masuk dan keluar dari sel.",
+      function:"Membatasi sel dan mengatur zat yang masuk serta keluar.",
       impact:"Keluar-masuknya zat antara sel dan lingkungannya dapat terganggu."
     },
     wall:{
@@ -1394,22 +1432,28 @@
     },
     cytoplasm:{
       name:"Sitoplasma",
-      function:"Cairan kental di dalam sel yang menjadi tempat organel berada dan berbagai reaksi sel berlangsung.",
+      function:"Cairan tempat organel berada dan berbagai reaksi sel berlangsung.",
       impact:"Berbagai proses yang berlangsung di dalam sel dapat terganggu."
     },
     vacuole:{
       name:"Vakuola",
-      function:"Menyimpan air dan berbagai zat. Pada sel tumbuhan, vakuola juga membantu menjaga sel tetap kaku.",
+      function:"Menyimpan air dan membantu sel tumbuhan tetap tegang.",
       impact:"Sel tumbuhan dapat kehilangan kekakuannya ketika kandungan air berkurang."
     },
     chloroplast:{
       name:"Kloroplas",
-      function:"Tempat fotosintesis, yaitu proses tumbuhan membuat makanan dengan menggunakan energi cahaya.",
+      function:"Tempat fotosintesis, yaitu proses membuat makanan dengan bantuan cahaya.",
       impact:"Kemampuan sel tumbuhan membuat makanan melalui fotosintesis dapat terganggu."
     }
   };
 
-  const seenAnimal=new Set(), seenPlant=new Set();
+  const savedAnimal=Array.isArray(savedExplain.animal)?savedExplain.animal.filter(k=>["nucleus","nucleolus","er","ribosome","golgi","mitochondria","lysosome","cytoplasm","membrane"].includes(k)):[];
+  const savedPlant=Array.isArray(savedExplain.plant)?savedExplain.plant.filter(k=>["nucleus","nucleolus","er","ribosome","golgi","chloroplast","vacuole","cytoplasm","membrane","wall","mitochondria"].includes(k)):[];
+  const seenAnimal=new Set(savedAnimal), seenPlant=new Set(savedPlant);
+  $("#animalSeen").textContent=seenAnimal.size+" / 9 dikenali";
+  $("#plantSeen").textContent=seenPlant.size+" / 11 dikenali";
+  all(".animal-hotspots [data-organelle]").forEach(b=>b.classList.toggle("is-viewed",seenAnimal.has(b.dataset.organelle)));
+  all(".plant-hotspots [data-organelle]").forEach(b=>b.classList.toggle("is-viewed",seenPlant.has(b.dataset.organelle)));
   function showOrganelle(kind,key,button){
     const data=organelles[key]; if(!data)return;
     const info=kind==="animal"?$("#animalOrganelleInfo"):$("#plantOrganelleInfo");
@@ -1420,6 +1464,9 @@
     info.innerHTML='<span class="organelle-number">'+hotspotLabel+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
     const seen=kind==="animal"?seenAnimal:seenPlant;
     seen.add(key);
+    button.classList.add("is-viewed");
+    saveExplain();
+    updateBottomNavVisibility();
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
   all(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
@@ -1432,19 +1479,23 @@
     ["ribosome","Ribosom","both"],["golgi","Badan Golgi","both"],["wall","Dinding sel","plant"],
     ["chloroplast","Kloroplas","plant"],["vacuole","Vakuola besar","plant"],["lysosome","Lisosom","animal"]
   ];
-  const compareSeen=new Set();
-  $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'">'+n+'</button>').join("");
+  const compareSeen=new Set(Array.isArray(savedExplain.compare)?savedExplain.compare.filter(k=>compareItems.some(item=>item[0]===k)):[]);
+  $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'" class="'+(compareSeen.has(k)?"is-viewed":"")+'">'+n+'</button>').join("");
+  $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
   $("#compareButtons").addEventListener("click",e=>{
     const b=e.target.closest("[data-compare]"); if(!b)return;
     all("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
     compareSeen.add(b.dataset.compare);
     b.classList.add("is-viewed");
+    saveExplain();
     $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
     const item=compareItems.find(x=>x[0]===b.dataset.compare);
     const where=item[2], name=item[1];
     const animal=where==="both"||where==="animal", plant=where==="both"||where==="plant";
     $("#animalCompare").innerHTML='<span>SEL HEWAN</span><strong>'+(animal?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(animal?" terdapat pada model sel hewan.":" bukan ciri khas model sel hewan pada pembelajaran ini.")+'</p>';
-    $("#plantCompare").innerHTML='<span>SEL TUMBUHAN</span><strong>'+(plant?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(plant?" terdapat pada model sel tumbuhan.":" bukan ciri khas model sel tumbuhan pada pembelajaran ini.")+'</p>';
+    $("#plantCompare").innerHTML=where==="animal"&&item[0]==="lysosome"
+      ? '<span>SEL TUMBUHAN</span><strong>Fungsi serupa</strong><p>Vakuola pada banyak sel tumbuhan membantu menguraikan zat, seperti fungsi lisosom.</p>'
+      : '<span>SEL TUMBUHAN</span><strong>'+(plant?"✓ Ada":"— Tidak khas")+'</strong><p>'+name+(plant?" terdapat pada model sel tumbuhan.":" bukan ciri khas model sel tumbuhan pada pembelajaran ini.")+'</p>';
     updateBottomNavVisibility();
   });
 
@@ -1517,12 +1568,21 @@
     }
   ];
 
-  const caseStates=cases.map(()=>({
+  const caseStates=cases.map((_,i)=>({
     organSel:"",organAttempts:0,organFirst:null,organFinal:null,organDone:false,
-    reasonSel:"",reasonAttempts:0,reasonFirst:null,reasonFinal:null,reasonDone:false
+    reasonSel:"",reasonAttempts:0,reasonFirst:null,reasonFinal:null,reasonDone:false,
+    ...(Array.isArray(activitySave.cases)?activitySave.cases[i]||{}:{})
   }));
-  let activeCase=0;
+  let activeCase=Number.isInteger(activitySave.activeCase)&&activitySave.activeCase>=0&&activitySave.activeCase<cases.length?activitySave.activeCase:0;
+  function saveCases(){
+    rememberActivity("cases",caseStates);
+    rememberActivity("activeCase",activeCase);
+  }
 
+  function rotateChoices(items,step){
+    const k=step%items.length;
+    return [...items.slice(k),...items.slice(0,k)];
+  }
   function attemptText(attempts,done){
     if(done)return attempts===1?"Tepat pada jawaban pertama":"Selesai setelah diperbaiki";
     if(attempts===1)return "Sudah menjawab 1 kali • 1 kesempatan tersisa";
@@ -1545,20 +1605,32 @@
     $("#casePanel").innerHTML=
       '<article class="case-card-main"><p class="stage-kicker">KASUS '+(activeCase+1)+'</p><h3>'+c.title+'</h3><p>'+c.text+'</p></article>'+
       '<section class="case-step"><p><b>Langkah 1 — Organel mana yang fungsinya paling sesuai dengan kondisi pada kasus ini?</b></p><div class="case-step-options" id="caseOrganOpts">'+
-      c.organs.map(x=>'<button type="button" data-case-organ="'+x+'" class="'+(s.organSel===x?"is-selected":"")+'" '+(s.organDone?"disabled":"")+'>'+x+'</button>').join("")+
-      '</div><div class="case-lock"><span>'+attemptText(s.organAttempts,s.organDone)+'</span><button type="button" id="lockCaseOrgan" '+(s.organDone?"disabled":"")+'>Kunci pilihan organel</button></div><div id="caseOrganFeedback" class="module-feedback neutral">'+(s.organDone?(s.organFinal?"Pilihan organelmu tepat.":"Baca pembahasan, lalu lanjutkan ke langkah 2."):"Pilih satu organel yang menurutmu paling sesuai.")+'</div></section>'+
+      rotateChoices(c.organs,activeCase+1).map(x=>'<button type="button" data-case-organ="'+x+'" class="'+(s.organSel===x?"is-selected":"")+'" '+(s.organDone?"disabled":"")+'>'+x+'</button>').join("")+
+      '</div><div class="case-lock"><span>'+attemptText(s.organAttempts,s.organDone)+'</span><button type="button" id="lockCaseOrgan" '+(s.organDone?"disabled":"")+'>Kunci pilihan organel</button></div><div id="caseOrganFeedback" class="module-feedback neutral">'+(s.organDone?(s.organFinal?"Pilihan organelmu tepat: "+c.organ+".":"Organel yang tepat: "+c.organ+"."):"Pilih satu organel yang menurutmu paling sesuai.")+'</div></section>'+
       '<section class="case-step '+(!s.organDone?"locked-step":"")+'"><p><b>Langkah 2 — Mengapa organel tersebut paling sesuai?</b></p><div class="case-step-options" id="caseReasonOpts">'+
-      c.reasons.map(x=>'<button type="button" data-case-reason="'+x.replace(/"/g,'&quot;')+'" class="'+(s.reasonSel===x?"is-selected":"")+'" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>'+x+'</button>').join("")+
-      '</div><div class="case-lock"><span>'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasanmu tepat.":"Baca pembahasan alasan yang benar."):"Pilih alasan yang paling tepat menjelaskan pilihan organelmu."))+'</div></section>';
+      rotateChoices(c.reasons,activeCase*2+1).map(x=>'<button type="button" data-case-reason="'+x.replace(/"/g,'&quot;')+'" class="'+(s.reasonSel===x?"is-selected":"")+'" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>'+x+'</button>').join("")+
+      '</div><div class="case-lock"><span>'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasanmu tepat: "+c.reason:"Pembahasan: "+c.reason):"Pilih alasan yang paling tepat menjelaskan pilihan organelmu."))+'</div></section>';
+    if(s.reasonDone&&activeCase<cases.length-1){
+      $("#casePanel").insertAdjacentHTML("beforeend",'<button type="button" class="primary-inline case-next-action" id="nextCase">Kasus berikutnya →</button>');
+    }
     renderCaseTabs();
   }
-  $("#caseTabs").addEventListener("click",e=>{const b=e.target.closest("[data-case]");if(!b)return;activeCase=Number(b.dataset.case);renderCase()});
+  $("#caseTabs").addEventListener("click",e=>{const b=e.target.closest("[data-case]");if(!b)return;activeCase=Number(b.dataset.case);saveCases();renderCase()});
   $("#casePanel").addEventListener("click",e=>{
     const c=cases[activeCase], s=caseStates[activeCase];
+    if(e.target.closest("#nextCase")){
+      if(s.reasonDone&&activeCase<cases.length-1){
+        activeCase++;
+        saveCases();
+        renderCase();
+        updateBottomNavVisibility();
+      }
+      return;
+    }
     let b=e.target.closest("[data-case-organ]");
-    if(b&&!s.organDone){s.organSel=b.dataset.caseOrgan;renderCase();return}
+    if(b&&!s.organDone){s.organSel=b.dataset.caseOrgan;saveCases();renderCase();return}
     b=e.target.closest("[data-case-reason]");
-    if(b&&s.organDone&&!s.reasonDone){s.reasonSel=b.dataset.caseReason;renderCase();return}
+    if(b&&s.organDone&&!s.reasonDone){s.reasonSel=b.dataset.caseReason;saveCases();renderCase();return}
     if(e.target.closest("#lockCaseOrgan")){
       const fbText=()=>{
         if(!s.organSel)return "Pilih satu organel yang menurutmu paling sesuai sebelum mengunci.";
@@ -1569,7 +1641,7 @@
         if(!s.organDone)return "<b>Belum tepat.</b> "+c.hintOrgan+" Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
         return "<b>Dua kali menjawab selesai.</b> Organel yang paling sesuai adalah <b>"+c.organ+"</b>. Perhatikan kembali fungsi organel tersebut sebelum melanjutkan ke langkah 2.";
       };
-      const txt=fbText();renderCase();const f=$("#caseOrganFeedback");f.className="module-feedback "+(s.organFinal?"good":"warn");f.innerHTML=txt;return;
+      const txt=fbText();saveCases();renderCase();const f=$("#caseOrganFeedback");f.className="module-feedback "+(s.organFinal?"good":"warn");f.innerHTML=txt;return;
     }
     if(e.target.closest("#lockCaseReason")){
       if(!s.reasonSel)return;
@@ -1580,62 +1652,105 @@
       if(good)txt="<b>Tepat.</b> "+c.reason;
       else if(!s.reasonDone)txt="<b>Belum tepat.</b> Cocokkan kembali alasanmu dengan fungsi utama "+c.organ+". Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
       else txt="<b>Dua kali menjawab selesai.</b> Penjelasan yang paling tepat: "+c.reason;
-      renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
+      saveCases();renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
       updateBottomNavVisibility();
     }
   });
   renderCase();
 
-  // ---------- EVALUATE ----------
+  // ---------- EVALUATE: 10 butir, jawaban dan hasil tahan muat ulang ----------
   const evalItems=[
-    {domain:"Konsep sel",q:"Unit struktural dan fungsional terkecil makhluk hidup adalah ...",opts:["Jaringan","Sel","Organ","Sistem organ"],a:1,why:"Sel merupakan unit terkecil yang masih menjalankan fungsi kehidupan."},
-    {domain:"Mikroskop",q:"Mikroskop menggunakan okuler 10× dan objektif 40×. Pembesaran totalnya adalah ...",opts:["50×","100×","400×","4.000×"],a:2,why:"Pembesaran total = 10× × 40× = 400×."},
-    {domain:"Mikroskop",q:"Okuler 15× dipasangkan dengan objektif 10×. Pembesaran totalnya adalah ...",opts:["25×","150×","1500×","5×"],a:1,why:"15× × 10× = 150×."},
-    {domain:"Organel",q:"Organel yang menjadi tempat sintesis protein adalah ...",opts:["Ribosom","Lisosom","Vakuola","Kloroplas"],a:0,why:"Ribosom merupakan tempat sintesis protein."},
-    {domain:"Organel",q:"Sel yang membutuhkan banyak energi untuk bekerja diperkirakan memiliki banyak ...",opts:["Mitokondria","Badan Golgi","Dinding sel","Nukleolus"],a:0,why:"Mitokondria berperan utama dalam respirasi seluler dan penyediaan energi."},
-    {domain:"Sel tumbuhan",q:"Struktur yang secara langsung berperan dalam fotosintesis adalah ...",opts:["Kloroplas","Vakuola","Membran sel","Lisosom"],a:0,why:"Kloroplas mengandung klorofil dan merupakan tempat fotosintesis."},
-    {domain:"Sel hewan & tumbuhan",q:"Struktur yang terdapat pada sel hewan maupun sel tumbuhan adalah ...",opts:["Dinding sel","Kloroplas","Membran sel","Vakuola besar"],a:2,why:"Membran sel dimiliki keduanya; dinding sel dan kloroplas merupakan ciri penting sel tumbuhan."},
-    {domain:"Struktur–fungsi",q:"Jika kemampuan mengatur keluar-masuknya zat terganggu, bagian yang paling langsung perlu diperiksa adalah ...",opts:["Membran sel","Ribosom","Nukleolus","Kloroplas"],a:0,why:"Membran sel mengatur pertukaran zat secara selektif."},
-    {domain:"Sel tumbuhan",q:"Sel tumbuhan kehilangan banyak air dan menjadi kurang tegang meskipun dinding sel tetap utuh. Struktur yang paling berkaitan adalah ...",opts:["Vakuola","Badan Golgi","Ribosom","Nukleus"],a:0,why:"Vakuola menyimpan air dan membantu mempertahankan tekanan turgor."},
-    {domain:"Mikroskop",q:"Ketika pembesaran objektif dinaikkan dari 10× menjadi 40×, pengamatan umumnya menunjukkan bahwa ...",opts:["Objek tampak lebih kecil dan bidang pandang lebih sempit","Objek tampak lebih besar dan bidang pandang lebih sempit","Objek tampak sama besar dan bidang pandang lebih luas","Objek hilang karena pembesaran total selalu berkurang"],a:1,why:"Pembesaran lebih tinggi membuat objek tampak lebih besar, sedangkan area bidang pandang yang terlihat menjadi lebih sempit."}
+    {domain:"Pengamatan sel",q:"Saat mengamati epidermis bawang, Rani menemukan banyak ruang kecil berbatas jelas yang menyusun jaringan. Ruang-ruang tersebut paling tepat disebut ...",opts:["Organ","Sel","Sistem organ","Molekul"],a:1,why:"Jaringan tersusun atas sel-sel yang memiliki batas dan menjalankan fungsi kehidupan."},
+    {domain:"Mikroskop",q:"Mikroskop memakai okuler 10× dan objektif 40×. Pembesaran total yang digunakan adalah ...",opts:["50×","100×","400×","4.000×"],a:2,why:"Pembesaran total = okuler × objektif = 10 × 40 = 400 kali."},
+    {domain:"Mikroskop",q:"Jika okuler 15× dipasangkan dengan objektif 10×, berapakah pembesaran totalnya?",opts:["1.500×","150×","25×","5×"],a:1,why:"15 × 10 = 150 kali."},
+    {domain:"Penggunaan mikroskop",q:"Objek sulit ditemukan pada objektif 40×. Langkah awal yang paling tepat untuk mencari kembali objek adalah ...",opts:["Langsung memakai minyak imersi","Memutar makrometer pada objektif 40× hingga mentok","Mengganti preparat tanpa pemeriksaan","Kembali ke objektif rendah lalu pusatkan objek"],a:3,why:"Mulailah dengan objektif rendah dan pusatkan objek sebelum menaikkan pembesaran. Hindari memaksa pemutar fokus kasar pada objektif tinggi."},
+    {domain:"Struktur dan fungsi",q:"Sel otot bekerja terus-menerus dan membutuhkan lebih banyak energi. Organel yang berkaitan langsung dengan kondisi ini adalah ...",opts:["Mitokondria","Kloroplas","Dinding sel","Vakuola"],a:0,why:"Mitokondria menjadi tempat respirasi seluler yang menyediakan energi bagi aktivitas sel."},
+    {domain:"Sel tumbuhan",q:"Sel daun masih hidup, tetapi produksi gula melalui fotosintesis menurun tajam. Organel yang perlu ditinjau terlebih dahulu adalah ...",opts:["Ribosom","Lisosom","Kloroplas","Nukleolus"],a:2,why:"Kloroplas merupakan tempat berlangsungnya fotosintesis pada sel tumbuhan."},
+    {domain:"Struktur dan fungsi",q:"Jika sebuah sel gagal mengatur zat yang masuk dan keluar, bagian sel yang paling berkaitan ialah ...",opts:["Badan Golgi","Membran sel","Nukleolus","Kloroplas"],a:1,why:"Membran sel berperan sebagai batas selektif untuk pertukaran zat."},
+    {domain:"Sel tumbuhan",q:"Dinding sel tetap utuh, tetapi sel tumbuhan kehilangan air dan menjadi layu. Bagian yang paling terkait dengan penyimpanan air adalah ...",opts:["Ribosom","Badan Golgi","Vakuola","Nukleus"],a:2,why:"Vakuola membantu menyimpan air dan menjaga tekanan turgor pada sel tumbuhan."},
+    {domain:"Perbandingan model sel",q:"Sebuah model sel memiliki dinding sel, vakuola besar, dan kloroplas. Model tersebut paling mungkin menunjukkan ...",opts:["Sel otot manusia","Sel darah merah manusia","Sel saraf manusia","Sel tumbuhan hijau"],a:3,why:"Dinding sel, vakuola besar, dan kloroplas merupakan ciri umum model sel tumbuhan hijau."},
+    {domain:"Analisis mikroskop",q:"Maya mengganti objektif 10× menjadi 40× tanpa mengganti okuler. Perubahan yang biasanya terjadi adalah ...",opts:["Gambar mengecil dan bidang pandang makin luas","Gambar membesar dan bidang pandang makin sempit","Gambar sama besar dan bidang pandang tetap","Pembesaran total berkurang"],a:1,why:"Objektif lebih kuat memperbesar gambar, sedangkan luas area preparat yang tampak menjadi lebih sempit."}
   ];
-  let evalIndex=0, evalScore=0, evalChoice=null, evalLocked=false;
+  const savedEval=activitySave.evaluationV2||{};
+  const evalAnswers=Array.isArray(savedEval.answers)&&savedEval.answers.length===evalItems.length
+    ? savedEval.answers.map(x=>Number.isInteger(x)&&x>=0&&x<=3?x:null)
+    : Array(evalItems.length).fill(null);
+  let evalIndex=Number.isInteger(savedEval.index)&&savedEval.index>=0&&savedEval.index<evalItems.length?savedEval.index:0;
+  let evalFinished=savedEval.finished===true&&evalAnswers.every(x=>x!==null);
+  let evalScore=evalAnswers.reduce((sum,a,i)=>sum+(a===evalItems[i].a?1:0),0);
+  let evalChoice=evalAnswers[evalIndex],evalLocked=evalChoice!==null;
+  function saveEvaluation(){
+    rememberActivity("evaluationV2",{index:evalIndex,answers:evalAnswers,finished:evalFinished});
+  }
   function renderEval(){
-    const evalPanel=document.querySelector(".evaluate-panel");
-    if(evalPanel) evalPanel.dataset.evaluationFinished="false";
-    const item=evalItems[evalIndex];
+    const item=evalItems[evalIndex],answer=evalAnswers[evalIndex];
+    evalChoice=answer;evalLocked=answer!==null;
     $("#evalProgress").textContent="Soal "+(evalIndex+1)+" / "+evalItems.length;
     $("#evalScore").textContent="Skor "+evalScore;
     $("#evalBar").style.width=((evalIndex+1)/evalItems.length*100)+"%";
     $("#evalDomain").textContent=item.domain;
     $("#evalQuestion").textContent=item.q;
     $("#evalOptions").innerHTML=item.opts.map((x,i)=>'<button type="button" data-eval="'+i+'">'+x+'</button>').join("");
-    $("#evalFeedback").className="module-feedback neutral";$("#evalFeedback").textContent="Pilih satu jawaban.";
-    $("#lockEval").disabled=false;$("#nextEval").hidden=true;evalChoice=null;evalLocked=false;
+    $("#lockEval").disabled=evalLocked||evalFinished;
+    $("#nextEval").hidden=!evalLocked||evalFinished;
+    $("#nextEval").textContent=evalIndex===evalItems.length-1?"Lihat hasil akhir →":"Soal berikutnya →";
+    const fb=$("#evalFeedback");
+    if(evalLocked){
+      const good=answer===item.a;
+      all("#evalOptions button").forEach((b,i)=>{
+        b.disabled=true;
+        b.classList.toggle("correct",i===item.a);
+        b.classList.toggle("wrong",i===answer&&!good);
+      });
+      fb.className="module-feedback "+(good?"good":"warn");
+      fb.textContent=(good?"Tepat. ":"Belum tepat. ")+item.why;
+    }else{
+      fb.className="module-feedback neutral";
+      fb.textContent="Pilih satu jawaban.";
+    }
+    const p=$(".evaluate-panel");
+    if(p)p.dataset.evaluationFinished=String(evalFinished);
+    if(evalFinished){
+      fb.className="module-feedback "+(evalScore>=8?"good":"warn");
+      fb.textContent="Evaluasi selesai: "+evalScore+" / "+evalItems.length+". "+
+        (evalScore>=8?"Pelajari kembali alasan pada soal yang belum tepat.":"Tinjau kembali hasil pengamatan dan fungsi organel, lalu jelaskan perbaikannya.");
+    }
+    updateBottomNavVisibility();
   }
   $("#evalOptions").addEventListener("click",e=>{
-    const b=e.target.closest("[data-eval]");if(!b||evalLocked)return;
+    const b=e.target.closest("[data-eval]");if(!b||evalLocked||evalFinished)return;
     evalChoice=Number(b.dataset.eval);setSelected($("#evalOptions"),b);
   });
   $("#lockEval").addEventListener("click",()=>{
-    if(evalChoice===null){$("#evalFeedback").textContent="Pilih satu jawaban sebelum mengunci.";return}
-    const item=evalItems[evalIndex],good=evalChoice===item.a;
-    evalLocked=true;if(good)evalScore++;
-    all("#evalOptions button").forEach((b,i)=>{b.disabled=true;b.classList.toggle("correct",i===item.a);b.classList.toggle("wrong",i===evalChoice&&!good)});
-    $("#evalFeedback").className="module-feedback "+(good?"good":"warn");
-    $("#evalFeedback").innerHTML=(good?"<b>Tepat.</b> ":"<b>Belum tepat.</b> ")+item.why;
-    $("#evalScore").textContent="Skor "+evalScore;$("#lockEval").disabled=true;$("#nextEval").hidden=false;
-    $("#nextEval").textContent=evalIndex===evalItems.length-1?"Lihat hasil akhir →":"Soal berikutnya →";
+    if(evalLocked||evalFinished)return;
+    if(evalChoice===null){$("#evalFeedback").textContent="Pilih satu jawaban sebelum mengunci.";return;}
+    evalAnswers[evalIndex]=evalChoice;
+    evalScore=evalAnswers.reduce((sum,a,i)=>sum+(a===evalItems[i].a?1:0),0);
+    saveEvaluation();renderEval();
   });
   $("#nextEval").addEventListener("click",()=>{
-    if(evalIndex<evalItems.length-1){evalIndex++;renderEval()}
-    else{
-      $("#nextEval").hidden=true;
-      const evalPanel=document.querySelector(".evaluate-panel");
-      if(evalPanel) evalPanel.dataset.evaluationFinished="true";
-      $("#evalFeedback").className="module-feedback "+(evalScore>=8?"good":"warn");
-      $("#evalFeedback").innerHTML="<b>Evaluasi selesai: "+evalScore+" / "+evalItems.length+".</b> "+(evalScore>=8?"Pemahamanmu sudah kuat. Tinjau kembali soal yang masih salah untuk memperkuat alasan.":"Kembali ke Explain dan Elaborate pada konsep yang masih salah, lalu coba jelaskan dengan bahasamu sendiri.");
-    }
+    if(!evalLocked||evalFinished)return;
+    if(evalIndex<evalItems.length-1){evalIndex++;saveEvaluation();renderEval();}
+    else {evalFinished=true;saveEvaluation();renderEval();}
   });
   renderEval();
+
+  // Bukti ketercapaian setiap tahap. Footer bukan jalan pintas penyelesaian.
+  moduleBridge.isStageReady=stage=>{
+    switch(Number(stage)){
+      case 0:return lifeDone;
+      case 1:return zoomIndex===2&&engageLocked&&$("#engageReason").value.trim().length>=12;
+      case 2:return predictionLocked&&microSeen.size===3&&microConclusionSaved;
+      case 3:return explainPageSeen.size===4&&seenAnimal.size===9&&seenPlant.size===11
+        &&compareSeen.size===compareItems.length
+        &&Number($("#cellExplainTabs [data-cell-page].is-active")?.dataset.cellPage)===3;
+      case 4:return activeCase===cases.length-1&&caseStates.every((_,i)=>caseDone(i));
+      case 5:return evalFinished;
+      case 6:return Boolean($("#studentName").value.trim()&&$("#studentClass").value.trim()
+        &&[...document.querySelectorAll("[data-reflection]")].some(f=>f.value.trim().length>=10)
+        &&document.querySelector("[data-confidence].is-selected"));
+      default:return false;
+    }
+  };
+  updateBottomNavVisibility();
 })();

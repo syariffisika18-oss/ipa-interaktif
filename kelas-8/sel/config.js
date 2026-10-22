@@ -4,7 +4,7 @@ window.IPA_TEMPLATE_CONFIG = {
   materialId: "kelas-8-sel",
   materialTitle: "Sel dan Mikroskop",
   materialMeta: "Kelas VIII • 7 tahap • Sel, mikroskop, organel",
-  objective: "Peserta didik mampu menghubungkan ciri makhluk hidup dengan sel sebagai unit struktural dan fungsional terkecil, menghitung pembesaran total mikroskop, membandingkan sel hewan dan tumbuhan, serta menjelaskan hubungan organel dengan fungsinya.",
+  objective: "Setelah belajar, peserta didik mampu: (1) membuat prediksi beralasan berdasarkan pengamatan jaringan daun; (2) menghitung dan membandingkan pembesaran mikroskop serta pengaruhnya pada bidang pandang; (3) membandingkan struktur sel hewan dan sel tumbuhan; dan (4) menganalisis hubungan organel dengan fungsinya melalui kasus.",
   defaultMode: "mandiri",
   feedbackEndpoint: "https://script.google.com/macros/s/AKfycbypYONB7Q5VvX-bs0zENegZDCzmTmcAFeyzqhDBd2L1cpdI_4m6NDkQMcXDSBqJlGXi/exec",
   difficultyCategories: [

@@ -955,3 +955,58 @@
     margin-top:8px;
   }
 }
+
+
+/* Audit 2026-10-22: masukan tertulis dan transparansi bukti 5E */
+.microscope-view-card[hidden],
+.module-written-card[hidden],
+#poeExplain[hidden],
+.zoom-visual[hidden],
+#engageQuestion[hidden]{display:none!important}
+.module-written-label{display:block;font-weight:750;color:var(--text,#193630);line-height:1.45}
+.module-written-label textarea{
+  display:block;width:100%;box-sizing:border-box;min-height:88px;margin-top:8px;
+  padding:11px 13px;border:1px solid var(--line,#cbd5e1);border-radius:12px;
+  background:#fff;color:inherit;font:inherit;line-height:1.5;resize:vertical
+}
+.module-written-label textarea:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+.module-written-card{margin-top:14px;padding:14px;border:1px solid var(--line,#cbd5e1);border-radius:16px;background:#f4faf8}
+.module-written-card .primary-inline{margin-top:12px}
+.module-written-card .module-feedback{margin-top:10px}
+.photo-locked-note{display:grid;align-content:center;justify-items:center;gap:8px;min-height:180px;text-align:center;padding:18px;border:1px dashed #78a9a2;border-radius:16px;background:#f2faf7}
+.photo-locked-note p{margin:0;color:var(--muted,#526963);font-weight:650}
+.photo-locked-note strong{font-size:1rem}
+.photo-locked-note[hidden]{display:none!important}
+.organelle-hotspots button.is-viewed:not(.is-active){box-shadow:0 0 0 2px #0f766e}
+@media(max-width:640px){
+  .photo-locked-note{min-height:115px;padding:13px}
+  .module-written-card{padding:12px}
+  .module-written-label textarea{font-size:16px}
+}
+
+/* Prioritas keterbacaan ponsel: jangan memakai huruf 8–10 px untuk aktivitas IPA */
+.micro-seen-status{margin:0 0 9px;color:var(--primary,#0f766e);font-size:.82rem;font-weight:750}
+@media(max-width:640px) and (orientation:portrait){
+  .microscope-layout,.organelle-layout{grid-template-columns:minmax(0,1fr)!important}
+  .eval-options,.case-step-options{grid-template-columns:minmax(0,1fr)!important}
+  .microscope-control-card,.microscope-view-card{padding:12px!important}
+  .option-grid button,.lens-buttons button,.compare-buttons button,.eval-options button,
+  .case-step-options button{min-height:42px!important;padding:9px 11px!important;font-size:.85rem!important}
+  .micro-prompt,.scope-photo-note,.observe-readout p,.poe-explain,.organelle-info p,.organelle-facts,
+  .case-step p,.case-card-main p,.concept-note{font-size:.85rem!important;line-height:1.5!important}
+  .organelle-info h3,.cell-eval-card h3,.case-card-main h3{font-size:1rem!important}
+  .case-lock button,.zoom-tabs button,.cell-explain-tabs button{min-height:38px!important;font-size:.78rem!important}
+  .organelle-info{min-height:0!important;padding:13px!important}
+}
+
+@media(max-width:640px) and (orientation:portrait){
+  .case-tabs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .case-tabs button{min-height:38px!important;font-size:.82rem!important}
+  .photo-cell-wrap .photo-hotspots button span{font-size:.6rem!important}
+}
+
+/* Tanda organel telah ditinjau, juga setelah progres dimuat ulang. */
+.photo-cell-wrap .photo-hotspots button.is-viewed:not(.is-active){
+  background:#1967a3!important;
+  box-shadow:0 0 0 3px rgba(25,103,163,.3)!important;
+}
