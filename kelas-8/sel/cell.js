@@ -12,6 +12,13 @@
   }
 
   const state = loadState();
+  // Bukti aktivitas sebelumnya berbeda dengan audit 5E baru.
+  // Simpan identitas/refleksi, tetapi jangan gunakan tanda selesai lama sebagai bukti.
+  if (state.learningAuditVersion!=="20261022-5e1"){
+    state.activeStage=0;
+    state.completed=[];
+    state.learningAuditVersion="20261022-5e1";
+  }
 
   let activeStage = Number.isInteger(state.activeStage) ? state.activeStage : 0;
   let completed = Array.isArray(state.completed) ? new Set(state.completed.filter(x=>Number.isInteger(x)&&x>=0&&x<stageCount)) : new Set();
@@ -1572,6 +1579,10 @@
     rememberActivity("activeCase",activeCase);
   }
 
+  function rotateChoices(items,step){
+    const k=step%items.length;
+    return [...items.slice(k),...items.slice(0,k)];
+  }
   function attemptText(attempts,done){
     if(done)return attempts===1?"Tepat pada jawaban pertama":"Selesai setelah diperbaiki";
     if(attempts===1)return "Sudah menjawab 1 kali • 1 kesempatan tersisa";
@@ -1594,10 +1605,10 @@
     $("#casePanel").innerHTML=
       '<article class="case-card-main"><p class="stage-kicker">KASUS '+(activeCase+1)+'</p><h3>'+c.title+'</h3><p>'+c.text+'</p></article>'+
       '<section class="case-step"><p><b>Langkah 1 — Organel mana yang fungsinya paling sesuai dengan kondisi pada kasus ini?</b></p><div class="case-step-options" id="caseOrganOpts">'+
-      c.organs.map(x=>'<button type="button" data-case-organ="'+x+'" class="'+(s.organSel===x?"is-selected":"")+'" '+(s.organDone?"disabled":"")+'>'+x+'</button>').join("")+
+      rotateChoices(c.organs,activeCase+1).map(x=>'<button type="button" data-case-organ="'+x+'" class="'+(s.organSel===x?"is-selected":"")+'" '+(s.organDone?"disabled":"")+'>'+x+'</button>').join("")+
       '</div><div class="case-lock"><span>'+attemptText(s.organAttempts,s.organDone)+'</span><button type="button" id="lockCaseOrgan" '+(s.organDone?"disabled":"")+'>Kunci pilihan organel</button></div><div id="caseOrganFeedback" class="module-feedback neutral">'+(s.organDone?(s.organFinal?"Pilihan organelmu tepat.":"Baca pembahasan, lalu lanjutkan ke langkah 2."):"Pilih satu organel yang menurutmu paling sesuai.")+'</div></section>'+
       '<section class="case-step '+(!s.organDone?"locked-step":"")+'"><p><b>Langkah 2 — Mengapa organel tersebut paling sesuai?</b></p><div class="case-step-options" id="caseReasonOpts">'+
-      c.reasons.map(x=>'<button type="button" data-case-reason="'+x.replace(/"/g,'&quot;')+'" class="'+(s.reasonSel===x?"is-selected":"")+'" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>'+x+'</button>').join("")+
+      rotateChoices(c.reasons,activeCase*2+1).map(x=>'<button type="button" data-case-reason="'+x.replace(/"/g,'&quot;')+'" class="'+(s.reasonSel===x?"is-selected":"")+'" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>'+x+'</button>').join("")+
       '</div><div class="case-lock"><span>'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasanmu tepat.":"Baca pembahasan alasan yang benar."):"Pilih alasan yang paling tepat menjelaskan pilihan organelmu."))+'</div></section>';
     renderCaseTabs();
   }
