@@ -1356,9 +1356,20 @@
   }
 
   // ---------- EXPLAIN tabs ----------
+  const savedExplain=activitySave.explain||{};
+  if(Array.isArray(savedExplain.pages))savedExplain.pages.filter(i=>Number.isInteger(i)&&i>=0&&i<4).forEach(i=>explainPageSeen.add(i));
+  function saveExplain(){
+    rememberActivity("explain",{
+      pages:[...explainPageSeen],
+      animal:[...seenAnimal],
+      plant:[...seenPlant],
+      compare:[...compareSeen]
+    });
+  }
   all("#cellExplainTabs [data-cell-page]").forEach(btn=>btn.addEventListener("click",()=>{
     const i=Number(btn.dataset.cellPage);
     explainPageSeen.add(i);
+    saveExplain();
     all("#cellExplainTabs button").forEach(b=>b.classList.toggle("is-active",b===btn));
     all("[data-cell-content]").forEach(p=>p.classList.toggle("is-active",Number(p.dataset.cellContent)===i));
     updateBottomNavVisibility();
@@ -1427,7 +1438,13 @@
     }
   };
 
-  const seenAnimal=new Set(), seenPlant=new Set();
+  const savedAnimal=Array.isArray(savedExplain.animal)?savedExplain.animal.filter(k=>["nucleus","nucleolus","er","ribosome","golgi","mitochondria","lysosome","cytoplasm","membrane"].includes(k)):[];
+  const savedPlant=Array.isArray(savedExplain.plant)?savedExplain.plant.filter(k=>["nucleus","nucleolus","er","ribosome","golgi","chloroplast","vacuole","cytoplasm","membrane","wall","mitochondria"].includes(k)):[];
+  const seenAnimal=new Set(savedAnimal), seenPlant=new Set(savedPlant);
+  $("#animalSeen").textContent=seenAnimal.size+" / 9 dikenali";
+  $("#plantSeen").textContent=seenPlant.size+" / 11 dikenali";
+  all(".animal-hotspots [data-organelle]").forEach(b=>b.classList.toggle("is-viewed",seenAnimal.has(b.dataset.organelle)));
+  all(".plant-hotspots [data-organelle]").forEach(b=>b.classList.toggle("is-viewed",seenPlant.has(b.dataset.organelle)));
   function showOrganelle(kind,key,button){
     const data=organelles[key]; if(!data)return;
     const info=kind==="animal"?$("#animalOrganelleInfo"):$("#plantOrganelleInfo");
@@ -1438,6 +1455,9 @@
     info.innerHTML='<span class="organelle-number">'+hotspotLabel+'</span><h3>'+data.name+'</h3><div class="organelle-facts"><div><span>FUNGSI UTAMA</span><strong>'+data.function+'</strong></div><div><span>JIKA TERGANGGU</span><strong>'+data.impact+'</strong></div></div>';
     const seen=kind==="animal"?seenAnimal:seenPlant;
     seen.add(key);
+    button.classList.add("is-viewed");
+    saveExplain();
+    updateBottomNavVisibility();
     (kind==="animal"?$("#animalSeen"):$("#plantSeen")).textContent=seen.size+" / "+(kind==="animal"?9:11)+" dikenali";
   }
   all(".animal-hotspots [data-organelle]").forEach(b=>b.addEventListener("click",()=>showOrganelle("animal",b.dataset.organelle,b)));
@@ -1450,13 +1470,15 @@
     ["ribosome","Ribosom","both"],["golgi","Badan Golgi","both"],["wall","Dinding sel","plant"],
     ["chloroplast","Kloroplas","plant"],["vacuole","Vakuola besar","plant"],["lysosome","Lisosom","animal"]
   ];
-  const compareSeen=new Set();
-  $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'">'+n+'</button>').join("");
+  const compareSeen=new Set(Array.isArray(savedExplain.compare)?savedExplain.compare.filter(k=>compareItems.some(item=>item[0]===k)):[]);
+  $("#compareButtons").innerHTML=compareItems.map(([k,n])=>'<button type="button" data-compare="'+k+'" class="'+(compareSeen.has(k)?"is-viewed":"")+'">'+n+'</button>').join("");
+  $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
   $("#compareButtons").addEventListener("click",e=>{
     const b=e.target.closest("[data-compare]"); if(!b)return;
     all("#compareButtons button").forEach(x=>x.classList.toggle("is-active",x===b));
     compareSeen.add(b.dataset.compare);
     b.classList.add("is-viewed");
+    saveExplain();
     $("#compareProgress").textContent=compareSeen.size+" / "+compareItems.length+" ditinjau";
     const item=compareItems.find(x=>x[0]===b.dataset.compare);
     const where=item[2], name=item[1];
@@ -1535,11 +1557,16 @@
     }
   ];
 
-  const caseStates=cases.map(()=>({
+  const caseStates=cases.map((_,i)=>({
     organSel:"",organAttempts:0,organFirst:null,organFinal:null,organDone:false,
-    reasonSel:"",reasonAttempts:0,reasonFirst:null,reasonFinal:null,reasonDone:false
+    reasonSel:"",reasonAttempts:0,reasonFirst:null,reasonFinal:null,reasonDone:false,
+    ...(Array.isArray(activitySave.cases)?activitySave.cases[i]||{}:{})
   }));
-  let activeCase=0;
+  let activeCase=Number.isInteger(activitySave.activeCase)&&activitySave.activeCase>=0&&activitySave.activeCase<cases.length?activitySave.activeCase:0;
+  function saveCases(){
+    rememberActivity("cases",caseStates);
+    rememberActivity("activeCase",activeCase);
+  }
 
   function attemptText(attempts,done){
     if(done)return attempts===1?"Tepat pada jawaban pertama":"Selesai setelah diperbaiki";
@@ -1570,13 +1597,13 @@
       '</div><div class="case-lock"><span>'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu":attemptText(s.reasonAttempts,s.reasonDone))+'</span><button type="button" id="lockCaseReason" '+((!s.organDone||s.reasonDone)?"disabled":"")+'>Kunci alasan</button></div><div id="caseReasonFeedback" class="module-feedback neutral">'+(!s.organDone?"Selesaikan langkah 1 terlebih dahulu.":(s.reasonDone?(s.reasonFinal?"Alasanmu tepat.":"Baca pembahasan alasan yang benar."):"Pilih alasan yang paling tepat menjelaskan pilihan organelmu."))+'</div></section>';
     renderCaseTabs();
   }
-  $("#caseTabs").addEventListener("click",e=>{const b=e.target.closest("[data-case]");if(!b)return;activeCase=Number(b.dataset.case);renderCase()});
+  $("#caseTabs").addEventListener("click",e=>{const b=e.target.closest("[data-case]");if(!b)return;activeCase=Number(b.dataset.case);saveCases();renderCase()});
   $("#casePanel").addEventListener("click",e=>{
     const c=cases[activeCase], s=caseStates[activeCase];
     let b=e.target.closest("[data-case-organ]");
-    if(b&&!s.organDone){s.organSel=b.dataset.caseOrgan;renderCase();return}
+    if(b&&!s.organDone){s.organSel=b.dataset.caseOrgan;saveCases();renderCase();return}
     b=e.target.closest("[data-case-reason]");
-    if(b&&s.organDone&&!s.reasonDone){s.reasonSel=b.dataset.caseReason;renderCase();return}
+    if(b&&s.organDone&&!s.reasonDone){s.reasonSel=b.dataset.caseReason;saveCases();renderCase();return}
     if(e.target.closest("#lockCaseOrgan")){
       const fbText=()=>{
         if(!s.organSel)return "Pilih satu organel yang menurutmu paling sesuai sebelum mengunci.";
@@ -1587,7 +1614,7 @@
         if(!s.organDone)return "<b>Belum tepat.</b> "+c.hintOrgan+" Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
         return "<b>Dua kali menjawab selesai.</b> Organel yang paling sesuai adalah <b>"+c.organ+"</b>. Perhatikan kembali fungsi organel tersebut sebelum melanjutkan ke langkah 2.";
       };
-      const txt=fbText();renderCase();const f=$("#caseOrganFeedback");f.className="module-feedback "+(s.organFinal?"good":"warn");f.innerHTML=txt;return;
+      const txt=fbText();saveCases();renderCase();const f=$("#caseOrganFeedback");f.className="module-feedback "+(s.organFinal?"good":"warn");f.innerHTML=txt;return;
     }
     if(e.target.closest("#lockCaseReason")){
       if(!s.reasonSel)return;
@@ -1598,7 +1625,7 @@
       if(good)txt="<b>Tepat.</b> "+c.reason;
       else if(!s.reasonDone)txt="<b>Belum tepat.</b> Cocokkan kembali alasanmu dengan fungsi utama "+c.organ+". Kamu masih memiliki satu kesempatan untuk memperbaiki jawaban.";
       else txt="<b>Dua kali menjawab selesai.</b> Penjelasan yang paling tepat: "+c.reason;
-      renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
+      saveCases();renderCase();const f=$("#caseReasonFeedback");f.className="module-feedback "+(s.reasonFinal?"good":"warn");f.innerHTML=txt;
       updateBottomNavVisibility();
     }
   });
