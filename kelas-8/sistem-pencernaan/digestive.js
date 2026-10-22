@@ -160,6 +160,7 @@
   ];
 
   let prediction="";
+  let predictionReason="";
   let journeyIndex=0;
   let furthestJourney=0;
   let modelIndex=0;
@@ -595,7 +596,7 @@
   function saveExploreSession(){
     try{
       sessionStorage.setItem(exploreStorageKey,JSON.stringify({
-        prediction,journeyIndex,visited:[...exploreVisited],predictionChecked
+        prediction,predictionReason,journeyIndex,visited:[...exploreVisited],predictionChecked
       }));
     }catch(error){console.warn("Progres Explore belum tersimpan",error);}
   }
@@ -613,19 +614,19 @@
         ||!visited.includes(0))return;
       if(!Number.isInteger(saved.journeyIndex)
         ||!visited.includes(saved.journeyIndex))return;
-      const allowedPredictions=[...document.querySelectorAll("#predictionOptions [data-prediction]")]
-        .map(button=>button.dataset.prediction);
-      if(saved.prediction!==""&&!allowedPredictions.includes(saved.prediction))return;
+      if(typeof saved.prediction!=="string"||saved.prediction.length>500
+        ||typeof saved.predictionReason!=="string"||saved.predictionReason.length>500)return;
       if(saved.predictionChecked===true
-        && (!saved.prediction||!visited.includes(4)))return;
+        && (!saved.prediction.trim()||!saved.predictionReason.trim()||!visited.includes(4)))return;
       prediction=saved.prediction;
+      predictionReason=saved.predictionReason;
+      document.getElementById("predictionText").value=prediction;
+      document.getElementById("predictionReason").value=predictionReason;
       journeyIndex=saved.journeyIndex;
       exploreVisited.clear();
       visited.forEach(index=>exploreVisited.add(index));
       furthestJourney=Math.max(...visited);
       predictionChecked=saved.predictionChecked===true;
-      document.querySelectorAll("#predictionOptions [data-prediction]").forEach(button=>
-        button.classList.toggle("is-selected",button.dataset.prediction===prediction));
       if(prediction){
         document.getElementById("predictionFeedback").textContent=
           "Prediksi sebelumnya berhasil dipulihkan. Lanjutkan pengamatan di Explore.";
@@ -633,9 +634,7 @@
       if(predictionChecked){
         const box=document.getElementById("predictionCheckResult");
         box.className="digest-feedback good";
-        box.textContent=prediction==="usus-halus"
-          ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
-          :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
+        box.textContent="Hasil pengamatan: sebagian besar zat gizi diserap di usus halus. Bandingkan dengan dugaan dan alasan awalmu.";
       }
     }catch(error){console.warn("Progres Explore belum dapat dipulihkan",error);}
   }
@@ -704,27 +703,31 @@
     selectJourney(pos===exploreOrder.length-1?exploreOrder[0]:exploreOrder[pos+1]);
   };
 
-  document.getElementById("predictionOptions").addEventListener("click",e=>{
-    const b=e.target.closest("[data-prediction]"); if(!b)return;
-    prediction=b.dataset.prediction;
+  function updateWrittenPrediction(){
+    prediction=document.getElementById("predictionText").value.slice(0,500);
+    predictionReason=document.getElementById("predictionReason").value.slice(0,500);
     predictionChecked=false;
-    document.getElementById("predictionCheckResult").textContent="Prediksi diubah. Uji kembali menggunakan hasil Explore.";
+    const result=document.getElementById("predictionCheckResult");
+    result.className="digest-feedback neutral";
+    result.textContent="Dugaan diperbarui. Bandingkan kembali dengan hasil Explore.";
+    document.getElementById("predictionFeedback").textContent=
+      prediction.trim()&&predictionReason.trim()
+        ?"Dugaan dan alasan tersimpan. Selanjutnya, jelajahi organ pencernaan untuk mengujinya."
+        :"Lengkapi dugaan dan alasanmu sebelum melanjutkan.";
     saveExploreSession();
-    e.currentTarget.querySelectorAll("button").forEach(x=>x.classList.toggle("is-selected",x===b));
     window.refreshStageFooter?.();
-    document.getElementById("predictionFeedback").textContent="Prediksi tersimpan. Gunakan Explore untuk mengujinya.";
-  });
+  }
+  document.getElementById("predictionText").addEventListener("input",updateWrittenPrediction);
+  document.getElementById("predictionReason").addEventListener("input",updateWrittenPrediction);
   document.getElementById("checkPrediction").onclick=()=>{
     const box=document.getElementById("predictionCheckResult");
-    if(furthestJourney<4){box.className="digest-feedback warn";box.textContent="Jelajahi sampai Usus halus terlebih dahulu.";return}
-    if(!prediction){box.className="digest-feedback warn";box.textContent="Kamu belum membuat prediksi pada Engage.";return}
-    box.className="digest-feedback good";
+    if(furthestJourney<4){box.className="digest-feedback warn";box.textContent="Jelajahi sampai usus halus terlebih dahulu.";return;}
+    if(!prediction.trim()||!predictionReason.trim()){box.className="digest-feedback warn";box.textContent="Lengkapi dugaan dan alasan pada Engage.";return;}
+    box.className="digest-feedback neutral";
     predictionChecked=true;
     saveExploreSession();
     window.refreshStageFooter?.();
-    box.textContent=prediction==="usus-halus"
-      ?"Prediksimu didukung hasil Explore: sebagian besar zat gizi diserap di usus halus melalui permukaan yang luas dan vili."
-      :"Hasil Explore menunjukkan bahwa sebagian besar zat gizi diserap di usus halus. Bandingkan kembali fungsi lambung, usus halus, dan usus besar.";
+    box.textContent="Hasil pengamatan: sebagian besar zat gizi diserap di usus halus. Bandingkan dengan dugaan dan alasan awalmu; jika berbeda, jelaskan hal baru yang kamu pelajari.";
   };
 
   const nutrientModels=[
@@ -2165,7 +2168,7 @@
       case 0:
         return nutrientExamined;
       case 1:
-        return !!prediction;
+        return !!prediction.trim() && !!predictionReason.trim();
       case 2:
         return journeyIndex===exploreOrder.length-1
           && exploreVisited.size===exploreOrder.length
