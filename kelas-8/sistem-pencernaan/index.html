@@ -206,15 +206,13 @@
       </div>
 
       <div class="prediction-card">
-        <p class="question-kicker">Prediksi dulu</p>
-        <h3>Organ mana yang menurutmu paling berperan dalam penyerapan zat gizi?</h3>
-        <div class="prediction-options" id="predictionOptions">
-          <button data-prediction="lambung">Lambung</button>
-          <button data-prediction="usus-halus">Usus halus</button>
-          <button data-prediction="usus-besar">Usus besar</button>
-        </div>
-        <div id="predictionFeedback" class="digest-feedback neutral">Prediksimu akan diperiksa kembali setelah Explore.</div>
-        <p class="teacher-note">Minta beberapa siswa menjelaskan alasannya. Jangan membuka jawaban final dulu.</p>
+        <p class="question-kicker">Prediksi awal</p>
+        <h3>Setelah nasi, telur, dan sayur berubah selama proses pencernaan, di bagian mana zat gizinya dapat masuk ke tubuh?</h3>
+        <label for="predictionText"><strong>Saya menduga…</strong></label>
+        <textarea id="predictionText" rows="3" maxlength="500" placeholder="Tuliskan dugaanmu tentang proses dan lokasi penyerapan zat gizi."></textarea>
+        <label for="predictionReason"><strong>Karena…</strong></label>
+        <textarea id="predictionReason" rows="3" maxlength="500" placeholder="Tuliskan alasan berdasarkan pengetahuan awalmu."></textarea>
+        <div id="predictionFeedback" class="digest-feedback neutral">Tuliskan dugaan dan alasanmu. Belum ada jawaban benar atau salah pada tahap ini.</div>
       </div>
     </section>
 
@@ -660,6 +658,6 @@
   <script src="config.js?v=20261022-final3"></script>
   <script>window.IPA_STAGE_COMPLETE_CHECK=()=>false;</script>
   <script src="../../template-universal/template.js?v=20261022-final3"></script>
-  <script src="digestive.js?v=20261022-qa4"></script>
+  <script src="digestive.js?v=20261022-engage5"></script>
 </body>
 </html>
