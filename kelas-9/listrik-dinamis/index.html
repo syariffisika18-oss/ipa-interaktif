@@ -3,7 +3,7 @@
 <body data-learning-mode="mandiri">
 <header class="module-topbar"><div class="module-shell module-topbar-row"><a class="portal-link" href="../">← Materi Kelas IX</a><div class="module-title-mini"><span>IPA Interaktif • Kelas IX</span><strong>Listrik Dinamis</strong></div><button id="resetLearning" class="reset-learning" type="button">Reset progres</button></div></header>
 <main class="module-shell module-main">
-<section class="module-hero"><div><p class="u-eyebrow">Template Universal v0.4</p><h1>Listrik Dinamis: Seri & Paralel</h1><p>Fenomena → uji rangkaian → jalur arus → hubungan matematis → latihan → refleksi.</p></div><div class="module-mode"><strong>Mode penggunaan</strong><div class="mode-switch"><button type="button" data-learning-mode="mandiri">👤 Mandiri</button><button type="button" data-learning-mode="guru">👨‍🏫 Bersama Guru</button></div><p id="modeHelp" class="mode-help"></p></div></section>
+<section class="module-hero"><div><p class="u-eyebrow">IPA Interaktif • Eksperimen virtual</p><h1>Listrik Dinamis: Seri & Paralel</h1><p>Fenomena → uji rangkaian → jalur arus → hubungan matematis → latihan → refleksi.</p></div><div class="module-mode"><strong>Mode penggunaan</strong><div class="mode-switch"><button type="button" data-learning-mode="mandiri">👤 Mandiri</button><button type="button" data-learning-mode="guru">👨‍🏫 Bersama Guru</button></div><p id="modeHelp" class="mode-help"></p></div></section>
 <section class="progress-wrap"><div class="progress-line"><strong>Progres modul</strong><span id="learningProgressText">0 dari 7 tahap</span></div><div class="progress-track"><div id="learningProgressFill" class="progress-fill"></div></div></section>
 <nav class="u-stage-nav" aria-label="Tahapan pembelajaran"><button class="u-stage-tab active" data-u-stage="0"><b>1</b>Orientasi</button><button class="u-stage-tab" data-u-stage="1"><b>2</b>Engage</button><button class="u-stage-tab" data-u-stage="2"><b>3</b>Explore</button><button class="u-stage-tab" data-u-stage="3"><b>4</b>Explain</button><button class="u-stage-tab" data-u-stage="4"><b>5</b>Elaborate</button><button class="u-stage-tab" data-u-stage="5"><b>6</b>Evaluate</button><button class="u-stage-tab" data-u-stage="6"><b>7</b>Reflect</button></nav>
 
@@ -17,7 +17,7 @@
 
 <section class="u-stage-panel engage-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 2</p><h2>Engage</h2></div><span class="u-principle">Fenomena • Prediksi • POE</span></div><div class="engage-scene"><div class="house-lamps"><div class="lamp-row"><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div><div class="lamp-icon">💡</div></div></div><div><h3>Tiga lampu rumah menyala. Satu lampu dilepas dari fittingnya.</h3><p>Menurutmu, apa yang terjadi pada dua lampu lainnya jika instalasinya dirancang seperti rangkaian rumah?</p><div class="engage-options"><button class="engage-option" data-prediction="semua-padam" type="button">Semua lampu ikut padam</button><button class="engage-option" data-prediction="lain-tetap" type="button">Lampu lain tetap dapat menyala</button><button class="engage-option" data-prediction="lebih-redup" type="button">Lampu lain menjadi lebih redup</button></div><div id="engageFeedback" class="note">Pilih prediksi terlebih dahulu. Jawabannya akan diuji pada tahap Explore.</div><p class="mode-only-teacher small"><b>Guru:</b> minta 2–3 siswa menyampaikan alasan sebelum membuka simulasi.</p></div></div></div></section>
 
-<section class="u-stage-panel explore-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 3</p><h2>Explore</h2></div><span class="u-principle">Concrete • Manipulasi • Pengamatan</span></div><div class="cpa-banner"><b>C — Concrete:</b> ubah susunan, jumlah lampu, tegangan, hambatan, sakelar, dan kondisi lampu. Gunakan hasilnya untuk menguji prediksi.</div>
+<section class="u-stage-panel explore-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 3</p><h2>Explore</h2></div><span class="u-principle">Concrete • Manipulasi • Pengamatan</span></div><div class="cpa-banner"><b>C — Concrete:</b> ubah susunan, jumlah lampu, tegangan, hambatan, sakelar, dan kondisi lampu. Gunakan hasilnya untuk menguji prediksi.</div><p class="simulation-notice"><b>Model simulasi:</b> sumber tegangan ideal dan lampu dimodelkan sebagai resistor dengan hambatan tetap. Warna/terang lampu adalah indikator visual relatif berbasis daya, bukan ukuran kecerahan lampu nyata. Saat praktik gunakan baterai bertegangan rendah, bukan instalasi listrik rumah.</p>
 <div class="mode-only-teacher teacher-guide"><b>Untuk guru:</b> minta siswa memprediksi akibat perubahan sebelum menggeser kontrol, lalu minta mereka menjelaskan hasil pengamatannya sebelum masuk ke slide “Maknai hasilnya”.</div>
 
 <div id="predictionCheckCard" class="mode-only-self prediction-check-card">
@@ -136,7 +136,15 @@
               <div>③ Bandingkan arus total, arus tiap lampu, dan tegangan tiap lampu ketika susunan atau jumlah lampu diubah.</div>
             </div>
 
-            <button id="compareBtn" class="btn full">Lanjut ke Explain →</button>
+            <section class="investigation-card" aria-labelledby="investigationTitle">
+  <h3 id="investigationTitle">📋 Catat data penyelidikanmu</h3>
+  <p>Gunakan <b>tegangan dan hambatan tiap lampu yang sama</b> untuk membandingkan minimal satu rangkaian seri dan satu paralel. Kembali ke slide “Atur & amati” untuk mengubah parameter, lalu ke sini untuk mencatat hasil.</p>
+  <div class="investigation-actions"><button id="recordObservation" type="button" class="btn">Catat kondisi sekarang</button><button id="clearObservations" type="button" class="btn secondary">Hapus data percobaan</button></div>
+  <p id="observationStatus" class="investigation-status" role="status" aria-live="polite">Belum ada data.</p>
+  <div class="investigation-table-scroll"><table class="investigation-table"><thead><tr><th>Jenis</th><th>Lampu</th><th>Tegangan</th><th>R/lampu</th><th>R total</th><th>I total</th></tr></thead><tbody id="observationRows"><tr><td colspan="6">Belum ada pengamatan tercatat.</td></tr></tbody></table></div>
+  <label class="investigation-conclusion"><span><b>Kesimpulan berdasarkan datamu</b> — apa perbedaan pengaruh susunan seri dan paralel terhadap hambatan serta arus total?</span><textarea id="observationConclusion" rows="3" maxlength="800" placeholder="Dari data percobaan saya, pada tegangan dan R/lampu yang sama ..."></textarea></label>
+</section>
+<button id="compareBtn" class="btn full">Lanjut ke Explain →</button>
           </div>
         </div>
 
@@ -152,7 +160,7 @@
     <div><p class="u-stage-kicker">Tahap 4</p><h2>Explain</h2></div>
     <span class="u-principle">Bandingkan • Turunkan • Terapkan</span>
   </div>
-  <div class="cpa-banner"><b>Explain:</b> bandingkan struktur seri dan paralel secara langsung, lalu turunkan hubungan matematisnya.</div>
+  <div class="cpa-banner"><b>Explain:</b> bandingkan struktur seri dan paralel secara langsung, lalu turunkan hubungan matematisnya.</div><p class="simulation-notice">Gunakan data percobaan dari Explore untuk menjelaskan <b>mengapa</b> arus dan hambatan berubah. Tabel perbandingan angka di bawah selalu menggunakan <b>rangkaian utuh, sakelar ON, dan sumber ideal</b>, meskipun simulator terakhir dalam keadaan terbuka.</p>
 <div class="mode-only-teacher teacher-guide"><b>Untuk guru:</b> sebelum membaca tabel atau persamaan, minta siswa menyebutkan perbedaan jalur, arus, dan tegangan dari hasil Explore. Gunakan tombol slide setelah diskusi singkat.</div>
   <section id="explainFlow" class="cpa-section">
     <div class="card stage-card">
@@ -246,9 +254,7 @@
               </div>
             </div>
 
-            <div class="note stage-note compact-explain-note">
-              Struktur jalur inilah yang menjadi dasar hubungan matematis seri dan paralel.
-            </div>
+            <div class="note stage-note compact-explain-note">Struktur jalur inilah yang menjadi dasar hubungan matematis seri dan paralel. Untuk model lampu resistif, terang lampu berkaitan dengan dayanya: <b>P = VI = I²R = V²/R</b>. Pada lampu nyata, hubungan daya dan kecerahan tidak selalu sebanding.</div>
           </div>
 
           <!-- E2: TURUNAN SERI + PARALEL -->
@@ -320,14 +326,14 @@
           <div class="slide-title">1. Kasus instalasi rumah</div>
           <div class="elab-context-mini">
             <span>FENOMENA</span>
-            <b>3 lampu rumah harus bekerja independen.</b>
-            <small>Satu lampu dilepas → lampu lain diharapkan tetap menyala.</small>
+            <b>Tiga meja praktik laboratorium memiliki lampu kerja dan sakelar masing-masing.</b>
+            <small>Setiap meja harus dapat menyalakan atau mematikan lampunya sendiri tanpa memengaruhi meja lain.</small>
           </div>
 
           <div class="elab-mini-question" data-elab-question="home"
-               data-clue="Ingat: apakah melepas satu lampu memutus jalur lampu yang lain?"
-               data-final="Susunan paralel paling sesuai. Setiap lampu berada pada cabang sendiri, sehingga satu cabang dapat diputus tanpa memutus cabang lain.">
-            <b>Susunan yang paling sesuai adalah...</b>
+               data-clue="Ingat: apakah sakelar pada satu meja boleh memutus arus meja lain?"
+               data-final="Susunan paralel dengan sakelar masing-masing cabang paling sesuai. Tiap meja bisa dikendalikan tanpa memutus lintasan lampu pada meja lain.">
+            <b>Bagaimana ketiga lampu sebaiknya dihubungkan ke sumber tegangan yang sama?</b>
             <div class="elab-options" data-elab-answer-group>
               <button type="button" data-elab-answer data-value="seri" data-correct="false">Seri</button>
               <button type="button" data-elab-answer data-value="paralel" data-correct="true">Paralel</button>
@@ -510,7 +516,7 @@
           <span class="stage-count" id="quizCount">1/20</span>
         </div>
 
-        <div class="quiz-footer quiz-footer-top">
+        <p class="assessment-note">Hasil kuis tersimpan pada perangkat ini dan disertakan dalam ringkasan refleksi. Jika perangkat dipakai bersama, gunakan Reset progres setelah hasil berhasil dicatat guru.</p><div class="quiz-footer quiz-footer-top">
           <span class="chip">Skor: <span id="score">0</span>/20</span>
           <button id="resetQuiz" class="btn secondary">Ulangi</button>
         </div>
@@ -525,7 +531,7 @@
       </div>
     </section></div></section>
 
-<section class="u-stage-panel reflect-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 7</p><h2>Reflect</h2></div><span class="u-principle">Monitoring • Confidence • Feedback guru</span></div><div class="reflection-grid"><label><span>Apa yang sudah saya pahami?</span><textarea rows="4" data-reflection="understood" placeholder="Contoh: saya memahami mengapa arus seri sama..."></textarea></label><label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused" placeholder="Tuliskan bagian yang masih sulit secara spesifik."></textarea></label></div><div class="u-card reflect-block"><b>Pada bagian mana kamu masih mengalami kesulitan?</b><div id="difficultyGrid" class="difficulty-grid"></div></div><div class="u-card reflect-block"><b>Seberapa yakin kamu memahami materi?</b><div class="confidence-row" style="margin-top:10px"><button type="button" data-confidence="1">Perlu bantuan</button><button type="button" data-confidence="2">Cukup paham</button><button type="button" data-confidence="3">Sudah yakin</button></div></div><div class="send-card"><div><strong>Kirim refleksi ke guru</strong><p>Refleksi masuk ke Google Sheet dan Dashboard Guru.</p><p id="sendStatus" class="send-status">Belum pernah dikirim.</p></div><button id="sendFeedback" class="send-btn" type="button">Kirim Refleksi</button></div></div></section>
+<section class="u-stage-panel reflect-panel"><div class="u-panel-card"><div class="u-stage-head"><div><p class="u-stage-kicker">Tahap 7</p><h2>Reflect</h2></div><span class="u-principle">Monitoring • Confidence • Feedback guru</span></div><div class="reflection-grid"><label><span>Apa yang sudah saya pahami?</span><textarea rows="4" data-reflection="understood" placeholder="Contoh: saya memahami mengapa arus seri sama..."></textarea></label><label><span>Apa yang masih membingungkan?</span><textarea rows="4" data-reflection="confused" placeholder="Tuliskan bagian yang masih sulit secara spesifik."></textarea></label></div><div class="u-card reflect-block"><b>Pada bagian mana kamu masih mengalami kesulitan?</b><div id="difficultyGrid" class="difficulty-grid"></div></div><div class="u-card reflect-block"><b>Seberapa yakin kamu memahami materi?</b><div class="confidence-row" style="margin-top:10px"><button type="button" data-confidence="1">Perlu bantuan</button><button type="button" data-confidence="2">Cukup paham</button><button type="button" data-confidence="3">Sudah yakin</button></div></div><div class="u-card reflect-block"><b>Ringkasan hasil belajarmu</b><div id="learningEvidenceSummary" class="learning-evidence-summary" role="status" aria-live="polite">Ringkasan evaluasi akan muncul setelah menjawab soal.</div></div><div class="send-card"><div><strong>Kirim refleksi ke guru</strong><p>Refleksi dikirim ke layanan guru melalui Google Apps Script. Nama, kelas, jawaban refleksi, dan ringkasan progres digunakan untuk tindak lanjut pembelajaran. Data juga tersimpan di perangkat ini; hindari menggunakan identitas lengkap pada perangkat bersama.</p><p id="sendStatus" class="send-status">Belum pernah dikirim.</p></div><button id="sendFeedback" class="send-btn" type="button">Kirim Refleksi</button></div></div></section>
 
 <div class="u-bottom-nav is-context-hidden" aria-hidden="true"><button id="uPrev" class="u-prev" type="button">← Sebelumnya</button><button id="uComplete" class="u-complete" type="button">Tandai selesai</button><button id="uNext" class="u-next" type="button">Berikutnya →</button></div>
 </main>
