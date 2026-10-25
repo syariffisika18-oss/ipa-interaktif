@@ -473,10 +473,44 @@ function show(i,doScroll=true){
 }
 function render(){const c=done.size,p=Math.round(c/N*100);fill.style.width=p+"%";ptxt.textContent=c+" dari "+N+" tahap • "+p+"%";tabs.forEach((t,j)=>t.classList.toggle("complete",done.has(j)))}
 
-async function send(){const ep=(config.feedbackEndpoint||"").trim(), snap=snapshot(), fp=JSON.stringify(snap);if(!snap.studentName||!snap.className){msg("Isi nama/nomor absen dan kelas pada tahap Orientasi.");show(0);return}if(!snap.confused&&!snap.difficulties.length&&!snap.confidence){msg("Isi minimal satu bagian refleksi.");return}if(!ep){msg("Koneksi Google Sheets belum aktif.");return}if(state.lastSentFingerprint===fp){msg("Tidak ada perubahan sejak pengiriman terakhir.");refreshSend();return}let sid=state.pendingFingerprint===fp&&state.pendingSubmissionId?state.pendingSubmissionId:id();state.pendingSubmissionId=sid;state.pendingFingerprint=fp;save();sendUI("sending");const payload={timestampClient:new Date().toISOString(),studentName:snap.studentName,className:snap.className,materialId:config.materialId,materialTitle:config.materialTitle,mode:snap.mode,understood:snap.understood,confused:snap.confused,difficulties:snap.difficulties.join(", "),confidence:confLabel(snap.confidence),completedStages:String(snap.completedStages),totalStages:String(N),submissionId:sid,sessionId:state.sessionId,templateVersion:(config.templateVersion||"")+" / modul "+(config.moduleVersion||"")};try{await fetch(ep,{method:"POST",mode:"no-cors",body:new URLSearchParams(payload)});const ok=await verify(ep,sid);if(!ok){sendUI("warn");msg("Sudah dikirim dari browser, tetapi belum terverifikasi. Coba kirim ulang.");return}state.lastSentFingerprint=fp;state.lastSentAt=new Date().toISOString();state.lastSubmissionId=sid;state.pendingSubmissionId="";state.pendingFingerprint="";save();sendUI("ok");msg("Refleksi terverifikasi masuk ke dashboard guru.")}catch(e){sendUI("error");msg("Pengiriman gagal. Refleksi lokal tetap tersimpan.")}}
-function snapshot(){return{studentName:document.getElementById("studentName").value.trim(),className:document.getElementById("studentClass").value.trim(),mode,understood:state.reflections?.understood?.trim()||"",confused:state.reflections?.confused?.trim()||"",difficulties:diffs().slice().sort(),confidence:+(state.confidence||0),completedStages:done.size}}
+async function send(){const ep=(config.feedbackEndpoint||"").trim(), snap=snapshot(), fp=JSON.stringify(snap);if(!snap.studentName||!snap.className){msg("Isi nama/nomor absen dan kelas pada tahap Orientasi.");show(0);return}if(!snap.confused&&!snap.difficulties.length&&!snap.confidence){msg("Isi minimal satu bagian refleksi.");return}if(!ep){msg("Koneksi Google Sheets belum aktif.");return}if(state.lastSentFingerprint===fp){msg("Tidak ada perubahan sejak pengiriman terakhir.");refreshSend();return}let sid=state.pendingFingerprint===fp&&state.pendingSubmissionId?state.pendingSubmissionId:id();state.pendingSubmissionId=sid;state.pendingFingerprint=fp;save();sendUI("sending");const payload={timestampClient:new Date().toISOString(),studentName:snap.studentName,className:snap.className,materialId:config.materialId,materialTitle:config.materialTitle,mode:snap.mode,understood:[snap.understood,"[Ringkasan otomatis pembelajaran]\\n"+learningEvidenceText(snap)].filter(Boolean).join("\\n\\n"),
+confused:snap.confused,difficulties:snap.difficulties.join(", "),confidence:confLabel(snap.confidence),
+completedStages:String(snap.completedStages),totalStages:String(N),
+quizCorrect:String(snap.quizCorrect),quizAnswered:String(snap.quizAnswered),quizTotal:String(snap.quizTotal),
+inquiryCount:String(snap.inquiryCount),inquiryComparable:snap.inquiryComparable?"ya":"belum",
+inquiryConclusion:snap.inquiryConclusion,submissionId:sid,sessionId:state.sessionId,templateVersion:(config.templateVersion||"")+" / modul "+(config.moduleVersion||"")};try{await fetch(ep,{method:"POST",mode:"no-cors",body:new URLSearchParams(payload)});const ok=await verify(ep,sid);if(!ok){sendUI("warn");msg("Sudah dikirim dari browser, tetapi belum terverifikasi. Coba kirim ulang.");return}state.lastSentFingerprint=fp;state.lastSentAt=new Date().toISOString();state.lastSubmissionId=sid;state.pendingSubmissionId="";state.pendingFingerprint="";save();sendUI("ok");msg("Refleksi terverifikasi masuk ke dashboard guru.")}catch(e){sendUI("error");msg("Pengiriman gagal. Refleksi lokal tetap tersimpan.")}}
+function snapshot(){
+  const quiz=window.getListrikQuizEvidence?.()||{correct:0,total:20,answered:0};
+  const inquiry=window.getListrikInquiryEvidence?.()||{count:0,comparable:false,conclusion:""};
+  return {
+    studentName:document.getElementById("studentName").value.trim(),
+    className:document.getElementById("studentClass").value.trim(),mode,
+    understood:state.reflections?.understood?.trim()||"",
+    confused:state.reflections?.confused?.trim()||"",
+    difficulties:diffs().slice().sort(),confidence:+(state.confidence||0),
+    completedStages:done.size,
+    quizCorrect:quiz.correct,quizTotal:quiz.total,quizAnswered:quiz.answered,
+    inquiryCount:inquiry.count,inquiryComparable:inquiry.comparable,
+    inquiryConclusion:inquiry.conclusion||""
+  };
+}
+function learningEvidenceText(snap){
+  const a=snap||snapshot();
+  const parts=[`Evaluate: ${a.quizCorrect}/${a.quizTotal} benar (${a.quizAnswered} soal dijawab)`];
+  parts.push(`Explore: ${a.inquiryCount} pengamatan; pasangan seri–paralel sebanding: ${a.inquiryComparable?'ya':'belum'}`);
+  if(a.inquiryConclusion)parts.push(`Kesimpulan Explore: ${a.inquiryConclusion}`);
+  return parts.join("\n");
+}
+function refreshLearningEvidence(){
+  const el=document.getElementById("learningEvidenceSummary");
+  if(!el)return;
+  const a=snapshot();
+  el.textContent=learningEvidenceText(a);
+}
+window.addEventListener("learningevidencechange",()=>{refreshLearningEvidence();changed()});
+window.addEventListener("learningmodechange",refreshLearningEvidence);
 function diffs(){return[...document.querySelectorAll("[data-difficulty]:checked")].map(x=>x.dataset.difficulty)}
-function changed(){refreshSend()}
+function changed(){refreshLearningEvidence();refreshSend()}
 function refreshSend(){const b=document.getElementById("sendFeedback"),s=document.getElementById("sendStatus");if(!b||!s)return;const fp=JSON.stringify(snapshot()),same=!!(state.lastSentFingerprint&&state.lastSentFingerprint===fp);s.className="send-status";if(!(config.feedbackEndpoint||"").trim()){b.disabled=true;s.textContent="Google Sheets belum terhubung."}else if(same){b.disabled=true;s.classList.add("ok");s.textContent="✓ Terkirim "+fmtTime(state.lastSentAt)+" • tidak ada perubahan."}else{b.disabled=false;s.textContent=state.lastSentAt?"Ada perubahan setelah kiriman "+fmtTime(state.lastSentAt)+".":"Belum pernah dikirim."}}
 function sendUI(k){const b=document.getElementById("sendFeedback"),s=document.getElementById("sendStatus");s.className="send-status";b.textContent=k==="sending"?"Mengirim...":"Kirim Refleksi";b.disabled=k==="sending";if(k==="sending"){s.classList.add("warn");s.textContent="Mengirim dan memverifikasi..."}else if(k==="ok"){s.classList.add("ok");s.textContent="✓ Terverifikasi "+fmtTime(state.lastSentAt)+".";b.disabled=true}else if(k==="warn"){s.classList.add("warn");s.textContent="Belum terverifikasi. Kirim ulang memakai ID yang sama.";b.disabled=false}else if(k==="error"){s.classList.add("error");s.textContent="Gagal mengirim. Data lokal tetap aman.";b.disabled=false}}
 async function verify(ep,sid){for(let i=0;i<3;i++){if(i)await new Promise(r=>setTimeout(r,700));if(await jsonp(ep,sid,5000))return true}return false}
