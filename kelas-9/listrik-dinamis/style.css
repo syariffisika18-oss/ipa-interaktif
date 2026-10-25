@@ -3073,3 +3073,74 @@ body[data-learning-mode="mandiri"] .elab-reveal{
 
 /* CONTEXTUAL LEARNING FOOTER */
 .u-bottom-nav.is-context-hidden{display:none!important}
+
+
+/* AUDIT 2026-10-25: keep inactive slides hidden even when compact desktop grid
+   overrides the base stage-slide display rule. */
+.explore-panel #concrete .stage-slide:not(.active){display:none!important}
+
+/* Inquiry notebook */
+.investigation-card{grid-column:1/-1;border:1px solid #cbd9e7;background:#f8fbff;border-radius:15px;padding:16px;margin-top:14px}
+.investigation-card h3{margin:0 0 8px;font-size:1.05rem;color:#163f59}
+.investigation-card p{margin:0 0 12px;font-size:.95rem;line-height:1.55}
+.investigation-actions{display:flex;gap:10px;flex-wrap:wrap}
+.investigation-actions .btn{min-height:42px}
+.investigation-status{font-weight:700;color:#84460b;font-size:.9rem;margin:10px 0}
+.investigation-status.ready{color:#12634b}
+.investigation-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.investigation-table{border-collapse:collapse;width:100%;min-width:535px;background:#fff;font-variant-numeric:tabular-nums}
+.investigation-table th,.investigation-table td{padding:9px;border:1px solid #d3dce9;text-align:center;font-size:.84rem}
+.investigation-table th{background:#ebf2fa;font-weight:800}
+.investigation-conclusion{display:grid;gap:8px;margin-top:12px;line-height:1.5}
+.investigation-conclusion textarea{width:100%;min-height:90px;resize:vertical;border:1px solid #9baec1;padding:10px 12px;font:inherit;font-size:.95rem;border-radius:10px;background:white;color:var(--ink)}
+.simulation-notice{border-left:4px solid #248276;background:#edf8f5;padding:11px 13px;border-radius:8px;font-size:.93rem;line-height:1.5;margin:10px 0 16px;color:#193d39}
+.assessment-note{line-height:1.5;color:#435267;font-size:.9rem}
+.learning-evidence-summary{white-space:pre-line;padding:10px 0;font-size:.94rem;line-height:1.6}
+.quiz-reveal{margin-top:10px}
+.quiz-reveal[hidden]{display:none!important}
+.quiz-single .option.selected{border:2px solid #3559e0;background:#eef2ff}
+body .u-stage-tab:focus-visible,
+body button:focus-visible,
+body input:focus-visible,
+body textarea:focus-visible,
+body a:focus-visible{outline:3px solid #d97706!important;outline-offset:3px!important}
+
+@media(min-width:951px){
+  /* A readable layout is preferable to squeezing all experimental content into one viewport. */
+  .explore-panel #concrete .compact-controls>.small,
+  .explore-panel #concrete .small,
+  .explore-panel #concrete .sliderline label,
+  .explore-panel #concrete .sliderline b,
+  .explore-panel #concrete .segment button,
+  .explore-panel #concrete .control-grid .btn,
+  .explore-panel #concrete .slide-title,
+  .explore-panel #concrete .compact-question,
+  .explore-panel #concrete .stat .small,
+  .explore-panel #concrete #compareBtn,
+  .explore-panel .prediction-question,
+  .explore-panel .prediction-choice-row button,
+  .explore-panel .prediction-evidence button,
+  .explore-panel .prediction-feedback{font-size:.82rem!important;line-height:1.4!important}
+  .explore-panel #concrete .combined-circuit,
+  .explore-panel #concrete .combined-circuit svg{height:270px!important;max-height:270px!important}
+  .explore-panel #concrete .segment button,
+  .explore-panel #concrete .control-grid .btn,
+  .explore-panel .prediction-choice-row button,
+  .explore-panel .prediction-evidence button{min-height:38px!important}
+  .explore-panel #concrete .sliderline{min-height:32px!important}
+  .explore-panel #concrete .compact-controls{gap:10px!important}
+  .explore-panel #concrete .stage-kicker{font-size:.72rem!important}
+  .explore-panel #concrete .compact-zoom{min-height:38px!important;font-size:.8rem!important}
+  .explore-panel .prediction-test-steps{font-size:.8rem!important}
+  .explore-panel .prediction-recall span,
+  .explore-panel .prediction-recall strong,
+  .explore-panel .prediction-check-card>p{font-size:.8rem!important}
+}
+@media(max-width:640px){
+  .investigation-card{padding:12px;margin-top:12px}
+  .investigation-card h3{font-size:1rem}
+  .investigation-actions .btn{width:100%;font-size:.88rem}
+  .investigation-table th,.investigation-table td{font-size:.8rem}
+  .simulation-notice{font-size:.88rem}
+  .investigation-conclusion textarea{font-size:1rem}
+}
