@@ -72,8 +72,6 @@ function drawBulb(x,y,r,brightness,label,off=false){
   const glowAlpha = off ? 0.03 : (0.10 + 0.34*brightness);
   const ringAlpha = off ? 0.02 : (0.10 + 0.28*brightness);
   const level = brightnessText(brightness);
-  const barW = 64;
-  const fillW = Math.max(0, Math.min(barW, barW*brightness));
 
   let rays = '';
   if(!off && brightness > 0.28){
@@ -103,9 +101,6 @@ function drawBulb(x,y,r,brightness,label,off=false){
       <line x1="${x+r}" y1="${y}" x2="${x+r+26}" y2="${y}" stroke="#333a4d" stroke-width="5"/>
       <text x="${x}" y="${y+r+33}" text-anchor="middle" font-size="18" fill="#172033">${label}</text>
       <text x="${x}" y="${y+r+51}" text-anchor="middle" font-size="14" font-weight="700" fill="#b26b00">${level}</text>
-      <rect x="${x-barW/2}" y="${y+r+58}" width="${barW}" height="8" rx="5" fill="#e5e7eb" stroke="#cdd5df"/>
-      <rect x="${x-barW/2}" y="${y+r+58}" width="${fillW}" height="8" rx="5" fill="${brightness>0.78 ? '#ff9800' : brightness>0.45 ? '#f4b942' : '#b8c1cc'}"/>
-      <text x="${x}" y="${y+r+81}" text-anchor="middle" font-size="12" fill="#667085">skala visual simulasi</text>
     </g>`;
 }
 
@@ -137,6 +132,7 @@ function drawCircuit(){
   let s='';
 
   if(state.type==='series'){
+    svg.setAttribute('viewBox','0 0 760 420');
     const xs = n===1?[380]:n===2?[300,500]:[240,380,520];
 
     // Left side + battery: the source is physically in the only series loop.
@@ -178,8 +174,10 @@ function drawCircuit(){
     // No outer rectangle, so the topology is visually unambiguous.
     const leftRail=190, rightRail=570, bulbX=380;
     const ys = n===1?[120]:n===2?[105,205]:[85,165,245];
-    const sourceY=315;
+    // Keep the source path below lamp labels, even with three branches.
+    const sourceY=385;
     const railTop=ys[0];
+    svg.setAttribute('viewBox','0 0 760 470');
 
     // Two common node rails.
     s += `<line x1="${leftRail}" y1="${railTop}" x2="${leftRail}" y2="${sourceY}" stroke="#333a4d" stroke-width="6"/>
@@ -1252,6 +1250,7 @@ initPredictionCheck();
 initElaborate();
 initObservations();
 renderQuiz();
+window.dispatchEvent(new Event('learningevidencechange'));
 refreshAll();
 showStage('concrete',0,false);
 showStage('explain',0,false);
