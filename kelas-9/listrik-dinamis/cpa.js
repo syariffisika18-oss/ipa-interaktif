@@ -289,10 +289,10 @@ const quizData = [
   },
   {
     level:'easy',
-    q:'Jika satu lampu pada rangkaian paralel dilepas, apa yang terjadi pada lampu di cabang lain?',
-    a:['Tetap dapat menyala','Semua ikut padam','Tegangan sumber menjadi nol','Semua menjadi seri'],
-    c:0,
-    f:'Cabang lain masih mempunyai lintasan tertutup sendiri menuju sumber.'
+    q:'Voltmeter menunjukkan 9 V pada cabang pertama rangkaian paralel dengan sumber ideal 9 V. Tegangan pada cabang kedua adalah...',
+    a:['4,5 V','18 V','9 V','0 V'],
+    c:2,
+    f:'Kedua cabang terhubung pada pasangan node yang sama, sehingga beda potensialnya 9 V.'
   },
   {
     level:'hard',
@@ -359,7 +359,7 @@ const quizData = [
   },
   {
     level:'hard',
-    q:'Pada soal sebelumnya, dua hambatan 6 Ω paralel pada 12 V. Berapa arus totalnya?',
+    q:'Dua hambatan 6 Ω dipasang paralel pada sumber ideal 12 V. Berapa arus total dari sumber?',
     a:['1 A','2 A','4 A','12 A'],
     c:2,
     f:'Masing-masing cabang 2 A, sehingga arus total = 2 + 2 = 4 A.'
@@ -373,10 +373,10 @@ const quizData = [
   },
   {
     level:'medium',
-    q:'Jika jumlah lampu identik dalam rangkaian seri ditambah, hambatan total akan...',
-    a:['Berkurang','Tetap','Bertambah','Menjadi nol'],
+    q:'Resistor 4 Ω dan 8 Ω disusun seri pada sumber ideal 12 V. Besar tegangan pada resistor 8 Ω adalah...',
+    a:['4 V','6 V','8 V','12 V'],
     c:2,
-    f:'Pada seri, Rₜ = R₁ + R₂ + ..., sehingga penambahan hambatan menambah hambatan total.'
+    f:'Hambatan total 12 Ω, sehingga arusnya 1 A. Tegangan pada resistor 8 Ω adalah 1 × 8 = 8 V.'
   },
   {
     level:'medium',
@@ -424,60 +424,193 @@ function buildQuizOrder(){
   return [...easy,...medium,...hard];
 }
 
-let quizOrder=buildQuizOrder();
+const QUIZ_KEY='ipa-interaktif:listrik-dinamis:quiz:v3';
+function loadQuizProgress(){
+  try{
+    const item=JSON.parse(localStorage.getItem(QUIZ_KEY));
+    if(!item||!Array.isArray(item.order)||item.order.length!==quizData.length
+      ||new Set(item.order).size!==quizData.length
+      ||item.order.some(n=>!Number.isInteger(n)||n<0||n>=quizData.length)) return null;
+    return item;
+  }catch(_){return null;}
+}
+const savedQuiz=loadQuizProgress();
+let quizOrder=savedQuiz?savedQuiz.order.map(i=>quizData[i]):buildQuizOrder();
+let selections=(savedQuiz&&Array.isArray(savedQuiz.selections)&&savedQuiz.selections.length===quizOrder.length)
+  ?savedQuiz.selections.map(n=>Number.isInteger(n)&&n>=0&&n<=3?n:-1)
+  :Array(quizOrder.length).fill(-1);
+let revealedQuiz=(savedQuiz&&Array.isArray(savedQuiz.revealed)&&savedQuiz.revealed.length===quizOrder.length)
+  ?savedQuiz.revealed.map(Boolean):Array(quizOrder.length).fill(false);
+let answered=selections.map(n=>n>=0);
+let score=selections.reduce((sum,j,i)=>sum+(j>=0&&j===quizOrder[i].c?1:0),0);
+let quizSlide=Math.max(0,Math.min(quizOrder.length-1,Number.isInteger(savedQuiz?.slide)?savedQuiz.slide:0));
 
-let answered = Array(quizOrder.length).fill(false);
-let score=0;
-
-let quizSlide=0;
+function saveQuiz(){
+  try{localStorage.setItem(QUIZ_KEY,JSON.stringify({
+    order:quizOrder.map(q=>quizData.indexOf(q)),selections,revealed:revealedQuiz,slide:quizSlide
+  }));}catch(_){}
+  window.dispatchEvent(new Event('learningevidencechange'));
+}
+function resetQuizState(){
+  quizOrder=buildQuizOrder();
+  selections=Array(quizOrder.length).fill(-1);
+  answered=Array(quizOrder.length).fill(false);
+  revealedQuiz=Array(quizOrder.length).fill(false);
+  score=0;quizSlide=0;
+  saveQuiz();renderQuiz();
+}
+function quizEvidence(){
+  return {correct:score,total:quizOrder.length,answered:answered.filter(Boolean).length};
+}
+window.getListrikQuizEvidence=quizEvidence;
 
 function renderQuiz(){
   const q=quizOrder[quizSlide];
   const box=$('#quizBox');
+  if(!box||!q)return;
+  const guru=document.body.dataset.learningMode==='guru';
   box.innerHTML=`
     <div class="quiz-single">
       <div class="quiz-index">Soal ${quizSlide+1} dari ${quizOrder.length}</div>
       <div class="question" data-q="${quizSlide}">
         <b>${q.q}</b>
-        ${q.a.map((a,j)=>`<button class="option" data-i="${quizSlide}" data-j="${j}">${a}</button>`).join('')}
-        <div class="feedback" id="fb${quizSlide}"></div>
+        ${q.a.map((a,j)=>`<button type="button" class="option" data-i="${quizSlide}" data-j="${j}">${a}</button>`).join('')}
+        <div class="feedback" id="fb${quizSlide}" role="status" aria-live="polite"></div>
+        ${guru?'<button type="button" class="btn secondary quiz-reveal">Buka pembahasan</button>':''}
       </div>
     </div>`;
   $('#score').textContent=score;
   $('#quizCount').textContent=`${quizSlide+1}/${quizOrder.length}`;
-
   const nav=document.querySelector('[data-nav-for="quiz"]');
   if(nav){
     nav.querySelector('.stage-prev').disabled=quizSlide===0;
     nav.querySelector('.stage-next').disabled=quizSlide===quizOrder.length-1;
     renderDots(nav,quizOrder.length,quizSlide);
   }
-
-  $$('.option').forEach(btn=>btn.addEventListener('click',()=>{
-    const i=+btn.dataset.i, j=+btn.dataset.j;
-    if(answered[i]) return;
-    answered[i]=true;
-    const qq=quizOrder[i];
-    const parent=btn.closest('.question');
-    parent.querySelectorAll('.option').forEach((b,k)=>{
-      if(k===qq.c) b.classList.add('correct');
-      else if(k===j) b.classList.add('wrong');
-      b.disabled=true;
+  const selected=selections[quizSlide];
+  const reveal=box.querySelector('.quiz-reveal');
+  const feedback=$('#fb'+quizSlide);
+  const showResult=!guru||revealedQuiz[quizSlide];
+  box.querySelectorAll('.option').forEach((button,j)=>{
+    const chosen=selected>=0;
+    button.disabled=chosen;
+    button.setAttribute('aria-pressed',chosen&&j===selected?'true':'false');
+    if(chosen&&showResult){
+      if(j===q.c)button.classList.add('correct');
+      else if(j===selected)button.classList.add('wrong');
+    }else if(chosen&&j===selected){
+      button.classList.add('selected');
+    }
+    button.addEventListener('click',()=>{
+      if(selections[quizSlide]>=0)return;
+      selections[quizSlide]=j;
+      answered[quizSlide]=true;
+      if(j===q.c)score++;
+      saveQuiz();
+      renderQuiz();
+      window.refreshLearningFooter?.();
     });
-    if(j===qq.c) score++;
-    $('#score').textContent=score;
-    $('#fb'+i).textContent=(j===qq.c?'Benar. ':'Belum tepat. ')+qq.f;
-  }));
-
-  if(answered[quizSlide]){
-    const parent=box.querySelector('.question');
-    const qq=quizOrder[quizSlide];
-    parent.querySelectorAll('.option').forEach((b,k)=>{
-      if(k===qq.c) b.classList.add('correct');
-      b.disabled=true;
-    });
-    $('#fb'+quizSlide).textContent='Soal ini sudah dijawab. Jawaban benar ditandai hijau.';
+  });
+  if(selected>=0){
+    if(showResult){
+      feedback.textContent=(selected===q.c?'Benar. ':'Belum tepat. ')+q.f;
+    }else{
+      feedback.textContent='Jawaban tersimpan. Diskusikan alasan siswa, lalu buka pembahasan.';
+    }
+  }else{
+    feedback.textContent='Pilih satu jawaban.';
   }
+  if(reveal){
+    reveal.hidden=selected<0||revealedQuiz[quizSlide];
+    reveal.addEventListener('click',()=>{
+      revealedQuiz[quizSlide]=true;
+      saveQuiz();renderQuiz();
+    });
+  }
+}
+
+// Evidence-based inquiry log: compare one series and one parallel circuit
+// while holding source voltage, resistance per lamp, and lamp count fixed.
+const OBSERVATION_KEY='ipa-interaktif:listrik-dinamis:observations:v1';
+let observations=[];
+let observationConclusion='';
+function loadObservations(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(OBSERVATION_KEY));
+    if(saved&&Array.isArray(saved.records)){
+      observations=saved.records.filter(r=>r&&['series','parallel'].includes(r.type)
+        &&Number.isFinite(r.Rt)&&Number.isFinite(r.It)&&Number.isInteger(r.bulbs)
+        &&Number.isFinite(r.V)&&Number.isFinite(r.R)).slice(0,12);
+      observationConclusion=typeof saved.conclusion==='string'?saved.conclusion.slice(0,800):'';
+    }
+  }catch(_){}
+}
+function observationsAreComparable(){
+  return observations.some(a=>a.type==='series'&&observations.some(b=>
+    b.type==='parallel'&&a.bulbs===b.bulbs&&a.V===b.V&&a.R===b.R));
+}
+function saveObservations(){
+  try{localStorage.setItem(OBSERVATION_KEY,JSON.stringify({records:observations,conclusion:observationConclusion}));}catch(_){}
+  window.dispatchEvent(new Event('learningevidencechange'));
+  window.refreshLearningFooter?.();
+}
+window.isListrikExploreDataComplete=(teacherMode=false)=>
+  observationsAreComparable()&&(teacherMode||observationConclusion.trim().length>=20);
+window.getListrikInquiryEvidence=()=>({
+  count:observations.length,comparable:observationsAreComparable(),conclusion:observationConclusion
+});
+function renderObservationLog(){
+  const rows=document.getElementById('observationRows');
+  const status=document.getElementById('observationStatus');
+  if(!rows||!status)return;
+  rows.replaceChildren();
+  if(!observations.length){
+    const tr=document.createElement('tr'),td=document.createElement('td');
+    td.colSpan=6;td.textContent='Belum ada pengamatan tercatat.';
+    tr.appendChild(td);rows.appendChild(tr);
+  }else{
+    observations.forEach(o=>{
+      const tr=document.createElement('tr');
+      [o.type==='series'?'Seri':'Paralel',o.bulbs,fmt(o.V,'V'),fmt(o.R,'Ω'),fmt(o.Rt,'Ω'),fmt(o.It,'A')]
+        .forEach(v=>{const td=document.createElement('td');td.textContent=String(v);tr.appendChild(td);});
+      rows.appendChild(tr);
+    });
+  }
+  status.textContent=observationsAreComparable()
+    ?'✓ Terdapat data seri dan paralel yang dapat dibandingkan pada variabel kontrol sama.'
+    :`${observations.length} pengamatan tersimpan. Catat pasangan seri dan paralel dengan jumlah lampu, V, dan R/lampu yang sama.`;
+  status.classList.toggle('ready',observationsAreComparable());
+}
+function initObservations(){
+  const record=document.getElementById('recordObservation');
+  const clear=document.getElementById('clearObservations');
+  const conclusion=document.getElementById('observationConclusion');
+  if(!record||!clear||!conclusion)return;
+  loadObservations();
+  conclusion.value=observationConclusion;
+  conclusion.addEventListener('input',()=>{
+    observationConclusion=conclusion.value.slice(0,800);
+    saveObservations();
+  });
+  record.addEventListener('click',()=>{
+    const m=metrics();
+    if(!state.on||state.removed||state.bulbs<2||m.Rt===null){
+      document.getElementById('observationStatus').textContent='Nyalakan sakelar, pasang semua lampu, dan pilih 2 atau 3 lampu terlebih dahulu.';
+      return;
+    }
+    const row={type:state.type,bulbs:state.bulbs,V:state.V,R:state.R,Rt:m.Rt,It:m.It};
+    const at=observations.findIndex(o=>o.type===row.type&&o.bulbs===row.bulbs&&o.V===row.V&&o.R===row.R);
+    if(at>=0)observations[at]=row;
+    else observations.push(row);
+    observations=observations.slice(-12);
+    saveObservations();renderObservationLog();
+  });
+  clear.addEventListener('click',()=>{
+    if(!observations.length)return;
+    if(!confirm('Hapus seluruh tabel hasil percobaan ini?'))return;
+    observations=[];saveObservations();renderObservationLog();
+  });
+  renderObservationLog();
 }
 
 function refreshAll(){
@@ -555,7 +688,7 @@ $$('.stage-nav').forEach(nav=>{
   nav.querySelector('.stage-prev').addEventListener('click',()=>{
     if(group==='quiz'){
       quizSlide=Math.max(0,quizSlide-1);
-      renderQuiz();
+      saveQuiz();renderQuiz();
       const quizTarget=nav.closest('.stage-card')?.querySelector('.stage-topline')||document.getElementById('quizBox');
       window.scrollToLearningContent?.(quizTarget);
     }else{
@@ -565,7 +698,7 @@ $$('.stage-nav').forEach(nav=>{
   nav.querySelector('.stage-next').addEventListener('click',()=>{
     if(group==='quiz'){
       quizSlide=Math.min(quizOrder.length-1,quizSlide+1);
-      renderQuiz();
+      saveQuiz();renderQuiz();
       const quizTarget=nav.closest('.stage-card')?.querySelector('.stage-topline')||document.getElementById('quizBox');
       window.scrollToLearningContent?.(quizTarget);
     }else{
@@ -777,8 +910,9 @@ $('#resetBtn').onclick=()=>{
 
 $('#compareBtn').onclick=()=>{stageIndex.explain=0;window.setLearningStage?.(3,false);setTimeout(()=>showStage('explain',0,true),0)};
 $('#goElaborateBtn').onclick=()=>{stageIndex.elaborate=0;window.setLearningStage?.(4,false);setTimeout(()=>showStage('elaborate',0,true),0)};
-$('#goEvaluateBtn').onclick=()=>{quizOrder=buildQuizOrder();answered=Array(quizOrder.length).fill(false);score=0;quizSlide=0;renderQuiz();window.setLearningStage?.(5)};
-$('#resetQuiz').onclick=()=>{quizOrder=buildQuizOrder();answered=Array(quizOrder.length).fill(false);score=0;quizSlide=0;renderQuiz()};
+$('#goEvaluateBtn').onclick=()=>{renderQuiz();window.setLearningStage?.(5)};
+$('#resetQuiz').onclick=()=>{if(confirm('Mulai ulang 20 soal? Jawaban dan skor kuis sebelumnya pada perangkat ini akan dihapus.'))resetQuizState()};
+window.addEventListener('learningmodechange',renderQuiz);
 
 
 function openZoom(targetId,title){
@@ -1049,9 +1183,11 @@ window.LISTRIK_CONTENT_COMPLETE=(stage)=>{
   if(stage===2){
     const holder=document.querySelector('[data-stage-group="concrete"]');
     const slides=holder?[...holder.querySelectorAll('.stage-slide')]:[];
-    const predictionDone=document.getElementById('predictionCheckCard')?.dataset.predictionChecked==='true';
+    const teacherMode=document.body.dataset.learningMode==='guru';
+    const predictionDone=teacherMode||document.getElementById('predictionCheckCard')?.dataset.predictionChecked==='true';
+    const inquiryDone=typeof window.isListrikExploreDataComplete==='function' && window.isListrikExploreDataComplete(teacherMode);
     const allViewed=slides.length>0 && slides.every(slide=>slide.classList.contains("is-viewed"));
-    return allViewed && slides.at(-1).classList.contains("active") && predictionDone;
+    return allViewed && slides.at(-1).classList.contains("active") && predictionDone && inquiryDone;
   }
   if(stage===3){
     const holder=document.querySelector('[data-stage-group="explain"]');
@@ -1085,10 +1221,8 @@ window.resetListrikDinamisInteractiveState=()=>{
   if(resistance) resistance.value='10';
 
   // Evaluate
-  quizOrder=buildQuizOrder();
-  answered=Array(quizOrder.length).fill(false);
-  score=0;
-  quizSlide=0;
+  resetQuizState();
+  localStorage.removeItem(QUIZ_KEY);
 
   // Clear all transient selections/feedback generated by CPA.
   document.querySelectorAll(
@@ -1116,6 +1250,7 @@ document.addEventListener('change',scheduleLearningFooter,true);
 
 initPredictionCheck();
 initElaborate();
+initObservations();
 renderQuiz();
 refreshAll();
 showStage('concrete',0,false);
