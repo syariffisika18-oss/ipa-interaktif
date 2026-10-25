@@ -477,7 +477,8 @@ function renderQuiz(){
         ${guru?'<button type="button" class="btn secondary quiz-reveal">Buka pembahasan</button>':''}
       </div>
     </div>`;
-  $('#score').textContent=score;
+  const scoreReady=!guru||(answered.every(Boolean)&&revealedQuiz.every(Boolean));
+  $('#score').textContent=scoreReady?score:'—';
   $('#quizCount').textContent=`${quizSlide+1}/${quizOrder.length}`;
   const nav=document.querySelector('[data-nav-for="quiz"]');
   if(nav){
